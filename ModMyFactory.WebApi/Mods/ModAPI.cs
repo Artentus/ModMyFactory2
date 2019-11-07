@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace ModMyFactory.WebApi.Mods
 {
-    public static class ModAPI
+    public static class ModApi
     {
         internal const string BaseUrl = "https://mods.factorio.com";
         const string ModsUrl = BaseUrl + "/api/mods";
@@ -40,14 +40,14 @@ namespace ModMyFactory.WebApi.Mods
         /// <summary>
         /// Requests extended information on a specific mod.
         /// </summary>
-        public static async Task<ModInfo> RequestModInfoAsync(string modName)
+        public static async Task<ApiModInfo> RequestModInfoAsync(string modName)
         {
             try
             {
                 string url = $"{ModsUrl}/{modName}/full";
                 string document = await WebHelper.RequestDocumentAsync(url);
 
-                return JsonConvert.DeserializeObject<ModInfo>(document);
+                return JsonConvert.DeserializeObject<ApiModInfo>(document);
             }
             catch (WebException ex)
             {

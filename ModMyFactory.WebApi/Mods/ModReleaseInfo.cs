@@ -40,20 +40,20 @@ namespace ModMyFactory.WebApi.Mods
         readonly public string Checksum;
 
         /// <summary>
-        /// Select information from the mods info file.
+        /// Select information from the mods info.
         /// </summary>
         [JsonProperty("info_json")]
-        readonly public ModInfoFile InfoFile;
+        readonly public BaseTypes.ModInfo Info;
 
         [JsonConstructor]
-        internal ModReleaseInfo(AccurateVersion version, string downloadUrl, string fileName, DateTime releaseDate, string checksum, ModInfoFile infoFile)
+        internal ModReleaseInfo(AccurateVersion version, string downloadUrl, string fileName, DateTime releaseDate, string checksum, BaseTypes.ModInfo info)
         {
             Version = version;
-            DownloadUrl = ModAPI.BaseUrl + downloadUrl;
+            DownloadUrl = ModApi.BaseUrl + downloadUrl;
             FileName = fileName;
             ReleaseDate = releaseDate;
             Checksum = checksum;
-            InfoFile = infoFile;
+            Info = info;
         }
     }
 }

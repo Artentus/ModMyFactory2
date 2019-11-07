@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace ModMyFactory.WebApi.Factorio
 {
-    public static class DownloadAPI
+    public static class DownloadApi
     {
         const string BaseUrl = "https://www.factorio.com";
         const string ReleasesUrl = BaseUrl + "/api/latest-releases";

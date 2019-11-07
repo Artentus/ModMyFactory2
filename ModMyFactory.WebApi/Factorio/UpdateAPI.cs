@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace ModMyFactory.WebApi.Factorio
 {
-    public static class UpdateAPI
+    public static class UpdateApi
     {
         const string BaseUrl = "https://updater.factorio.com";
         const string PacketUrl = BaseUrl + "/get-available-versions";

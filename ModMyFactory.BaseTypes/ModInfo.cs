@@ -5,9 +5,9 @@ using System.Threading.Tasks;
 namespace ModMyFactory.BaseTypes
 {
     /// <summary>
-    /// A representation of a mods info file.
+    /// Information about a mod.
     /// </summary>
-    public struct ModInfoFile
+    public struct ModInfo
     {
         /// <summary>
         /// The unique name of the mod.
@@ -53,7 +53,7 @@ namespace ModMyFactory.BaseTypes
         readonly public Dependency[] Dependencies;
 
         [JsonConstructor]
-        internal ModInfoFile(string name, string displayName, AccurateVersion version, AccurateVersion factorioVersion, string author, string description, params Dependency[] dependencies)
+        internal ModInfo(string name, string displayName, AccurateVersion version, AccurateVersion factorioVersion, string author, string description, params Dependency[] dependencies)
         {
             Name = name;
             DisplayName = displayName;
@@ -97,15 +97,15 @@ namespace ModMyFactory.BaseTypes
         /// <summary>
         /// Loads mod info from a json string.
         /// </summary>
-        public static ModInfoFile FromJson(string json)
+        public static ModInfo FromJson(string json)
         {
-            return JsonConvert.DeserializeObject<ModInfoFile>(json);
+            return JsonConvert.DeserializeObject<ModInfo>(json);
         }
 
         /// <summary>
         /// Loads a mod info file.
         /// </summary>
-        public static async Task<ModInfoFile> FromFileAsync(FileInfo file)
+        public static async Task<ModInfo> FromFileAsync(FileInfo file)
         {
             using (var fs = file.OpenRead())
             {
@@ -120,7 +120,7 @@ namespace ModMyFactory.BaseTypes
         /// <summary>
         /// Loads a mod info file.
         /// </summary>
-        public static async Task<ModInfoFile> FromFileAsync(string fileName)
+        public static async Task<ModInfo> FromFileAsync(string fileName)
             => await FromFileAsync(new FileInfo(fileName));
     }
 }

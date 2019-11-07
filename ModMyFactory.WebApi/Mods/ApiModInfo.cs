@@ -6,7 +6,7 @@ namespace ModMyFactory.WebApi.Mods
     /// <summary>
     /// Contains information about a mod.
     /// </summary>
-    public struct ModInfo
+    public struct ApiModInfo
     {
         /// <summary>
         /// The display name of the mod.
@@ -135,7 +135,7 @@ namespace ModMyFactory.WebApi.Mods
 
 
         [JsonConstructor]
-        internal ModInfo(string displayName, int downloadCount, string name, string summary, string author, double score, string category, string thumbnailUrl, ModReleaseInfo latestRelease,
+        internal ApiModInfo(string displayName, int downloadCount, string name, string summary, string author, double score, string category, string thumbnailUrl, ModReleaseInfo latestRelease,
                          string description, string changelog, string faq, string homepage, string gitHubUrl, License license, ModReleaseInfo[] releases, DateTime creationDate, DateTime lastUpdateDate)
         {
             DisplayName = displayName;

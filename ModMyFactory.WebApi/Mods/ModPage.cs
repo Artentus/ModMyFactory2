@@ -17,10 +17,10 @@ namespace ModMyFactory.WebApi.Mods
         /// A list of mods.
         /// </summary>
         [JsonProperty("results")]
-        readonly public ModInfo[] Mods;
+        readonly public ApiModInfo[] Mods;
 
         [JsonConstructor]
-        internal ModPage(Pagination pagination, ModInfo[] mods)
+        internal ModPage(Pagination pagination, ApiModInfo[] mods)
         {
             Pagination = pagination;
             Mods = mods;
