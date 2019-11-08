@@ -153,6 +153,13 @@ namespace ModMyFactory.Mods
                 throw;
             }
 
+            if (!ModFile.TryParseFileName(file.NameWithoutExtension(), out var fileName, out var fileVersion)
+                || (fileName != info.Name) || (fileVersion != info.Version))
+            {
+                thumbnail?.Dispose();
+                return (false, null);
+            }
+
             return (hasInfo, hasInfo ? new ZippedModFile(file, info, thumbnail) : null);
         }
 

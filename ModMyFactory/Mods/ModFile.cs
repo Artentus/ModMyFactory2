@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using ModMyFactory.BaseTypes;
+using System.IO;
 using System.Threading.Tasks;
 
 namespace ModMyFactory.Mods
@@ -58,6 +59,21 @@ namespace ModMyFactory.Mods
             var newStream = new MemoryStream((int)thumbnail.Length);
             await thumbnail.CopyToAsync(newStream);
             return newStream;
+        }
+
+        internal static bool TryParseFileName(string fileName, out string name, out AccurateVersion version)
+        {
+            name = null;
+            version = default;
+
+            int index = fileName.LastIndexOf('_');
+            if ((index < 1) || (index >= fileName.Length - 1)) return false;
+
+            name = fileName.Substring(0, index);
+            if (string.IsNullOrWhiteSpace(name)) return false;
+
+            var versionString = fileName.Substring(index + 1);
+            return AccurateVersion.TryParse(versionString, out version);
         }
     }
 }
