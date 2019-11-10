@@ -30,20 +30,20 @@
     <ProjectReference Include="..\ModMyFactory.BaseTypes\ModMyFactory.BaseTypes.csproj" />
   </ItemGroup>
 
-  <PropertyGroup Condition="'$(TargetFramework)' == 'netcoreapp3.0'">
-    <DefineConstants>NETCORE</DefineConstants>
+  <PropertyGroup Condition="'$(TargetFramework)' == 'netstandard2.0' OR '$(TargetFramework)' == 'netcoreapp3.0'">
+    <DefineConstants>$(DefineConstants);NETCORE</DefineConstants>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(TargetFramework)' == 'net472'">
-    <DefineConstants>NETFULL</DefineConstants>
+    <DefineConstants>$(DefineConstants);NETFULL</DefineConstants>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
-    <DefineConstants>DEBUG</DefineConstants>
+    <DefineConstants>$(DefineConstants);DEBUG</DefineConstants>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)' == 'Release'">
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
-    <DefineConstants>RELEASE</DefineConstants>
+    <DefineConstants>$(DefineConstants);RELEASE</DefineConstants>
   </PropertyGroup>
 
 </Project>

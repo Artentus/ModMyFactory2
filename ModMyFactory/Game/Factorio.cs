@@ -1,11 +1,16 @@
 ﻿using ModMyFactory.Mods;
 using System.IO;
 using System.Threading.Tasks;
+#if NETCORE
+using System;
+#endif
 
 namespace ModMyFactory.Game
 {
     public static class Factorio
     {
+        static Steam _steam = null;
+
         static async Task<(bool, IModFile)> TryLoadCoreModAsync(DirectoryInfo directory)
         {
             var coreModPath = Path.Combine(directory.FullName, "data", "core");
@@ -25,15 +30,13 @@ namespace ModMyFactory.Game
             return executable.Exists;
 #elif NETCORE
             var os = Environment.OSVersion;
-            executable = null;
             if (os.Platform == PlatformID.Win32NT)
                 executable = new FileInfo(Path.Combine(directory.FullName, "bin", "x64", "factorio.exe"));
             else if (os.Platform == PlatformID.Unix)
                 executable = new FileInfo(Path.Combine(directory.FullName, "bin", "x64", "factorio"));
-            return (executable != null) && executable.Exists;
-#else
-            executable = null;
-            return false;
+            else
+                throw new PlatformException();
+            return executable.Exists;
 #endif
         }
 
@@ -52,7 +55,7 @@ namespace ModMyFactory.Game
             (bool s2, var baseMod) = await TryLoadBaseModAsync(directory);
             if (!s2) return (false, null);
 
-            return (true, new FactorioInstance(directory, executable, coreMod, baseMod));
+            return (true, new FactorioStandaloneInstance(directory, coreMod, baseMod, executable));
         }
 
         /// <summary>
@@ -84,6 +87,45 @@ namespace ModMyFactory.Game
         {
             var dir = new DirectoryInfo(path);
             return await LoadAsync(dir);
+        }
+
+        static async Task<(bool, DirectoryInfo)> TryGetSteamDirectoryAsync(Steam steam)
+        {
+            var libraries = await steam.GetLibrariesAsync();
+            foreach (var library in libraries)
+            {
+                foreach (var dir in library.EnumerateDirectories("Factorio"))
+                    if (TryLoadExecutable(dir, out _)) return (true, dir);
+            }
+            return (false, null);
+        }
+
+        /// <summary>
+        /// Tries to load the Factorio Steam instance.
+        /// </summary>
+        public static async Task<(bool, FactorioInstance)> TryLoadSteamAsync()
+        {
+            if ((_steam is null) && !Steam.TryLoad(out _steam)) return (false, null); // Use same steam instance at all times
+            (bool s0, var directory) = await TryGetSteamDirectoryAsync(_steam);
+            if (!s0) return (false, null);
+
+            (bool s1, var coreMod) = await TryLoadCoreModAsync(directory);
+            if (!s1) return (false, null);
+
+            (bool s2, var baseMod) = await TryLoadBaseModAsync(directory);
+            if (!s2) return (false, null);
+
+            return (true, new FactorioSteamInstance(directory, coreMod, baseMod, _steam));
+        }
+
+        /// <summary>
+        /// Loads the Factorio Steam instance.
+        /// </summary>
+        public static async Task<FactorioInstance> LoadSteamAsync()
+        {
+            (bool success, var result) = await TryLoadSteamAsync();
+            if (!success) throw new ManagerException("Factorio Steam version not found.");
+            return result;
         }
     }
 }

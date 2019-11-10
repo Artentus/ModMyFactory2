@@ -1,8 +1,7 @@
-﻿using System;
-using ModMyFactory.IO.Win32;
-
+﻿using ModMyFactory.IO.Win32;
 #if NETCORE
 using ModMyFactory.IO.Unix;
+using System;
 #endif
 
 namespace ModMyFactory.IO
@@ -19,8 +18,9 @@ namespace ModMyFactory.IO
                 return new JunctionInfo(path);
             else if (os.Platform == PlatformID.Unix)
                 return new SymlinkInfo(path);
+            else
+                throw new PlatformException();
 #endif
-            throw new NotSupportedException("Current platform not supported.");
         }
     }
 }
