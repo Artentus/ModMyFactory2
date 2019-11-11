@@ -4,7 +4,7 @@ using System.IO;
 
 namespace ModMyFactory.Game
 {
-    sealed class FactorioStandaloneInstance : FactorioInstance
+    sealed class FactorioStandaloneInstance : FactorioInstanceBase
     {
         readonly FileInfo _executable;
 

@@ -4,7 +4,7 @@ using System.IO;
 
 namespace ModMyFactory.Game
 {
-    sealed class FactorioSteamInstance : FactorioInstance
+    sealed class FactorioSteamInstance : FactorioInstanceBase
     {
         readonly static string SavegamePath;
         readonly static string ScenarioPath;
