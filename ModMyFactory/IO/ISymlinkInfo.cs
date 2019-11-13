@@ -10,6 +10,8 @@
 
         bool Exists { get; }
 
+        void Create(string desination);
+
         void Delete();
     }
 }

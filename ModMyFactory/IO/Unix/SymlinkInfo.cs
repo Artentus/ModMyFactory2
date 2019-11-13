@@ -26,6 +26,8 @@ namespace ModMyFactory.IO.Unix
                 throw new IOException("File is not a symbolic link.");
         }
 
+        public void Create(string destination) => link.CreateSymbolicLinkTo(destination);
+
         public void Delete() => link.Delete();
     }
 }

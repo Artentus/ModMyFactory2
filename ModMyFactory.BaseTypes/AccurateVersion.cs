@@ -42,6 +42,11 @@ namespace ModMyFactory.BaseTypes
             Revision = revision;
         }
 
+        /// <summary>
+        /// Creates a version object containing only the main and major version parts of this version object.
+        /// </summary>
+        public AccurateVersion ToMajor() => new AccurateVersion(Binary & 0xFFFF0000);
+
         public bool Equals(AccurateVersion other) => other.Binary == this.Binary;
 
         public override bool Equals(object obj)
@@ -113,6 +118,9 @@ namespace ModMyFactory.BaseTypes
         }
 
 
+        /// <summary>
+        /// Tries to interpret a string as a version.
+        /// </summary>
         public static bool TryParse(string value, out AccurateVersion version)
         {
             version = default;
@@ -133,6 +141,9 @@ namespace ModMyFactory.BaseTypes
             return true;
         }
 
+        /// <summary>
+        /// Interprets a string as a version.
+        /// </summary>
         public static AccurateVersion Parse(string value)
         {
             if (TryParse(value, out var result)) return result;

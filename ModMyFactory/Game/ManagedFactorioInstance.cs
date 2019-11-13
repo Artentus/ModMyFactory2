@@ -1,11 +1,8 @@
 ﻿using ModMyFactory.BaseTypes;
-using ModMyFactory.Game;
+using ModMyFactory.IO;
 using ModMyFactory.Mods;
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ModMyFactory.Game
 {
@@ -39,31 +36,37 @@ namespace ModMyFactory.Game
 
         public void Start(string[] args) => _baseInstance.Start(args);
 
-        public void LinkSavegameDirectory(string destination)
-        {
+        /// <summary>
+        /// Links this instances save directory to another location.
+        /// All contents in the old directory will be deleted!
+        /// </summary>
+        /// <param name="destination">The location to link to.</param>
+        public void LinkSavegameDirectory(string destination) => LinkDirectory(SavegameDirectory, destination);
 
-        }
+        /// <summary>
+        /// Unlinks this instances save directory so it points to its original location.
+        /// </summary>
+        public void UnlinkSavegameDirectory() => UnlinkDirectory(SavegameDirectory);
 
-        public void UnlinkSavegameDirectory()
-        {
+        /// <summary>
+        /// Links this instances scenario directory to another location.
+        /// All contents in the old directory will be deleted!
+        /// </summary>
+        /// <param name="destination">The location to link to.</param>
+        public void LinkScenarioDirectory(string destination) => LinkDirectory(ScenarioDirectory, destination);
 
-        }
+        /// <summary>
+        /// Unlinks this instances scenario directory so it points to its original location.
+        /// </summary>
+        public void UnlinkScenarioDirectory() => UnlinkDirectory(ScenarioDirectory);
 
-        public void LinkScenarioDirectory(string destination)
-        {
+        internal void LinkModDirectoryInternal(string destination) => LinkDirectory(ModDirectory, destination);
 
-        }
-
-        public void UnlinkScenarioDirectory()
-        {
-
-        }
-
-        internal void LinkModDirectoryInternal(string destination)
-        {
-
-        }
-
+        /// <summary>
+        /// Links this instances mod directory to another location.
+        /// All contents in the old directory will be deleted!
+        /// </summary>
+        /// <param name="destination">The location to link to.</param>
         public void LinkModDirectory(string destination)
         {
             if (HasManagerAttached)
@@ -71,11 +74,11 @@ namespace ModMyFactory.Game
             LinkModDirectoryInternal(destination);
         }
 
-        internal void UnlinkModDirectoryInternal()
-        {
+        internal void UnlinkModDirectoryInternal() => UnlinkDirectory(ModDirectory);
 
-        }
-
+        /// <summary>
+        /// Unlinks this instances mod directory so it points to its original location.
+        /// </summary>
         public void UnlinkModDirectory()
         {
             if (HasManagerAttached)
@@ -106,6 +109,26 @@ namespace ModMyFactory.Game
             if (instance is ManagedFactorioInstance)
                 return (ManagedFactorioInstance)instance;
             return new ManagedFactorioInstance(instance);
+        }
+
+        static void LinkDirectory(DirectoryInfo directory, string destination)
+        {
+            var link = Symlink.FromPath(directory.FullName);
+            if (link.Exists)
+            {
+                link.DestinationPath = destination;
+            }
+            else
+            {
+                if (directory.Exists) directory.Delete(true);
+                link.Create(destination);
+            }
+        }
+
+        static void UnlinkDirectory(DirectoryInfo directory)
+        {
+            var link = Symlink.FromPath(directory.FullName);
+            if (link.Exists) link.Delete();
         }
     }
 }

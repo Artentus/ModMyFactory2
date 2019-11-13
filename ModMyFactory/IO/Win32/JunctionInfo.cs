@@ -35,6 +35,12 @@ namespace ModMyFactory.IO.Win32
                 _destinationPath = Junction.GetDestination(FullName);
         }
 
+        public void Create(string destination)
+        {
+            _destinationPath = destination;
+            Junction.Create(FullName, destination);
+        }
+
         public void Delete() => Junction.Delete(FullName);
     }
 }
