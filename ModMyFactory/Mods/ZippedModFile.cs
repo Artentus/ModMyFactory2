@@ -22,6 +22,21 @@ namespace ModMyFactory.Mods
 
         public bool IsExtracted => false;
 
+        public bool Enabled
+        {
+            get => string.Equals(_file.Extension, ".zip", StringComparison.InvariantCultureIgnoreCase);
+            set
+            {
+                if (value != Enabled)
+                {
+                    if (value)
+                        _file.Rename(string.Concat(Info.Name, "_", Info.Version, ".zip"));
+                    else
+                        _file.Rename(string.Concat(Info.Name, "_", Info.Version, ".disabled"));
+                }
+            }
+        }
+
         public void Delete()
         {
             Thumbnail.Dispose();
@@ -65,7 +80,10 @@ namespace ModMyFactory.Mods
 
             var newDir = new DirectoryInfo(Path.Combine(destination, _file.NameWithoutExtension()));
             var newThumbnail = ModFile.LoadThumbnail(newDir);
-            return new ExtractedModFile(newDir, Info, newThumbnail);
+            var extractedFile = new ExtractedModFile(newDir, Info, newThumbnail);
+
+            if (!Enabled) extractedFile.Enabled = false;
+            return extractedFile;
         }
 
         /// <summary>
@@ -147,10 +165,11 @@ namespace ModMyFactory.Mods
                     }
                 }
             }
-            catch
+            catch (Exception ex)
             {
                 thumbnail?.Dispose(); // In case of exception dispose thumbnail stream
-                throw;
+                if (ex is IOException) throw; // Catch all but file system exceptions
+                else return (false, null); // File was not valid
             }
 
             if (!ModFile.TryParseFileName(file.NameWithoutExtension(), out var fileName, out var fileVersion)

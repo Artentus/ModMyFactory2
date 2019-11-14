@@ -52,7 +52,7 @@ namespace ModMyFactory
             if (!_modManagers.TryGetValue(factorioVersion, out var result))
             {
                 var dir = new DirectoryInfo(Path.Combine(_modDirectory.FullName, factorioVersion.ToString()));
-                result = new ModManager(factorioVersion, dir);
+                result = new ModManager(factorioVersion);
                 _modManagers.Add(factorioVersion, result);
             }
             return result;
@@ -66,7 +66,7 @@ namespace ModMyFactory
         {
             instance.HasManagerAttached = true;
             var modManager = GetModManager(instance.Version.ToMajor());
-            instance.LinkModDirectoryInternal(modManager.Directory.FullName);
+            
             _managedInstances.Add(instance);
         }
 

@@ -44,5 +44,7 @@ namespace ModMyFactory.IO
                 return newDir;
             }
         }
+
+        public static void Rename(this DirectoryInfo directory, string newName) => directory.MoveTo(Path.Combine(directory.Parent.FullName, newName));
     }
 }

@@ -28,6 +28,12 @@ namespace ModMyFactory.Mods
         bool IsExtracted { get; }
 
         /// <summary>
+        /// Gets or sets if this mod file is enabled on file level.
+        /// A disabled mod file will not be recognized by Factorio.
+        /// </summary>
+        bool Enabled { get; set; }
+
+        /// <summary>
         /// Deletes this mod file.
         /// </summary>
         void Delete();

@@ -40,6 +40,8 @@ namespace ModMyFactory.IO
             }
         }
 
-        public static string NameWithoutExtension(this FileInfo file) =>  Path.GetFileNameWithoutExtension(file.Name);
+        public static void Rename(this FileInfo file, string newName) => file.MoveTo(Path.Combine(file.Directory.FullName, newName));
+
+        public static string NameWithoutExtension(this FileInfo file) => Path.GetFileNameWithoutExtension(file.Name);
     }
 }

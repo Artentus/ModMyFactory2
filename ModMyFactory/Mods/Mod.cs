@@ -11,6 +11,12 @@ namespace ModMyFactory.Mods
     public class Mod : IDisposable
     {
         readonly IModFile _file;
+        bool _enabled;
+
+        /// <summary>
+        /// Is raised if the enabled state of this mod changes.
+        /// </summary>
+        public event EventHandler EnabledChanged;
 
         /// <summary>
         /// The unique name of the mod.
@@ -58,6 +64,37 @@ namespace ModMyFactory.Mods
         /// </summary>
         public virtual bool CanDisable => true;
 
+        /// <summary>
+        /// Gets or sets if this mod is enabled.
+        /// If a mod is enabled all other mods in the same family will be disabled.
+        /// </summary>
+        public bool Enabled
+        {
+            get => CanDisable ? _enabled : true;
+            set
+            {
+                if (value == _enabled) return;
+                if (!value && !CanDisable)
+                    throw new InvalidOperationException("This mod cannot be disabled.");
+
+                _enabled = value;
+                if (!(_file is null) && (FactorioVersion < ModManager.FormatSwitch)) // Below 0.17 file needs to be disabled manually
+                {
+                    if (value) // Always enable file
+                        _file.Enabled = true;
+                    else if (!(Family is null) && (Family.Count > 1)) // Only disable file if there are other mods in the family
+                        _file.Enabled = false;
+                }
+                EnabledChanged?.Invoke(this, EventArgs.Empty);
+            }
+        }
+
+        /// <summary>
+        /// The family this mod is part of.
+        /// Is null if the mod has not been added to a family.
+        /// </summary>
+        public ModFamily Family { get; internal set; }
+
         protected Mod(string name, string displayName, AccurateVersion version, AccurateVersion factorioVersion,
             string author, string description, Dependency[] dependencies, Stream thumbnail = null)
         {
@@ -79,6 +116,9 @@ namespace ModMyFactory.Mods
             : this(file.Info, file.Thumbnail)
         {
             _file = file;
+            Enabled = _file.Enabled;
+            if (_file.Info.FactorioVersion >= ModManager.FormatSwitch)
+                _file.Enabled = true; // Starting with Factorio 0.17 mod files should always be enabled
         }
 
         protected virtual void Dispose(bool disposing)

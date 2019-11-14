@@ -1,23 +1,103 @@
 ﻿using ModMyFactory.BaseTypes;
 using System;
+using System.Collections;
 using System.Collections.Generic;
-using System.IO;
-using System.Text;
+using System.Linq;
 
 namespace ModMyFactory.Mods
 {
-    public sealed class ModManager
+    public sealed class ModManager : ICollection<Mod>
     {
+        internal static readonly AccurateVersion FormatSwitch = new AccurateVersion(0, 17); // Native support for multiple mods in Factorio 0.17 and onwards
+
+        readonly Dictionary<string, ModFamily> _families;
+
+        /// <summary>
+        /// The version of Factorio being managed.
+        /// </summary>
         public AccurateVersion FactorioVersion { get; }
 
-        public DirectoryInfo Directory { get; }
+        /// <summary>
+        /// A collection of mod families formed by the managed mods.
+        /// </summary>
+        public IReadOnlyCollection<ModFamily> Families { get; }
 
-        /// <param name="factorioVersion">The version of Factorio this mod manager targets. Only considers major version.</param>
-        /// <param name="directory">The directory the managed mods reside in.</param>
-        public ModManager(AccurateVersion factorioVersion, DirectoryInfo directory)
+        /// <summary>
+        /// The number of mods managed.
+        /// </summary>
+        public int Count => Families.Sum(family => family.Count());
+
+        /// <param name="factorioVersion">The version of Factorio getting managed. Only considers major version.</param>
+        public ModManager(AccurateVersion factorioVersion)
         {
+            _families = new Dictionary<string, ModFamily>();
             FactorioVersion = factorioVersion.ToMajor();
-            Directory = directory;
+            Families = _families.Values;
         }
+
+        ModFamily GetFamily(string name)
+        {
+            if (!_families.TryGetValue(name, out var result))
+            {
+                result = new ModFamily(name);
+                _families.Add(name, result);
+            }
+            return result;
+        }
+
+        bool TryGetFamily(string name, out ModFamily result) => _families.TryGetValue(name, out result);
+
+        /// <summary>
+        /// Adds a mod to be managed.
+        /// </summary>
+        public void Add(Mod mod)
+        {
+            if (mod is null) throw new ArgumentNullException();
+            if (mod.FactorioVersion.ToMajor() != FactorioVersion) throw new ArgumentException("Mod has incorrect Factorio version.");
+
+            var family = GetFamily(mod.Name);
+            if (family.Contains(mod)) return; // If mod already managed do nothing
+            family.Add(mod);
+        }
+
+        /// <summary>
+        /// Removes a mod from the manager.
+        /// </summary>
+        public bool Remove(Mod mod)
+        {
+            if (mod is null) return false;
+            if (!TryGetFamily(mod.Name, out var family)) return false;
+            return family.Remove(mod);
+        }
+
+        /// <summary>
+        /// Removes all managed mods.
+        /// </summary>
+        public void Clear() => _families.Clear();
+
+        /// <summary>
+        /// Checks if a mod is managed by this manager.
+        /// </summary>
+        public bool Contains(Mod mod)
+        {
+            if (mod is null) return false;
+            if (!TryGetFamily(mod.Name, out var family)) return false;
+            return family.Contains(mod);
+        }
+
+        public IEnumerator<Mod> GetEnumerator()
+        {
+            foreach (var family in Families)
+            {
+                foreach (var mod in family)
+                    yield return mod;
+            }
+        }
+
+        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+
+        bool ICollection<Mod>.IsReadOnly => false;
+
+        void ICollection<Mod>.CopyTo(Mod[] array, int arrayIndex) => throw new NotSupportedException();
     }
 }

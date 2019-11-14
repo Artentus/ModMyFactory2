@@ -21,6 +21,27 @@ namespace ModMyFactory.Mods
 
         public bool IsExtracted => true;
 
+        public bool Enabled
+        {
+            get => File.Exists(Path.Combine(_directory.FullName, "info.json"));
+            set
+            {
+                if (value != Enabled)
+                {
+                    if (value)
+                    {
+                        var infoFile = new FileInfo(Path.Combine(_directory.FullName, "info.disabled"));
+                        infoFile.Rename("info.json");
+                    }
+                    else
+                    {
+                        var infoFile = new FileInfo(Path.Combine(_directory.FullName, "info.json"));
+                        infoFile.Rename("info.disabled");
+                    }
+                }
+            }
+        }
+
         public void Delete()
         {
             Thumbnail.Dispose();
@@ -56,6 +77,9 @@ namespace ModMyFactory.Mods
         /// <param name="destination">The path to pack this mod file at, excluding the mod files name itself.</param>
         public async Task<ZippedModFile> PackAsync(string destination)
         {
+            bool wasEnabled = Enabled;
+            if (!wasEnabled) Enabled = true;
+
             var newFile = new FileInfo(Path.Combine(destination, _directory.Name + ".zip"));
             if (!newFile.Directory.Exists) newFile.Directory.Create();
             
@@ -69,7 +93,14 @@ namespace ModMyFactory.Mods
             });
             
             var newThumbnail = await ModFile.CopyThumbnailAsync(Thumbnail);
-            return new ZippedModFile(newFile, Info, newThumbnail);
+            var zippedFile = new ZippedModFile(newFile, Info, newThumbnail);
+
+            if (!wasEnabled)
+            {
+                zippedFile.Enabled = false;
+                Enabled = false;
+            }
+            return zippedFile;
         }
 
         /// <summary>
@@ -109,7 +140,11 @@ namespace ModMyFactory.Mods
         public static async Task<(bool, ExtractedModFile)> TryLoadAsync(DirectoryInfo directory)
         {
             var infoFile = new FileInfo(Path.Combine(directory.FullName, "info.json"));
-            if (!infoFile.Exists) return (false, null);
+            if (!infoFile.Exists)
+            {
+                infoFile = new FileInfo(Path.Combine(directory.FullName, "info.disabled"));
+                if (!infoFile.Exists) return (false, null);
+            }
 
             ModInfo info;
             try
