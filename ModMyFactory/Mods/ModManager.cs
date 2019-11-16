@@ -13,6 +13,11 @@ namespace ModMyFactory.Mods
         readonly Dictionary<string, ModFamily> _families;
 
         /// <summary>
+        /// Is raised if mods in a family change their enabled state.
+        /// </summary>
+        public event EventHandler<ModFamilyEnabledChangedEventArgs> FamilyEnabledChanged;
+
+        /// <summary>
         /// The version of Factorio being managed.
         /// </summary>
         public AccurateVersion FactorioVersion { get; }
@@ -35,12 +40,19 @@ namespace ModMyFactory.Mods
             Families = _families.Values;
         }
 
+        void OnFamilyModsEnabledChanged(object sender, EventArgs e)
+        {
+            var family = (ModFamily)sender;
+            FamilyEnabledChanged?.Invoke(this, new ModFamilyEnabledChangedEventArgs(family));
+        }
+
         ModFamily GetFamily(string name)
         {
             if (!_families.TryGetValue(name, out var result))
             {
                 result = new ModFamily(name);
                 _families.Add(name, result);
+                result.ModsEnabledChanged += OnFamilyModsEnabledChanged;
             }
             return result;
         }
@@ -67,13 +79,25 @@ namespace ModMyFactory.Mods
         {
             if (mod is null) return false;
             if (!TryGetFamily(mod.Name, out var family)) return false;
-            return family.Remove(mod);
+
+            var result = family.Remove(mod);
+            if (result && (family.Count == 0))
+            {
+                family.ModsEnabledChanged -= OnFamilyModsEnabledChanged;
+                _families.Remove(family.FamilyName);
+            }
+            return result;
         }
 
         /// <summary>
         /// Removes all managed mods.
         /// </summary>
-        public void Clear() => _families.Clear();
+        public void Clear()
+        {
+            foreach (var family in Families)
+                family.ModsEnabledChanged -= OnFamilyModsEnabledChanged;
+            _families.Clear();
+        }
 
         /// <summary>
         /// Checks if a mod is managed by this manager.

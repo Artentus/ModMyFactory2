@@ -1,11 +1,9 @@
 ﻿using ModMyFactory.BaseTypes;
 using ModMyFactory.Game;
 using ModMyFactory.Mods;
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.IO;
 
 namespace ModMyFactory
 {
@@ -16,42 +14,23 @@ namespace ModMyFactory
     {
         readonly List<ManagedFactorioInstance> _managedInstances;
         readonly Dictionary<AccurateVersion, ModManager> _modManagers;
-        DirectoryInfo _modDirectory;
 
         /// <summary>
         /// The list of instances being managed.
         /// </summary>
         public IReadOnlyList<ManagedFactorioInstance> ManagedInstances { get; }
 
-        /// <summary>
-        /// The managed mod directory.
-        /// </summary>
-        public DirectoryInfo ModDirectory
-        {
-            get => _modDirectory;
-            set
-            {
-                if (!string.Equals(_modDirectory.FullName, value.FullName, StringComparison.InvariantCultureIgnoreCase))
-                {
-                    _modDirectory = value;
-                    // TODO: relink all instances and managers
-                }
-            }
-        }
-
-        public Manager(DirectoryInfo modDirectory)
+        public Manager()
         {
             _managedInstances = new List<ManagedFactorioInstance>();
             ManagedInstances = new ReadOnlyCollection<ManagedFactorioInstance>(_managedInstances);
             _modManagers = new Dictionary<AccurateVersion, ModManager>();
-            _modDirectory = modDirectory;
         }
 
         ModManager GetModManager(AccurateVersion factorioVersion)
         {
             if (!_modManagers.TryGetValue(factorioVersion, out var result))
             {
-                var dir = new DirectoryInfo(Path.Combine(_modDirectory.FullName, factorioVersion.ToString()));
                 result = new ModManager(factorioVersion);
                 _modManagers.Add(factorioVersion, result);
             }

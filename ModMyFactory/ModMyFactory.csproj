@@ -44,7 +44,7 @@
   </PropertyGroup>
   
   <ItemGroup Condition="'$(TargetFramework)' == 'net472'">
-    <Reference Include="mscorlib"/>
+    <Reference Include="mscorlib" />
     <Reference Include="Microsoft.CSharp" />
 
     <Compile Remove="IO\Unix\SymlinkInfo.cs" />

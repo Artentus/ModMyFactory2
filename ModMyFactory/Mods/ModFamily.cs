@@ -6,11 +6,12 @@ namespace ModMyFactory.Mods
 {
     /// <summary>
     /// Groups mods with the same name but different version.
-    /// Only one mod in a family can be enabled at the same time.
+    /// Only one mod in a family can be enabled at a time.
     /// </summary>
     public sealed class ModFamily : ICollection<Mod>
     {
         readonly List<Mod> _mods;
+        Mod _enabledMod;
         volatile bool _raiseEvent = true;
 
         /// <summary>
@@ -28,6 +29,11 @@ namespace ModMyFactory.Mods
         /// </summary>
         public int Count => _mods.Count;
 
+        /// <summary>
+        /// The currently enabled mod of this family, or null if no mod is enabled.
+        /// </summary>
+        public Mod EnabledMod => _enabledMod;
+
         bool ICollection<Mod>.IsReadOnly => false;
 
         public ModFamily(string familyName)
@@ -40,7 +46,7 @@ namespace ModMyFactory.Mods
             : this(mod?.Name)
         {
             if (mod is null) throw new ArgumentNullException();
-            _mods.Add(mod);
+            Add(mod);
         }
 
         void OnModEnabledChanged(object sender, EventArgs e)
@@ -56,8 +62,12 @@ namespace ModMyFactory.Mods
                 }
                 _raiseEvent = true;
 
-                if (_raiseEvent) ModsEnabledChanged?.Invoke(this, EventArgs.Empty);
+                _enabledMod = senderMod;
             }
+            else if (senderMod == _enabledMod)
+                _enabledMod = null;
+
+            if (_raiseEvent) ModsEnabledChanged?.Invoke(this, EventArgs.Empty);
         }
 
         /// <summary>
@@ -67,11 +77,19 @@ namespace ModMyFactory.Mods
         {
             if (mod is null) throw new ArgumentNullException();
             if (!string.Equals(mod.Name, FamilyName, StringComparison.InvariantCulture)) throw new ArgumentException("The mod is not part of this family.");
-            if (!(mod.Family is null)) throw new InvalidOperationException("The mod is already part of another family.");
+            if (!(mod.Family is null)) throw new InvalidOperationException("The mod is already part of a family.");
 
             mod.Family = this;
-            mod.EnabledChanged += OnModEnabledChanged;
             _mods.Add(mod);
+
+            if (mod.Enabled)
+            {
+                if (_enabledMod == null)
+                    _enabledMod = mod;
+                else
+                    mod.Enabled = false;
+            }
+            mod.EnabledChanged += OnModEnabledChanged;
         }
 
         /// <summary>
@@ -86,6 +104,7 @@ namespace ModMyFactory.Mods
             {
                 mod.Family = null;
                 mod.EnabledChanged -= OnModEnabledChanged;
+                if (mod == _enabledMod) _enabledMod = null;
             }
             return result;
         }
@@ -100,6 +119,8 @@ namespace ModMyFactory.Mods
                 mod.Family = null;
                 mod.EnabledChanged -= OnModEnabledChanged;
             }
+
+            _enabledMod = null;
             _mods.Clear();
         }
 

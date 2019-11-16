@@ -68,12 +68,10 @@ namespace ModMyFactory.BaseTypes
         /// Creates a json string from this mod info.
         /// </summary>
         public string ToJson(Formatting formatting = Formatting.Indented, JsonSerializerSettings settings = null)
-        {
-            return JsonConvert.SerializeObject(this, formatting, settings);
-        }
+            => JsonConvert.SerializeObject(this, formatting, settings);
 
         /// <summary>
-        /// Saves the mod info file.
+        /// Saves a mod info file.
         /// </summary>
         public async Task SaveToFileAsync(FileInfo file, Formatting formatting = Formatting.Indented, JsonSerializerSettings settings = null)
         {
@@ -89,7 +87,7 @@ namespace ModMyFactory.BaseTypes
         }
 
         /// <summary>
-        /// Saves the mod info file.
+        /// Saves a mod info file.
         /// </summary>
         public async Task SaveToFileAsync(string fileName, Formatting formatting = Formatting.Indented, JsonSerializerSettings settings = null)
             => await SaveToFileAsync(new FileInfo(fileName), formatting, settings);
@@ -98,9 +96,7 @@ namespace ModMyFactory.BaseTypes
         /// Loads mod info from a json string.
         /// </summary>
         public static ModInfo FromJson(string json)
-        {
-            return JsonConvert.DeserializeObject<ModInfo>(json);
-        }
+            => JsonConvert.DeserializeObject<ModInfo>(json);
 
         /// <summary>
         /// Loads a mod info file.
