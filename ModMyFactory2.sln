@@ -19,8 +19,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ModMyFactory.Win32", "ModMy
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ModMyFactoryGUI", "ModMyFactoryGUI\ModMyFactoryGUI.csproj", "{D95B6C5F-83B6-4226-AC8F-198EECD04C2A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ModMyFactoryWin", "ModMyFactoryWin\ModMyFactoryWin.csproj", "{0FCE023D-FE48-4D79-87DB-A23CE819057B}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -59,10 +57,6 @@ Global
 		{D95B6C5F-83B6-4226-AC8F-198EECD04C2A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D95B6C5F-83B6-4226-AC8F-198EECD04C2A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D95B6C5F-83B6-4226-AC8F-198EECD04C2A}.Release|Any CPU.Build.0 = Release|Any CPU
-		{0FCE023D-FE48-4D79-87DB-A23CE819057B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{0FCE023D-FE48-4D79-87DB-A23CE819057B}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{0FCE023D-FE48-4D79-87DB-A23CE819057B}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{0FCE023D-FE48-4D79-87DB-A23CE819057B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

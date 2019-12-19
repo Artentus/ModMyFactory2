@@ -2,7 +2,7 @@
   
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <TargetFramework>netcoreapp3.0</TargetFramework>
+    <TargetFrameworks>netcoreapp3.0;net472</TargetFrameworks>
     <RootNamespace>ModMyFactory.Gui</RootNamespace>
     <AssemblyName>ModMyFactoryGUI</AssemblyName>
     <ApplicationIcon>Assets\MMF_Icon.ico</ApplicationIcon>
@@ -42,13 +42,27 @@
     <PackageReference Include="Avalonia" Version="0.9.1" />
     <PackageReference Include="Avalonia.Desktop" Version="0.9.1" />
     <PackageReference Include="Avalonia.ReactiveUI" Version="0.9.1" />
-    <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
     <ProjectReference Include="..\ModMyFactory.BaseTypes\ModMyFactory.BaseTypes.csproj" />
     <ProjectReference Include="..\ModMyFactory.Export\ModMyFactory.Export.csproj" />
     <ProjectReference Include="..\ModMyFactory.Localization\ModMyFactory.Localization.csproj" />
     <ProjectReference Include="..\ModMyFactory.ModSettings\ModMyFactory.ModSettings.csproj" />
     <ProjectReference Include="..\ModMyFactory\ModMyFactory.csproj" />
   </ItemGroup>
+
+  <ItemGroup Condition="'$(TargetFramework)' == 'netcoreapp3.0'">
+    <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
+  </ItemGroup>
+  <PropertyGroup Condition="'$(TargetFramework)' == 'netcoreapp3.0'">
+    <DefineConstants>$(DefineConstants);NETCORE</DefineConstants>
+  </PropertyGroup>
+
+  <ItemGroup Condition="'$(TargetFramework)' == 'net472'">
+    <Reference Include="mscorlib" />
+    <Reference Include="Microsoft.CSharp" />
+  </ItemGroup>
+  <PropertyGroup Condition="'$(TargetFramework)' == 'net472'">
+    <DefineConstants>$(DefineConstants);NETFULL</DefineConstants>
+  </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
     <DefineConstants>$(DefineConstants);DEBUG</DefineConstants>
