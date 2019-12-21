@@ -4,11 +4,11 @@ using ModMyFactoryGUI.Controls;
 
 namespace ModMyFactoryGUI.Views
 {
-    partial class MainWindow : WindowBase
+    partial class AboutWindow : WindowBase
     {
-        public MainWindow()
+        public AboutWindow()
         {
-            InitializeComponent();
+            this.InitializeComponent();
 #if DEBUG
             this.AttachDevTools();
 #endif

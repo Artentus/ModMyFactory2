@@ -3,10 +3,10 @@
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
     <TargetFrameworks>netcoreapp3.0;net472</TargetFrameworks>
-    <RootNamespace>ModMyFactory.Gui</RootNamespace>
+    <RootNamespace>ModMyFactoryGUI</RootNamespace>
     <AssemblyName>ModMyFactoryGUI</AssemblyName>
     <ApplicationIcon>Assets\MMF_Icon.ico</ApplicationIcon>
-    <StartupObject>ModMyFactory.Gui.Program</StartupObject>
+    <StartupObject>ModMyFactoryGUI.Program</StartupObject>
     <ApplicationManifest>App.manifest</ApplicationManifest>
     <Authors>Mathis Rech</Authors>
     <Product>ModMyFactory v2</Product>
@@ -35,7 +35,7 @@
     <AvaloniaResource Include="**\*.xaml">
       <SubType>Designer</SubType>
     </AvaloniaResource>
-    <AvaloniaResource Include="Assets\*" />
+    <AvaloniaResource Include="Assets\**" />
   </ItemGroup>
   
   <ItemGroup>

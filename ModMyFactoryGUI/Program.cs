@@ -1,36 +1,27 @@
 ﻿using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Dialogs;
 using Avalonia.Logging.Serilog;
 using Avalonia.ReactiveUI;
-using ModMyFactory.Gui.ViewModels;
-using ModMyFactory.Gui.Views;
 
-namespace ModMyFactory.Gui
+namespace ModMyFactoryGUI
 {
     static class Program
     {
         // Initialization code. Don't use any Avalonia, third-party APIs or any
         // SynchronizationContext-reliant code before AppMain is called: things aren't initialized
         // yet and stuff might break.
-        public static void Main(string[] args) => BuildAvaloniaApp().Start(AppMain, args);
+        public static int Main(string[] args)
+            => BuildAvaloniaApp().StartWithClassicDesktopLifetime(args, ShutdownMode.OnMainWindowClose);
 
         // Avalonia configuration, don't remove; also used by visual designer.
-        public static AppBuilder BuildAvaloniaApp()
+        static AppBuilder BuildAvaloniaApp()
             => AppBuilder.Configure<App>()
-                .UsePlatformDetect()
+#if DEBUG
                 .LogToDebug()
-                .UseReactiveUI();
-
-        // Your application's entry point. Here you can initialize your MVVM framework, DI
-        // container, etc.
-        private static void AppMain(Application app, string[] args)
-        {
-            var window = new MainWindow
-            {
-                DataContext = new MainViewModel(),
-            };
-
-            app.Run(window);
-        }
+#endif
+                .UsePlatformDetect()
+                .UseReactiveUI()
+                .UseManagedSystemDialogs();
     }
 }

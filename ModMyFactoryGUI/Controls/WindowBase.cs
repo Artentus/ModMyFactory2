@@ -1,8 +1,9 @@
 ﻿using Avalonia.Controls;
+using ModMyFactoryGUI.MVVM;
 
-namespace ModMyFactory.Gui.Views
+namespace ModMyFactoryGUI.Controls
 {
-    abstract class WindowBase : Window
+    abstract class WindowBase : Window, IView
     {
         protected WindowBase()
         {

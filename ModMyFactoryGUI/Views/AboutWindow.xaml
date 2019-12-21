@@ -1,7 +1,7 @@
-﻿<controls:WindowBase x:Class="ModMyFactoryGUI.Views.MainWindow"
+﻿<controls:WindowBase x:Class="ModMyFactoryGUI.Views.AboutWindow"
                      xmlns="https://github.com/avaloniaui"
                      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                      xmlns:controls="clr-namespace:ModMyFactoryGUI.Controls"
-                     Icon="/Assets/MMF_Icon.ico" Title="ModMyFactory GUI">
+                     Icon="/Assets/MMF_Icon.ico" Title="AboutWindow">
 
 </controls:WindowBase>
