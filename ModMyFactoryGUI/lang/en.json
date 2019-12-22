@@ -6,5 +6,131 @@
   "AboutWindowTitle": {
     "type": "string",
     "value": "About ModMyFactory GUI"
+  },
+
+  // File menu
+  "FileMenuItem": {
+    "type": "string",
+    "value": "_File"
+  },
+  "AddModsMenuItem": {
+    "type": "string",
+    "value": "Add mods"
+  },
+  "DownloadModsMenuItem": {
+    "type": "string",
+    "value": "Download mods"
+  },
+  "DownloadModsHotkey": {
+    "type": "string",
+    "value": "F7"
+  },
+  "AddModFilesMenuItem": {
+    "type": "string",
+    "value": "Add mod files"
+  },
+  "AddModFilesHotkey": {
+    "type": "string",
+    "value": "F8"
+  },
+  "NewModpackMenuItem": {
+    "type": "string",
+    "value": "New modpack"
+  },
+  "NewModpackHotkey": {
+    "type": "string",
+    "value": "Ctrl+N"
+  },
+  "CreateLinkMenuItem": {
+    "type": "string",
+    "value": "Create link"
+  },
+  "CreateLinkHotkey": {
+    "type": "string",
+    "value": "Ctrl+L"
+  },
+  "ExportModpacksMenuItem": {
+    "type": "string",
+    "value": "Export modpacks"
+  },
+  "ExportModpacksHotkey": {
+    "type": "string",
+    "value": "Ctrl+E"
+  },
+  "ImportModpacksMenuItem": {
+    "type": "string",
+    "value": "Import modpacks"
+  },
+  "ImportModpacksHotkey": {
+    "type": "string",
+    "value": "Ctrl+I"
+  },
+  "StartGameMenuItem": {
+    "type": "string",
+    "value": "Start game"
+  },
+  "StartGameHotkey": {
+    "type": "string",
+    "value": "F6"
+  },
+  "CloseMenuItem": {
+    "type": "string",
+    "value": "Close"
+  },
+  "CloseHotkey": {
+    "type": "string",
+    "value": "Alt+F4"
+  },
+
+  // Edit menu
+  "EditMenuItem": {
+    "type": "string",
+    "value": "_Edit"
+  },
+
+  // View menu
+  "ViewMenuItem": {
+    "type": "string",
+    "value": "_View"
+  },
+
+  // Language menu
+  "LanguageMenuItem": {
+    "type": "string",
+    "value": "_Language"
+  },
+
+  // Info menu
+  "InfoMenuItem": {
+    "type": "string",
+    "value": "_Info"
+  },
+  "HelpMenuItem": {
+    "type": "string",
+    "value": "Help"
+  },
+  "HelpHotkey": {
+    "type": "string",
+    "value": "F1"
+  },
+  "CheckUpdateMenuItem": {
+    "type": "string",
+    "value": "Check for Update"
+  },
+  "CheckUpdateHotkey": {
+    "type": "string",
+    "value": "F3"
+  },
+  "ThreadMenuItem": {
+    "type": "string",
+    "value": "ModMyFactory forum thread"
+  },
+  "AboutMenuItem": {
+    "type": "string",
+    "value": "About ModMyFactory GUI"
+  },
+  "AboutHotkey": {
+    "type": "string",
+    "value": "Ctrl+F1"
   }
 }

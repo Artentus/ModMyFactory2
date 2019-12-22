@@ -36,8 +36,9 @@
       <SubType>Designer</SubType>
     </AvaloniaResource>
     <AvaloniaResource Include="Assets\**" />
+    <AvaloniaResource Include="Assets\**\**" />
   </ItemGroup>
-
+  
   <ItemGroup>
     <None Update="lang\*.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

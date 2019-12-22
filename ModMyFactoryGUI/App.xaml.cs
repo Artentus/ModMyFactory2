@@ -76,8 +76,8 @@ namespace ModMyFactoryGUI
 #if DEBUG
                 .WriteTo.Debug(restrictedToMinimumLevel: LogEventLevel.Verbose)
 #endif
+                .MinimumLevel.Verbose()
                 .CreateLogger();
-
         }
 
         void LoadLocales()

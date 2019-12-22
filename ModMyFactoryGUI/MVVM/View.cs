@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ReactiveUI;
+using System;
 
 namespace ModMyFactoryGUI.MVVM
 {
@@ -10,13 +11,23 @@ namespace ModMyFactoryGUI.MVVM
         {
             var view = new TView();
             viewModel = (TViewModel)Activator.CreateInstance(typeof(TViewModel), view);
-            view.DataContext = viewModel;
+            view.ViewModel = viewModel;
+            return view;
+        }
+
+        public static TView CreateWithViewModel<TView, TViewModel>(out TViewModel viewModel, IScreen hostScreen)
+            where TView : IView, new()
+            where TViewModel : RoutableViewModelBase<TView>
+        {
+            var view = new TView();
+            viewModel = (TViewModel)Activator.CreateInstance(typeof(TViewModel), view, hostScreen);
+            view.ViewModel = viewModel;
             return view;
         }
 
         public static TViewModel ViewModel<TViewModel, TView>(this TView view)
             where TView : IView
             where TViewModel : ViewModelBase<TView>
-            => view.DataContext as TViewModel;
+            => view.ViewModel as TViewModel;
     }
 }

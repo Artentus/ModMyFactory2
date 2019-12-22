@@ -16,12 +16,15 @@ namespace ModMyFactoryGUI
 
         // Avalonia configuration, don't remove; also used by visual designer.
         static AppBuilder BuildAvaloniaApp()
-            => AppBuilder.Configure<App>()
+        {
+            return AppBuilder.Configure<App>()
 #if DEBUG
                 .LogToDebug()
 #endif
                 .UsePlatformDetect()
                 .UseReactiveUI()
                 .UseManagedSystemDialogs();
+        }
+            
     }
 }
