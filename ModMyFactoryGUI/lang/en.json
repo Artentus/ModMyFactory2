@@ -1,0 +1,10 @@
+{
+  "MainWindowTitle": {
+    "type": "string",
+    "value": "ModMyFactory GUI"
+  },
+  "AboutWindowTitle": {
+    "type": "string",
+    "value": "About ModMyFactory GUI"
+  }
+}

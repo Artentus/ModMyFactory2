@@ -1,7 +1,8 @@
 ﻿<controls:WindowBase x:Class="ModMyFactoryGUI.Views.MainWindow"
                      xmlns="https://github.com/avaloniaui"
                      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                     xmlns:l="clr-namespace:ModMyFactoryGUI.Localization"
                      xmlns:controls="clr-namespace:ModMyFactoryGUI.Controls"
-                     Icon="/Assets/MMF_Icon.ico" Title="ModMyFactory GUI">
+                     Icon="/Assets/MMF_Icon.ico" Title="{l:LocalizedResource MainWindowTitle}">
 
 </controls:WindowBase>
