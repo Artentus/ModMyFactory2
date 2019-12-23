@@ -1,4 +1,4 @@
-﻿using Avalonia;
+using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
 using ModMyFactoryGUI.Localization;
@@ -67,17 +67,23 @@ namespace ModMyFactoryGUI
             AvaloniaXamlLoader.Load(this);
         }
 
-        void InitLogger()
+        void InitLogger(IClassicDesktopStyleApplicationLifetime lifetime)
         {
-            string logFile = Path.Combine(ApplicationDataDirectory.FullName, "log.txt");
+            string logFile = Path.Combine(ApplicationDataDirectory.FullName, "logs", "log_.txt");
             Log.Logger = new LoggerConfiguration()
                 .WriteTo.Console(restrictedToMinimumLevel: LogEventLevel.Information)
-                .WriteTo.File(logFile, restrictedToMinimumLevel: LogEventLevel.Information)
+                .WriteTo.File(logFile, restrictedToMinimumLevel: LogEventLevel.Information,
+                              rollingInterval: RollingInterval.Day, retainedFileCountLimit: 7)
 #if DEBUG
                 .WriteTo.Debug(restrictedToMinimumLevel: LogEventLevel.Verbose)
 #endif
                 .MinimumLevel.Verbose()
                 .CreateLogger();
+
+            Log.Information("GUI version: {0}");
+            Log.Information("ModMyFactory version: {0}");
+
+            lifetime.Exit += (sender, e) => Log.CloseAndFlush();
         }
 
         void LoadLocales()
@@ -107,19 +113,11 @@ namespace ModMyFactoryGUI
 
         public override void OnFrameworkInitializationCompleted()
         {
-            InitLogger();
-
             if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime lifetime)
             {
-                lifetime.Exit += (sender, e) => Log.CloseAndFlush();
+                InitLogger(lifetime);
                 LoadLocales();
                 lifetime.MainWindow = View.CreateWithViewModel<MainWindow, MainWindowViewModel>(out _);
-            }
-            else
-            {
-                // This should be impossible to reach.
-                Log.Fatal("Unexpected application lifetime. Aborting.");
-                Log.CloseAndFlush();
             }
 
             base.OnFrameworkInitializationCompleted();

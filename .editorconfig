@@ -1,0 +1,13 @@
+# All files
+[*]
+indent_style = space
+indent_size = 4
+charset = utf-8
+
+# JSON files
+[*.json]
+indent_size = 2
+
+# XAML files
+[*.xaml]
+indent_size = 2

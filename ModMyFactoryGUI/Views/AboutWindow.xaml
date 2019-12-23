@@ -1,7 +1,7 @@
-﻿<Window x:Class="ModMyFactoryGUI.Views.AboutWindow"
+<Window x:Class="ModMyFactoryGUI.Views.AboutWindow"
         xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:l="clr-namespace:ModMyFactoryGUI.Localization"
         Icon="/Assets/MMF_Icon.ico" Title="{l:LocalizedResource AboutWindowTitle}">
-  
+
 </Window>

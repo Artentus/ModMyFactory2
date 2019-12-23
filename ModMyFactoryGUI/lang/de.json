@@ -1,25 +1,25 @@
 {
   "MainWindowTitle": {
     "type": "string",
-    "value": "ModMyFactory GUI"
+    "value": "ModMyFactory-GUI"
   },
   "AboutWindowTitle": {
     "type": "string",
-    "value": "About ModMyFactory GUI"
+    "value": "Über ModMyFactory-GUI"
   },
 
   // File menu
   "FileMenuItem": {
     "type": "string",
-    "value": "_File"
+    "value": "_Datei"
   },
   "AddModsMenuItem": {
     "type": "string",
-    "value": "Add mods"
+    "value": "Mods hinzufügen"
   },
   "DownloadModsMenuItem": {
     "type": "string",
-    "value": "Download mods"
+    "value": "Mods herunterladen"
   },
   "DownloadModsHotkey": {
     "type": "string",
@@ -27,7 +27,7 @@
   },
   "AddModFilesMenuItem": {
     "type": "string",
-    "value": "Add mod files"
+    "value": "Mod-Dateien hinzufügen"
   },
   "AddModFilesHotkey": {
     "type": "string",
@@ -35,39 +35,39 @@
   },
   "NewModpackMenuItem": {
     "type": "string",
-    "value": "New modpack"
+    "value": "Neues Modpack"
   },
   "NewModpackHotkey": {
     "type": "string",
-    "value": "Ctrl+N"
+    "value": "Strg+N"
   },
   "CreateLinkMenuItem": {
     "type": "string",
-    "value": "Create link"
+    "value": "Link erstellen"
   },
   "CreateLinkHotkey": {
     "type": "string",
-    "value": "Ctrl+L"
+    "value": "Strg+L"
   },
   "ExportModpacksMenuItem": {
     "type": "string",
-    "value": "Export modpacks"
+    "value": "Modpacks exportieren"
   },
   "ExportModpacksHotkey": {
     "type": "string",
-    "value": "Ctrl+E"
+    "value": "Strg+E"
   },
   "ImportModpacksMenuItem": {
     "type": "string",
-    "value": "Import modpacks"
+    "value": "Modpacks importieren"
   },
   "ImportModpacksHotkey": {
     "type": "string",
-    "value": "Ctrl+I"
+    "value": "Strg+I"
   },
   "StartGameMenuItem": {
     "type": "string",
-    "value": "Start game"
+    "value": "Spiel starten"
   },
   "StartGameHotkey": {
     "type": "string",
@@ -75,7 +75,7 @@
   },
   "CloseMenuItem": {
     "type": "string",
-    "value": "Close"
+    "value": "Schließen"
   },
   "CloseHotkey": {
     "type": "string",
@@ -85,55 +85,55 @@
   // Edit menu
   "EditMenuItem": {
     "type": "string",
-    "value": "_Edit"
+    "value": "_Bearbeiten"
   },
   "UpdateModsMenuItem": {
     "type": "string",
-    "value": "Update mods"
+    "value": "Mods aktualisieren"
   },
   "UpdateModsHotkey": {
     "type": "string",
-    "value": "Ctrl+U"
+    "value": "Strg+U"
   },
   "DependenciesMenuItem": {
     "type": "string",
-    "value": "Mod dependencies"
+    "value": "Mod-Abhängigkeiten"
   },
   "DependenciesHotkey": {
     "type": "string",
-    "value": "Ctrl+D"
+    "value": "Strg+D"
   },
 
   // View menu
   "ViewMenuItem": {
     "type": "string",
-    "value": "_View"
+    "value": "_Ansicht"
   },
   "OpenFactorioFolderMenuItem": {
     "type": "string",
-    "value": "Open Factorio folder"
+    "value": "Factorio-Ordner öffnen"
   },
   "OpenModFolderMenuItem": {
     "type": "string",
-    "value": "Open mod folder"
+    "value": "Mod-Ordner öffnen"
   },
   "OpenSavegameFolderMenuItem": {
     "type": "string",
-    "value": "Open savegame folder"
+    "value": "Spielstand-Ordner öffnen"
   },
   "OpenScenarioFolderMenuItem": {
     "type": "string",
-    "value": "Open scenario folder"
+    "value": "Szenario-Ordner öffnen"
   },
   "ThemeMenuItem": {
     "type": "string",
-    "value": "Visual theme"
+    "value": "Erscheinungsbild"
   },
 
   // Language menu
   "LanguageMenuItem": {
     "type": "string",
-    "value": "_Language"
+    "value": "_Sprache"
   },
 
   // Info menu
@@ -143,7 +143,7 @@
   },
   "HelpMenuItem": {
     "type": "string",
-    "value": "Help"
+    "value": "Hilfe"
   },
   "HelpHotkey": {
     "type": "string",
@@ -151,7 +151,7 @@
   },
   "CheckUpdateMenuItem": {
     "type": "string",
-    "value": "Check for Update"
+    "value": "Auf Aktualisierung prüfen"
   },
   "CheckUpdateHotkey": {
     "type": "string",
@@ -159,14 +159,14 @@
   },
   "ThreadMenuItem": {
     "type": "string",
-    "value": "ModMyFactory forum thread"
+    "value": "ModMyFactory-Forum"
   },
   "AboutMenuItem": {
     "type": "string",
-    "value": "About ModMyFactory GUI"
+    "value": "Über ModMyFactory-GUI"
   },
   "AboutHotkey": {
     "type": "string",
-    "value": "Ctrl+F1"
+    "value": "Strg+F1"
   }
 }

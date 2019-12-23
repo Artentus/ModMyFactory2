@@ -38,9 +38,7 @@ namespace ModMyFactoryGUI.Localization
             if (!disposed)
             {
                 disposed = true;
-
-                if (disposing)
-                    App.Current.LocaleManager.UICultureChanged -= UICultureChangedHandler;
+                App.Current.LocaleManager.UICultureChanged -= UICultureChangedHandler;
             }
         }
 

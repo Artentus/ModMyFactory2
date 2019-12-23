@@ -1,223 +1,300 @@
-﻿<Window x:Class="ModMyFactoryGUI.Views.MainWindow"
+<Window x:Class="ModMyFactoryGUI.Views.MainWindow"
         xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:l="clr-namespace:ModMyFactoryGUI.Localization"
         Icon="/Assets/MMF_Icon.ico" Title="{l:LocalizedResource MainWindowTitle}">
 
-    <DockPanel>
-      
-        <!-- Main Menu -->
-        <Menu DockPanel.Dock="Top">
+  <DockPanel>
 
-            <!-- File menu -->
-            <MenuItem Header="{l:LocalizedResource FileMenuItem}">
+    <!-- Main Menu -->
+    <Menu DockPanel.Dock="Top">
 
-              <!-- Add mods menu -->
-              <MenuItem Header="{l:LocalizedResource AddModsMenuItem}">
-                <MenuItem.Icon>
-                  <Image Source="/Assets/Icons/Add.png"/>
-                </MenuItem.Icon>
+      <!-- File menu -->
+      <MenuItem Header="{l:LocalizedResource FileMenuItem}">
 
-                <!-- Download mods -->
-                <MenuItem>
-                  <MenuItem.Header>
-                    <DockPanel>
-                      <TextBlock DockPanel.Dock="Left" Text="{l:LocalizedResource DownloadModsMenuItem}" HorizontalAlignment="Left" Margin="0,0,16,0"/>
-                      <TextBlock DockPanel.Dock="Right" Text="{l:LocalizedResource DownloadModsHotkey}" HorizontalAlignment="Right"/>
-                    </DockPanel>
-                  </MenuItem.Header>
-                  <MenuItem.Icon>
-                    <Image Source="/Assets/Icons/Download.png"/>
-                  </MenuItem.Icon>
-                </MenuItem>
+        <!-- Add mods menu -->
+        <MenuItem Header="{l:LocalizedResource AddModsMenuItem}">
+          <MenuItem.Icon>
+            <Image Source="/Assets/Icons/Add.png"/>
+          </MenuItem.Icon>
 
-                <!-- Add mod files -->
-                <MenuItem>
-                  <MenuItem.Header>
-                    <DockPanel>
-                      <TextBlock DockPanel.Dock="Left" Text="{l:LocalizedResource AddModFilesMenuItem}" HorizontalAlignment="Left" Margin="0,0,16,0"/>
-                      <TextBlock DockPanel.Dock="Right" Text="{l:LocalizedResource AddModFilesHotkey}" HorizontalAlignment="Right"/>
-                    </DockPanel>
-                  </MenuItem.Header>
-                  <MenuItem.Icon>
-                    <Image Source="/Assets/Icons/AddDocument.png"/>
-                  </MenuItem.Icon>
-                </MenuItem>
-                
-              </MenuItem>
+          <!-- Download mods -->
+          <MenuItem>
+            <MenuItem.Header>
+              <DockPanel>
+                <TextBlock DockPanel.Dock="Left" Text="{l:LocalizedResource DownloadModsMenuItem}" HorizontalAlignment="Left" Margin="0,0,16,0"/>
+                <TextBlock DockPanel.Dock="Right" Text="{l:LocalizedResource DownloadModsHotkey}" HorizontalAlignment="Right"/>
+              </DockPanel>
+            </MenuItem.Header>
+            <MenuItem.Icon>
+              <Image Source="/Assets/Icons/Download.png"/>
+            </MenuItem.Icon>
+          </MenuItem>
 
-              <!-- New modpack -->
-              <MenuItem>
-                <MenuItem.Header>
-                  <DockPanel>
-                    <TextBlock DockPanel.Dock="Left" Text="{l:LocalizedResource NewModpackMenuItem}" HorizontalAlignment="Left" Margin="0,0,16,0"/>
-                    <TextBlock DockPanel.Dock="Right" Text="{l:LocalizedResource NewModpackHotkey}" HorizontalAlignment="Right"/>
-                  </DockPanel>
-                </MenuItem.Header>
-                <MenuItem.Icon>
-                  <Image Source="/Assets/Icons/NewPackage.png"/>
-                </MenuItem.Icon>
-              </MenuItem>
+          <!-- Add mod files -->
+          <MenuItem>
+            <MenuItem.Header>
+              <DockPanel>
+                <TextBlock DockPanel.Dock="Left" Text="{l:LocalizedResource AddModFilesMenuItem}" HorizontalAlignment="Left" Margin="0,0,16,0"/>
+                <TextBlock DockPanel.Dock="Right" Text="{l:LocalizedResource AddModFilesHotkey}" HorizontalAlignment="Right"/>
+              </DockPanel>
+            </MenuItem.Header>
+            <MenuItem.Icon>
+              <Image Source="/Assets/Icons/AddDocument.png"/>
+            </MenuItem.Icon>
+          </MenuItem>
 
-              <!-- Create link -->
-              <MenuItem >
-                <MenuItem.Header>
-                  <DockPanel>
-                    <TextBlock DockPanel.Dock="Left" Text="{l:LocalizedResource CreateLinkMenuItem}" HorizontalAlignment="Left" Margin="0,0,16,0"/>
-                    <TextBlock DockPanel.Dock="Right" Text="{l:LocalizedResource CreateLinkHotkey}" HorizontalAlignment="Right"/>
-                  </DockPanel>
-                </MenuItem.Header>
-                <MenuItem.Icon>
-                  <Image Source="/Assets/Icons/Link.png"/>
-                </MenuItem.Icon>
-              </MenuItem>
+        </MenuItem>
 
-              <Separator/>
+        <!-- New modpack -->
+        <MenuItem>
+          <MenuItem.Header>
+            <DockPanel>
+              <TextBlock DockPanel.Dock="Left" Text="{l:LocalizedResource NewModpackMenuItem}" HorizontalAlignment="Left" Margin="0,0,16,0"/>
+              <TextBlock DockPanel.Dock="Right" Text="{l:LocalizedResource NewModpackHotkey}" HorizontalAlignment="Right"/>
+            </DockPanel>
+          </MenuItem.Header>
+          <MenuItem.Icon>
+            <Image Source="/Assets/Icons/NewPackage.png"/>
+          </MenuItem.Icon>
+        </MenuItem>
 
-              <!-- Export modpacks -->
-              <MenuItem>
-                <MenuItem.Header>
-                  <DockPanel>
-                    <TextBlock DockPanel.Dock="Left" Text="{l:LocalizedResource ExportModpacksMenuItem}" HorizontalAlignment="Left" Margin="0,0,16,0"/>
-                    <TextBlock DockPanel.Dock="Right" Text="{l:LocalizedResource ExportModpacksHotkey}" HorizontalAlignment="Right"/>
-                  </DockPanel>
-                </MenuItem.Header>
-                <MenuItem.Icon>
-                  <Image Source="/Assets/Icons/ExportPackage.png"/>
-                </MenuItem.Icon>
-              </MenuItem>
+        <!-- Create link -->
+        <MenuItem >
+          <MenuItem.Header>
+            <DockPanel>
+              <TextBlock DockPanel.Dock="Left" Text="{l:LocalizedResource CreateLinkMenuItem}" HorizontalAlignment="Left" Margin="0,0,16,0"/>
+              <TextBlock DockPanel.Dock="Right" Text="{l:LocalizedResource CreateLinkHotkey}" HorizontalAlignment="Right"/>
+            </DockPanel>
+          </MenuItem.Header>
+          <MenuItem.Icon>
+            <Image Source="/Assets/Icons/Link.png"/>
+          </MenuItem.Icon>
+        </MenuItem>
 
-              <!-- Import modpacks -->
-              <MenuItem>
-                <MenuItem.Header>
-                  <DockPanel>
-                    <TextBlock DockPanel.Dock="Left" Text="{l:LocalizedResource ImportModpacksMenuItem}" HorizontalAlignment="Left" Margin="0,0,16,0"/>
-                    <TextBlock DockPanel.Dock="Right" Text="{l:LocalizedResource ImportModpacksHotkey}" HorizontalAlignment="Right"/>
-                  </DockPanel>
-                </MenuItem.Header>
-                <MenuItem.Icon>
-                  <Image Source="/Assets/Icons/ImportPackage.png"/>
-                </MenuItem.Icon>
-              </MenuItem>
+        <Separator/>
 
-              <Separator/>
+        <!-- Export modpacks -->
+        <MenuItem>
+          <MenuItem.Header>
+            <DockPanel>
+              <TextBlock DockPanel.Dock="Left" Text="{l:LocalizedResource ExportModpacksMenuItem}" HorizontalAlignment="Left" Margin="0,0,16,0"/>
+              <TextBlock DockPanel.Dock="Right" Text="{l:LocalizedResource ExportModpacksHotkey}" HorizontalAlignment="Right"/>
+            </DockPanel>
+          </MenuItem.Header>
+          <MenuItem.Icon>
+            <Image Source="/Assets/Icons/ExportPackage.png"/>
+          </MenuItem.Icon>
+        </MenuItem>
 
-              <!-- Start game -->
-              <MenuItem>
-                <MenuItem.Header>
-                  <DockPanel>
-                    <TextBlock DockPanel.Dock="Left" Text="{l:LocalizedResource StartGameMenuItem}" HorizontalAlignment="Left" Margin="0,0,16,0"/>
-                    <TextBlock DockPanel.Dock="Right" Text="{l:LocalizedResource StartGameHotkey}" HorizontalAlignment="Right"/>
-                  </DockPanel>
-                </MenuItem.Header>
-                <MenuItem.Icon>
-                  <Image Source="/Assets/Icons/Run.png"/>
-                </MenuItem.Icon>
-              </MenuItem>
+        <!-- Import modpacks -->
+        <MenuItem>
+          <MenuItem.Header>
+            <DockPanel>
+              <TextBlock DockPanel.Dock="Left" Text="{l:LocalizedResource ImportModpacksMenuItem}" HorizontalAlignment="Left" Margin="0,0,16,0"/>
+              <TextBlock DockPanel.Dock="Right" Text="{l:LocalizedResource ImportModpacksHotkey}" HorizontalAlignment="Right"/>
+            </DockPanel>
+          </MenuItem.Header>
+          <MenuItem.Icon>
+            <Image Source="/Assets/Icons/ImportPackage.png"/>
+          </MenuItem.Icon>
+        </MenuItem>
 
-              <Separator/>
+        <Separator/>
 
-              <!-- Close application -->
-              <MenuItem Command="{Binding CloseCommand}">
-                <MenuItem.Header>
-                  <DockPanel>
-                    <TextBlock DockPanel.Dock="Left" Text="{l:LocalizedResource CloseMenuItem}" HorizontalAlignment="Left" Margin="0,0,16,0"/>
-                    <TextBlock DockPanel.Dock="Right" Text="{l:LocalizedResource CloseHotkey}" HorizontalAlignment="Right"/>
-                  </DockPanel>
-                </MenuItem.Header>
-                <MenuItem.Icon>
-                  <Image Source="/Assets/Icons/Close.png"/>
-                </MenuItem.Icon>
-              </MenuItem>
-              
-            </MenuItem>
+        <!-- Start game -->
+        <MenuItem>
+          <MenuItem.Header>
+            <DockPanel>
+              <TextBlock DockPanel.Dock="Left" Text="{l:LocalizedResource StartGameMenuItem}" HorizontalAlignment="Left" Margin="0,0,16,0"/>
+              <TextBlock DockPanel.Dock="Right" Text="{l:LocalizedResource StartGameHotkey}" HorizontalAlignment="Right"/>
+            </DockPanel>
+          </MenuItem.Header>
+          <MenuItem.Icon>
+            <Image Source="/Assets/Icons/Run.png"/>
+          </MenuItem.Icon>
+        </MenuItem>
 
-            <!-- Edit menu -->
-            <MenuItem Header="{l:LocalizedResource EditMenuItem}">
+        <Separator/>
 
-            </MenuItem>
+        <!-- Close application -->
+        <MenuItem Command="{Binding CloseCommand}">
+          <MenuItem.Header>
+            <DockPanel>
+              <TextBlock DockPanel.Dock="Left" Text="{l:LocalizedResource CloseMenuItem}" HorizontalAlignment="Left" Margin="0,0,16,0"/>
+              <TextBlock DockPanel.Dock="Right" Text="{l:LocalizedResource CloseHotkey}" HorizontalAlignment="Right"/>
+            </DockPanel>
+          </MenuItem.Header>
+          <MenuItem.Icon>
+            <Image Source="/Assets/Icons/Close.png"/>
+          </MenuItem.Icon>
+        </MenuItem>
 
-            <!-- View menu -->
-            <MenuItem Header="{l:LocalizedResource ViewMenuItem}">
+      </MenuItem>
 
-            </MenuItem>
+      <!-- Edit menu -->
+      <MenuItem Header="{l:LocalizedResource EditMenuItem}">
 
-            <!-- Language menu -->
-            <MenuItem Header="{l:LocalizedResource LanguageMenuItem}">
+        <!-- Update mods -->
+        <MenuItem>
+          <MenuItem.Header>
+            <DockPanel>
+              <TextBlock DockPanel.Dock="Left" Text="{l:LocalizedResource UpdateModsMenuItem}" HorizontalAlignment="Left" Margin="0,0,16,0"/>
+              <TextBlock DockPanel.Dock="Right" Text="{l:LocalizedResource UpdateModsHotkey}" HorizontalAlignment="Right"/>
+            </DockPanel>
+          </MenuItem.Header>
+          <MenuItem.Icon>
+            <Image Source="/Assets/Icons/Update.png"/>
+          </MenuItem.Icon>
+        </MenuItem>
 
-            </MenuItem>
+        <!-- Mod dependencies -->
+        <MenuItem>
+          <MenuItem.Header>
+            <DockPanel>
+              <TextBlock DockPanel.Dock="Left" Text="{l:LocalizedResource DependenciesMenuItem}" HorizontalAlignment="Left" Margin="0,0,16,0"/>
+              <TextBlock DockPanel.Dock="Right" Text="{l:LocalizedResource DependenciesHotkey}" HorizontalAlignment="Right"/>
+            </DockPanel>
+          </MenuItem.Header>
+          <MenuItem.Icon>
+            <Image Source="/Assets/Icons/Dependency.png"/>
+          </MenuItem.Icon>
+        </MenuItem>
 
-            <!-- Info menu -->
-            <MenuItem Header="{l:LocalizedResource InfoMenuItem}">
+      </MenuItem>
 
-              <!-- Help -->
-              <MenuItem>
-                <MenuItem.Header>
-                  <DockPanel>
-                    <TextBlock DockPanel.Dock="Left" Text="{l:LocalizedResource HelpMenuItem}" HorizontalAlignment="Left" Margin="0,0,16,0"/>
-                    <TextBlock DockPanel.Dock="Right" Text="{l:LocalizedResource HelpHotkey}" HorizontalAlignment="Right"/>
-                  </DockPanel>
-                </MenuItem.Header>
-                <MenuItem.Icon>
-                  <Image Source="/Assets/Icons/Help.png"/>
-                </MenuItem.Icon>
-              </MenuItem>
+      <!-- View menu -->
+      <MenuItem Header="{l:LocalizedResource ViewMenuItem}">
 
-              <!-- Check for update -->
-              <MenuItem>
-                <MenuItem.Header>
-                  <DockPanel>
-                    <TextBlock DockPanel.Dock="Left" Text="{l:LocalizedResource CheckUpdateMenuItem}" HorizontalAlignment="Left" Margin="0,0,16,0"/>
-                    <TextBlock DockPanel.Dock="Right" Text="{l:LocalizedResource CheckUpdateHotkey}" HorizontalAlignment="Right"/>
-                  </DockPanel>
-                </MenuItem.Header>
-                <MenuItem.Icon>
-                  <Image Source="/Assets/Icons/Update.png"/>
-                </MenuItem.Icon>
-              </MenuItem>
+        <!-- Open folders -->
+        <MenuItem Header="{l:LocalizedResource OpenFactorioFolderMenuItem}">
+          <MenuItem.Icon>
+            <Image Source="/Assets/Icons/OpenFolder.png"/>
+          </MenuItem.Icon>
+        </MenuItem>
+        <MenuItem Header="{l:LocalizedResource OpenModFolderMenuItem}">
+          <MenuItem.Icon>
+            <Image Source="/Assets/Icons/OpenFolder.png"/>
+          </MenuItem.Icon>
+        </MenuItem>
+        <MenuItem Header="{l:LocalizedResource OpenSavegameFolderMenuItem}">
+          <MenuItem.Icon>
+            <Image Source="/Assets/Icons/OpenFolder.png"/>
+          </MenuItem.Icon>
+        </MenuItem>
+        <MenuItem Header="{l:LocalizedResource OpenScenarioFolderMenuItem}">
+          <MenuItem.Icon>
+            <Image Source="/Assets/Icons/OpenFolder.png"/>
+          </MenuItem.Icon>
+        </MenuItem>
 
-              <Separator/>
+        <Separator/>
 
-              <!-- Web links -->
-              <MenuItem Header="factorio.com">
-                <MenuItem.Icon>
-                  <Image Source="/Assets/Icons/WebDestination.png"/>
-                </MenuItem.Icon>
-              </MenuItem>
-              <MenuItem Header="mods.factorio.com">
-                <MenuItem.Icon>
-                  <Image Source="/Assets/Icons/WebDestination.png"/>
-                </MenuItem.Icon>
-              </MenuItem>
-              <MenuItem Header="{l:LocalizedResource ThreadMenuItem}">
-                <MenuItem.Icon>
-                  <Image Source="/Assets/Icons/WebDestination.png"/>
-                </MenuItem.Icon>
-              </MenuItem>
+        <!-- Visual theme -->
+        <MenuItem Header="{l:LocalizedResource ThemeMenuItem}">
+          <MenuItem.Icon>
+            <Image Source="/Assets/Icons/Themes.png"/>
+          </MenuItem.Icon>
 
-              <Separator/>
+        </MenuItem>
 
-              <!-- About -->
-              <MenuItem Command="{Binding OpenAboutWindowCommand}">
-                <MenuItem.Header>
-                  <DockPanel>
-                    <TextBlock DockPanel.Dock="Left" Text="{l:LocalizedResource AboutMenuItem}" HorizontalAlignment="Left" Margin="0,0,16,0"/>
-                    <TextBlock DockPanel.Dock="Right" Text="{l:LocalizedResource AboutHotkey}" HorizontalAlignment="Right"/>
-                  </DockPanel>
-                </MenuItem.Header>
-                <MenuItem.Icon>
-                  <Image Source="/Assets/Icons/Information.png"/>
-                </MenuItem.Icon>
-              </MenuItem>
-            </MenuItem>
-          
-        </Menu>
-      
-        <!-- Toolbar -->
-        <Menu DockPanel.Dock="Top">
-            
-        </Menu>
-      
-    </DockPanel>
-    
+      </MenuItem>
+
+      <!-- Language menu -->
+      <MenuItem Name="LangParent" Header="{l:LocalizedResource LanguageMenuItem}" Items="{Binding AvailableCultures}">
+        <MenuItem.Styles>
+          <Style Selector="MenuItem#LangParent > MenuItem">
+            <Setter Property="Command" Value="{Binding SelectCommand}"/>
+            <Setter Property="Header">
+              <Setter.Value>
+                <Template>
+                  <CheckBox Margin="-7,0,0,0" BorderThickness="0" IsHitTestVisible="False"
+                            IsChecked="{Binding Selected}" Content="{Binding DisplayName}"/>
+                </Template>
+              </Setter.Value>
+            </Setter>
+            <Setter Property="Icon">
+              <Setter.Value>
+                <Template>
+                  <Image Source="{Binding Icon}"/>
+                </Template>
+              </Setter.Value>
+            </Setter>
+          </Style>
+        </MenuItem.Styles>
+      </MenuItem>
+
+      <!-- Info menu -->
+      <MenuItem Header="{l:LocalizedResource InfoMenuItem}">
+
+        <!-- Help -->
+        <MenuItem>
+          <MenuItem.Header>
+            <DockPanel>
+              <TextBlock DockPanel.Dock="Left" Text="{l:LocalizedResource HelpMenuItem}" HorizontalAlignment="Left" Margin="0,0,16,0"/>
+              <TextBlock DockPanel.Dock="Right" Text="{l:LocalizedResource HelpHotkey}" HorizontalAlignment="Right"/>
+            </DockPanel>
+          </MenuItem.Header>
+          <MenuItem.Icon>
+            <Image Source="/Assets/Icons/Help.png"/>
+          </MenuItem.Icon>
+        </MenuItem>
+
+        <!-- Check for update -->
+        <MenuItem>
+          <MenuItem.Header>
+            <DockPanel>
+              <TextBlock DockPanel.Dock="Left" Text="{l:LocalizedResource CheckUpdateMenuItem}" HorizontalAlignment="Left" Margin="0,0,16,0"/>
+              <TextBlock DockPanel.Dock="Right" Text="{l:LocalizedResource CheckUpdateHotkey}" HorizontalAlignment="Right"/>
+            </DockPanel>
+          </MenuItem.Header>
+          <MenuItem.Icon>
+            <Image Source="/Assets/Icons/Update.png"/>
+          </MenuItem.Icon>
+        </MenuItem>
+
+        <Separator/>
+
+        <!-- Web links -->
+        <MenuItem Header="factorio.com">
+          <MenuItem.Icon>
+            <Image Source="/Assets/Icons/WebDestination.png"/>
+          </MenuItem.Icon>
+        </MenuItem>
+        <MenuItem Header="mods.factorio.com">
+          <MenuItem.Icon>
+            <Image Source="/Assets/Icons/WebDestination.png"/>
+          </MenuItem.Icon>
+        </MenuItem>
+        <MenuItem Header="{l:LocalizedResource ThreadMenuItem}">
+          <MenuItem.Icon>
+            <Image Source="/Assets/Icons/WebDestination.png"/>
+          </MenuItem.Icon>
+        </MenuItem>
+
+        <Separator/>
+
+        <!-- About -->
+        <MenuItem Command="{Binding OpenAboutWindowCommand}">
+          <MenuItem.Header>
+            <DockPanel>
+              <TextBlock DockPanel.Dock="Left" Text="{l:LocalizedResource AboutMenuItem}" HorizontalAlignment="Left" Margin="0,0,16,0"/>
+              <TextBlock DockPanel.Dock="Right" Text="{l:LocalizedResource AboutHotkey}" HorizontalAlignment="Right"/>
+            </DockPanel>
+          </MenuItem.Header>
+          <MenuItem.Icon>
+            <Image Source="/Assets/Icons/Information.png"/>
+          </MenuItem.Icon>
+        </MenuItem>
+      </MenuItem>
+
+    </Menu>
+
+    <!-- Toolbar -->
+    <Menu DockPanel.Dock="Top">
+
+    </Menu>
+
+  </DockPanel>
+
 </Window>
