@@ -4,4 +4,23 @@
         xmlns:l="clr-namespace:ModMyFactoryGUI.Localization"
         Icon="/Assets/MMF_Icon.ico" Title="{l:LocalizedResource AboutWindowTitle}">
 
+  <Window.Resources>
+    <l:LocalizedFormatter x:Key="LocalizedFormatter"/>
+  </Window.Resources>
+
+  <Grid>
+    <Grid.RowDefinitions>
+      <RowDefinition Height="Auto"/>
+      <RowDefinition Height="Auto"/>
+      <RowDefinition Height="Auto"/>
+      <RowDefinition Height="Auto"/>
+      <RowDefinition Height="*"/>
+    </Grid.RowDefinitions>
+
+    <TextBlock Grid.Row="0" Text="{l:LocalizedResource MainWindowTitle}" Classes="h1"/>
+    <TextBlock Grid.Row="1" Text="{Binding GUIVersion, Converter={StaticResource LocalizedFormatter}, ConverterParameter=GUIVersionFormat}" Classes="muted"/>
+    <TextBlock Grid.Row="2" Text="{Binding MMFVersion, Converter={StaticResource LocalizedFormatter}, ConverterParameter=MMFVersionFormat}" Classes="muted"/>
+    
+  </Grid>
+
 </Window>

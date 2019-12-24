@@ -1,11 +1,8 @@
 {
+  // --------- Main window ---------
   "MainWindowTitle": {
     "type": "string",
     "value": "ModMyFactory GUI"
-  },
-  "AboutWindowTitle": {
-    "type": "string",
-    "value": "About ModMyFactory GUI"
   },
 
   // File menu
@@ -168,5 +165,19 @@
   "AboutHotkey": {
     "type": "string",
     "value": "Ctrl+F1"
+  },
+
+  // --------- About window ---------
+  "AboutWindowTitle": {
+    "type": "string",
+    "value": "About ModMyFactory GUI"
+  },
+  "GUIVersionFormat": {
+    "type": "string",
+    "value": "GUI version: {0}"
+  },
+  "MMFVersionFormat": {
+    "type": "string",
+    "value": "ModMyFactory version: {0}"
   }
 }

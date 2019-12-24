@@ -3,6 +3,7 @@ using ModMyFactoryGUI.Views;
 using ReactiveUI;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows.Input;
 
 namespace ModMyFactoryGUI.ViewModels
@@ -23,9 +24,14 @@ namespace ModMyFactoryGUI.ViewModels
             : base(window)
         {
             CloseCommand = ReactiveCommand.Create(AttachedView.Close);
-            
-            var aboutWindow = View.CreateWithViewModel<AboutWindow, AboutWindowViewModel>(out var viewModel);
-            OpenAboutWindowCommand = ReactiveCommand.CreateFromTask(() => aboutWindow.ShowDialog(AttachedView));
+            OpenAboutWindowCommand = ReactiveCommand.CreateFromTask(OpenAboutWindow);
+        }
+
+        async Task OpenAboutWindow()
+        {
+            var window = View.CreateWithViewModel<AboutWindow, AboutWindowViewModel>(out var viewModel);
+            await window.ShowDialog(AttachedView);
+            viewModel.Dispose();
         }
     }
 }
