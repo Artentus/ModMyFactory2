@@ -23,7 +23,7 @@
             <MenuItem.Header>
               <DockPanel>
                 <TextBlock DockPanel.Dock="Left" Text="{l:LocalizedResource DownloadModsMenuItem}" HorizontalAlignment="Left" Margin="0,0,16,0"/>
-                <TextBlock DockPanel.Dock="Right" Text="{l:LocalizedResource DownloadModsHotkey}" HorizontalAlignment="Right"/>
+                <TextBlock DockPanel.Dock="Right" Text="{l:LocalizedResource DownloadModsHotkey}" HorizontalAlignment="Right" Classes="muted"/>
               </DockPanel>
             </MenuItem.Header>
             <MenuItem.Icon>
@@ -36,7 +36,7 @@
             <MenuItem.Header>
               <DockPanel>
                 <TextBlock DockPanel.Dock="Left" Text="{l:LocalizedResource AddModFilesMenuItem}" HorizontalAlignment="Left" Margin="0,0,16,0"/>
-                <TextBlock DockPanel.Dock="Right" Text="{l:LocalizedResource AddModFilesHotkey}" HorizontalAlignment="Right"/>
+                <TextBlock DockPanel.Dock="Right" Text="{l:LocalizedResource AddModFilesHotkey}" HorizontalAlignment="Right" Classes="muted"/>
               </DockPanel>
             </MenuItem.Header>
             <MenuItem.Icon>
@@ -51,7 +51,7 @@
           <MenuItem.Header>
             <DockPanel>
               <TextBlock DockPanel.Dock="Left" Text="{l:LocalizedResource NewModpackMenuItem}" HorizontalAlignment="Left" Margin="0,0,16,0"/>
-              <TextBlock DockPanel.Dock="Right" Text="{l:LocalizedResource NewModpackHotkey}" HorizontalAlignment="Right"/>
+              <TextBlock DockPanel.Dock="Right" Text="{l:LocalizedResource NewModpackHotkey}" HorizontalAlignment="Right" Classes="muted"/>
             </DockPanel>
           </MenuItem.Header>
           <MenuItem.Icon>
@@ -64,7 +64,7 @@
           <MenuItem.Header>
             <DockPanel>
               <TextBlock DockPanel.Dock="Left" Text="{l:LocalizedResource CreateLinkMenuItem}" HorizontalAlignment="Left" Margin="0,0,16,0"/>
-              <TextBlock DockPanel.Dock="Right" Text="{l:LocalizedResource CreateLinkHotkey}" HorizontalAlignment="Right"/>
+              <TextBlock DockPanel.Dock="Right" Text="{l:LocalizedResource CreateLinkHotkey}" HorizontalAlignment="Right" Classes="muted"/>
             </DockPanel>
           </MenuItem.Header>
           <MenuItem.Icon>
@@ -79,7 +79,7 @@
           <MenuItem.Header>
             <DockPanel>
               <TextBlock DockPanel.Dock="Left" Text="{l:LocalizedResource ExportModpacksMenuItem}" HorizontalAlignment="Left" Margin="0,0,16,0"/>
-              <TextBlock DockPanel.Dock="Right" Text="{l:LocalizedResource ExportModpacksHotkey}" HorizontalAlignment="Right"/>
+              <TextBlock DockPanel.Dock="Right" Text="{l:LocalizedResource ExportModpacksHotkey}" HorizontalAlignment="Right" Classes="muted"/>
             </DockPanel>
           </MenuItem.Header>
           <MenuItem.Icon>
@@ -92,7 +92,7 @@
           <MenuItem.Header>
             <DockPanel>
               <TextBlock DockPanel.Dock="Left" Text="{l:LocalizedResource ImportModpacksMenuItem}" HorizontalAlignment="Left" Margin="0,0,16,0"/>
-              <TextBlock DockPanel.Dock="Right" Text="{l:LocalizedResource ImportModpacksHotkey}" HorizontalAlignment="Right"/>
+              <TextBlock DockPanel.Dock="Right" Text="{l:LocalizedResource ImportModpacksHotkey}" HorizontalAlignment="Right" Classes="muted"/>
             </DockPanel>
           </MenuItem.Header>
           <MenuItem.Icon>
@@ -107,7 +107,7 @@
           <MenuItem.Header>
             <DockPanel>
               <TextBlock DockPanel.Dock="Left" Text="{l:LocalizedResource StartGameMenuItem}" HorizontalAlignment="Left" Margin="0,0,16,0"/>
-              <TextBlock DockPanel.Dock="Right" Text="{l:LocalizedResource StartGameHotkey}" HorizontalAlignment="Right"/>
+              <TextBlock DockPanel.Dock="Right" Text="{l:LocalizedResource StartGameHotkey}" HorizontalAlignment="Right" Classes="muted"/>
             </DockPanel>
           </MenuItem.Header>
           <MenuItem.Icon>
@@ -122,7 +122,7 @@
           <MenuItem.Header>
             <DockPanel>
               <TextBlock DockPanel.Dock="Left" Text="{l:LocalizedResource CloseMenuItem}" HorizontalAlignment="Left" Margin="0,0,16,0"/>
-              <TextBlock DockPanel.Dock="Right" Text="{l:LocalizedResource CloseHotkey}" HorizontalAlignment="Right"/>
+              <TextBlock DockPanel.Dock="Right" Text="{l:LocalizedResource CloseHotkey}" HorizontalAlignment="Right" Classes="muted"/>
             </DockPanel>
           </MenuItem.Header>
           <MenuItem.Icon>
@@ -140,7 +140,7 @@
           <MenuItem.Header>
             <DockPanel>
               <TextBlock DockPanel.Dock="Left" Text="{l:LocalizedResource UpdateModsMenuItem}" HorizontalAlignment="Left" Margin="0,0,16,0"/>
-              <TextBlock DockPanel.Dock="Right" Text="{l:LocalizedResource UpdateModsHotkey}" HorizontalAlignment="Right"/>
+              <TextBlock DockPanel.Dock="Right" Text="{l:LocalizedResource UpdateModsHotkey}" HorizontalAlignment="Right" Classes="muted"/>
             </DockPanel>
           </MenuItem.Header>
           <MenuItem.Icon>
@@ -153,7 +153,7 @@
           <MenuItem.Header>
             <DockPanel>
               <TextBlock DockPanel.Dock="Left" Text="{l:LocalizedResource DependenciesMenuItem}" HorizontalAlignment="Left" Margin="0,0,16,0"/>
-              <TextBlock DockPanel.Dock="Right" Text="{l:LocalizedResource DependenciesHotkey}" HorizontalAlignment="Right"/>
+              <TextBlock DockPanel.Dock="Right" Text="{l:LocalizedResource DependenciesHotkey}" HorizontalAlignment="Right" Classes="muted"/>
             </DockPanel>
           </MenuItem.Header>
           <MenuItem.Icon>
@@ -191,11 +191,30 @@
         <Separator/>
 
         <!-- Visual theme -->
-        <MenuItem Header="{l:LocalizedResource ThemeMenuItem}">
+        <MenuItem Name="ThemeParent" Header="{l:LocalizedResource ThemeMenuItem}" Items="{Binding AvailableThemes}">
           <MenuItem.Icon>
             <Image Source="/Assets/Icons/Themes.png"/>
           </MenuItem.Icon>
-
+          <MenuItem.Styles>
+            <Style Selector="MenuItem#ThemeParent > MenuItem">
+              <Setter Property="Command" Value="{Binding SelectCommand}"/>
+              <Setter Property="Header">
+                <Setter.Value>
+                  <Template>
+                    <CheckBox Margin="-7,0,0,0" BorderThickness="0" IsHitTestVisible="False"
+                              IsChecked="{Binding Selected}" Content="{Binding DisplayName}"/>
+                  </Template>
+                </Setter.Value>
+              </Setter>
+              <Setter Property="Icon">
+                <Setter.Value>
+                  <Template>
+                    <Image Source="{Binding Icon}"/>
+                  </Template>
+                </Setter.Value>
+              </Setter>
+            </Style>
+          </MenuItem.Styles>
         </MenuItem>
 
       </MenuItem>
@@ -232,7 +251,7 @@
           <MenuItem.Header>
             <DockPanel>
               <TextBlock DockPanel.Dock="Left" Text="{l:LocalizedResource HelpMenuItem}" HorizontalAlignment="Left" Margin="0,0,16,0"/>
-              <TextBlock DockPanel.Dock="Right" Text="{l:LocalizedResource HelpHotkey}" HorizontalAlignment="Right"/>
+              <TextBlock DockPanel.Dock="Right" Text="{l:LocalizedResource HelpHotkey}" HorizontalAlignment="Right" Classes="muted"/>
             </DockPanel>
           </MenuItem.Header>
           <MenuItem.Icon>
@@ -245,7 +264,7 @@
           <MenuItem.Header>
             <DockPanel>
               <TextBlock DockPanel.Dock="Left" Text="{l:LocalizedResource CheckUpdateMenuItem}" HorizontalAlignment="Left" Margin="0,0,16,0"/>
-              <TextBlock DockPanel.Dock="Right" Text="{l:LocalizedResource CheckUpdateHotkey}" HorizontalAlignment="Right"/>
+              <TextBlock DockPanel.Dock="Right" Text="{l:LocalizedResource CheckUpdateHotkey}" HorizontalAlignment="Right" Classes="muted"/>
             </DockPanel>
           </MenuItem.Header>
           <MenuItem.Icon>
@@ -279,7 +298,7 @@
           <MenuItem.Header>
             <DockPanel>
               <TextBlock DockPanel.Dock="Left" Text="{l:LocalizedResource AboutMenuItem}" HorizontalAlignment="Left" Margin="0,0,16,0"/>
-              <TextBlock DockPanel.Dock="Right" Text="{l:LocalizedResource AboutHotkey}" HorizontalAlignment="Right"/>
+              <TextBlock DockPanel.Dock="Right" Text="{l:LocalizedResource AboutHotkey}" HorizontalAlignment="Right" Classes="muted"/>
             </DockPanel>
           </MenuItem.Header>
           <MenuItem.Icon>

@@ -1,4 +1,4 @@
-﻿using ModMyFactoryGUI.MVVM;
+using ModMyFactoryGUI.MVVM;
 using ModMyFactoryGUI.Views;
 using ReactiveUI;
 using System.Collections.Generic;
@@ -15,6 +15,9 @@ namespace ModMyFactoryGUI.ViewModels
 
         public IEnumerable<CultureViewModel> AvailableCultures
             => App.Current.LocaleManager.AvailableCultures.Select(c => new CultureViewModel(c));
+
+        public IEnumerable<ThemeViewModel> AvailableThemes
+            => App.Current.ThemeManager.Themes.Select(t => new ThemeViewModel(t));
 
         public MainWindowViewModel(MainWindow window)
             : base(window)

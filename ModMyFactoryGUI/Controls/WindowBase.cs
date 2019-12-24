@@ -1,4 +1,4 @@
-﻿using Avalonia.Controls;
+using Avalonia.Controls;
 using ModMyFactoryGUI.MVVM;
 
 namespace ModMyFactoryGUI.Controls
@@ -14,6 +14,7 @@ namespace ModMyFactoryGUI.Controls
         protected WindowBase()
         {
             UseLayoutRounding = true;
+            App.Current.ThemeManager.EnableThemes(this);
         }
     }
 }

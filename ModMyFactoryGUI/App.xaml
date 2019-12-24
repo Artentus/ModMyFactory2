@@ -1,11 +1,13 @@
-<avalonia:Application x:Class="ModMyFactoryGUI.App"
+<Application x:Class="ModMyFactoryGUI.App"
                       xmlns="https://github.com/avaloniaui"
-                      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                      xmlns:avalonia="clr-namespace:Avalonia;assembly=Avalonia.Controls">
+                      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
-  <avalonia:Application.Styles>
+  <Application.Styles>
     <StyleInclude Source="avares://Avalonia.Themes.Default/DefaultTheme.xaml"/>
-    <StyleInclude Source="avares://Avalonia.Themes.Default/Accents/BaseLight.xaml"/>
-  </avalonia:Application.Styles>
 
-</avalonia:Application>
+    <Style Selector="TextBlock.muted">
+      <Setter Property="Foreground" Value="{DynamicResource ThemeForegroundLowBrush}"/>
+    </Style>
+  </Application.Styles>
+
+</Application>

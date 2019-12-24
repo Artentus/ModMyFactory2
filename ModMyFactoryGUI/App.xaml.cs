@@ -1,6 +1,8 @@
 using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
+using Avalonia.ThemeManager;
+using ModMyFactory;
 using ModMyFactoryGUI.Localization;
 using ModMyFactoryGUI.Localization.Json;
 using ModMyFactoryGUI.MVVM;
@@ -17,6 +19,8 @@ namespace ModMyFactoryGUI
 {
     partial class App : Application
     {
+        public static CustomVersion Version { get; } = new CustomVersion(1, 1, 0, 0, 1, VersionCycle.Alpha, VersionBranch.Nightly);
+
         public static new App Current => Application.Current as App;
 
         public IClassicDesktopStyleApplicationLifetime Lifetime => (IClassicDesktopStyleApplicationLifetime)ApplicationLifetime;
@@ -28,6 +32,8 @@ namespace ModMyFactoryGUI
         public DirectoryInfo ApplicationDataDirectory { get; }
 
         public LocaleManager LocaleManager { get; private set; }
+
+        public IThemeSelector ThemeManager { get; private set; }
 
         DirectoryInfo GetApplicationDataDirectory()
         {
@@ -80,8 +86,8 @@ namespace ModMyFactoryGUI
                 .MinimumLevel.Verbose()
                 .CreateLogger();
 
-            Log.Information("GUI version: {0}");
-            Log.Information("ModMyFactory version: {0}");
+            Log.Information("GUI version: {0}", Version);
+            Log.Information("ModMyFactory version: {0}", StaticInfo.Version);
 
             lifetime.Exit += (sender, e) => Log.CloseAndFlush();
         }
@@ -111,12 +117,20 @@ namespace ModMyFactoryGUI
             }
         }
 
+        void LoadThemes()
+        {
+            ThemeManager = ThemeSelector.Create(Path.Combine(ApplicationDirectory.FullName, "themes"));
+            Log.Information("Themes successfully loaded. Available themes: {0}",
+                string.Join(", ", ThemeManager.Themes.Select(t => t.Name)));
+        }
+
         public override void OnFrameworkInitializationCompleted()
         {
             if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime lifetime)
             {
                 InitLogger(lifetime);
                 LoadLocales();
+                LoadThemes();
                 lifetime.MainWindow = View.CreateWithViewModel<MainWindow, MainWindowViewModel>(out _);
             }
 
