@@ -1,6 +1,6 @@
 <Style xmlns="https://github.com/avaloniaui"
-       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-       xmlns:sys="clr-namespace:System;assembly=netstandard">
+       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+  
   <Style.Resources>
 
     <Color x:Key="ThemeAccentColor">#CC119EDA</Color>
@@ -12,7 +12,6 @@
     <Color x:Key="ThemeBorderLowColor">#FFAAAAAA</Color>
     <Color x:Key="ThemeBorderMidColor">#FF888888</Color>
     <Color x:Key="ThemeBorderHighColor">#FF333333</Color>
-
 
     <Color x:Key="ThemeControlLowColor">#FF868999</Color>
     <Color x:Key="ThemeControlMidColor">#FFF5F5F5</Color>
@@ -62,13 +61,15 @@
     <SolidColorBrush x:Key="NotificationCardErrorBackgroundBrush" Color="#BD202C" Opacity="0.75"/>
 
     <Thickness x:Key="ThemeBorderThickness">1</Thickness>
-    <sys:Double x:Key="ThemeDisabledOpacity">0.5</sys:Double>
+    <x:Double x:Key="ThemeDisabledOpacity">0.5</x:Double>
 
-    <sys:Double x:Key="FontSizeSmall">10</sys:Double>
-    <sys:Double x:Key="FontSizeNormal">12</sys:Double>
-    <sys:Double x:Key="FontSizeLarge">16</sys:Double>
+    <x:Double x:Key="FontSizeSmall">10</x:Double>
+    <x:Double x:Key="FontSizeNormal">12</x:Double>
+    <x:Double x:Key="FontSizeLarge">16</x:Double>
 
-    <sys:Double x:Key="ScrollBarThickness">18</sys:Double>
-    <sys:Double x:Key="ScrollBarThumbThickness">8</sys:Double>
+    <x:Double x:Key="ScrollBarThickness">18</x:Double>
+    <x:Double x:Key="ScrollBarThumbThickness">8</x:Double>
+    
   </Style.Resources>
+  
 </Style>

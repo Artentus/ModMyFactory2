@@ -115,14 +115,16 @@ namespace ModMyFactoryGUI
                 LocaleManager = new LocaleManager();
                 Log.Warning("Language files not found.");
             }
+            // ToDo: Load selected locale from settings.
         }
 
         void LoadThemes()
         {
             var path = Path.Combine(ApplicationDirectory.FullName, "themes");
-            ThemeManager = ThemeSelector.Create(path);
+            ThemeManager = ThemeSelector.LoadSafe(path);
             Log.Information("Themes successfully loaded. Available themes: {0}",
-                string.Join(", ", ThemeManager.Themes.Select(t => t.Name)));
+                string.Join(", ", ThemeManager.Select(t => t.Name)));
+            ThemeManager.SelectedTheme = ThemeManager.First(); // ToDo: Load selected theme from settings.
         }
 
         public override void OnFrameworkInitializationCompleted()

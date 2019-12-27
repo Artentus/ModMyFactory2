@@ -58,8 +58,8 @@
     <PackageReference Include="Avalonia" Version="0.9.1" />
     <PackageReference Include="Avalonia.Desktop" Version="0.9.1" />
     <PackageReference Include="Avalonia.ReactiveUI" Version="0.9.1" />
-    <PackageReference Include="Avalonia.ThemeManager" Version="0.9.0" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
+    <PackageReference Include="ReactiveUI" Version="11.0.6" />
     <PackageReference Include="Serilog" Version="2.9.0" />
     <PackageReference Include="Serilog.Sinks.Console" Version="3.1.1" />
     <PackageReference Include="Serilog.Sinks.Debug" Version="1.0.1" />
@@ -69,10 +69,12 @@
     <ProjectReference Include="..\ModMyFactory.Localization\ModMyFactory.Localization.csproj" />
     <ProjectReference Include="..\ModMyFactory.ModSettings\ModMyFactory.ModSettings.csproj" />
     <ProjectReference Include="..\ModMyFactory\ModMyFactory.csproj" />
+    <ProjectReference Include="..\Avalonia.ThemeManager\Avalonia.ThemeManager.csproj" />
   </ItemGroup>
 
   <ItemGroup Condition="'$(TargetFramework)' == 'netcoreapp3.0'">
     <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
+    <PackageReference Include="System.Reactive" Version="4.3.2" />
   </ItemGroup>
   <PropertyGroup Condition="'$(TargetFramework)' == 'netcoreapp3.0'">
     <DefineConstants>$(DefineConstants);NETCORE</DefineConstants>

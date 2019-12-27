@@ -20,7 +20,7 @@ namespace ModMyFactoryGUI.ViewModels
             => App.Current.LocaleManager.AvailableCultures.Select(c => new CultureViewModel(c));
 
         public IEnumerable<ThemeViewModel> AvailableThemes
-            => App.Current.ThemeManager.Themes.Select(t => new ThemeViewModel(t));
+            => App.Current.ThemeManager.Select(t => new ThemeViewModel(t));
 
         public MainWindowViewModel()
         {
