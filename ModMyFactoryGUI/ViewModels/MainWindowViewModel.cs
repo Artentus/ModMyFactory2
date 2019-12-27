@@ -10,6 +10,8 @@ namespace ModMyFactoryGUI.ViewModels
 {
     sealed class MainWindowViewModel : ScreenBase<MainWindow>
     {
+        readonly AboutWindowViewModel _aboutWindowViewModel = new AboutWindowViewModel();
+
         public ICommand CloseCommand { get; }
 
         public ICommand OpenAboutWindowCommand { get; }
@@ -20,18 +22,18 @@ namespace ModMyFactoryGUI.ViewModels
         public IEnumerable<ThemeViewModel> AvailableThemes
             => App.Current.ThemeManager.Themes.Select(t => new ThemeViewModel(t));
 
-        public MainWindowViewModel(MainWindow window)
-            : base(window)
+        public MainWindowViewModel()
         {
-            CloseCommand = ReactiveCommand.Create(AttachedView.Close);
+            CloseCommand = ReactiveCommand.Create(CloseWindow);
             OpenAboutWindowCommand = ReactiveCommand.CreateFromTask(OpenAboutWindow);
         }
 
+        void CloseWindow() => AttachedView.Close();
+
         async Task OpenAboutWindow()
         {
-            var window = View.CreateWithViewModel<AboutWindow, AboutWindowViewModel>(out var viewModel);
+            var window = View.CreateAndAttach(_aboutWindowViewModel);
             await window.ShowDialog(AttachedView);
-            viewModel.Dispose();
         }
     }
 }

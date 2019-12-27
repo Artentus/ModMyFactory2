@@ -1,56 +1,28 @@
-﻿using System;
+using Avalonia.Utilities;
+using System;
 using System.ComponentModel;
 
 namespace ModMyFactoryGUI.Localization
 {
-    sealed class LocalizedResource : NotifyPropertyChangedBase, IDisposable
+    sealed class LocalizedResource : NotifyPropertyChangedBase, IWeakSubscriber<EventArgs>
     {
-        string _key;
+        public string Key { get; }
 
-        public string Key
-        {
-            get => _key;
-            set
-            {
-                _key = value;
-                OnPropertyChanged(new PropertyChangedEventArgs("Value"));
-            }
-        }
-
-        public object Value => App.Current.LocaleManager.GetResource(_key);
+        public object Value { get; private set; }
 
         public LocalizedResource(string key)
         {
-            _key = key;
-            App.Current.LocaleManager.UICultureChanged += UICultureChangedHandler;
+            Key = key;
+            Value = App.Current.LocaleManager.GetResource(Key);
+            WeakSubscriptionManager.Subscribe(App.Current.LocaleManager, nameof(LocaleManager.UICultureChanged), this);
         }
 
         void UICultureChangedHandler(object sender, EventArgs e)
         {
-            OnPropertyChanged(new PropertyChangedEventArgs("Value"));
+            Value = App.Current.LocaleManager.GetResource(Key);
+            OnPropertyChanged(new PropertyChangedEventArgs(nameof(Value)));
         }
 
-
-        bool disposed = false;
-
-        void Dispose(bool disposing)
-        {
-            if (!disposed)
-            {
-                disposed = true;
-                App.Current.LocaleManager.UICultureChanged -= UICultureChangedHandler;
-            }
-        }
-
-        ~LocalizedResource()
-        {
-           Dispose(false);
-        }
-
-        public void Dispose()
-        {
-            Dispose(true);
-            GC.SuppressFinalize(this);
-        }
+        void IWeakSubscriber<EventArgs>.OnEvent(object sender, EventArgs e) => UICultureChangedHandler(sender, e);
     }
 }

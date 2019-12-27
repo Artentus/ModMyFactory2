@@ -1,4 +1,6 @@
+using Avalonia.Utilities;
 using ModMyFactory;
+using ModMyFactoryGUI.Localization;
 using ModMyFactoryGUI.MVVM;
 using ModMyFactoryGUI.Views;
 using ReactiveUI;
@@ -6,16 +8,15 @@ using System;
 
 namespace ModMyFactoryGUI.ViewModels
 {
-    sealed class AboutWindowViewModel : ScreenBase<AboutWindow>, IDisposable
+    sealed class AboutWindowViewModel : ScreenBase<AboutWindow>, IWeakSubscriber<EventArgs>
     {
         public string GUIVersion => App.Version.ToString();
 
         public string MMFVersion => StaticInfo.Version.ToString();
 
-        public AboutWindowViewModel(AboutWindow window)
-            : base(window)
+        public AboutWindowViewModel()
         {
-            App.Current.LocaleManager.UICultureChanged += UICultureChangedHandler;
+            WeakSubscriptionManager.Subscribe(App.Current.LocaleManager, nameof(LocaleManager.UICultureChanged), this);
         }
 
         void UICultureChangedHandler(object sender, EventArgs e)
@@ -24,27 +25,6 @@ namespace ModMyFactoryGUI.ViewModels
             this.RaisePropertyChanged(nameof(MMFVersion));
         }
 
-
-        private bool disposed = false;
-
-        void Dispose(bool disposing)
-        {
-            if (!disposed)
-            {
-                disposed = true;
-                App.Current.LocaleManager.UICultureChanged -= UICultureChangedHandler;
-            }
-        }
-
-        ~AboutWindowViewModel()
-        {
-            Dispose(false);
-        }
-
-        public void Dispose()
-        {
-            Dispose(true);
-            GC.SuppressFinalize(this);
-        }
+        void IWeakSubscriber<EventArgs>.OnEvent(object sender, EventArgs e) => UICultureChangedHandler(sender, e);
     }
 }

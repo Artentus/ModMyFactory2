@@ -119,7 +119,8 @@ namespace ModMyFactoryGUI
 
         void LoadThemes()
         {
-            ThemeManager = ThemeSelector.Create(Path.Combine(ApplicationDirectory.FullName, "themes"));
+            var path = Path.Combine(ApplicationDirectory.FullName, "themes");
+            ThemeManager = ThemeSelector.Create(path);
             Log.Information("Themes successfully loaded. Available themes: {0}",
                 string.Join(", ", ThemeManager.Themes.Select(t => t.Name)));
         }
@@ -131,7 +132,10 @@ namespace ModMyFactoryGUI
                 InitLogger(lifetime);
                 LoadLocales();
                 LoadThemes();
-                lifetime.MainWindow = View.CreateWithViewModel<MainWindow, MainWindowViewModel>(out _);
+
+                var mainViewModel = new MainWindowViewModel();
+                var mainView = View.CreateAndAttach(mainViewModel);
+                lifetime.MainWindow = mainView;
             }
 
             base.OnFrameworkInitializationCompleted();

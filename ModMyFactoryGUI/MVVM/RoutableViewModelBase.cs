@@ -1,10 +1,10 @@
-﻿using ReactiveUI;
+using ReactiveUI;
 using System;
 using System.Reactive.Disposables;
 
 namespace ModMyFactoryGUI.MVVM
 {
-    abstract class RoutableViewModelBase<T> : ViewModelBase<T>, IRoutableViewModel, IActivatableViewModel where T : IView
+    abstract class RoutableViewModelBase<T> : ViewModelBase<T>, IRoutableViewModel, IActivatableViewModel where T : class, IView
     {
         public IScreen HostScreen { get; }
 
@@ -12,8 +12,7 @@ namespace ModMyFactoryGUI.MVVM
 
         public ViewModelActivator Activator { get; }
 
-        protected RoutableViewModelBase(T view, IScreen hostScreen)
-            : base(view)
+        protected RoutableViewModelBase(IScreen hostScreen)
         {
             HostScreen = hostScreen;
             UrlPathSegment = Guid.NewGuid().ToString();
@@ -26,8 +25,8 @@ namespace ModMyFactoryGUI.MVVM
             });
         }
 
-        protected RoutableViewModelBase(T view)
-            : this(view, null)
+        protected RoutableViewModelBase()
+            : this(null)
         { }
 
         protected virtual void OnActivated()

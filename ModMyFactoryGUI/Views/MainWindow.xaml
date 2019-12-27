@@ -1,6 +1,7 @@
 <Window x:Class="ModMyFactoryGUI.Views.MainWindow"
         xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:rxui="http://reactiveui.net"
         xmlns:l="clr-namespace:ModMyFactoryGUI.Localization"
         Icon="/Assets/MMF_Icon.ico" Title="{l:LocalizedResource MainWindowTitle}">
 
@@ -313,6 +314,10 @@
     <Menu DockPanel.Dock="Top">
 
     </Menu>
+
+    <rxui:RoutedViewHost DockPanel.Dock="Bottom" Router="{Binding Router}">
+      
+    </rxui:RoutedViewHost>
 
   </DockPanel>
 

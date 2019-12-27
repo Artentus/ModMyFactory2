@@ -2,7 +2,7 @@ using Avalonia.Data.Converters;
 using System;
 using System.Globalization;
 
-namespace ModMyFactoryGUI.Localization
+namespace ModMyFactoryGUI
 {
     abstract class ValueConverterBase<TSource, TTarget, TParameter> : IValueConverter
     {
