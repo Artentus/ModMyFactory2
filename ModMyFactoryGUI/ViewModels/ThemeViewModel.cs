@@ -1,5 +1,7 @@
 using Avalonia.Media.Imaging;
 using Avalonia.ThemeManager;
+using Avalonia.Utilities;
+using ModMyFactoryGUI.Localization;
 using ReactiveUI;
 using System;
 using System.IO;
@@ -7,13 +9,23 @@ using System.Windows.Input;
 
 namespace ModMyFactoryGUI.ViewModels
 {
-    sealed class ThemeViewModel : ReactiveObject, IDisposable
+    sealed class ThemeViewModel : ReactiveObject, IWeakSubscriber<EventArgs>
     {
-        static event EventHandler SelectedThemeChanged;
+        class EventManager
+        {
+            public event EventHandler SelectedThemeChanged;
+
+            public void RaiseEvent()
+                => SelectedThemeChanged?.Invoke(this, EventArgs.Empty);
+        }
+
+
+        const string ResourcePrefix = "__theme__.";
+        static readonly EventManager InternalEventManager = new EventManager();
 
         public ITheme Theme { get; }
 
-        public string DisplayName { get; }
+        public string DisplayName => (string)App.Current.LocaleManager.GetResource(ResourcePrefix + Theme.Name);
 
         public IBitmap Icon { get; }
 
@@ -24,46 +36,32 @@ namespace ModMyFactoryGUI.ViewModels
         public ThemeViewModel(ITheme theme)
         {
             Theme = theme;
-            DisplayName = theme.Name;
 
             string iconPath = Path.Combine(App.Current.ApplicationDirectory.FullName,
                 "themes", "assets", "icons", theme.Name + ".png");
             if (File.Exists(iconPath)) Icon = new Bitmap(iconPath);
 
             SelectCommand = ReactiveCommand.Create(Select);
-            SelectedThemeChanged += SelectedThemeChangedHandler;
+            WeakSubscriptionManager.Subscribe(InternalEventManager, nameof(EventManager.SelectedThemeChanged), this);
+            WeakSubscriptionManager.Subscribe(App.Current.LocaleManager, nameof(LocaleManager.UICultureChanged), this);
         }
 
         public void Select()
         {
             App.Current.ThemeManager.SelectedTheme = Theme;
-            SelectedThemeChanged?.Invoke(this, EventArgs.Empty);
+            InternalEventManager.RaiseEvent();
         }
 
-        void SelectedThemeChangedHandler(object sender, EventArgs e) => this.RaisePropertyChanged(nameof(Selected));
+        void SelectedThemeChangedHandler() => this.RaisePropertyChanged(nameof(Selected));
 
+        void UICultureChangedHandler() => this.RaisePropertyChanged(nameof(DisplayName));
 
-        private bool disposed = false;
-
-        void Dispose(bool disposing)
+        public void OnEvent(object sender, EventArgs e)
         {
-            if (!disposed)
-            {
-                disposed = true;
-                if (disposing) Icon.Dispose();
-                SelectedThemeChanged -= SelectedThemeChangedHandler;
-            }
-        }
-
-        ~ThemeViewModel()
-        {
-            Dispose(false);
-        }
-
-        public void Dispose()
-        {
-            Dispose(true);
-            GC.SuppressFinalize(this);
+            if (sender is EventManager)
+                SelectedThemeChangedHandler();
+            else if (sender is LocaleManager)
+                UICultureChangedHandler();
         }
     }
 }

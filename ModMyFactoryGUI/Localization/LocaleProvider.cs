@@ -1,4 +1,4 @@
-﻿using ModMyFactoryGUI.Helpers;
+using ModMyFactoryGUI.Helpers;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,7 +7,7 @@ namespace ModMyFactoryGUI.Localization
 {
     static class LocaleProvider
     {
-        const string DefaultCulture = "en";
+        public const string DefaultCulture = "en";
 
         class EmptyLocale : ILocale
         {

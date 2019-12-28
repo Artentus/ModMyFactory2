@@ -31,6 +31,8 @@ namespace ModMyFactoryGUI
 
         public DirectoryInfo ApplicationDataDirectory { get; }
 
+        public SettingManager Settings { get; private set; }
+
         public LocaleManager LocaleManager { get; private set; }
 
         public IThemeSelector ThemeManager { get; private set; }
@@ -73,9 +75,9 @@ namespace ModMyFactoryGUI
             AvaloniaXamlLoader.Load(this);
         }
 
-        void InitLogger(IClassicDesktopStyleApplicationLifetime lifetime)
+        void InitLogger()
         {
-            string logFile = Path.Combine(ApplicationDataDirectory.FullName, "logs", "log_.txt");
+            var logFile = Path.Combine(ApplicationDataDirectory.FullName, "logs", "log_.txt");
             Log.Logger = new LoggerConfiguration()
                 .WriteTo.Console(restrictedToMinimumLevel: LogEventLevel.Information)
                 .WriteTo.File(logFile, restrictedToMinimumLevel: LogEventLevel.Information,
@@ -88,8 +90,12 @@ namespace ModMyFactoryGUI
 
             Log.Information("GUI version: {0}", Version);
             Log.Information("ModMyFactory version: {0}", StaticInfo.Version);
+        }
 
-            lifetime.Exit += (sender, e) => Log.CloseAndFlush();
+        void LoadSettings()
+        {
+            var settingsFile = Path.Combine(ApplicationDataDirectory.FullName, "settings.json");
+            Settings = SettingManager.LoadSafe(settingsFile);
         }
 
         void LoadLocales()
@@ -102,7 +108,7 @@ namespace ModMyFactoryGUI
                 {
                     LocaleManager = new LocaleManager(localeProvider);
                     Log.Information("Language files successfully loaded. Available languages: {0}",
-                        string.Join(", ", LocaleManager.AvailableCultures.Select(c => c.TwoLetterISOLanguageName)));
+                        string.Join(", ", LocaleManager.AvailableCultures.Select(c => c.EnglishName)));
                 }
                 catch (LocaleException ex)
                 {
@@ -115,25 +121,73 @@ namespace ModMyFactoryGUI
                 LocaleManager = new LocaleManager();
                 Log.Warning("Language files not found.");
             }
-            // ToDo: Load selected locale from settings.
+
+            var cultureName = Settings.Get(SettingName.UICulture, LocaleProvider.DefaultCulture);
+            var selectedCulture = LocaleManager.AvailableCultures.Where(c => string.Equals(c.TwoLetterISOLanguageName, cultureName)).FirstOrDefault();
+            if (selectedCulture is null)
+            {
+                Log.Warning("Language '{0}' not available, reverting to default.", cultureName);
+                selectedCulture = LocaleManager.DefaultCulture;
+                Settings.Set(SettingName.UICulture, selectedCulture.TwoLetterISOLanguageName);
+            }
+            else
+            {
+                Log.Information("Language set to {0}.", selectedCulture.EnglishName);
+            }
+            LocaleManager.UICulture = selectedCulture;
+            LocaleManager.UICultureChanged += (sender, e) =>
+            {
+                Settings.Set(SettingName.UICulture, LocaleManager.UICulture.TwoLetterISOLanguageName);
+                Settings.Save();
+            };
         }
 
         void LoadThemes()
         {
-            var path = Path.Combine(ApplicationDirectory.FullName, "themes");
-            ThemeManager = ThemeSelector.LoadSafe(path);
+            var themeDir = Path.Combine(ApplicationDirectory.FullName, "themes");
+            ThemeManager = ThemeSelector.LoadSafe(themeDir);
             Log.Information("Themes successfully loaded. Available themes: {0}",
                 string.Join(", ", ThemeManager.Select(t => t.Name)));
-            ThemeManager.SelectedTheme = ThemeManager.First(); // ToDo: Load selected theme from settings.
+
+            var themeName = Settings.Get(SettingName.Theme, ThemeManager.First().Name);
+            if (!ThemeManager.SelectTheme(themeName))
+            {
+                Log.Warning("Theme '{0}' not available, reverting to default.", themeName);
+                ThemeManager.SelectedTheme = ThemeManager.First();
+                Settings.Set(SettingName.Theme, ThemeManager.SelectedTheme.Name);
+            }
+            else
+            {
+                Log.Information("Theme set to {0}.", themeName);
+            }
+
+            ThemeManager.PropertyChanged += (sender, e) =>
+            {
+                if (e.PropertyName == nameof(ThemeSelector.SelectedTheme))
+                {
+                    Settings.Set(SettingName.Theme, ThemeManager.SelectedTheme.Name);
+                    Settings.Save();
+                }
+            };
+        }
+
+        void OnExit(object sender, ControlledApplicationLifetimeExitEventArgs e)
+        {
+            Settings.Save();
+            Log.CloseAndFlush();
         }
 
         public override void OnFrameworkInitializationCompleted()
         {
             if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime lifetime)
             {
-                InitLogger(lifetime);
+                InitLogger();
+                LoadSettings();
                 LoadLocales();
                 LoadThemes();
+
+                Settings.Save();
+                lifetime.Exit += OnExit;
 
                 var mainViewModel = new MainWindowViewModel();
                 var mainView = View.CreateAndAttach(mainViewModel);

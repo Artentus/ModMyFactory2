@@ -179,5 +179,23 @@
   "MMFVersionFormat": {
     "type": "string",
     "value": "ModMyFactory-Version: {0}"
+  },
+
+  // --------- Visual theme names ---------
+  "__theme__.Light": {
+    "type": "string",
+    "value": "Hell"
+  },
+  "__theme__.Dark": {
+    "type": "string",
+    "value": "Dunkel"
+  },
+  "__theme__.BaseLight": {
+    "type": "string",
+    "value": "Hell"
+  },
+  "__theme__.BaseDark": {
+    "type": "string",
+    "value": "Dunkel"
   }
 }

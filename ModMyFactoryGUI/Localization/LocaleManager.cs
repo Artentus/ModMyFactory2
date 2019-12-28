@@ -39,7 +39,7 @@ namespace ModMyFactoryGUI.Localization
         }
 
         public LocaleManager(ILocaleProvider localeProvider)
-            : this(localeProvider, CultureInfo.GetCultureInfo("en"))
+            : this(localeProvider, CultureInfo.GetCultureInfo(LocaleProvider.DefaultCulture))
         { }
 
         public LocaleManager()
