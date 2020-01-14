@@ -1,18 +1,25 @@
-﻿using Avalonia;
+using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Dialogs;
 using Avalonia.Logging.Serilog;
 using Avalonia.ReactiveUI;
+using CommandLine;
+using CommandLine.Text;
+using ModMyFactoryGUI.CommandLine;
+using ModMyFactoryGUI.Helpers;
+using System;
 
 namespace ModMyFactoryGUI
 {
     static class Program
     {
-        // Initialization code. Don't use any Avalonia, third-party APIs or any
-        // SynchronizationContext-reliant code before AppMain is called: things aren't initialized
-        // yet and stuff might break.
-        public static int Main(string[] args)
-            => BuildAvaloniaApp().StartWithClassicDesktopLifetime(args, ShutdownMode.OnMainWindowClose);
+        public const int NoError = 0;
+        public const int GeneralError = 1;
+
+        static int StartGame(StartGameOptions options)
+        {
+            return NoError;
+        }
 
         // Avalonia configuration, don't remove; also used by visual designer.
         static AppBuilder BuildAvaloniaApp()
@@ -25,6 +32,40 @@ namespace ModMyFactoryGUI
                 .UseReactiveUI()
                 .UseManagedSystemDialogs();
         }
-            
+
+        static int StartApp(string[] args, OptionsBase options)
+        {
+            return BuildAvaloniaApp().StartWithClassicDesktopLifetime(args, ShutdownMode.OnMainWindowClose);
+        }
+
+        static HelpText ConfigureHelpText(HelpText helpText)
+        {
+            helpText.AdditionalNewLineAfterOption = false;
+            return helpText;
+        }
+
+        // Initialization code. Don't use any Avalonia, third-party APIs or any
+        // SynchronizationContext-reliant code before AppMain is called: things aren't initialized
+        // yet and stuff might break.
+        public static int Main(string[] args)
+        {
+            bool hasConsole = ConsoleHelper.TryAttachConsole(out var consoleHandle);
+            var parser = new Parser(config =>
+            {
+                config.CaseSensitive = false;
+                config.HelpWriter = Console.Out;
+            });
+
+            var parsedOptions = Parser.Default.ParseArguments<RunOptions, StartGameOptions>(args);
+            var helpText = HelpText.AutoBuild(parsedOptions, ConfigureHelpText, e => e);
+
+            int result = parsedOptions.MapResult(
+                (RunOptions opts) => StartApp(args, opts),
+                (StartGameOptions opts) => StartGame(opts),
+                errs => GeneralError);
+
+            if (hasConsole) ConsoleHelper.FreeConsole(consoleHandle);
+            return result;
+        }
     }
 }

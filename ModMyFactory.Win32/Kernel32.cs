@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.IO;
 using System.Runtime.ConstrainedExecution;
 using System.Runtime.InteropServices;
@@ -83,6 +83,12 @@ namespace ModMyFactory.Win32
                 Marshal.ThrowExceptionForHR(hResult);
             }
         }
+
+        /// <summary>
+        /// Gets the window handle of the calling process' console window.
+        /// </summary>
+        [DllImport("kernel32.dll")]
+        public static extern IntPtr GetConsoleWindow();
 
         #endregion
 

@@ -1,5 +1,4 @@
 using Avalonia.Utilities;
-using ModMyFactory;
 using ModMyFactoryGUI.Localization;
 using ModMyFactoryGUI.MVVM;
 using ModMyFactoryGUI.Views;
@@ -10,9 +9,9 @@ namespace ModMyFactoryGUI.ViewModels
 {
     sealed class AboutWindowViewModel : ScreenBase<AboutWindow>, IWeakSubscriber<EventArgs>
     {
-        public string GUIVersion => App.Version.ToString();
+        public string GUIVersion => App.GUIVersion;
 
-        public string MMFVersion => StaticInfo.Version.ToString();
+        public string MMFVersion => App.MMFVersion;
 
         public AboutWindowViewModel()
         {

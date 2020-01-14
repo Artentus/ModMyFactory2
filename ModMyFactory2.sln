@@ -24,9 +24,12 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{6B407FCB-44CF-464B-B86E-6D5A494316E9}"
 	ProjectSection(SolutionItems) = preProject
 		.editorconfig = .editorconfig
+		constants.targets = constants.targets
+		package.targets = package.targets
+		references.targets = references.targets
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Avalonia.ThemeManager", "Avalonia.ThemeManager\Avalonia.ThemeManager.csproj", "{7C16015B-E6C0-4A2F-B22B-1BE471DA080C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Avalonia.ThemeManager", "Avalonia.ThemeManager\Avalonia.ThemeManager.csproj", "{7C16015B-E6C0-4A2F-B22B-1BE471DA080C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

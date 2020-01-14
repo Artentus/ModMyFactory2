@@ -1,27 +1,31 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
+  <Import Project="..\package.targets" />
+  <Import Project="..\constants.targets" />
+  <Import Project="..\references.targets" />
 
   <PropertyGroup>
     <TargetFrameworks>netstandard2.0;netcoreapp3.0;net472</TargetFrameworks>
     <RootNamespace>ModMyFactory</RootNamespace>
     <AssemblyName>ModMyFactory</AssemblyName>
-    <Authors>Mathis Rech</Authors>
-    <Product>ModMyFactory v2</Product>
-    <Copyright>Copyright (C) 2019 Mathis Rech</Copyright>
-    <PackageLicenseFile>License.md</PackageLicenseFile>
-    <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
-    <RepositoryUrl>https://github.com/Artentus/ModMyFactory2</RepositoryUrl>
-    <PackageProjectUrl>https://github.com/Artentus/ModMyFactory2</PackageProjectUrl>
-    <NeutralLanguage>en</NeutralLanguage>
-    <AssemblyVersion>2.0.1.0</AssemblyVersion>
-    <FileVersion>0.1.0.0</FileVersion>
-  </PropertyGroup>
 
-  <ItemGroup>
-    <None Include="..\License.md">
-      <Pack>True</Pack>
-      <PackagePath></PackagePath>
-    </None>
-  </ItemGroup>
+    <!-- Major.Minor.Patch.Build -->
+    <!-- Build is never reset -->
+    <VersionPrefix>1.0.0.1</VersionPrefix>
+
+    <!-- One of either 'beta', 'nightly' or empty for stable -->
+    <!-- 
+      stable: Build is ready for general use
+      beta: Build is functional but may be unstable
+      nightly: In development, functionality not guaranteed
+    -->
+    <VersionSuffix>nightly</VersionSuffix>
+
+    <!-- 2.0 -->
+    <AssemblyVersion>2.0</AssemblyVersion>
+
+    <!-- Same as VersionPrefix -->
+    <FileVersion>1.0.0.1</FileVersion>
+  </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
@@ -36,30 +40,12 @@
 
   <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0' OR '$(TargetFramework)' == 'netcoreapp3.0'">
     <PackageReference Include="Mono.Posix.NETStandard" Version="1.0.0" />
-    <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
     <PackageReference Include="Microsoft.Win32.Registry" Version="4.7.0" />
   </ItemGroup>
-  <PropertyGroup Condition="'$(TargetFramework)' == 'netstandard2.0' OR '$(TargetFramework)' == 'netcoreapp3.0'">
-    <DefineConstants>$(DefineConstants);NETCORE</DefineConstants>
-  </PropertyGroup>
   
   <ItemGroup Condition="'$(TargetFramework)' == 'net472'">
-    <Reference Include="mscorlib" />
-    <Reference Include="Microsoft.CSharp" />
-
     <Compile Remove="IO\Unix\SymlinkInfo.cs" />
     <None Include="IO\Unix\SymlinkInfo.cs" />
   </ItemGroup>
-  <PropertyGroup Condition="'$(TargetFramework)' == 'net472'">
-    <DefineConstants>$(DefineConstants);NETFULL</DefineConstants>
-  </PropertyGroup>
-  
-  <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
-    <DefineConstants>$(DefineConstants);DEBUG</DefineConstants>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)' == 'Release'">
-    <GenerateDocumentationFile>true</GenerateDocumentationFile>
-    <DefineConstants>$(DefineConstants);RELEASE</DefineConstants>
-  </PropertyGroup>
 
 </Project>

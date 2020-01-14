@@ -1,47 +1,19 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
+  <Import Project="..\package.targets" />
+  <Import Project="..\constants.targets" />
+  <Import Project="..\references.targets" />
 
   <PropertyGroup>
     <TargetFrameworks>netstandard2.0;netcoreapp3.0;net472</TargetFrameworks>
     <RootNamespace>ModMyFactory.ModSettings</RootNamespace>
     <AssemblyName>ModMyFactory.ModSettings</AssemblyName>
-    <Authors>Mathis Rech</Authors>
-    <Product>ModMyFactory v2</Product>
-    <Copyright>Copyright (C) 2019 Mathis Rech</Copyright>
-    <PackageLicenseFile>License.md</PackageLicenseFile>
-    <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
-    <RepositoryUrl>https://github.com/Artentus/ModMyFactory2</RepositoryUrl>
-    <PackageProjectUrl>https://github.com/Artentus/ModMyFactory2</PackageProjectUrl>
-    <NeutralLanguage>en</NeutralLanguage>
     <AssemblyVersion>2.0.1.0</AssemblyVersion>
     <FileVersion>0.1.0.0</FileVersion>
   </PropertyGroup>
-
-  <ItemGroup>
-    <None Include="..\License.md">
-      <Pack>True</Pack>
-      <PackagePath></PackagePath>
-    </None>
-  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
     <ProjectReference Include="..\ModMyFactory.BaseTypes\ModMyFactory.BaseTypes.csproj" />
   </ItemGroup>
 
-  <PropertyGroup Condition="'$(TargetFramework)' == 'netstandard2.0' OR '$(TargetFramework)' == 'netcoreapp3.0'">
-    <DefineConstants>$(DefineConstants);NETCORE</DefineConstants>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(TargetFramework)' == 'net472'">
-    <DefineConstants>$(DefineConstants);NETFULL</DefineConstants>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
-    <DefineConstants>$(DefineConstants);DEBUG</DefineConstants>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)' == 'Release'">
-    <GenerateDocumentationFile>true</GenerateDocumentationFile>
-    <DefineConstants>$(DefineConstants);RELEASE</DefineConstants>
-  </PropertyGroup>
-  
 </Project>

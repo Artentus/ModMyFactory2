@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "ModMyFactoryGUI": {
+      "commandName": "Project",
+      "commandLineArgs": "run"
+    }
+  }
+}

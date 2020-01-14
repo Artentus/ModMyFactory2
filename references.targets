@@ -1,0 +1,12 @@
+<Project>
+
+    <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0' OR '$(TargetFramework)' == 'netcoreapp3.0'">
+        <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
+    </ItemGroup>
+
+    <ItemGroup Condition="'$(TargetFramework)' == 'net472'">
+        <Reference Include="mscorlib" />
+        <Reference Include="Microsoft.CSharp" />
+    </ItemGroup>
+
+</Project>
