@@ -10,6 +10,9 @@ branches:
 platform: Any CPU
 configuration: Release
 
+before_build:
+  - nuget restore
+
 build:
   project: 'ModMyFactory.BaseTypes\ModMyFactory.BaseTypes.csproj'
 
