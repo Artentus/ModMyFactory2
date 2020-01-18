@@ -33,8 +33,8 @@
     <ProjectReference Include="..\ModMyFactory.BaseTypes\ModMyFactory.BaseTypes.csproj" />
     <ProjectReference Include="..\ModMyFactory.Export\ModMyFactory.Export.csproj" />
     <ProjectReference Include="..\ModMyFactory.Localization\ModMyFactory.Localization.csproj" />
-    <ProjectReference Include="..\ModMyFactory.WebApi\ModMyFactory.WebApi.csproj" />
     <ProjectReference Include="..\ModMyFactory.ModSettings\ModMyFactory.ModSettings.csproj" />
+    <ProjectReference Include="..\ModMyFactory.WebApi\ModMyFactory.WebApi.csproj" />
     <ProjectReference Include="..\ModMyFactory.Win32\ModMyFactory.Win32.csproj" />
   </ItemGroup>
 
