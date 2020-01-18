@@ -11,7 +11,7 @@ platform: Any CPU
 configuration: Release
 
 before_build:
-  - nuget restore
+  - nuget restore 'ModMyFactory.BaseTypes\ModMyFactory.BaseTypes.csproj'
 
 build:
   project: 'ModMyFactory.BaseTypes\ModMyFactory.BaseTypes.csproj'
