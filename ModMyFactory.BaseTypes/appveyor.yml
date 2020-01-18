@@ -11,7 +11,7 @@ platform: Any CPU
 configuration: Release
 
 before_build:
-  - nuget restore '..\ModMyFactory.BaseTypes\ModMyFactory.BaseTypes.csproj'
+  - nuget restore
 
 build:
   project: 'ModMyFactory.BaseTypes\ModMyFactory.BaseTypes.csproj'
@@ -24,3 +24,7 @@ dotnet_csproj:
   assembly_version: '2.0'
   file_version: '{version}'
   informational_version: '{version}'
+
+cache:
+  - '%userprofile%\.nuget\packages'
+  - '%LocalAppData%\NuGet\v3-cache'
