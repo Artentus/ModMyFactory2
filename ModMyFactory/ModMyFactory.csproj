@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <Import Project="..\package.targets" />
   <Import Project="..\constants.targets" />
   <Import Project="..\references.targets" />
@@ -7,35 +7,23 @@
     <TargetFrameworks>netstandard2.0;netcoreapp3.0;net472</TargetFrameworks>
     <RootNamespace>ModMyFactory</RootNamespace>
     <AssemblyName>ModMyFactory</AssemblyName>
+    <Description>Feature-rich mod manager API for the game Factorio.</Description>
 
-    <!-- Major.Minor.Patch.Build -->
-    <!-- Build is never reset -->
-    <VersionPrefix>1.0.0.1</VersionPrefix>
-
-    <!-- One of either 'beta', 'nightly' or empty for stable -->
-    <!-- 
-      stable: Build is ready for general use
-      beta: Build is functional but may be unstable
-      nightly: In development, functionality not guaranteed
-    -->
-    <VersionSuffix>nightly</VersionSuffix>
-
-    <!-- 2.0 -->
+    <Version Condition="'$(VersionSuffix)' != ''">$(VersionSuffix)</Version>
+    <Version Condition="'$(VersionSuffix)' == ''">0.0.0.0</Version>
     <AssemblyVersion>2.0</AssemblyVersion>
-
-    <!-- Same as VersionPrefix -->
-    <FileVersion>1.0.0.1</FileVersion>
+    <FileVersion>$(Version)</FileVersion>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
     <PackageReference Include="sharpcompress" Version="0.24.0" />
-    <ProjectReference Include="..\ModMyFactory.BaseTypes\ModMyFactory.BaseTypes.csproj" />
-    <ProjectReference Include="..\ModMyFactory.Export\ModMyFactory.Export.csproj" />
-    <ProjectReference Include="..\ModMyFactory.Localization\ModMyFactory.Localization.csproj" />
-    <ProjectReference Include="..\ModMyFactory.ModSettings\ModMyFactory.ModSettings.csproj" />
-    <ProjectReference Include="..\ModMyFactory.WebApi\ModMyFactory.WebApi.csproj" />
-    <ProjectReference Include="..\ModMyFactory.Win32\ModMyFactory.Win32.csproj" />
+    <PackageReference Include="ModMyFactory.BaseTypes" Version="1.0.0.3-alpha" />
+    <PackageReference Include="ModMyFactory.Export" Version="1.0.0.1-alpha" />
+    <PackageReference Include="ModMyFactory.Localization" Version="1.0.0.1-alpha" />
+    <PackageReference Include="ModMyFactory.ModSettings" Version="1.0.0.1-alpha" />
+    <PackageReference Include="ModMyFactory.WebApi" Version="1.0.0.1-alpha" />
+    <PackageReference Include="ModMyFactory.Win32" Version="1.0.0.1-alpha" />
   </ItemGroup>
 
   <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0' OR '$(TargetFramework)' == 'netcoreapp3.0'">
