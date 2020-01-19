@@ -27,10 +27,8 @@ dotnet_csproj:
   patch: true
   file: 'ModMyFactory.BaseTypes\ModMyFactory.BaseTypes.csproj'
   version: '{version}'
-  package_version: '{version}'
-  assembly_version: '2.0'
   file_version: '{version}'
-  informational_version: '{version}'
+  package_version: '{version}'
 
 cache:
   - '%userprofile%\.nuget\packages'
