@@ -24,3 +24,11 @@ cache:
 artifacts:
   path: '**\*.nupkg'
   name: Packages
+
+deploy:
+- provider: NuGet
+  api_key:
+    secure: KA2qkfEDg1TjBRCavKySQnRwcN7h+QZN/IaUM8TTBkWiQUuCs9o28hAVBd/o++q6
+  artifact: 'Packages'
+  on:
+    APPVEYOR_REPO_TAG: true

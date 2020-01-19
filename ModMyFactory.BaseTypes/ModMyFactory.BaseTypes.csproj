@@ -9,7 +9,7 @@
     <AssemblyName>ModMyFactory.BaseTypes</AssemblyName>
 
     <Version Condition="'$(VersionSuffix)' != ''">$(VersionSuffix)</Version>
-    <Version Condition="'$(VersionSuffix)' == ''">0.0.0</Version>
+    <Version Condition="'$(VersionSuffix)' == ''">0.0.0.0</Version>
     <AssemblyVersion>2.0</AssemblyVersion>
     <FileVersion>$(Version)</FileVersion>
   </PropertyGroup>
