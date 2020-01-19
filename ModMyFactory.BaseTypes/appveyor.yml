@@ -7,6 +7,10 @@ branches:
   only:
     - master
 
+only_commits:
+  files:
+    - 'ModMyFactory.BaseTypes\'
+
 platform: Any CPU
 configuration: Release
 
@@ -15,6 +19,9 @@ before_build:
 
 build:
   project: 'ModMyFactory.BaseTypes\ModMyFactory.BaseTypes.csproj'
+
+after_build:
+  - dotnet pack ModMyFactory.BaseTypes\ -c Release
 
 dotnet_csproj:
   patch: true
@@ -28,3 +35,7 @@ dotnet_csproj:
 cache:
   - '%userprofile%\.nuget\packages'
   - '%LocalAppData%\NuGet\v3-cache'
+
+artifacts:
+  path: 'ModMyFactory.BaseTypes\bin\Releaseß*.nupkg'
+  name: Packages
