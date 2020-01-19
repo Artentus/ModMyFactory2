@@ -11,12 +11,6 @@ only_commits:
   files:
     - 'ModMyFactory.BaseTypes\'
 
-platform: Any CPU
-configuration: Release
-
-before_build:
-  - nuget restore
-  
 build_script:
   - dotnet build ModMyFactory.BaseTypes\ -c Release --version-suffix %APPVEYOR_BUILD_VERSION%
 
