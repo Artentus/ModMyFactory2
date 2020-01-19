@@ -1,7 +1,7 @@
 image: Visual Studio 2019
 shallow_clone: true
 
-version: 1.0.0.{build}
+version: 1.0.0.{build}-alpha
 
 branches:
   only:
