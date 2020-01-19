@@ -16,18 +16,12 @@ configuration: Release
 
 before_build:
   - nuget restore
-
-build:
-  project: 'ModMyFactory.BaseTypes\ModMyFactory.BaseTypes.csproj'
+  
+build_script:
+  - dotnet build ModMyFactory.BaseTypes\ -c Release --version-suffix %APPVEYOR_BUILD_VERSION%
 
 after_build:
-  - dotnet pack ModMyFactory.BaseTypes\ -c Release
-
-dotnet_csproj:
-  patch: true
-  file: 'ModMyFactory.BaseTypes\ModMyFactory.BaseTypes.csproj'
-  version: '{version}'
-  package_version: '{version}'
+  - dotnet pack ModMyFactory.BaseTypes\ -c Release --version-suffix %APPVEYOR_BUILD_VERSION%
 
 cache:
   - '%userprofile%\.nuget\packages'

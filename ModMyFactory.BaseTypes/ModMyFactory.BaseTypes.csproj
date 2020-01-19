@@ -8,11 +8,9 @@
     <RootNamespace>ModMyFactory.BaseTypes</RootNamespace>
     <AssemblyName>ModMyFactory.BaseTypes</AssemblyName>
 
+    <Version Condition="'$(VersionSuffix)' != ''">$(VersionSuffix)</Version>
+    <Version Condition="'$(VersionSuffix)' == ''">0.0.0</Version>
     <AssemblyVersion>2.0</AssemblyVersion>
-    <!-- Placeholders required for AppVeyor -->
-    <Version>1.0.0.0</Version>
-    <FileVersion>$(VersionPrefix)</FileVersion>
-    <PackageVersion>1.0.0.0</PackageVersion>
   </PropertyGroup>
 
   <ItemGroup>
