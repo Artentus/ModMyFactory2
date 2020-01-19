@@ -28,5 +28,5 @@ cache:
   - '%LocalAppData%\NuGet\v3-cache'
 
 artifacts:
-  path: 'ModMyFactory.BaseTypes\bin\AnyCPU\Release\*.nupkg'
+  path: '**\*.nupkg'
   name: Packages
