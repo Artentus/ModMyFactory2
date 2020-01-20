@@ -17,8 +17,8 @@ build_script:
   - dotnet publish ModMyFactoryGUI\ -c Release -f net472 --version-suffix %APPVEYOR_BUILD_VERSION%
 
 after_build:
-  - 7z a mmf_%APPVEYOR_BUILD_VERSION%_netcoreapp3.0.zip ModMyFactoryGUI\bin\Release\netcoreapp3.0\publish\
-  - 7z a mmf_%APPVEYOR_BUILD_VERSION%_net472.zip ModMyFactoryGUI\bin\Release\net472\publish\
+  - 7z a mmf_%APPVEYOR_BUILD_VERSION%_netcoreapp3.0.zip .\ModMyFactoryGUI\bin\Release\netcoreapp3.0\publish\*
+  - 7z a mmf_%APPVEYOR_BUILD_VERSION%_net472.zip .\ModMyFactoryGUI\bin\Release\net472\publish\*
 
 cache:
   - '%userprofile%\.nuget\packages'
