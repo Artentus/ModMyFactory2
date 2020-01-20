@@ -8,10 +8,6 @@ branches:
   only:
     - master
 
-skip_commits:
-  files:
-    - '**\*.yml'
-
 build_script:
   - dotnet publish ModMyFactoryGUI\ -c Release -f netcoreapp3.0 --version-suffix %APPVEYOR_BUILD_VERSION%
   - dotnet publish ModMyFactoryGUI\ -c Release -f net472 --version-suffix %APPVEYOR_BUILD_VERSION%
