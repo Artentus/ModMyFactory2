@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <Import Project="..\package.targets" />
   <Import Project="..\constants.targets" />
   <Import Project="..\references.targets" />
@@ -11,24 +11,11 @@
     <ApplicationIcon>Assets\MMF_Icon.ico</ApplicationIcon>
     <StartupObject>ModMyFactoryGUI.Program</StartupObject>
     <ApplicationManifest>App.manifest</ApplicationManifest>
-    
-    <!-- Major.Minor.Patch.Build -->
-    <!-- Build is never reset -->
-    <VersionPrefix>1.0.0.1</VersionPrefix>
-    
-    <!-- One of either 'beta', 'nightly' or empty for stable -->
-    <!-- 
-      stable: Build is ready for general use
-      beta: Build is functional but may be unstable
-      nightly: In development, functionality not guaranteed
-    -->
-    <VersionSuffix>nightly</VersionSuffix>
 
-    <!-- Major.0 -->
+    <Version Condition="'$(VersionSuffix)' != ''">$(VersionSuffix)</Version>
+    <Version Condition="'$(VersionSuffix)' == ''">0.0.0.0</Version>
     <AssemblyVersion>1.0</AssemblyVersion>
-
-    <!-- Same as VersionPrefix -->
-    <FileVersion>1.0.0.1</FileVersion>
+    <FileVersion>$(Version)</FileVersion>
   </PropertyGroup>
 
   <ItemGroup>
@@ -64,17 +51,18 @@
     <PackageReference Include="Avalonia.ReactiveUI" Version="0.9.1" />
     <PackageReference Include="CommandLineParser" Version="2.7.82" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
-    <PackageReference Include="ReactiveUI" Version="11.1.6" />
+    <PackageReference Include="ReactiveUI" Version="11.1.12" />
     <PackageReference Include="Serilog" Version="2.9.0" />
     <PackageReference Include="Serilog.Sinks.Console" Version="3.1.1" />
     <PackageReference Include="Serilog.Sinks.Debug" Version="1.0.1" />
     <PackageReference Include="Serilog.Sinks.File" Version="4.1.0" />
-    <ProjectReference Include="..\ModMyFactory.BaseTypes\ModMyFactory.BaseTypes.csproj" />
-    <ProjectReference Include="..\ModMyFactory.Export\ModMyFactory.Export.csproj" />
-    <ProjectReference Include="..\ModMyFactory.Localization\ModMyFactory.Localization.csproj" />
-    <ProjectReference Include="..\ModMyFactory.ModSettings\ModMyFactory.ModSettings.csproj" />
-    <ProjectReference Include="..\ModMyFactory.Win32\ModMyFactory.Win32.csproj" />
-    <ProjectReference Include="..\ModMyFactory\ModMyFactory.csproj" />
+    <PackageReference Include="ModMyFactory.BaseTypes" Version="1.0.0.3-alpha" />
+    <PackageReference Include="ModMyFactory.Export" Version="1.0.0.1-alpha" />
+    <PackageReference Include="ModMyFactory.Localization" Version="1.0.0.1-alpha" />
+    <PackageReference Include="ModMyFactory.ModSettings" Version="1.0.0.1-alpha" />
+    <PackageReference Include="ModMyFactory.WebApi" Version="1.0.0.1-alpha" />
+    <PackageReference Include="ModMyFactory.Win32" Version="1.0.0.1-alpha" />
+    <PackageReference Include="ModMyFactory" Version="1.0.0.1-alpha" />
     <ProjectReference Include="..\Avalonia.ThemeManager\Avalonia.ThemeManager.csproj" />
   </ItemGroup>
 

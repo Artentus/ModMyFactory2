@@ -1,0 +1,29 @@
+image: Visual Studio 2019
+shallow_clone: true
+skip_non_tags: true
+
+version: 1.0.0.{build}-alpha
+
+branches:
+  only:
+    - master
+
+skip_commits:
+  files:
+    - '**\*.yml'
+
+build_script:
+  - dotnet publish ModMyFactoryGUI\ -c Release --version-suffix %APPVEYOR_BUILD_VERSION%
+
+#after_build:
+
+cache:
+  - '%userprofile%\.nuget\packages'
+  - '%LocalAppData%\NuGet\v3-cache'
+
+artifacts:
+  path:
+  name:
+
+deploy:
+- provider:

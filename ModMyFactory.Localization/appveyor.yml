@@ -1,5 +1,6 @@
 image: Visual Studio 2019
 shallow_clone: true
+skip_tags: true
 
 version: 1.0.0.{build}-alpha
 
@@ -10,6 +11,10 @@ branches:
 only_commits:
   files:
     - 'ModMyFactory.Localization\'
+
+skip_commits:
+  files:
+    - '**\*.yml'
 
 build_script:
   - dotnet build ModMyFactory.Localization\ -c Release --version-suffix %APPVEYOR_BUILD_VERSION%
