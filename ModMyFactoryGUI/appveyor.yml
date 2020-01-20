@@ -28,5 +28,11 @@ artifacts:
   path: mmf_%APPVEYOR_BUILD_VERSION%_*.zip
   name: Binaries
 
-#deploy:
-#- provider:
+deploy:
+- provider: GitHub
+  release: 'ModMyFactoryGUI v$(appveyor_build_version)'
+  description: ''
+  auth_token:
+    secure: pvpw2TIwvV+P7KoIG1vAJCBT8aSYCVzgtp9Cq+IsyQ/wsmgXbSzJsg9uYPsD8ZCX
+  artifact: Binaries
+  prerelease: true # don't forget to change
