@@ -21,9 +21,9 @@ cache:
   - '%userprofile%\.nuget\packages'
   - '%LocalAppData%\NuGet\v3-cache'
 
-artifacts:
-  path:
-  name:
+#artifacts:
+#  path:
+#  name:
 
-deploy:
-- provider:
+#deploy:
+#- provider:
