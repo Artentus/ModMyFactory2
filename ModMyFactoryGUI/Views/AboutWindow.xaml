@@ -2,24 +2,29 @@
         xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:l="clr-namespace:ModMyFactoryGUI.Localization"
-        Icon="/Assets/MMF_Icon.ico" Title="{l:LocalizedResource AboutWindowTitle}">
+        Icon="/Assets/MMF_Icon.ico" Title="{l:LocalizedResource AboutWindowTitle}"
+        Width="800" Height="400" WindowStartupLocation="CenterOwner" CanResize="False">
 
   <Window.Resources>
     <l:LocalizedFormatter x:Key="LocalizedFormatter"/>
   </Window.Resources>
 
-  <Grid>
+  <Grid Margin="8">
     <Grid.RowDefinitions>
-      <RowDefinition Height="Auto"/>
-      <RowDefinition Height="Auto"/>
       <RowDefinition Height="Auto"/>
       <RowDefinition Height="Auto"/>
       <RowDefinition Height="*"/>
     </Grid.RowDefinitions>
+    <Grid.ColumnDefinitions>
+      <ColumnDefinition Width="*"/>
+      <ColumnDefinition Width="Auto"/>
+      <ColumnDefinition Width="*"/>
+    </Grid.ColumnDefinitions>
 
-    <TextBlock Grid.Row="0" Text="{l:LocalizedResource MainWindowTitle}" Classes="h1"/>
-    <TextBlock Grid.Row="1" Text="{Binding GUIVersion, Converter={StaticResource LocalizedFormatter}, ConverterParameter=GUIVersionFormat}" Classes="muted"/>
-    <TextBlock Grid.Row="2" Text="{Binding MMFVersion, Converter={StaticResource LocalizedFormatter}, ConverterParameter=MMFVersionFormat}" Classes="muted"/>
+    <TextBlock Grid.Row="0" Grid.Column="0" Text="{l:LocalizedResource MainWindowTitle}" Classes="h1"/>
+    <TextBlock Grid.Row="1" Grid.Column="0" Text="{Binding GUIVersion, Converter={StaticResource LocalizedFormatter}, ConverterParameter=GUIVersionFormat}" Classes="muted"/>
+
+    <Rectangle Grid.Row="0" Grid.RowSpan="3" Grid.Column="1" Width="1" Fill="{DynamicResource ThemeBorderLowBrush}"/>
     
   </Grid>
 

@@ -9,9 +9,13 @@
       <Setter Property="Foreground" Value="{DynamicResource ThemeForegroundLowBrush}"/>
     </Style>
     <Style Selector="TextBlock.h1">
-      <Setter Property="FontSize" Value="{DynamicResource FontSizeLarge}"/>
+      <Setter Property="FontSize" Value="24"/>
+      <Setter Property="FontWeight" Value="Bold"/>
     </Style>
     <Style Selector="TextBlock.h2">
+      <Setter Property="FontSize" Value="{DynamicResource FontSizeLarge}"/>
+    </Style>
+    <Style Selector="TextBlock.h3">
       <Setter Property="FontWeight" Value="Bold"/>
     </Style>
   </Application.Styles>

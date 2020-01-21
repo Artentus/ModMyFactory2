@@ -9,9 +9,7 @@ namespace ModMyFactoryGUI.ViewModels
 {
     sealed class AboutWindowViewModel : ScreenBase<AboutWindow>, IWeakSubscriber<EventArgs>
     {
-        public string GUIVersion => App.GUIVersion;
-
-        public string MMFVersion => App.MMFVersion;
+        public string GUIVersion => VersionStatistics.AppVersion;
 
         public AboutWindowViewModel()
         {
@@ -21,7 +19,6 @@ namespace ModMyFactoryGUI.ViewModels
         void UICultureChangedHandler(object sender, EventArgs e)
         {
             this.RaisePropertyChanged(nameof(GUIVersion));
-            this.RaisePropertyChanged(nameof(MMFVersion));
         }
 
         void IWeakSubscriber<EventArgs>.OnEvent(object sender, EventArgs e) => UICultureChangedHandler(sender, e);

@@ -25,5 +25,72 @@ namespace ModMyFactory.Win32
                 Marshal.ThrowExceptionForHR(hResult);
             }
         }
+
+        [DllImport("user32.dll", EntryPoint = "GetWindowLong", SetLastError = true)]
+        private static extern IntPtr GetWindowLong32(IntPtr hWnd, int nIndex);
+
+        [DllImport("user32.dll", EntryPoint = "GetWindowLongPtr", SetLastError = true)]
+        private static extern IntPtr GetWindowLong64(IntPtr hWnd, int nIndex);
+
+        /// <summary>
+        /// Gets attributes of a window.
+        /// </summary>
+        public static IntPtr GetWindowLong(IntPtr windowHandle, WindowLongIndex index)
+        {
+            IntPtr result;
+            if (Environment.Is64BitProcess)
+                result = GetWindowLong64(windowHandle, (int)index);
+            else
+                result = GetWindowLong32(windowHandle, (int)index);
+
+            if (result == IntPtr.Zero)
+            {
+                int hResult = Marshal.GetHRForLastWin32Error();
+                Marshal.ThrowExceptionForHR(hResult);
+            }
+            return result;
+        }
+
+        /// <summary>
+        /// Gets the styles of a window.
+        /// </summary>
+        public static WindowStyles GetWindowStyles(IntPtr windowHandle)
+        {
+            var result = GetWindowLong(windowHandle, WindowLongIndex.Style);
+            return (WindowStyles)((uint)result);
+        }
+
+        [DllImport("user32.dll", EntryPoint = "SetWindowLong", SetLastError = true)]
+        private static extern IntPtr SetWindowLong32(IntPtr hWnd, int nIndex, IntPtr dwNewLong);
+
+        [DllImport("user32.dll", EntryPoint = "SetWindowLongPtr", SetLastError = true)]
+        private static extern IntPtr SetWindowLong64(IntPtr hWnd, int nIndex, IntPtr dwNewLong);
+
+        /// <summary>
+        /// Changes attributes of a window.
+        /// </summary>
+        public static IntPtr SetWindowLong(IntPtr windowHandle, WindowLongIndex index, IntPtr newLong)
+        {
+            IntPtr result;
+            if (Environment.Is64BitProcess)
+                result = SetWindowLong64(windowHandle, (int)index, newLong);
+            else
+                result = SetWindowLong32(windowHandle, (int)index, newLong);
+
+            if (result == IntPtr.Zero)
+            {
+                int hResult = Marshal.GetHRForLastWin32Error();
+                Marshal.ThrowExceptionForHR(hResult);
+            }
+            return result;
+        }
+
+        /// <summary>
+        /// Sets the styles of a window.
+        /// </summary>
+        public static void SetWindowStyles(IntPtr windowHandle, WindowStyles styles)
+        {
+            SetWindowLong(windowHandle, WindowLongIndex.Style, new IntPtr((int)((uint)styles)));
+        }
     }
 }

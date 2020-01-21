@@ -1,6 +1,7 @@
-﻿using Avalonia;
+using Avalonia;
 using Avalonia.Markup.Xaml;
 using ModMyFactoryGUI.Controls;
+using System;
 
 namespace ModMyFactoryGUI.Views
 {
@@ -17,6 +18,8 @@ namespace ModMyFactoryGUI.Views
         private void InitializeComponent()
         {
             AvaloniaXamlLoader.Load(this);
+            //if (Environment.OSVersion.Platform == PlatformID.Win32NT)
+            //this.PlatformImpl.Handle.Handle
         }
     }
 }

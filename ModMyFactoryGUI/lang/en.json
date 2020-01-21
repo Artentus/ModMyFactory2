@@ -174,11 +174,7 @@
   },
   "GUIVersionFormat": {
     "type": "string",
-    "value": "GUI version: {0}"
-  },
-  "MMFVersionFormat": {
-    "type": "string",
-    "value": "ModMyFactory version: {0}"
+    "value": "v{0}"
   },
 
   // --------- Visual theme names ---------

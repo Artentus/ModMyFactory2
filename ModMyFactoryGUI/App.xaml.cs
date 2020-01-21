@@ -2,8 +2,6 @@ using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
 using Avalonia.ThemeManager;
-using ModMyFactory;
-using ModMyFactoryGUI.Helpers;
 using ModMyFactoryGUI.Localization;
 using ModMyFactoryGUI.Localization.Json;
 using ModMyFactoryGUI.MVVM;
@@ -20,10 +18,6 @@ namespace ModMyFactoryGUI
 {
     partial class App : Application
     {
-        public static string GUIVersion { get; } = Assembly.GetExecutingAssembly().ProductVersion();
-
-        public static string MMFVersion { get; } = Assembly.GetAssembly(typeof(Manager)).ProductVersion();
-
         public static new App Current => Application.Current as App;
 
         public IClassicDesktopStyleApplicationLifetime Lifetime => (IClassicDesktopStyleApplicationLifetime)ApplicationLifetime;
@@ -91,8 +85,9 @@ namespace ModMyFactoryGUI
                 .MinimumLevel.Verbose()
                 .CreateLogger();
 
-            Log.Information("GUI version: {0}", GUIVersion);
-            Log.Information("ModMyFactory version: {0}", MMFVersion);
+            Log.Information("GUI version: {0}", VersionStatistics.AppVersion);
+            foreach (var kvp in VersionStatistics.LoadedAssemblyVersions)
+                Log.Information("{0} v{1}", kvp.Key.GetName().Name, kvp.Value);
         }
 
         void LoadSettings()
