@@ -1,4 +1,10 @@
 {
+  // --------- Misc ---------
+  "CloseButton": {
+    "type": "string",
+    "value": "Schließen"
+  },
+
   // --------- Main window ---------
   "MainWindowTitle": {
     "type": "string",
@@ -171,6 +177,10 @@
   "AboutWindowTitle": {
     "type": "string",
     "value": "Über ModMyFactory GUI"
+  },
+  "AuthorFormat": {
+    "type": "string",
+    "value": "von {0}"
   },
 
   // --------- Visual theme names ---------

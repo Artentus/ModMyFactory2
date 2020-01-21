@@ -1,4 +1,10 @@
 {
+  // --------- Misc ---------
+  "CloseButton": {
+    "type": "string",
+    "value": "Close"
+  },
+
   // --------- Main window ---------
   "MainWindowTitle": {
     "type": "string",
@@ -172,7 +178,11 @@
     "type": "string",
     "value": "About ModMyFactory GUI"
   },
-  "GUIVersionFormat": {
+  "AuthorFormat": {
+    "type": "string",
+    "value": "by {0}"
+  },
+  "VersionFormat": {
     "type": "string",
     "value": "v{0}"
   },
