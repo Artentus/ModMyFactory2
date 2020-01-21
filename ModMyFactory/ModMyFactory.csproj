@@ -23,7 +23,7 @@
     <PackageReference Include="ModMyFactory.Localization" Version="1.0.0.1-alpha" />
     <PackageReference Include="ModMyFactory.ModSettings" Version="1.0.0.1-alpha" />
     <PackageReference Include="ModMyFactory.WebApi" Version="1.0.0.1-alpha" />
-    <PackageReference Include="ModMyFactory.Win32" Version="1.0.0.1-alpha" />
+    <PackageReference Include="ModMyFactory.Win32" Version="1.0.0.2-alpha" />
   </ItemGroup>
 
   <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0' OR '$(TargetFramework)' == 'netcoreapp3.0'">
