@@ -1,4 +1,4 @@
-﻿using ModMyFactory.BaseTypes;
+using ModMyFactory.BaseTypes;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
@@ -12,9 +12,9 @@ namespace ModMyFactory.ModSettings.Serialization
 {
     public static class Serializer
     {
-        static readonly AccurateVersion MinVersion = new AccurateVersion(0, 16);
-        static readonly AccurateVersion ByteSwitch = new AccurateVersion(0, 17); // Starting with 0.17 there is an additional byte in the file.
-        static readonly AccurateVersion DefaultWriteVersion = new AccurateVersion(0, 17, 73, 4); // Used by Factorio 0.17.73
+        static readonly AccurateVersion MinVersion = (0, 16);
+        static readonly AccurateVersion ByteSwitch = (0, 17); // Starting with 0.17 there is an additional byte in the file.
+        static readonly AccurateVersion DefaultWriteVersion = (0, 17, 73, 4); // Used by Factorio 0.17.73
 
         static bool FileVersionSupported(AccurateVersion fileVersion) => fileVersion >= MinVersion;
 
@@ -83,28 +83,25 @@ namespace ModMyFactory.ModSettings.Serialization
         /// <param name="formatting">Optional. Formatting of the JSON string.</param>
         public static string LoadFile(FileInfo file, out AccurateVersion fileVersion, Formatting formatting = Formatting.Indented)
         {
-            using (var stream = file.OpenRead())
+            using var stream = file.OpenRead();
+            using var reader = new AccurateBinaryReader(stream);
+
+            fileVersion = reader.ReadVersion();
+            if (!FileVersionSupported(fileVersion)) throw new SerializerException("File version not supported.");
+            if (fileVersion >= ByteSwitch) reader.ReadByte();
+
+            var sb = new StringBuilder();
+            var sw = new StringWriter(sb);
+            var writer = new JsonTextWriter(sw) { Formatting = formatting };
+
+            try
             {
-                using (var reader = new AccurateBinaryReader(stream))
-                {
-                    fileVersion = reader.ReadVersion();
-                    if (!FileVersionSupported(fileVersion)) throw new SerializerException("File version not supported.");
-                    if (fileVersion >= ByteSwitch) reader.ReadByte();
-
-                    var sb = new StringBuilder();
-                    var sw = new StringWriter(sb);
-                    var writer = new JsonTextWriter(sw) { Formatting = formatting };
-
-                    try
-                    {
-                        ReadPropertyTree(reader, writer);
-                        return sw.ToString();
-                    }
-                    catch (Exception ex) when (ex is EndOfStreamException || ex is JsonException)
-                    {
-                        throw new SerializerException("Specified file is not a valid settings file.", ex);
-                    }
-                }
+                ReadPropertyTree(reader, writer);
+                return sw.ToString();
+            }
+            catch (Exception ex) when (ex is EndOfStreamException || ex is JsonException)
+            {
+                throw new SerializerException("Specified file is not a valid settings file.", ex);
             }
         }
 
@@ -180,29 +177,26 @@ namespace ModMyFactory.ModSettings.Serialization
         public static void SaveToFile(string json, FileInfo file, AccurateVersion fileVersion)
         {
             if (!file.Directory.Exists) file.Directory.Create();
-            using (var stream = file.OpenWrite())
+            using var stream = file.OpenWrite();
+            using var writer = new AccurateBinaryWriter(stream);
+
+            writer.Write(fileVersion);
+            if (fileVersion > ByteSwitch) writer.Write(byte.MinValue);
+
+            if (string.IsNullOrWhiteSpace(json))
             {
-                using (var writer = new AccurateBinaryWriter(stream))
-                {
-                    writer.Write(fileVersion);
-                    if (fileVersion > ByteSwitch) writer.Write(byte.MinValue);
+                writer.Write((byte)PropertyTreeType.None);
+                return;
+            }
 
-                    if (string.IsNullOrWhiteSpace(json))
-                    {
-                        writer.Write((byte)PropertyTreeType.None);
-                        return;
-                    }
-
-                    try
-                    {
-                        var token = JObject.Parse(json);
-                        WritePropertyTree(writer, token);
-                    }
-                    catch (Exception ex) when (ex is InvalidEnumArgumentException || ex is JsonException)
-                    {
-                        throw new ArgumentException("Invalid JSON string.", nameof(file), ex);
-                    }
-                }
+            try
+            {
+                var token = JObject.Parse(json);
+                WritePropertyTree(writer, token);
+            }
+            catch (Exception ex) when (ex is InvalidEnumArgumentException || ex is JsonException)
+            {
+                throw new ArgumentException("Invalid JSON string.", nameof(file), ex);
             }
         }
 
