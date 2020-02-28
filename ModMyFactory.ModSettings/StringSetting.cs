@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -52,11 +52,7 @@ namespace ModMyFactory.ModSettings
         public StringSetting(RuntimeType runtimeType, string name, string localisedName, string localisedDescription, string order,
             string defaultValue, bool allowBlank = false)
             : base(runtimeType, name, localisedName, localisedDescription, order, defaultValue)
-        {
-            AllowBlank = allowBlank;
-            AllowedValues = null;
-            _value = defaultValue;
-        }
+            => (AllowBlank, AllowedValues, _value) = (allowBlank, null, defaultValue);
 
         public StringSetting(RuntimeType runtimeType, string name, string localisedName, string localisedDescription, string order,
             string defaultValue, IList<string> allowedValues)

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.IO;
 using System.Net;
 using System.Text;
@@ -28,8 +28,8 @@ namespace ModMyFactory.WebApi
                 request.ContentType = "application/x-www-form-urlencoded";
                 request.ContentLength = content.Length;
 
-                using (var stream = await request.GetRequestStreamAsync())
-                    await stream.WriteAsync(content, 0, content.Length);
+                using var stream = await request.GetRequestStreamAsync();
+                await stream.WriteAsync(content, 0, content.Length);
             }
 
             return request;
@@ -46,10 +46,8 @@ namespace ModMyFactory.WebApi
                 response = await request.GetResponseAsync();
                 responseStream = response.GetResponseStream();
 
-                var document = string.Empty;
-                using (var reader = new StreamReader(responseStream, Encoding.UTF8))
-                    document = await reader.ReadToEndAsync();
-                return document;
+                using var reader = new StreamReader(responseStream, Encoding.UTF8);
+                return await reader.ReadToEndAsync();
             }
             finally
             {
@@ -73,23 +71,22 @@ namespace ModMyFactory.WebApi
                 responseStream = response.GetResponseStream();
 
                 if (!file.Directory.Exists) file.Directory.Create();
-                using (var fs = file.Open(FileMode.Create, FileAccess.Write))
+                using var fs = file.Open(FileMode.Create, FileAccess.Write);
+
+                long responseLength = response.ContentLength;
+                long bytesWritten = 0;
+
+                var buffer = new byte[BufferSize];
+                int bytesRead = 0;
+                do
                 {
-                    long responseLength = response.ContentLength;
-                    long bytesWritten = 0;
+                    bytesRead = await responseStream.ReadAsync(buffer, 0, BufferSize, cancellationToken);
+                    await fs.WriteAsync(buffer, 0, bytesRead, cancellationToken);
+                    bytesWritten += bytesRead;
 
-                    var buffer = new byte[BufferSize];
-                    int bytesRead = 0;
-                    do
-                    {
-                        bytesRead = await responseStream.ReadAsync(buffer, 0, BufferSize, cancellationToken);
-                        await fs.WriteAsync(buffer, 0, bytesRead, cancellationToken);
-                        bytesWritten += bytesRead;
-
-                        if ((responseLength > 0) && (progress != null))
-                            progress.Report((double)bytesWritten / responseLength);
-                    } while (bytesRead == BufferSize);
-                }
+                    if ((responseLength > 0) && (progress != null))
+                        progress.Report((double)bytesWritten / responseLength);
+                } while (bytesRead == BufferSize);
             }
             catch (TaskCanceledException)
             {

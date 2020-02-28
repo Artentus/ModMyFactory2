@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.IO;
 using System.Text;
 using System.Threading.Tasks;
@@ -109,11 +109,7 @@ namespace ModMyFactory.Mods
         }
 
         internal ZippedModFile(FileInfo file, ModInfo info, Stream thumbnail)
-        {
-            _file = file;
-            Info = info;
-            Thumbnail = thumbnail;
-        }
+            => (_file, Info, Thumbnail) = (file, info, thumbnail);
 
 
         /// <summary>

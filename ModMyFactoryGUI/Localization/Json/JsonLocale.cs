@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+using Newtonsoft.Json;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
@@ -18,18 +18,15 @@ namespace ModMyFactoryGUI.Localization.Json
 
         public JsonLocale(FileInfo file, string culture)
         {
-            using (var fs = file.OpenRead())
-            {
-                using (var reader = new StreamReader(fs))
-                {
-                    string json = reader.ReadToEnd();
-                    var dict = JsonConvert.DeserializeObject<IDictionary<string, JsonValue>>(json);
+            using var fs = file.OpenRead();
+            using var reader = new StreamReader(fs);
 
-                    _values = new Dictionary<string, object>();
-                    foreach (var kvp in dict)
-                        _values.Add(kvp.Key, kvp.Value.Value);
-                }
-            }
+            string json = reader.ReadToEnd();
+            var dict = JsonConvert.DeserializeObject<IDictionary<string, JsonValue>>(json);
+
+            _values = new Dictionary<string, object>();
+            foreach (var kvp in dict)
+                _values.Add(kvp.Key, kvp.Value.Value);
 
             Culture = culture;
         }

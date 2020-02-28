@@ -13,10 +13,7 @@ namespace ModMyFactoryGUI
         readonly IDictionary<string, object> _table;
 
         private SettingManager(string filePath, IDictionary<string, object> table)
-        {
-            _filePath = filePath;
-            _table = table;
-        }
+            => (_filePath, _table) = (filePath, table);
 
         public SettingManager(string filePath)
             : this(filePath, new Dictionary<string, object>())

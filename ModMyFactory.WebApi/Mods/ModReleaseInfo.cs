@@ -1,4 +1,4 @@
-﻿using ModMyFactory.BaseTypes;
+using ModMyFactory.BaseTypes;
 using Newtonsoft.Json;
 using System;
 
@@ -43,17 +43,12 @@ namespace ModMyFactory.WebApi.Mods
         /// Select information from the mods info.
         /// </summary>
         [JsonProperty("info_json")]
-        readonly public BaseTypes.ModInfo Info;
+        readonly public ModInfo Info;
 
         [JsonConstructor]
-        internal ModReleaseInfo(AccurateVersion version, string downloadUrl, string fileName, DateTime releaseDate, string checksum, BaseTypes.ModInfo info)
-        {
-            Version = version;
-            DownloadUrl = ModApi.BaseUrl + downloadUrl;
-            FileName = fileName;
-            ReleaseDate = releaseDate;
-            Checksum = checksum;
-            Info = info;
-        }
+        internal ModReleaseInfo(AccurateVersion version, string downloadUrl, string fileName,
+            DateTime releaseDate, string checksum, ModInfo info)
+            => (Version, DownloadUrl, FileName, ReleaseDate, Checksum, Info)
+               = (version, ModApi.BaseUrl + downloadUrl, fileName, releaseDate, checksum, info);
     }
 }

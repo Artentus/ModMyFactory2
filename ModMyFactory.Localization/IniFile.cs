@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -250,8 +250,8 @@ namespace ModMyFactory.Localization
         /// </summary>
         public static IniFile Load(FileInfo file)
         {
-            using (var stream = file.OpenRead())
-                return Parse(stream);
+            using var stream = file.OpenRead();
+            return Parse(stream);
         }
 
         /// <summary>

@@ -163,10 +163,7 @@ namespace ModMyFactory.Win32
         /// The control code for the operation. This value identifies the specific operation to be performed and the type of device on which to perform it.
         /// </param>
         public static void DeviceIOControl(SafeFileHandle deviceHandle, IOControlCode controlCode)
-        {
-            int bytesReturned;
-            DeviceIOControlInternal(deviceHandle, controlCode, IntPtr.Zero, 0, IntPtr.Zero, 0, out bytesReturned);
-        }
+            => DeviceIOControlInternal(deviceHandle, controlCode, IntPtr.Zero, 0, IntPtr.Zero, 0, out _);
 
         #endregion
 

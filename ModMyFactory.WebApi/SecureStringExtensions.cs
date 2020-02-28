@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Runtime.InteropServices;
 using System.Security;
 using System.Text;
@@ -39,8 +39,6 @@ namespace ModMyFactory.WebApi
         }
 
         public static byte[] ToBytes(this SecureString secureString)
-        {
-            return ToBytes(secureString, Encoding.UTF8);
-        }
+            => ToBytes(secureString, Encoding.UTF8);
     }
 }

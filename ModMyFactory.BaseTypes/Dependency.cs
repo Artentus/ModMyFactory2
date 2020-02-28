@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+using Newtonsoft.Json;
 using System;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -32,12 +32,7 @@ namespace ModMyFactory.BaseTypes
         public AccurateVersion CompareVersion { get; }
 
         public Dependency(DependencyType type, string modName, DependencyComparison comparison, AccurateVersion compareVersion)
-        {
-            Type = type;
-            ModName = modName;
-            Comparison = comparison;
-            CompareVersion = compareVersion;
-        }
+            => (Type, ModName, Comparison, CompareVersion) = (type, modName, comparison, compareVersion);
 
         /// <summary>
         /// Determines if a given mod matches this dependency.
@@ -91,8 +86,8 @@ namespace ModMyFactory.BaseTypes
 
             string opA = this.Comparison.Operator;
             string opB = other.Comparison.Operator;
-            return (this.Type == other.Type) && (this.ModName == other.ModName) && (opA == opB)
-                && ((opA == DependencyOperator.None) || (this.CompareVersion == other.CompareVersion)); // If no comparison version doesn't matter
+            return (this.Type, this.ModName, opA) == (other.Type, other.ModName, opB)
+                && ((opA == DependencyOperator.None) || (this.CompareVersion == other.CompareVersion)); // If no comparison, version doesn't matter
         }
 
         public override bool Equals(object obj) => Equals(obj as Dependency);
@@ -101,7 +96,7 @@ namespace ModMyFactory.BaseTypes
         {
             string op = Comparison.Operator;
             int hash = Type.GetHashCode() ^ ModName.GetHashCode() ^ op.GetHashCode();
-            if (!string.IsNullOrEmpty(op)) hash ^= CompareVersion.GetHashCode();
+            if (op != DependencyOperator.None) hash ^= CompareVersion.GetHashCode();
             return hash;
         }
 

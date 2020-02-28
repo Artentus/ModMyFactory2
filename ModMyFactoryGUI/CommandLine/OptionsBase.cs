@@ -17,11 +17,6 @@ namespace ModMyFactoryGUI.CommandLine
         public bool NoAutoUpdate { get; }
 
         protected OptionsBase(bool verbose, bool noLog, string appDataPath, bool noAutoUpdate)
-        {
-            Verbose = verbose;
-            NoLog = noLog;
-            AppDataPath = appDataPath;
-            NoAutoUpdate = noAutoUpdate;
-        }
+            => (Verbose, NoLog, AppDataPath, NoAutoUpdate) = (verbose, noLog, appDataPath, noAutoUpdate);
     }
 }

@@ -1,4 +1,4 @@
-﻿using ModMyFactory.BaseTypes;
+using ModMyFactory.BaseTypes;
 using System;
 using System.IO;
 using System.Threading.Tasks;
@@ -97,15 +97,8 @@ namespace ModMyFactory.Mods
 
         protected Mod(string name, string displayName, AccurateVersion version, AccurateVersion factorioVersion,
             string author, string description, Dependency[] dependencies, Stream thumbnail = null)
-        {
-            Name = name;
-            DisplayName = displayName;
-            FactorioVersion = factorioVersion.ToMajor();
-            Author = author;
-            Description = description;
-            Dependencies = dependencies;
-            Thumbnail = thumbnail;
-        }
+            => (Name, DisplayName, Version, FactorioVersion, Author, Description, Dependencies, Thumbnail)
+               = (name, displayName, version, factorioVersion.ToMajor(), author, description, dependencies, thumbnail);
 
         protected Mod(ModInfo info, Stream Thumbnail = null)
             : this(info.Name, info.DisplayName, info.Version, info.FactorioVersion,

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Diagnostics;
 using System.IO;
 using System.Runtime.InteropServices;
@@ -21,7 +21,7 @@ namespace ModMyFactory.IO.Win32
 
             public ReparseTagType ReparseTag;
             public ushort ReparseDataLength;
-            private ushort Reserved;
+            private readonly ushort Reserved;
             public ushort SubstituteNameOffset;
             public ushort SubstituteNameLength;
             public ushort PrintNameOffset;
@@ -82,42 +82,36 @@ namespace ModMyFactory.IO.Win32
 
         private static ReparseDataBuffer GetReparseData(string path)
         {
-            using (SafeFileHandle reparsePointHandle = OpenReparsePoint(path, false))
+            using SafeFileHandle reparsePointHandle = OpenReparsePoint(path, false);
+            IntPtr buffer = Marshal.AllocHGlobal(ReparseDataBuffer.MaximumSize);
+            try
             {
-                IntPtr buffer = Marshal.AllocHGlobal(ReparseDataBuffer.MaximumSize);
-                try
-                {
-                    int bytesReturned;
-                    Kernel32.DeviceIOControl(reparsePointHandle, IOControlCode.FsctlGetReparsePoint,
-                        IntPtr.Zero, 0, buffer, ReparseDataBuffer.MaximumSize, out bytesReturned);
+                Kernel32.DeviceIOControl(reparsePointHandle, IOControlCode.FsctlGetReparsePoint,
+                    IntPtr.Zero, 0, buffer, ReparseDataBuffer.MaximumSize, out _);
 
-                    ReparseDataBuffer data = Marshal.PtrToStructure<ReparseDataBuffer>(buffer);
-                    return data;
-                }
-                finally
-                {
-                    Marshal.FreeHGlobal(buffer);
-                }
+                ReparseDataBuffer data = Marshal.PtrToStructure<ReparseDataBuffer>(buffer);
+                return data;
+            }
+            finally
+            {
+                Marshal.FreeHGlobal(buffer);
             }
         }
 
         private static void SetReparseData(string path, ReparseDataBuffer data)
         {
-            using (SafeFileHandle reparsePointHandle = OpenReparsePoint(path, true))
+            using SafeFileHandle reparsePointHandle = OpenReparsePoint(path, true);
+            IntPtr buffer = Marshal.AllocHGlobal(Marshal.SizeOf(data));
+            try
             {
-                IntPtr buffer = Marshal.AllocHGlobal(Marshal.SizeOf(data));
-                try
-                {
-                    Marshal.StructureToPtr(data, buffer, false);
+                Marshal.StructureToPtr(data, buffer, false);
 
-                    int bytesReturned;
-                    Kernel32.DeviceIOControl(reparsePointHandle, IOControlCode.FsctlSetReparsePoint,
-                        buffer, ReparseDataBuffer.HeaderSize + data.ReparseDataLength, IntPtr.Zero, 0, out bytesReturned);
-                }
-                finally
-                {
-                    Marshal.FreeHGlobal(buffer);
-                }
+                Kernel32.DeviceIOControl(reparsePointHandle, IOControlCode.FsctlSetReparsePoint,
+                    buffer, ReparseDataBuffer.HeaderSize + data.ReparseDataLength, IntPtr.Zero, 0, out _);
+            }
+            finally
+            {
+                Marshal.FreeHGlobal(buffer);
             }
         }
 
@@ -131,16 +125,11 @@ namespace ModMyFactory.IO.Win32
             if (string.IsNullOrEmpty(path))
                 throw new ArgumentNullException(nameof(path));
 
-            FileAttributes attributes;
-            if (!Kernel32.TryGetFileAttributes(path, out attributes))
-            {
+            if (!Kernel32.TryGetFileAttributes(path, out var attributes))
                 return false;
-            }
 
             if ((attributes & JunctionAttributes) != JunctionAttributes)
-            {
                 return false;
-            }
 
             ReparseDataBuffer data = GetReparseData(path);
             return data.ReparseTag == ReparseTagType.MountPoint;
@@ -166,11 +155,8 @@ namespace ModMyFactory.IO.Win32
             if (string.IsNullOrEmpty(path))
                 throw new ArgumentNullException(nameof(path));
 
-            FileAttributes attributes;
-            if (!Kernel32.TryGetFileAttributes(path, out attributes))
-            {
+            if (!Kernel32.TryGetFileAttributes(path, out var attributes))
                 throw new IOException($"The path '{path}' does not exist.");
-            }
 
             if ((attributes & JunctionAttributes) == JunctionAttributes)
             {
@@ -193,11 +179,8 @@ namespace ModMyFactory.IO.Win32
             if (string.IsNullOrEmpty(destination))
                 throw new ArgumentNullException(nameof(destination));
 
-            FileAttributes attributes;
-            if (!Kernel32.TryGetFileAttributes(path, out attributes))
-            {
+            if (!Kernel32.TryGetFileAttributes(path, out var attributes))
                 throw new IOException($"The path '{path}' does not exist.");
-            }
 
             if ((attributes & FileAttributes.Directory) == FileAttributes.Directory)
             {

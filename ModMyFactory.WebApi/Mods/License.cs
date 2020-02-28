@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+using Newtonsoft.Json;
 
 namespace ModMyFactory.WebApi.Mods
 {
@@ -21,9 +21,6 @@ namespace ModMyFactory.WebApi.Mods
 
         [JsonConstructor]
         internal License(string name, string url)
-        {
-            Name = name;
-            Url = url;
-        }
+            => (Name, Url) = (name, url);
     }
 }

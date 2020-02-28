@@ -1,4 +1,4 @@
-﻿using System.ComponentModel;
+using System.ComponentModel;
 
 namespace ModMyFactoryGUI
 {
@@ -7,8 +7,6 @@ namespace ModMyFactoryGUI
         public event PropertyChangedEventHandler PropertyChanged;
 
         protected virtual void OnPropertyChanged(PropertyChangedEventArgs e)
-        {
-            PropertyChanged?.Invoke(this, e);
-        }
+            => PropertyChanged?.Invoke(this, e);
     }
 }

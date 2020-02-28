@@ -23,6 +23,10 @@ namespace ModMyFactoryGUI.ViewModels
         const string ResourcePrefix = "__theme__.";
         static readonly EventManager InternalEventManager = new EventManager();
 
+        public static void SubscribeWeak(IWeakSubscriber<EventArgs> subscriber)
+            => WeakSubscriptionManager.Subscribe(InternalEventManager, nameof(EventManager.SelectedThemeChanged), subscriber);
+
+
         public ITheme Theme { get; }
 
         public string DisplayName => (string)App.Current.LocaleManager.GetResource(ResourcePrefix + Theme.Name);
@@ -56,7 +60,7 @@ namespace ModMyFactoryGUI.ViewModels
 
         void UICultureChangedHandler() => this.RaisePropertyChanged(nameof(DisplayName));
 
-        public void OnEvent(object sender, EventArgs e)
+        void IWeakSubscriber<EventArgs>.OnEvent(object sender, EventArgs e)
         {
             if (sender is EventManager)
                 SelectedThemeChangedHandler();

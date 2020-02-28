@@ -1,4 +1,4 @@
-﻿using Microsoft.Win32;
+using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -18,12 +18,10 @@ namespace ModMyFactory.Game
                 string softwarePath = Environment.Is64BitProcess ? @"SOFTWARE\WOW6432Node" : "SOFTWARE";
                 softwareKey = Registry.LocalMachine.OpenSubKey(softwarePath, false);
 
-                using (var key = softwareKey.OpenSubKey(@"Valve\Steam"))
-                {
-                    var obj = key.GetValue("InstallPath");
-                    path = obj as string;
-                    return Directory.Exists(path);
-                }
+                using var key = softwareKey.OpenSubKey(@"Valve\Steam");
+                var obj = key.GetValue("InstallPath");
+                path = obj as string;
+                return Directory.Exists(path);
             }
             catch
             {
@@ -89,11 +87,9 @@ namespace ModMyFactory.Game
             if (!vdfFile.Exists) return libraryPaths;
 
             string content;
-            using (var stream = vdfFile.OpenRead())
-            {
-                using (var reader = new StreamReader(stream))
-                    content = await reader.ReadToEndAsync();
-            }
+            using var stream = vdfFile.OpenRead();
+            using var reader = new StreamReader(stream);
+            content = await reader.ReadToEndAsync();
 
             var matches = Regex.Matches(content, "\"\\d\"\\s+\"(?<path>.+)\"");
             foreach (Match match in matches)

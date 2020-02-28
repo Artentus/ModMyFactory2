@@ -1,4 +1,4 @@
-﻿using ModMyFactory.BaseTypes;
+using ModMyFactory.BaseTypes;
 using Newtonsoft.Json;
 
 namespace ModMyFactory.Mods
@@ -28,11 +28,7 @@ namespace ModMyFactory.Mods
 
         [JsonConstructor]
         private ModFamilyStateInfo(string name, bool enabled, AccurateVersion version)
-        {
-            FamilyName = name;
-            Enabled = enabled;
-            Version = version;
-        }
+            => (FamilyName, Enabled, Version) = (name, enabled, version);
 
 
         /// <summary>

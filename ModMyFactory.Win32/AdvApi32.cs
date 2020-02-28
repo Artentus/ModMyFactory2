@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Runtime.InteropServices;
 
 namespace ModMyFactory.Win32
@@ -21,8 +21,7 @@ namespace ModMyFactory.Win32
         /// <returns>Returns a handle that identifies the newly opened access token.</returns>
         public static IntPtr OpenProcessToken(IntPtr processHandle, TokenAccessLevels desiredAccess)
         {
-            IntPtr tokenHandle;
-            if (!OpenProcessTokenNative(processHandle, desiredAccess, out tokenHandle))
+            if (!OpenProcessTokenNative(processHandle, desiredAccess, out IntPtr tokenHandle))
             {
                 int hResult = Marshal.GetHRForLastWin32Error();
                 Marshal.ThrowExceptionForHR(hResult);
@@ -41,8 +40,7 @@ namespace ModMyFactory.Win32
 
         private static Luid LookupPrivilegeValueInternal(string name, string systemName)
         {
-            Luid luid;
-            if (!LookupPrivilegeValueNative(systemName, name, out luid))
+            if (!LookupPrivilegeValueNative(systemName, name, out Luid luid))
             {
                 int hResult = Marshal.GetHRForLastWin32Error();
                 Marshal.ThrowExceptionForHR(hResult);
@@ -106,9 +104,8 @@ namespace ModMyFactory.Win32
             out TokenPrivileges previousState)
         {
             var previous = new TokenPrivileges();
-            int returnLength;
             if (!AdjustTokenPrivilegesNative(tokenHandle, false, ref newState,
-                Marshal.SizeOf(previous), ref previous, out returnLength))
+                Marshal.SizeOf(previous), ref previous, out _))
             {
                 int hResult = Marshal.GetHRForLastWin32Error();
                 Marshal.ThrowExceptionForHR(hResult);

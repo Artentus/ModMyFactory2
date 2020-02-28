@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.IO;
 using System.Threading.Tasks;
 using ModMyFactory.BaseTypes;
@@ -85,11 +85,9 @@ namespace ModMyFactory.Mods
             
             await Task.Run(() =>
             {
-                using (var fs = newFile.OpenWrite())
-                {
-                    using (var writer = new ZipWriter(fs, new ZipWriterOptions(CompressionType.Deflate)))
-                        PopulateZipArchive(writer, _directory, _directory.Name);
-                }
+                using var fs = newFile.OpenWrite();
+                using var writer = new ZipWriter(fs, new ZipWriterOptions(CompressionType.Deflate));
+                PopulateZipArchive(writer, _directory, _directory.Name);
             });
             
             var newThumbnail = await ModFile.CopyThumbnailAsync(Thumbnail);
@@ -126,11 +124,7 @@ namespace ModMyFactory.Mods
         }
 
         internal ExtractedModFile(DirectoryInfo directory, ModInfo info, Stream thumbnail)
-        {
-            _directory = directory;
-            Info = info;
-            Thumbnail = thumbnail;
-        }
+            => (_directory, Info, Thumbnail) = (directory, info, thumbnail);
 
 
         /// <summary>

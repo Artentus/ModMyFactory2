@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+using Newtonsoft.Json;
 
 namespace ModMyFactory.WebApi.Mods
 {
@@ -21,9 +21,6 @@ namespace ModMyFactory.WebApi.Mods
 
         [JsonConstructor]
         internal ModPage(Pagination pagination, ApiModInfo[] mods)
-        {
-            Pagination = pagination;
-            Mods = mods;
-        }
+            => (Pagination, Mods) = (pagination, mods);
     }
 }

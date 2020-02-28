@@ -5,6 +5,7 @@ using ModMyFactoryGUI.Views;
 using ReactiveUI;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Windows.Input;
 
@@ -20,11 +21,14 @@ namespace ModMyFactoryGUI.ViewModels
 
         public ICommand CloseCommand { get; }
 
+        public string Changelog { get; }
+
         public AboutWindowViewModel()
         {
             WeakSubscriptionManager.Subscribe(App.Current.LocaleManager, nameof(LocaleManager.UICultureChanged), this);
             AssemblyVersions = VersionStatistics.LoadedAssemblyVersions.Select(kvp => new AssemblyVersionViewModel(kvp.Key, kvp.Value));
             CloseCommand = ReactiveCommand.Create(() => AttachedView.Close());
+            Changelog = File.ReadAllText("test.txt");
         }
 
         void UICultureChangedHandler(object sender, EventArgs e)

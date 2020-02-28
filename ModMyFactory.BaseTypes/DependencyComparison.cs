@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 
 namespace ModMyFactory.BaseTypes
 {
@@ -16,29 +16,16 @@ namespace ModMyFactory.BaseTypes
 
         public DependencyComparison(string op)
         {
-            switch (op)
+            comparisonFunction = op switch
             {
-                case DependencyOperator.None:
-                    comparisonFunction = (x, y) => true;
-                    break;
-                case DependencyOperator.Equal:
-                    comparisonFunction = (x, y) => x.CompareTo(y) == 0;
-                    break;
-                case DependencyOperator.LessThan:
-                    comparisonFunction = (x, y) => x.CompareTo(y) < 0;
-                    break;
-                case DependencyOperator.GreaterThan:
-                    comparisonFunction = (x, y) => x.CompareTo(y) > 0;
-                    break;
-                case DependencyOperator.LessThanOrEqual:
-                    comparisonFunction = (x, y) => x.CompareTo(y) <= 0;
-                    break;
-                case DependencyOperator.GreaterThanOrEqual:
-                    comparisonFunction = (x, y) => x.CompareTo(y) >= 0;
-                    break;
-                default:
-                    throw new ArgumentException();
-            }
+                DependencyOperator.None => (x, y) => true,
+                DependencyOperator.Equal => (x, y) => x.CompareTo(y) == 0,
+                DependencyOperator.LessThan => (x, y) => x.CompareTo(y) < 0,
+                DependencyOperator.GreaterThan => (x, y) => x.CompareTo(y) > 0,
+                DependencyOperator.LessThanOrEqual => (x, y) => x.CompareTo(y) <= 0,
+                DependencyOperator.GreaterThanOrEqual => (x, y) => x.CompareTo(y) >= 0,
+                _ => throw new ArgumentException("Unknown operator", nameof(op)),
+            };
             Operator = op;
         }
 

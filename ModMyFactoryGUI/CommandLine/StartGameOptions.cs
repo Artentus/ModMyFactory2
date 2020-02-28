@@ -13,9 +13,6 @@ namespace ModMyFactoryGUI.CommandLine
 
         public StartGameOptions(string uid, string name, bool verbose, bool noLog, string appDataPath, bool noAutoUpdate)
             : base(verbose, noLog, appDataPath, noAutoUpdate)
-        {
-            Uid = uid;
-            Name = name;
-        }
+            => (Uid, Name) = (uid, name);
     }
 }

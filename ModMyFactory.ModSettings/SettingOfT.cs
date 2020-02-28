@@ -1,4 +1,4 @@
-﻿namespace ModMyFactory.ModSettings
+namespace ModMyFactory.ModSettings
 {
     /// <summary>
     /// BAse class for all mod settings.
@@ -55,13 +55,7 @@
         object ISetting.DefaultValue => DefaultValue;
 
         protected Setting(RuntimeType runtimeType, string name, string localisedName, string localisedDescription, string order, T defaultValue)
-        {
-            RuntimeType = runtimeType;
-            Name = name;
-            LocalisedName = localisedName;
-            LocalisedDescription = localisedDescription;
-            Order = order;
-            DefaultValue = defaultValue;
-        }
+            => (RuntimeType, Name, LocalisedName, LocalisedDescription, Order, DefaultValue)
+               = (runtimeType, name, localisedName, localisedDescription, order, defaultValue);
     }
 }

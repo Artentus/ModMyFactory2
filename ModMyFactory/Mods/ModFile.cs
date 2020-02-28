@@ -1,4 +1,4 @@
-﻿using ModMyFactory.BaseTypes;
+using ModMyFactory.BaseTypes;
 using System.IO;
 using System.Threading.Tasks;
 
@@ -63,8 +63,7 @@ namespace ModMyFactory.Mods
 
         internal static bool TryParseFileName(string fileName, out string name, out AccurateVersion version)
         {
-            name = null;
-            version = default;
+            (name, version) = (null, default);
 
             int index = fileName.LastIndexOf('_');
             if ((index < 1) || (index >= fileName.Length - 1)) return false;

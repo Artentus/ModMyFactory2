@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+using Newtonsoft.Json;
 using System;
 
 namespace ModMyFactoryGUI.Localization.Json
@@ -15,24 +15,14 @@ namespace ModMyFactoryGUI.Localization.Json
         public JsonValue(JsonValueType type, object value)
         {
             Type = type;
-            switch (type)
+            Value = type switch
             {
-                case JsonValueType.String:
-                    Value = Convert.ToString(value);
-                    break;
-                case JsonValueType.Integer:
-                    Value = Convert.ToInt64(value);
-                    break;
-                case JsonValueType.Float:
-                    Value = Convert.ToDouble(value);
-                    break;
-                case JsonValueType.Date:
-                    Value = Convert.ToDateTime(value);
-                    break;
-                default:
-                    Value = value;
-                    break;
-            }
+                JsonValueType.String => Convert.ToString(value),
+                JsonValueType.Integer => Convert.ToInt64(value),
+                JsonValueType.Float => Convert.ToDouble(value),
+                JsonValueType.Date => Convert.ToDateTime(value),
+                _ => value,
+            };
         }
     }
 }

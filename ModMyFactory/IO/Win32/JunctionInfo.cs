@@ -1,11 +1,11 @@
-﻿using System;
+using System;
 using System.IO;
 
 namespace ModMyFactory.IO.Win32
 {
     sealed class JunctionInfo : ISymlinkInfo
     {
-        string _destinationPath;
+        string? _destinationPath;
 
         public string Name { get; }
 
@@ -13,7 +13,7 @@ namespace ModMyFactory.IO.Win32
 
         public string DestinationPath
         {
-            get => _destinationPath;
+            get => _destinationPath ?? string.Empty;
             set
             {
                 _destinationPath = value;

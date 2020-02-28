@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+using Newtonsoft.Json;
 using System.IO;
 using System.Threading.Tasks;
 
@@ -53,16 +53,10 @@ namespace ModMyFactory.BaseTypes
         readonly public Dependency[] Dependencies;
 
         [JsonConstructor]
-        internal ModInfo(string name, string displayName, AccurateVersion version, AccurateVersion factorioVersion, string author, string description, params Dependency[] dependencies)
-        {
-            Name = name;
-            DisplayName = displayName;
-            Version = version;
-            FactorioVersion = factorioVersion;
-            Author = author;
-            Description = description;
-            Dependencies = dependencies;
-        }
+        internal ModInfo(string name, string displayName, AccurateVersion version, AccurateVersion factorioVersion,
+                         string author, string description, params Dependency[] dependencies)
+            => (Name, DisplayName, Version, FactorioVersion, Author, Description, Dependencies)
+               = (name, displayName, version, factorioVersion, author, description, dependencies);
 
         /// <summary>
         /// Creates a json string from this mod info.
@@ -76,14 +70,10 @@ namespace ModMyFactory.BaseTypes
         public async Task SaveToFileAsync(FileInfo file, Formatting formatting = Formatting.Indented, JsonSerializerSettings settings = null)
         {
             if (!file.Directory.Exists) file.Directory.Create();
-            using (var fs = file.OpenWrite())
-            {
-                using (var writer = new StreamWriter(fs))
-                {
-                    string json = ToJson(formatting, settings);
-                    await writer.WriteAsync(json);
-                }
-            }
+            using var fs = file.OpenWrite();
+            using var writer = new StreamWriter(fs);
+            string json = ToJson(formatting, settings);
+            await writer.WriteAsync(json);
         }
 
         /// <summary>
@@ -103,14 +93,10 @@ namespace ModMyFactory.BaseTypes
         /// </summary>
         public static async Task<ModInfo> FromFileAsync(FileInfo file)
         {
-            using (var fs = file.OpenRead())
-            {
-                using (var reader = new StreamReader(fs))
-                {
-                    string json = await reader.ReadToEndAsync();
-                    return FromJson(json);
-                }
-            }
+            using var fs = file.OpenRead();
+            using var reader = new StreamReader(fs);
+            string json = await reader.ReadToEndAsync();
+            return FromJson(json);
         }
 
         /// <summary>

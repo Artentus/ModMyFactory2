@@ -3,6 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:l="clr-namespace:ModMyFactoryGUI.Localization"
         xmlns:vm="clr-namespace:ModMyFactoryGUI.ViewModels"
+        xmlns:controls="clr-namespace:ModMyFactoryGUI.Controls"
         Icon="/Assets/MMF_Icon.ico" Title="{l:LocalizedResource AboutWindowTitle}"
         Width="700" Height="400" WindowStartupLocation="CenterOwner" CanResize="False">
 
@@ -44,6 +45,8 @@
             Content="{l:LocalizedResource CloseButton}" Command="{Binding CloseCommand}"/>
     
     <Rectangle Grid.Row="0" Grid.RowSpan="5" Grid.Column="1" Width="1" Margin="8,0" Fill="{DynamicResource ThemeBorderLowBrush}"/>
+
+    <controls:FormattingTextBlock Grid.Row="0" Grid.RowSpan="5" Grid.Column="2" Margin="8" MarkdownText="{Binding Changelog}"/>
     
   </Grid>
 

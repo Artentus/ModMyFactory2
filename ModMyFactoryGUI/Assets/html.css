@@ -1,0 +1,42 @@
+* {
+    font-size: 12pt;
+    color: %_ThemeForegroundColor_%;
+}
+
+h1 {
+    font-size: 20pt;
+    font-weight: bold;
+    text-decoration: underline;
+    color: %_ThemeForegroundColor_%;
+}
+
+h2 {
+    font-size: 18pt;
+    font-weight: bold;
+    color: %_ThemeForegroundColor_%;
+}
+
+h3 {
+    font-size: 16pt;
+    font-weight: normal;
+    color: %_ThemeForegroundColor_%;
+}
+
+h4 {
+    font-size: 12pt;
+    font-weight: bold;
+    color: %_ThemeForegroundColor_%;
+}
+
+h5, h6 {
+    font-size: 12pt;
+    font-weight: normal;
+    text-decoration: underline;
+    color: %_ThemeForegroundColor_%;
+}
+
+
+
+blockquote {
+    background-color: lightgray;
+}

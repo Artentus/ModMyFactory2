@@ -1,4 +1,4 @@
-﻿using ModMyFactory.Mods;
+using ModMyFactory.Mods;
 using System.IO;
 using System.Threading.Tasks;
 #if NETCORE

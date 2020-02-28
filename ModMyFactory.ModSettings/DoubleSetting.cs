@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -58,12 +58,7 @@ namespace ModMyFactory.ModSettings
         public DoubleSetting(RuntimeType runtimeType, string name, string localisedName, string localisedDescription, string order,
             double defaultValue, double minValue = double.NegativeInfinity, double maxValue = double.PositiveInfinity)
             : base(runtimeType, name, localisedName, localisedDescription, order, defaultValue)
-        {
-            MinValue = minValue;
-            MaxValue = maxValue;
-            AllowedValues = null;
-            _value = defaultValue;
-        }
+            => (MinValue, MaxValue, AllowedValues, _value) = (minValue, maxValue, null, defaultValue);
 
         public DoubleSetting(RuntimeType runtimeType, string name, string localisedName, string localisedDescription, string order,
             double defaultValue, IList<double> allowedValues)
