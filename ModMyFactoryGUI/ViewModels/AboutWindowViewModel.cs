@@ -23,12 +23,15 @@ namespace ModMyFactoryGUI.ViewModels
 
         public string Changelog { get; }
 
+        public AttributionViewModel Attributions { get; }
+
         public AboutWindowViewModel()
         {
             WeakSubscriptionManager.Subscribe(App.Current.LocaleManager, nameof(LocaleManager.UICultureChanged), this);
             AssemblyVersions = VersionStatistics.LoadedAssemblyVersions.Select(kvp => new AssemblyVersionViewModel(kvp.Key, kvp.Value));
             CloseCommand = ReactiveCommand.Create(() => AttachedView.Close());
-            Changelog = File.ReadAllText("test.txt");
+            Changelog = File.ReadAllText("Changelog.md");
+            Attributions = new AttributionViewModel();
         }
 
         void UICultureChangedHandler(object sender, EventArgs e)

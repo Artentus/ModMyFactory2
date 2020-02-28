@@ -182,6 +182,18 @@
     "type": "string",
     "value": "von {0}"
   },
+  "AttributionsTabHeader": {
+    "type": "string",
+    "value": "Zuschreibungen"
+  },
+  "ChangelogTabHeader": {
+    "type": "string",
+    "value": "Änderungen"
+  },
+  "ThirdPartySoftwareHeader": {
+    "type": "string",
+    "value": "Software von Drittanbietern"
+  },
 
   // --------- Visual theme names ---------
   "__theme__.Light": {

@@ -1,0 +1,33 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:controls="clr-namespace:ModMyFactoryGUI.Controls"
+             xmlns:l="clr-namespace:ModMyFactoryGUI.Localization"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450" FontSize="14"
+             x:Class="ModMyFactoryGUI.Views.AttributionView">
+
+  <StackPanel>
+    
+    <TextBlock HorizontalAlignment="Center" Margin="0,0,0,4" Classes="h2"
+               Text="{l:LocalizedResource ThirdPartySoftwareHeader}"/>
+    
+    <ItemsControl Items="{Binding Links}">
+      <ItemsControl.ItemsPanel>
+        <ItemsPanelTemplate>
+          <WrapPanel Orientation="Vertical" MaxHeight="100" HorizontalAlignment="Center"/>
+        </ItemsPanelTemplate>
+      </ItemsControl.ItemsPanel>
+      
+      <ItemsControl.ItemTemplate>
+        <DataTemplate>
+          <controls:HyperLink Margin="16,0" HorizontalAlignment="Center"
+                              Text="{Binding LinkText}" Url="{Binding Url}"/>
+        </DataTemplate>
+      </ItemsControl.ItemTemplate>
+      
+    </ItemsControl>
+    
+  </StackPanel>
+  
+</UserControl>

@@ -4,27 +4,27 @@
 }
 
 h1 {
-    font-size: 20pt;
+    font-size: 24pt;
     font-weight: bold;
     text-decoration: underline;
     color: %_ThemeForegroundColor_%;
 }
 
 h2 {
-    font-size: 18pt;
+    font-size: 20pt;
     font-weight: bold;
     color: %_ThemeForegroundColor_%;
 }
 
 h3 {
-    font-size: 16pt;
+    font-size: 18pt;
     font-weight: normal;
     color: %_ThemeForegroundColor_%;
 }
 
 h4 {
-    font-size: 12pt;
-    font-weight: bold;
+    font-size: 15pt;
+    font-weight: normal;
     color: %_ThemeForegroundColor_%;
 }
 
@@ -35,8 +35,11 @@ h5, h6 {
     color: %_ThemeForegroundColor_%;
 }
 
-
-
 blockquote {
-    background-color: lightgray;
+    color: %_ThemeForegroundLowColor_%;
+}
+
+code {
+    color: %_ThemeForegroundColor_%;
+    background-color: %_ThemeControlMidColor_%;
 }

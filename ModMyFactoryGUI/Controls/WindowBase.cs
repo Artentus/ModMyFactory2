@@ -1,11 +1,12 @@
 using Avalonia.Controls;
 using ModMyFactoryGUI.MVVM;
+using ReactiveUI;
 
 namespace ModMyFactoryGUI.Controls
 {
     abstract class WindowBase : Window, IView
     {
-        public object ViewModel
+        object IView.ViewModel
         {
             get => DataContext;
             set => DataContext = value;

@@ -6,9 +6,9 @@ using Avalonia.Media;
 using Avalonia.Platform;
 using Avalonia.Utilities;
 using Markdig;
+using ModMyFactoryGUI.Helpers;
 using ModMyFactoryGUI.ViewModels;
 using System;
-using System.Diagnostics;
 using System.IO;
 using System.Text.RegularExpressions;
 
@@ -67,22 +67,17 @@ namespace ModMyFactoryGUI.Controls
             AvaloniaXamlLoader.Load(this);
 
             _renderer = this.FindControl<HtmlLabel>("Renderer");
+            _renderer.LinkClicked += (_, e) => PlatformHelper.OpenWebUrl(e.Event.Link);
             _renderer.BaseStylesheet = ParseCss(_css);
             ThemeViewModel.SubscribeWeak(this);
         }
 
         string GetColorResource(string key)
         {
-            if (this.TryFindResource(key, out var resource) && (resource is Color color))
-            {
-                uint colorInt = color.ToUint32();
-                string colorHex = $"#{colorInt:X8}";
-                return colorHex;
-            }
-            else
-            {
-                return "#000000";
-            }
+            if (App.Current.TryGetThemeResource<Color>(key, out var color))
+                return $"rgba({color.R},{color.G},{color.B},{color.A})";
+
+            return "#000000";
         }
 
         string EvaluateMatch(Match match)

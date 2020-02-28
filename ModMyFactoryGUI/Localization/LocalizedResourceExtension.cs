@@ -47,18 +47,60 @@ namespace ModMyFactoryGUI.Localization
             _anchor = null;
         }
 
+        void Subscribe(Window window)
+        {
+            WeakEventHandlerManager.Subscribe<Window, EventArgs, LocalizedResourceExtension>(window, nameof(Window.Closed), DisconnectAnchor);
+        }
+
+        void DelayedSubscribe(object sender, EventArgs e)
+        {
+            var userControl = (UserControl)sender;
+
+            IControl control = userControl;
+            while (!(control is null))
+            {
+                if (control is Window) break;
+                control = control.Parent;
+            }
+
+            try
+            {
+                if (control is Window window) Subscribe(window);
+                else throw new InvalidOperationException("No window found");
+            }
+            catch
+            {
+                _anchor.Tag = null;
+                _anchor = null;
+                throw;
+            }
+            finally
+            {
+                userControl.AttachedToLogicalTree -= DelayedSubscribe;
+            }
+        }
+
         void ConnectAnchor(ITypeDescriptorContext context)
         {
             // This is a horrible hack to have the control keep the binding alive.
-            var window = context.GetFirstParent<Window>();
             _anchor.Tag = this;
-            WeakEventHandlerManager.Subscribe<Window, EventArgs, LocalizedResourceExtension>(window, nameof(Window.Closed), DisconnectAnchor);
+            var window = context.GetFirstParent<Window>();
+            if (window is null)
+            {
+                var userControl = context.GetFirstParent<UserControl>();
+                userControl.AttachedToLogicalTree += DelayedSubscribe;
+            }
+            else
+            {
+                Subscribe(window);
+            }
         }
 
         public Binding ProvideValue(IServiceProvider serviceProvider)
         {
             var context = (ITypeDescriptorContext)serviceProvider;
             _anchor = context.GetFirstParent<Control>();
+            if (_anchor is null) throw new InvalidOperationException("No suitable anchor found");
             ConnectAnchor(context);
             
             return new Binding

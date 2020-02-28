@@ -34,6 +34,24 @@ namespace ModMyFactoryGUI
 
         public IThemeSelector ThemeManager { get; private set; }
 
+        public bool TryGetThemeResource(string key, out object resource)
+            => ThemeManager.SelectedTheme.Style.TryGetResource(key, out resource);
+
+        public bool TryGetThemeResource<T>(string key, out T resource)
+        {
+            if (TryGetThemeResource(key, out object objRes))
+            {
+                if (objRes is T tRes)
+                {
+                    resource = tRes;
+                    return true;
+                }
+            }
+
+            resource = default;
+            return false;
+        }
+
         DirectoryInfo GetApplicationDataDirectory()
         {
             string path = null;

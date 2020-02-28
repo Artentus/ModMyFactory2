@@ -1,3 +1,5 @@
+using ReactiveUI;
+
 namespace ModMyFactoryGUI.MVVM
 {
     static class View
@@ -8,6 +10,12 @@ namespace ModMyFactoryGUI.MVVM
             var view = new TView();
             viewModel.AttachView(view);
             return view;
+        }
+
+        public static TViewModel ViewModel<TViewModel>(this IView view)
+            where TViewModel : ReactiveObject
+        {
+            return view.ViewModel as TViewModel;
         }
     }
 }

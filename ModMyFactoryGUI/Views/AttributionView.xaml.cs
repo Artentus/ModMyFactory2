@@ -1,17 +1,14 @@
-using Avalonia;
 using Avalonia.Markup.Xaml;
 using ModMyFactoryGUI.Controls;
+using ModMyFactoryGUI.ViewModels;
 
 namespace ModMyFactoryGUI.Views
 {
-    partial class MainWindow : WindowBase
+    class AttributionView : ReactiveControlBase<AttributionViewModel>
     {
-        public MainWindow()
+        public AttributionView()
         {
-            InitializeComponent();
-#if DEBUG
-            this.AttachDevTools();
-#endif
+            this.InitializeComponent();
         }
 
         private void InitializeComponent()
