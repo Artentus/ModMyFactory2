@@ -33,6 +33,8 @@
     <Color x:Key="HighlightForegroundColor">#FFFFFFFF</Color>
     <Color x:Key="ErrorColor">#FFFF0000</Color>
     <Color x:Key="ErrorLowColor">#10FF0000</Color>
+    <Color x:Key="HyperlinkColor">#FF007acc</Color>
+    <Color x:Key="HyperlinkHighlightColor">#FF1c97ea</Color>
 
     <Color x:Key="IconBaseColor1">#FFFFFFFF</Color>
     <Color x:Key="IconBaseColor2">#FF414141</Color>
@@ -68,6 +70,8 @@
     <SolidColorBrush x:Key="ThemeAccentBrush4" Color="{DynamicResource ThemeAccentColor4}"></SolidColorBrush>
     <SolidColorBrush x:Key="ErrorBrush" Color="{DynamicResource ErrorColor}"></SolidColorBrush>
     <SolidColorBrush x:Key="ErrorLowBrush" Color="{DynamicResource ErrorLowColor}"></SolidColorBrush>
+    <SolidColorBrush x:Key="HyperlinkBrush" Color="{DynamicResource HyperlinkColor}"></SolidColorBrush>
+    <SolidColorBrush x:Key="HyperlinkHighlightBrush" Color="{DynamicResource HyperlinkHighlightColor}"></SolidColorBrush>
 
     <SolidColorBrush x:Key="IconBaseBrush1" Color="{DynamicResource IconBaseColor1}"></SolidColorBrush>
     <SolidColorBrush x:Key="IconBaseBrush2" Color="{DynamicResource IconBaseColor2}"></SolidColorBrush>

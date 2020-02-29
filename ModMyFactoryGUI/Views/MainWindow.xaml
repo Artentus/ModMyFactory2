@@ -5,7 +5,8 @@
         xmlns:icons="clr-namespace:ModMyFactoryGUI.Controls.Icons"
         xmlns:largeicons="clr-namespace:ModMyFactoryGUI.Controls.Icons.Large"
         xmlns:views="clr-namespace:ModMyFactoryGUI.Views"
-        Icon="/Assets/MMF_Icon.ico" Title="{l:LocalizedResource MainWindowTitle}">
+        Icon="/Assets/MMF_Icon.ico" Title="{l:LocalizedResource MainWindowTitle}"
+        Background="{DynamicResource ThemeBackgroundHighBrush}">
 
   <Window.Styles>
     <Style Selector="TabControl WrapPanel">
@@ -16,7 +17,7 @@
   <DockPanel>
 
     <!-- Main Menu -->
-    <Menu DockPanel.Dock="Top" Background="{DynamicResource ThemeBackgroundHighBrush}">
+    <Menu DockPanel.Dock="Top">
 
       <!-- File menu -->
       <MenuItem Header="{l:LocalizedResource FileMenuItem}">
@@ -319,12 +320,13 @@
     </Menu>
 
     <!-- Toolbar -->
-    <Menu DockPanel.Dock="Top" Background="{DynamicResource ThemeBackgroundHighBrush}">
+    <Menu DockPanel.Dock="Top">
       
     </Menu>
 
     <!-- Main View -->
-    <TabControl DockPanel.Dock="Bottom" TabStripPlacement="Right" SelectedItem="{Binding SelectedTab, Mode=TwoWay}">
+    <TabControl DockPanel.Dock="Bottom" TabStripPlacement="Right" Background="{DynamicResource ThemeBackgroundBrush}"
+                SelectedItem="{Binding SelectedTab, Mode=TwoWay}">
 
       <!-- Manager -->
       <TabItem>

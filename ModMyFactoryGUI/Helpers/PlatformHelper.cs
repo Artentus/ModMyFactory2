@@ -8,6 +8,9 @@ namespace ModMyFactoryGUI.Helpers
     {
         public static void OpenWebUrl(string url)
         {
+#if NETFULL
+            Process.Start(new ProcessStartInfo(url) { UseShellExecute = true });
+#elif NETCORE
             // Code according to Microsoft
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
@@ -25,6 +28,9 @@ namespace ModMyFactoryGUI.Helpers
             {
                 throw new PlatformNotSupportedException();
             }
+#else
+            throw new PlatformNotSupportedException();
+#endif
         }
     }
 }
