@@ -4,14 +4,17 @@
   <Style.Resources>
 
     <Color x:Key="ThemeAccentColor">#CC119EDA</Color>
-    <Color x:Key="ThemeAccentColor2">#99119EDA</Color>
-    <Color x:Key="ThemeAccentColor3">#66119EDA</Color>
-    <Color x:Key="ThemeAccentColor4">#33119EDA</Color>
+    <Color x:Key="ThemeAccentColor2">#FFc9def5</Color>
+    <Color x:Key="ThemeAccentColor3">#FF96c6fa</Color>
+    <Color x:Key="ThemeAccentColor4">#FF96c6fa</Color>
 
     <Color x:Key="ThemeBackgroundColor">#FFFFFFFF</Color>
-    <Color x:Key="ThemeBorderLowColor">#FFAAAAAA</Color>
-    <Color x:Key="ThemeBorderMidColor">#FF888888</Color>
-    <Color x:Key="ThemeBorderHighColor">#FF333333</Color>
+    <Color x:Key="ThemeBackgroundHighColor">#FFeeeef2</Color>
+    <Color x:Key="ThemeBackgroundLowColor">#FFf6f6f6</Color>
+    
+    <Color x:Key="ThemeBorderLowColor">#FFcccedb</Color>
+    <Color x:Key="ThemeBorderMidColor">#FFcccedb</Color>
+    <Color x:Key="ThemeBorderHighColor">#FFeeeef2</Color>
 
     <Color x:Key="ThemeControlLowColor">#FF868999</Color>
     <Color x:Key="ThemeControlMidColor">#FFF5F5F5</Color>
@@ -22,17 +25,27 @@
     <Color x:Key="ThemeControlHighlightLowColor">#FFF0F0F0</Color>
     <Color x:Key="ThemeControlHighlightMidColor">#FFD0D0D0</Color>
     <Color x:Key="ThemeControlHighlightHighColor">#FF808080</Color>
-    <Color x:Key="ThemeForegroundColor">#FF000000</Color>
-    <Color x:Key="ThemeForegroundLowColor">#FF808080</Color>
+    
+    <Color x:Key="ThemeForegroundColor">#FF1e1e1e</Color>
+    <Color x:Key="ThemeForegroundLowColor">#FF717171</Color>
 
     <Color x:Key="HighlightColor">#FF086F9E</Color>
     <Color x:Key="HighlightForegroundColor">#FFFFFFFF</Color>
     <Color x:Key="ErrorColor">#FFFF0000</Color>
     <Color x:Key="ErrorLowColor">#10FF0000</Color>
-    <Color x:Key="HyperLinkColor">#FF096eb8</Color>
-    <Color x:Key="HyperLinkHighlightColor">#FF66bfff</Color>
+
+    <Color x:Key="IconBaseColor1">#FFFFFFFF</Color>
+    <Color x:Key="IconBaseColor2">#FF414141</Color>
+    <Color x:Key="IconColor1">#FF7ac1ff</Color>
+    <Color x:Key="IconColor2">#FF8dd28a</Color>
+    <Color x:Key="IconColor3">#FFd7ac6a</Color>
+    <Color x:Key="IconColor4">#FFf0ca94</Color>
+    <Color x:Key="IconColor5">#FFf38b76</Color>
 
     <SolidColorBrush x:Key="ThemeBackgroundBrush" Color="{DynamicResource ThemeBackgroundColor}"></SolidColorBrush>
+    <SolidColorBrush x:Key="ThemeBackgroundHighBrush" Color="{DynamicResource ThemeBackgroundHighColor}"></SolidColorBrush>
+    <SolidColorBrush x:Key="ThemeBackgroundLowBrush" Color="{DynamicResource ThemeBackgroundLowColor}"></SolidColorBrush>
+    
     <SolidColorBrush x:Key="ThemeBorderLowBrush" Color="{DynamicResource ThemeBorderLowColor}"></SolidColorBrush>
     <SolidColorBrush x:Key="ThemeBorderMidBrush" Color="{DynamicResource ThemeBorderMidColor}"></SolidColorBrush>
     <SolidColorBrush x:Key="ThemeBorderHighBrush" Color="{DynamicResource ThemeBorderHighColor}"></SolidColorBrush>
@@ -55,8 +68,14 @@
     <SolidColorBrush x:Key="ThemeAccentBrush4" Color="{DynamicResource ThemeAccentColor4}"></SolidColorBrush>
     <SolidColorBrush x:Key="ErrorBrush" Color="{DynamicResource ErrorColor}"></SolidColorBrush>
     <SolidColorBrush x:Key="ErrorLowBrush" Color="{DynamicResource ErrorLowColor}"></SolidColorBrush>
-    <SolidColorBrush x:Key="HyperLinkBrush" Color="{DynamicResource HyperLinkColor}"></SolidColorBrush>
-    <SolidColorBrush x:Key="HyperLinkHighlightBrush" Color="{DynamicResource HyperLinkHighlightColor}"></SolidColorBrush>
+
+    <SolidColorBrush x:Key="IconBaseBrush1" Color="{DynamicResource IconBaseColor1}"></SolidColorBrush>
+    <SolidColorBrush x:Key="IconBaseBrush2" Color="{DynamicResource IconBaseColor2}"></SolidColorBrush>
+    <SolidColorBrush x:Key="IconBrush1" Color="{DynamicResource IconColor1}"></SolidColorBrush>
+    <SolidColorBrush x:Key="IconBrush2" Color="{DynamicResource IconColor2}"></SolidColorBrush>
+    <SolidColorBrush x:Key="IconBrush3" Color="{DynamicResource IconColor3}"></SolidColorBrush>
+    <SolidColorBrush x:Key="IconBrush4" Color="{DynamicResource IconColor4}"></SolidColorBrush>
+    <SolidColorBrush x:Key="IconBrush5" Color="{DynamicResource IconColor5}"></SolidColorBrush>
 
     <SolidColorBrush x:Key="NotificationCardBackgroundBrush" Color="#444444" Opacity="0.75"/>
     <SolidColorBrush x:Key="NotificationCardInformationBackgroundBrush" Color="#007ACC" Opacity="0.75"/>

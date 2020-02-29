@@ -15,7 +15,7 @@
     <ItemsControl Items="{Binding Links}">
       <ItemsControl.ItemsPanel>
         <ItemsPanelTemplate>
-          <WrapPanel Orientation="Vertical" MaxHeight="100" HorizontalAlignment="Center"/>
+          <WrapPanel Orientation="Vertical" MaxHeight="140" HorizontalAlignment="Center"/>
         </ItemsPanelTemplate>
       </ItemsControl.ItemsPanel>
       

@@ -173,6 +173,24 @@
     "value": "Ctrl+F1"
   },
 
+  // Tab headers
+  "ManagerTabHeader": {
+    "type": "string",
+    "value": "Manager"
+  },
+  "OnlineModsTabHeader": {
+    "type": "string",
+    "value": "Download\nMods"
+  },
+  "FactorioTabHeader": {
+    "type": "string",
+    "value": "Factorio"
+  },
+  "SettingsTabHeader": {
+    "type": "string",
+    "value": "Settings"
+  },
+
   // --------- About window ---------
   "AboutWindowTitle": {
     "type": "string",
@@ -196,7 +214,7 @@
   },
   "ThirdPartySoftwareHeader": {
     "type": "string",
-    "value":  "Third party software"
+    "value": "Third party software"
   },
 
   // --------- Visual theme names ---------

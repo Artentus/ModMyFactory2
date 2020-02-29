@@ -21,7 +21,11 @@ namespace ModMyFactoryGUI.ViewModels
                 new WebLinkViewModel("Rx.NET", "https://github.com/dotnet/reactive"),
                 new WebLinkViewModel("Splat", "https://github.com/reactiveui/splat"),
                 new WebLinkViewModel("SkiaSharp", "https://github.com/mono/SkiaSharp"),
-                new WebLinkViewModel("JetBrains.Annotations", "https://www.nuget.org/packages/JetBrains.Annotations")
+                new WebLinkViewModel("JetBrains.Annotations", "https://www.nuget.org/packages/JetBrains.Annotations"),
+                new WebLinkViewModel("Avalonia.ThemeManager", "https://github.com/wieslawsoltes/Avalonia.ThemeManager"),
+                new WebLinkViewModel("SharpCompress", "https://github.com/adamhathcock/sharpcompress"),
+                new WebLinkViewModel("Mono.Posix", "https://github.com/mono/mono/tree/master/mcs/class/Mono.Posix"),
+                new WebLinkViewModel("SharpDX", "http://sharpdx.org/")
             };
         }
     }

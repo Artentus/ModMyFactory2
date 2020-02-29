@@ -1,14 +1,21 @@
 <Window x:Class="ModMyFactoryGUI.Views.MainWindow"
         xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:rxui="http://reactiveui.net"
         xmlns:l="clr-namespace:ModMyFactoryGUI.Localization"
+        xmlns:icons="clr-namespace:ModMyFactoryGUI.Controls.Icons"
+        xmlns:largeicons="clr-namespace:ModMyFactoryGUI.Controls.Icons.Large"
         Icon="/Assets/MMF_Icon.ico" Title="{l:LocalizedResource MainWindowTitle}">
+
+  <Window.Styles>
+    <Style Selector="TabControl WrapPanel">
+      <Setter Property="Background" Value="{DynamicResource ThemeBackgroundHighBrush}"/>
+    </Style>
+  </Window.Styles>
 
   <DockPanel>
 
     <!-- Main Menu -->
-    <Menu DockPanel.Dock="Top">
+    <Menu DockPanel.Dock="Top" Background="{DynamicResource ThemeBackgroundHighBrush}">
 
       <!-- File menu -->
       <MenuItem Header="{l:LocalizedResource FileMenuItem}">
@@ -311,13 +318,58 @@
     </Menu>
 
     <!-- Toolbar -->
-    <Menu DockPanel.Dock="Top">
-
+    <Menu DockPanel.Dock="Top" Background="{DynamicResource ThemeBackgroundHighBrush}">
+      
     </Menu>
 
-    <rxui:RoutedViewHost DockPanel.Dock="Bottom" Router="{Binding Router}">
+    <!-- Main View -->
+    <TabControl DockPanel.Dock="Bottom" TabStripPlacement="Right">
+
+      <!-- Manager -->
+      <TabItem>
+        <TabItem.Header>
+          <StackPanel Width="120" Margin="0,8">
+            <largeicons:ManagerIcon HorizontalAlignment="Center"/>
+            <TextBlock Text="{l:LocalizedResource ManagerTabHeader}" TextAlignment="Center"/>
+          </StackPanel>
+        </TabItem.Header>
+        
+      </TabItem>
+
+      <!-- Online mods -->
+      <TabItem>
+        <TabItem.Header>
+          <StackPanel Width="120" Margin="0,8">
+            <largeicons:DownloadModsIcon HorizontalAlignment="Center"/>
+            <TextBlock Text="{l:LocalizedResource OnlineModsTabHeader}" TextAlignment="Center"/>
+          </StackPanel>
+        </TabItem.Header>
+
+      </TabItem>
+
+      <!-- Factorio -->
+      <TabItem>
+        <TabItem.Header>
+          <StackPanel Width="120" Margin="0,8">
+            <largeicons:FactorioIcon HorizontalAlignment="Center"/>
+            <TextBlock Text="{l:LocalizedResource FactorioTabHeader}" TextAlignment="Center"/>
+          </StackPanel>
+        </TabItem.Header>
+
+      </TabItem>
+
+      <!-- Settings -->
+      <TabItem>
+        <TabItem.Header>
+          <StackPanel Width="120" Margin="0,8">
+            <largeicons:SettingsIcon HorizontalAlignment="Center"/>
+            <TextBlock Text="{l:LocalizedResource SettingsTabHeader}" TextAlignment="Center"/>
+          </StackPanel>
+        </TabItem.Header>
+
+      </TabItem>
       
-    </rxui:RoutedViewHost>
+    </TabControl>
 
   </DockPanel>
 

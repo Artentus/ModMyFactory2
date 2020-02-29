@@ -173,6 +173,16 @@
     "value": "Strg+F1"
   },
 
+  // Tab headers
+  "OnlineModsTabHeader": {
+    "type": "string",
+    "value": "Mods\nherunterladen"
+  },
+  "SettingsTabHeader": {
+    "type": "string",
+    "value": "Einstellungen"
+  },
+
   // --------- About window ---------
   "AboutWindowTitle": {
     "type": "string",

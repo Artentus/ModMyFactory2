@@ -7,10 +7,10 @@
 
   <UserControl.Styles>
     <Style Selector="TextBlock">
-      <Setter Property="Foreground" Value="{DynamicResource HyperLinkBrush}"/>
+      <Setter Property="Foreground" Value="{DynamicResource ThemeAccentBrush4}"/>
     </Style>
     <Style Selector="TextBlock:pointerover">
-      <Setter Property="Foreground" Value="{DynamicResource HyperLinkHighlightBrush}"/>
+      <Setter Property="Foreground" Value="{DynamicResource ThemeAccentBrush3}"/>
     </Style>
   </UserControl.Styles>
 
@@ -26,7 +26,7 @@
     
     <TextBlock x:Name="LinkText" Grid.Row="0" Grid.Column="0"/>
     <Rectangle Grid.Row="1" Grid.Column="0" Margin="-1,-2,-1,2"
-               Fill="{DynamicResource HyperLinkHighlightBrush}"
+               Fill="{DynamicResource ThemeAccentBrush3}"
                IsVisible="{Binding IsPointerOver, ElementName=LinkText}"
                IsHitTestVisible="False"/>
   </Grid>
