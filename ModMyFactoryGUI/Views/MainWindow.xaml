@@ -4,6 +4,7 @@
         xmlns:l="clr-namespace:ModMyFactoryGUI.Localization"
         xmlns:icons="clr-namespace:ModMyFactoryGUI.Controls.Icons"
         xmlns:largeicons="clr-namespace:ModMyFactoryGUI.Controls.Icons.Large"
+        xmlns:views="clr-namespace:ModMyFactoryGUI.Views"
         Icon="/Assets/MMF_Icon.ico" Title="{l:LocalizedResource MainWindowTitle}">
 
   <Window.Styles>
@@ -323,7 +324,7 @@
     </Menu>
 
     <!-- Main View -->
-    <TabControl DockPanel.Dock="Bottom" TabStripPlacement="Right">
+    <TabControl DockPanel.Dock="Bottom" TabStripPlacement="Right" SelectedItem="{Binding SelectedTab, Mode=TwoWay}">
 
       <!-- Manager -->
       <TabItem>
@@ -333,7 +334,8 @@
             <TextBlock Text="{l:LocalizedResource ManagerTabHeader}" TextAlignment="Center"/>
           </StackPanel>
         </TabItem.Header>
-        
+
+        <views:ManagerView DataContext="{Binding ManagerViewModel}"/>
       </TabItem>
 
       <!-- Online mods -->
@@ -345,6 +347,7 @@
           </StackPanel>
         </TabItem.Header>
 
+        <views:OnlineModsView DataContext="{Binding OnlineModsViewModel}"/>
       </TabItem>
 
       <!-- Factorio -->
@@ -356,6 +359,7 @@
           </StackPanel>
         </TabItem.Header>
 
+        <views:FactorioView DataContext="{Binding FactorioViewModel}"/>
       </TabItem>
 
       <!-- Settings -->
@@ -367,6 +371,7 @@
           </StackPanel>
         </TabItem.Header>
 
+        <views:SettingsView DataContext="{Binding SettingsViewModel}"/>
       </TabItem>
       
     </TabControl>

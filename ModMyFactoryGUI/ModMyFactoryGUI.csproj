@@ -37,6 +37,10 @@
     <AvaloniaResource Remove="Controls\Icons\Large\ManagerIcon.xaml" />
     <AvaloniaResource Remove="Controls\Icons\Large\SettingsIcon.xaml" />
     <AvaloniaResource Remove="Views\AttributionView.xaml" />
+    <AvaloniaResource Remove="Views\FactorioView.xaml" />
+    <AvaloniaResource Remove="Views\ManagerView.xaml" />
+    <AvaloniaResource Remove="Views\OnlineModsView.xaml" />
+    <AvaloniaResource Remove="Views\SettingsView.xaml" />
   </ItemGroup>
 
   <ItemGroup>
@@ -46,6 +50,10 @@
     <None Remove="Controls\Icons\Large\ManagerIcon.xaml" />
     <None Remove="Controls\Icons\Large\SettingsIcon.xaml" />
     <None Remove="Views\AttributionView.xaml" />
+    <None Remove="Views\FactorioView.xaml" />
+    <None Remove="Views\ManagerView.xaml" />
+    <None Remove="Views\OnlineModsView.xaml" />
+    <None Remove="Views\SettingsView.xaml" />
   </ItemGroup>
 
   <ItemGroup>
@@ -106,6 +114,18 @@
       <Generator>MSBuild:Compile</Generator>
     </EmbeddedResource>
     <EmbeddedResource Include="Controls\Icons\Large\SettingsIcon.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\ManagerView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\OnlineModsView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\FactorioView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\SettingsView.xaml">
       <Generator>MSBuild:Compile</Generator>
     </EmbeddedResource>
     <ProjectReference Include="..\Avalonia.ThemeManager\Avalonia.ThemeManager.csproj" />
