@@ -2,17 +2,20 @@ using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
 using Avalonia.ThemeManager;
+using Avalonia.Threading;
 using ModMyFactoryGUI.Localization;
 using ModMyFactoryGUI.Localization.Json;
 using ModMyFactoryGUI.MVVM;
 using ModMyFactoryGUI.ViewModels;
 using ModMyFactoryGUI.Views;
+using ReactiveUI;
 using Serilog;
 using Serilog.Events;
 using System;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Threading.Tasks;
 
 namespace ModMyFactoryGUI
 {
@@ -20,9 +23,13 @@ namespace ModMyFactoryGUI
     {
         public static new App Current => Application.Current as App;
 
+        public static EventHandler Loaded;
+
         public IClassicDesktopStyleApplicationLifetime Lifetime => (IClassicDesktopStyleApplicationLifetime)ApplicationLifetime;
 
         public MainWindow MainWindow => Lifetime.MainWindow as MainWindow;
+
+        public MenuItemViewModel ShutdownItemViewModel { get; }
 
         public DirectoryInfo ApplicationDirectory { get; }
 
@@ -50,6 +57,15 @@ namespace ModMyFactoryGUI
 
             resource = default;
             return false;
+        }
+
+        void Shutdown() => Lifetime.Shutdown();
+
+        async Task ShutdownAsync()
+        {
+            var uiDispatcher = Dispatcher.UIThread;
+            if (uiDispatcher.CheckAccess()) Shutdown();
+            else await uiDispatcher.InvokeAsync(Shutdown, DispatcherPriority.Send);
         }
 
         DirectoryInfo GetApplicationDataDirectory()
@@ -83,6 +99,9 @@ namespace ModMyFactoryGUI
             // Data directory
             ApplicationDataDirectory = GetApplicationDataDirectory();
             if (!ApplicationDataDirectory.Exists) ApplicationDataDirectory.Create();
+
+            var shutdownCommand = ReactiveCommand.CreateFromTask(ShutdownAsync);
+            ShutdownItemViewModel = new MenuItemViewModel(shutdownCommand, false, null, "CloseMenuItem", "CloseHotkey");
         }
 
         public override void Initialize()
@@ -204,6 +223,8 @@ namespace ModMyFactoryGUI
 
                 Settings.Save();
                 lifetime.Exit += OnExit;
+
+                Loaded?.Invoke(this, EventArgs.Empty);
 
                 var mainViewModel = new MainWindowViewModel();
                 var mainView = View.CreateAndAttach(mainViewModel);

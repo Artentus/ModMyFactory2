@@ -16,8 +16,6 @@ namespace ModMyFactoryGUI.ViewModels
         TabItem _selectedTab;
         IMainViewModel _selectedViewModel;
 
-        public ICommand CloseCommand { get; }
-
         public ICommand OpenAboutWindowCommand { get; }
 
         public IEnumerable<CultureViewModel> AvailableCultures
@@ -33,6 +31,14 @@ namespace ModMyFactoryGUI.ViewModels
         public FactorioViewModel FactorioViewModel { get; } = new FactorioViewModel();
 
         public SettingsViewModel SettingsViewModel { get; } = new SettingsViewModel();
+
+        public IReadOnlyCollection<IControl> FileMenuItems { get; private set; }
+
+        public bool FileMenuVisible => FileMenuItems.Count > 0;
+
+        public IReadOnlyCollection<IControl> EditMenuItems { get; private set; }
+
+        public bool EditMenuVisible => EditMenuItems.Count > 0;
 
         public TabItem SelectedTab
         {
@@ -64,12 +70,9 @@ namespace ModMyFactoryGUI.ViewModels
 
         public MainWindowViewModel()
         {
-            CloseCommand = ReactiveCommand.Create(CloseWindow);
             OpenAboutWindowCommand = ReactiveCommand.CreateFromTask(OpenAboutWindow);
             SelectedViewModel = ManagerViewModel;
         }
-
-        void CloseWindow() => AttachedView.Close();
 
         async Task OpenAboutWindow()
         {
@@ -87,7 +90,13 @@ namespace ModMyFactoryGUI.ViewModels
 
         void RebuildMenuItems(IMainViewModel viewModel)
         {
-            // ToDo: Implement
+            FileMenuItems = viewModel.FileMenuItems;
+            this.RaisePropertyChanged(nameof(FileMenuItems));
+            this.RaisePropertyChanged(nameof(FileMenuVisible));
+
+            EditMenuItems = viewModel.EditMenuItems;
+            this.RaisePropertyChanged(nameof(EditMenuItems));
+            this.RaisePropertyChanged(nameof(EditMenuVisible));
         }
     }
 }

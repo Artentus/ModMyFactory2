@@ -5,8 +5,24 @@
         xmlns:icons="clr-namespace:ModMyFactoryGUI.Controls.Icons"
         xmlns:largeicons="clr-namespace:ModMyFactoryGUI.Controls.Icons.Large"
         xmlns:views="clr-namespace:ModMyFactoryGUI.Views"
+        xmlns:models="clr-namespace:ModMyFactoryGUI.ViewModels"
         Icon="/Assets/MMF_Icon.ico" Title="{l:LocalizedResource MainWindowTitle}"
         Background="{DynamicResource ThemeBackgroundHighBrush}">
+
+  <Window.Resources>
+    <l:LocalizeConverter x:Key="LocalizeConverter"/>
+  </Window.Resources>
+
+  <Window.DataTemplates>
+    <DataTemplate DataType="{x:Type models:MenuHeaderViewModel}">
+      <DockPanel>
+        <TextBlock DockPanel.Dock="Left" HorizontalAlignment="Left"
+                   Text="{Binding HeaderKey, Converter={StaticResource LocalizeConverter}}"/>
+        <TextBlock DockPanel.Dock="Right" HorizontalAlignment="Right" Margin="16,0,0,0" Classes="muted"
+                   Text="{Binding InputGestureKey, Converter={StaticResource LocalizeConverter}}" IsVisible="{Binding InputGestureVisible}"/>
+      </DockPanel>
+    </DataTemplate>
+  </Window.DataTemplates>
 
   <Window.Styles>
     <Style Selector="TabControl WrapPanel">
@@ -19,159 +35,15 @@
     <!-- Main Menu -->
     <Menu DockPanel.Dock="Top">
 
-      <!-- File menu -->
-      <MenuItem Header="{l:LocalizedResource FileMenuItem}">
+      <!-- File menu (dynamically built) -->
+      <MenuItem Header="{l:LocalizedResource FileMenuItem}"
+                IsVisible="{Binding FileMenuVisible}"
+                Items="{Binding FileMenuItems}"/>
 
-        <!-- Add mods menu -->
-        <MenuItem Header="{l:LocalizedResource AddModsMenuItem}">
-          <MenuItem.Icon>
-            <Image Source="/Assets/Icons/Add.png"/>
-          </MenuItem.Icon>
-
-          <!-- Download mods -->
-          <MenuItem>
-            <MenuItem.Header>
-              <DockPanel>
-                <TextBlock DockPanel.Dock="Left" Text="{l:LocalizedResource DownloadModsMenuItem}" HorizontalAlignment="Left" Margin="0,0,16,0"/>
-                <TextBlock DockPanel.Dock="Right" Text="{l:LocalizedResource DownloadModsHotkey}" HorizontalAlignment="Right" Classes="muted"/>
-              </DockPanel>
-            </MenuItem.Header>
-            <MenuItem.Icon>
-              <Image Source="/Assets/Icons/Download.png"/>
-            </MenuItem.Icon>
-          </MenuItem>
-
-          <!-- Add mod files -->
-          <MenuItem>
-            <MenuItem.Header>
-              <DockPanel>
-                <TextBlock DockPanel.Dock="Left" Text="{l:LocalizedResource AddModFilesMenuItem}" HorizontalAlignment="Left" Margin="0,0,16,0"/>
-                <TextBlock DockPanel.Dock="Right" Text="{l:LocalizedResource AddModFilesHotkey}" HorizontalAlignment="Right" Classes="muted"/>
-              </DockPanel>
-            </MenuItem.Header>
-            <MenuItem.Icon>
-              <Image Source="/Assets/Icons/AddDocument.png"/>
-            </MenuItem.Icon>
-          </MenuItem>
-
-        </MenuItem>
-
-        <!-- New modpack -->
-        <MenuItem>
-          <MenuItem.Header>
-            <DockPanel>
-              <TextBlock DockPanel.Dock="Left" Text="{l:LocalizedResource NewModpackMenuItem}" HorizontalAlignment="Left" Margin="0,0,16,0"/>
-              <TextBlock DockPanel.Dock="Right" Text="{l:LocalizedResource NewModpackHotkey}" HorizontalAlignment="Right" Classes="muted"/>
-            </DockPanel>
-          </MenuItem.Header>
-          <MenuItem.Icon>
-            <Image Source="/Assets/Icons/NewPackage.png"/>
-          </MenuItem.Icon>
-        </MenuItem>
-
-        <!-- Create link -->
-        <MenuItem >
-          <MenuItem.Header>
-            <DockPanel>
-              <TextBlock DockPanel.Dock="Left" Text="{l:LocalizedResource CreateLinkMenuItem}" HorizontalAlignment="Left" Margin="0,0,16,0"/>
-              <TextBlock DockPanel.Dock="Right" Text="{l:LocalizedResource CreateLinkHotkey}" HorizontalAlignment="Right" Classes="muted"/>
-            </DockPanel>
-          </MenuItem.Header>
-          <MenuItem.Icon>
-            <Image Source="/Assets/Icons/Link.png"/>
-          </MenuItem.Icon>
-        </MenuItem>
-
-        <Separator/>
-
-        <!-- Export modpacks -->
-        <MenuItem>
-          <MenuItem.Header>
-            <DockPanel>
-              <TextBlock DockPanel.Dock="Left" Text="{l:LocalizedResource ExportModpacksMenuItem}" HorizontalAlignment="Left" Margin="0,0,16,0"/>
-              <TextBlock DockPanel.Dock="Right" Text="{l:LocalizedResource ExportModpacksHotkey}" HorizontalAlignment="Right" Classes="muted"/>
-            </DockPanel>
-          </MenuItem.Header>
-          <MenuItem.Icon>
-            <Image Source="/Assets/Icons/ExportPackage.png"/>
-          </MenuItem.Icon>
-        </MenuItem>
-
-        <!-- Import modpacks -->
-        <MenuItem>
-          <MenuItem.Header>
-            <DockPanel>
-              <TextBlock DockPanel.Dock="Left" Text="{l:LocalizedResource ImportModpacksMenuItem}" HorizontalAlignment="Left" Margin="0,0,16,0"/>
-              <TextBlock DockPanel.Dock="Right" Text="{l:LocalizedResource ImportModpacksHotkey}" HorizontalAlignment="Right" Classes="muted"/>
-            </DockPanel>
-          </MenuItem.Header>
-          <MenuItem.Icon>
-            <Image Source="/Assets/Icons/ImportPackage.png"/>
-          </MenuItem.Icon>
-        </MenuItem>
-
-        <Separator/>
-
-        <!-- Start game -->
-        <MenuItem>
-          <MenuItem.Header>
-            <DockPanel>
-              <TextBlock DockPanel.Dock="Left" Text="{l:LocalizedResource StartGameMenuItem}" HorizontalAlignment="Left" Margin="0,0,16,0"/>
-              <TextBlock DockPanel.Dock="Right" Text="{l:LocalizedResource StartGameHotkey}" HorizontalAlignment="Right" Classes="muted"/>
-            </DockPanel>
-          </MenuItem.Header>
-          <MenuItem.Icon>
-            <Image Source="/Assets/Icons/Run.png"/>
-          </MenuItem.Icon>
-        </MenuItem>
-
-        <Separator/>
-
-        <!-- Close application -->
-        <MenuItem Command="{Binding CloseCommand}">
-          <MenuItem.Header>
-            <DockPanel>
-              <TextBlock DockPanel.Dock="Left" Text="{l:LocalizedResource CloseMenuItem}" HorizontalAlignment="Left" Margin="0,0,16,0"/>
-              <TextBlock DockPanel.Dock="Right" Text="{l:LocalizedResource CloseHotkey}" HorizontalAlignment="Right" Classes="muted"/>
-            </DockPanel>
-          </MenuItem.Header>
-          <MenuItem.Icon>
-            <Image Source="/Assets/Icons/Close.png"/>
-          </MenuItem.Icon>
-        </MenuItem>
-
-      </MenuItem>
-
-      <!-- Edit menu -->
-      <MenuItem Header="{l:LocalizedResource EditMenuItem}">
-
-        <!-- Update mods -->
-        <MenuItem>
-          <MenuItem.Header>
-            <DockPanel>
-              <TextBlock DockPanel.Dock="Left" Text="{l:LocalizedResource UpdateModsMenuItem}" HorizontalAlignment="Left" Margin="0,0,16,0"/>
-              <TextBlock DockPanel.Dock="Right" Text="{l:LocalizedResource UpdateModsHotkey}" HorizontalAlignment="Right" Classes="muted"/>
-            </DockPanel>
-          </MenuItem.Header>
-          <MenuItem.Icon>
-            <Image Source="/Assets/Icons/Update.png"/>
-          </MenuItem.Icon>
-        </MenuItem>
-
-        <!-- Mod dependencies -->
-        <MenuItem>
-          <MenuItem.Header>
-            <DockPanel>
-              <TextBlock DockPanel.Dock="Left" Text="{l:LocalizedResource DependenciesMenuItem}" HorizontalAlignment="Left" Margin="0,0,16,0"/>
-              <TextBlock DockPanel.Dock="Right" Text="{l:LocalizedResource DependenciesHotkey}" HorizontalAlignment="Right" Classes="muted"/>
-            </DockPanel>
-          </MenuItem.Header>
-          <MenuItem.Icon>
-            <Image Source="/Assets/Icons/Dependency.png"/>
-          </MenuItem.Icon>
-        </MenuItem>
-
-      </MenuItem>
+      <!-- Edit menu (dynamically built) -->
+      <MenuItem Header="{l:LocalizedResource EditMenuItem}"
+                IsVisible="{Binding EditMenuVisible}"
+                Items="{Binding EditMenuItems}"/>
 
       <!-- View menu -->
       <MenuItem Header="{l:LocalizedResource ViewMenuItem}">
