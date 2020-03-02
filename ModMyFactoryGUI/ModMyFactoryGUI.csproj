@@ -31,32 +31,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <AvaloniaResource Remove="Controls\HyperLink.xaml" />
-    <AvaloniaResource Remove="Controls\Icons\Large\DownloadModsIcon.xaml" />
-    <AvaloniaResource Remove="Controls\Icons\Large\FactorioIcon.xaml" />
-    <AvaloniaResource Remove="Controls\Icons\Large\ManagerIcon.xaml" />
-    <AvaloniaResource Remove="Controls\Icons\Large\SettingsIcon.xaml" />
-    <AvaloniaResource Remove="Views\AttributionView.xaml" />
-    <AvaloniaResource Remove="Views\FactorioView.xaml" />
-    <AvaloniaResource Remove="Views\ManagerView.xaml" />
-    <AvaloniaResource Remove="Views\OnlineModsView.xaml" />
-    <AvaloniaResource Remove="Views\SettingsView.xaml" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Remove="Controls\HyperLink.xaml" />
-    <None Remove="Controls\Icons\Large\DownloadModsIcon.xaml" />
-    <None Remove="Controls\Icons\Large\FactorioIcon.xaml" />
-    <None Remove="Controls\Icons\Large\ManagerIcon.xaml" />
-    <None Remove="Controls\Icons\Large\SettingsIcon.xaml" />
-    <None Remove="Views\AttributionView.xaml" />
-    <None Remove="Views\FactorioView.xaml" />
-    <None Remove="Views\ManagerView.xaml" />
-    <None Remove="Views\OnlineModsView.xaml" />
-    <None Remove="Views\SettingsView.xaml" />
-  </ItemGroup>
-
-  <ItemGroup>
     <None Update="lang\*.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -98,36 +72,6 @@
     <PackageReference Include="ModMyFactory.WebApi" Version="1.0.0.3-alpha" />
     <PackageReference Include="ModMyFactory.Win32" Version="1.0.0.3-alpha" />
     <PackageReference Include="ModMyFactory" Version="1.0.0.5-alpha" />
-    <EmbeddedResource Include="Views\AttributionView.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Controls\HyperLink.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Controls\Icons\Large\ManagerIcon.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Controls\Icons\Large\DownloadModsIcon.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Controls\Icons\Large\FactorioIcon.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Controls\Icons\Large\SettingsIcon.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Views\ManagerView.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Views\OnlineModsView.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Views\FactorioView.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Views\SettingsView.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </EmbeddedResource>
     <ProjectReference Include="..\Avalonia.ThemeManager\Avalonia.ThemeManager.csproj" />
   </ItemGroup>
 

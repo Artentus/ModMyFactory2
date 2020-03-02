@@ -9,5 +9,7 @@ namespace ModMyFactoryGUI.ViewModels
         IReadOnlyCollection<IControl> FileMenuItems { get; }
 
         IReadOnlyCollection<IControl> EditMenuItems { get; }
+
+        IReadOnlyCollection<IControl> ToolbarItems { get; }
     }
 }

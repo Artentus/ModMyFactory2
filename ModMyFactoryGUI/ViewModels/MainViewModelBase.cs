@@ -1,4 +1,5 @@
 using Avalonia.Controls;
+using ModMyFactoryGUI.Controls;
 using ModMyFactoryGUI.MVVM;
 using ModMyFactoryGUI.Views;
 using System;
@@ -9,7 +10,8 @@ namespace ModMyFactoryGUI.ViewModels
 {
     abstract class MainViewModelBase<T> : RoutableViewModelBase<T>, IMainViewModel where T : class, IMainView
     {
-        IReadOnlyCollection<IControl> _fileMenuItems, _editMenuItems;
+        IReadOnlyCollection<IMenuItemViewModel> _fileMenuViewModels, _editMenuViewModels;
+        IReadOnlyCollection<IControl> _fileMenuItems, _editMenuItems, _toolbarItems;
 
         protected abstract List<IMenuItemViewModel> GetFileMenuViewModels();
         protected abstract List<IMenuItemViewModel> GetEditMenuViewModels();
@@ -28,7 +30,7 @@ namespace ModMyFactoryGUI.ViewModels
             return new List<IMenuItemViewModel>();
         }
 
-        ICollection<IMenuItemViewModel> BuildMenuViewModelCollection(List<IMenuItemViewModel> items, ICollection<IMenuItemViewModel> baseItems)
+        static IReadOnlyCollection<IMenuItemViewModel> BuildMenuViewModelCollection(List<IMenuItemViewModel> items, ICollection<IMenuItemViewModel> baseItems)
         {
             if (items is null) throw new ArgumentNullException(nameof(items));
             if (baseItems is null) throw new ArgumentNullException(nameof(baseItems));
@@ -45,7 +47,21 @@ namespace ModMyFactoryGUI.ViewModels
             return items;
         }
 
-        IControl CreateMenuItem(IMenuItemViewModel viewModel)
+        IReadOnlyCollection<IMenuItemViewModel> BuildFileMenuViewModelCollection()
+        {
+            var items = GetFileMenuViewModels();
+            var baseItems = GetBaseFileMenuViewModels();
+            return BuildMenuViewModelCollection(items, baseItems);
+        }
+
+        IReadOnlyCollection<IMenuItemViewModel> BuildEditMenuViewModelCollection()
+        {
+            var items = GetEditMenuViewModels();
+            var baseItems = GetBaseEditMenuViewModels();
+            return BuildMenuViewModelCollection(items, baseItems);
+        }
+
+        static IControl CreateMenuItem(IMenuItemViewModel viewModel)
         {
             if (viewModel is SeparatorMenuItemViewModel)
             {
@@ -60,13 +76,22 @@ namespace ModMyFactoryGUI.ViewModels
                     Command = itemViewModel.Command
                 };
             }
+            else if (viewModel is ParentMenuItemViewModel parentViewModel)
+            {
+                return new MenuItem
+                {
+                    Header = parentViewModel.Header,
+                    Icon = parentViewModel.Icon,
+                    Items = CreateMenuItems(parentViewModel.SubItems)
+                };
+            }
             else
             {
                 throw new ArgumentException("Unknown view model type", nameof(viewModel));
             }
         }
 
-        IReadOnlyCollection<IControl> CreateMenuItems(ICollection<IMenuItemViewModel> viewModels)
+        static IReadOnlyCollection<IControl> CreateMenuItems(IReadOnlyCollection<IMenuItemViewModel> viewModels)
         {
             var result = new List<IControl>(viewModels.Count);
             foreach (var viewModel in viewModels)
@@ -74,20 +99,77 @@ namespace ModMyFactoryGUI.ViewModels
             return result;
         }
 
+        static IControl CreateToolbarItem(IMenuItemViewModel viewModel)
+        {
+            if (viewModel is SeparatorMenuItemViewModel)
+            {
+                return new Separator();
+            }
+            else if (viewModel is MenuItemViewModel itemViewModel)
+            {
+                return new ToolbarItem
+                {
+                    Header = itemViewModel.Header,
+                    Icon = itemViewModel.Icon,
+                    Command = itemViewModel.Command
+                };
+            }
+            else if (viewModel is ParentMenuItemViewModel parentViewModel)
+            {
+                return new ToolbarItem
+                {
+                    Header = parentViewModel.Header,
+                    Icon = parentViewModel.Icon,
+                    Items = CreateToolbarItems(parentViewModel.SubItems)
+                };
+            }
+            else
+            {
+                throw new ArgumentException("Unknown view model type", nameof(viewModel));
+            }
+        }
+
+        static IReadOnlyCollection<IControl> CreateToolbarItems(
+            IReadOnlyCollection<IMenuItemViewModel> viewModels)
+        {
+            var filteredViewModels = viewModels.Where(vm => vm.IsInToolbar);
+            return filteredViewModels.Select(CreateToolbarItem).ToList();
+        }
+
+        static IReadOnlyCollection<IControl> CreateToolbarItems(
+            IReadOnlyCollection<IMenuItemViewModel> fileViewModels,
+            IReadOnlyCollection<IMenuItemViewModel> editViewModels)
+        {
+            var filteredFileViewModels = fileViewModels.Where(vm => vm.IsInToolbar).ToList();
+            var filteredEditViewModels = editViewModels.Where(vm => vm.IsInToolbar).ToList();
+
+            bool addSeparator = (filteredFileViewModels.Count) > 0 && (filteredEditViewModels.Count > 0);
+            int totalCount = filteredEditViewModels.Count + filteredEditViewModels.Count + (addSeparator ? 1 : 0);
+            var result = new List<IControl>(totalCount);
+
+            result.AddRange(filteredFileViewModels.ConvertAll(CreateToolbarItem));
+            if (addSeparator) result.Add(new Separator());
+            result.AddRange(filteredEditViewModels.ConvertAll(CreateToolbarItem));
+            return result;
+        }
+
         IReadOnlyCollection<IControl> BuildFileMenuItemCollection()
         {
-            var items = GetFileMenuViewModels();
-            var baseItems = GetBaseFileMenuViewModels();
-            var viewModels = BuildMenuViewModelCollection(items, baseItems);
-            return CreateMenuItems(viewModels);
+            _fileMenuViewModels ??= BuildFileMenuViewModelCollection();
+            return CreateMenuItems(_fileMenuViewModels);
         }
 
         IReadOnlyCollection<IControl> BuildEditMenuItemCollection()
         {
-            var items = GetEditMenuViewModels();
-            var baseItems = GetBaseEditMenuViewModels();
-            var viewModels = BuildMenuViewModelCollection(items, baseItems);
-            return CreateMenuItems(viewModels);
+            _editMenuViewModels ??= BuildEditMenuViewModelCollection();
+            return CreateMenuItems(_editMenuViewModels);
+        }
+
+        IReadOnlyCollection<IControl> BuildToolbarItemCollection()
+        {
+            _fileMenuViewModels ??= BuildFileMenuViewModelCollection();
+            _editMenuViewModels ??= BuildEditMenuViewModelCollection();
+            return CreateToolbarItems(_fileMenuViewModels, _editMenuViewModels);
         }
 
         public IReadOnlyCollection<IControl> FileMenuItems
@@ -95,5 +177,8 @@ namespace ModMyFactoryGUI.ViewModels
 
         public IReadOnlyCollection<IControl> EditMenuItems
             => _editMenuItems ??= BuildEditMenuItemCollection();
+
+        public IReadOnlyCollection<IControl> ToolbarItems
+            => _toolbarItems ??= BuildToolbarItemCollection();
     }
 }

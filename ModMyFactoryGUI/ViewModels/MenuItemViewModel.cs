@@ -36,12 +36,12 @@ namespace ModMyFactoryGUI.ViewModels
 
     class ParentMenuItemViewModel : MenuItemViewModelBase
     {
-        public IReadOnlyCollection<MenuItemViewModel> SubItems { get; }
+        public IReadOnlyCollection<IMenuItemViewModel> SubItems { get; }
 
-        public ParentMenuItemViewModel(IList<MenuItemViewModel> subItems, bool isInToolbar, IControl icon, string headerKey, string inputGestureKey = null)
+        public ParentMenuItemViewModel(IList<IMenuItemViewModel> subItems, bool isInToolbar, IControl icon, string headerKey, string inputGestureKey = null)
             : base(isInToolbar, icon, headerKey, inputGestureKey)
         {
-            SubItems = new ReadOnlyCollection<MenuItemViewModel>(subItems);
+            SubItems = new ReadOnlyCollection<IMenuItemViewModel>(subItems);
         }
     }
 

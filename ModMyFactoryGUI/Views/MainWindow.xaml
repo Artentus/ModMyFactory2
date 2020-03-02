@@ -6,6 +6,7 @@
         xmlns:largeicons="clr-namespace:ModMyFactoryGUI.Controls.Icons.Large"
         xmlns:views="clr-namespace:ModMyFactoryGUI.Views"
         xmlns:models="clr-namespace:ModMyFactoryGUI.ViewModels"
+        xmlns:controls="clr-namespace:ModMyFactoryGUI.Controls"
         Icon="/Assets/MMF_Icon.ico" Title="{l:LocalizedResource MainWindowTitle}"
         Background="{DynamicResource ThemeBackgroundHighBrush}">
 
@@ -192,9 +193,7 @@
     </Menu>
 
     <!-- Toolbar -->
-    <Menu DockPanel.Dock="Top">
-      
-    </Menu>
+    <controls:Toolbar DockPanel.Dock="Top" Items="{Binding ToolbarItems}"/>
 
     <!-- Main View -->
     <TabControl DockPanel.Dock="Bottom" TabStripPlacement="Right" Background="{DynamicResource ThemeBackgroundBrush}"

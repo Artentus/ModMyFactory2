@@ -40,6 +40,8 @@ namespace ModMyFactoryGUI.ViewModels
 
         public bool EditMenuVisible => EditMenuItems.Count > 0;
 
+        public IReadOnlyCollection<IControl> ToolbarItems { get; private set; }
+
         public TabItem SelectedTab
         {
             get => _selectedTab;
@@ -97,6 +99,9 @@ namespace ModMyFactoryGUI.ViewModels
             EditMenuItems = viewModel.EditMenuItems;
             this.RaisePropertyChanged(nameof(EditMenuItems));
             this.RaisePropertyChanged(nameof(EditMenuVisible));
+
+            ToolbarItems = viewModel.ToolbarItems;
+            this.RaisePropertyChanged(nameof(ToolbarItems));
         }
     }
 }
