@@ -9,7 +9,7 @@ using System;
 
 namespace ModMyFactoryGUI.Helpers
 {
-    static class EnumExtensions
+    internal static class EnumExtensions
     {
         public static T SetFlag<T>(this T value, T flag) where T : Enum
         {

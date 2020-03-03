@@ -9,7 +9,7 @@ using ModMyFactory.Game;
 
 namespace ModMyFactory.Mods
 {
-    class FactorioBaseMod : Mod
+    internal class FactorioBaseMod : Mod
     {
         public override bool CanDisable => false;
 

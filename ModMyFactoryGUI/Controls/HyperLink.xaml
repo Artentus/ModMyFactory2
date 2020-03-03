@@ -16,28 +16,27 @@ the Free Software Foundation, either version 3 of the License, or
 
   <UserControl.Styles>
     <Style Selector="TextBlock">
-      <Setter Property="Foreground" Value="{DynamicResource HyperlinkBrush}"/>
+      <Setter Property="Foreground" Value="{DynamicResource HyperlinkBrush}" />
     </Style>
     <Style Selector="TextBlock:pointerover">
-      <Setter Property="Foreground" Value="{DynamicResource HyperlinkHighlightBrush}"/>
+      <Setter Property="Foreground" Value="{DynamicResource HyperlinkHighlightBrush}" />
     </Style>
   </UserControl.Styles>
 
   <Grid>
     <Grid.RowDefinitions>
-      <RowDefinition Height="Auto"/>
-      <RowDefinition Height="1"/>
+      <RowDefinition Height="Auto" />
+      <RowDefinition Height="1" />
     </Grid.RowDefinitions>
     <Grid.ColumnDefinitions>
-      <ColumnDefinition Width="Auto"/>
-      <ColumnDefinition Width="*"/>
+      <ColumnDefinition Width="Auto" />
+      <ColumnDefinition Width="*" />
     </Grid.ColumnDefinitions>
-    
-    <TextBlock x:Name="LinkText" Grid.Row="0" Grid.Column="0"/>
+
+    <TextBlock x:Name="LinkText" Grid.Row="0" Grid.Column="0" />
     <Rectangle Grid.Row="1" Grid.Column="0" Margin="-1,-2,-1,2"
                Fill="{DynamicResource HyperlinkHighlightBrush}"
                IsVisible="{Binding IsPointerOver, ElementName=LinkText}"
-               IsHitTestVisible="False"/>
+               IsHitTestVisible="False" />
   </Grid>
-
 </UserControl>

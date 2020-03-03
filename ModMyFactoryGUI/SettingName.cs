@@ -7,7 +7,7 @@
 
 namespace ModMyFactoryGUI
 {
-    static class SettingName
+    internal static class SettingName
     {
         public const string UICulture = "language";
         public const string Theme = "theme";

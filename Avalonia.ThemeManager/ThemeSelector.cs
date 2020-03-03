@@ -2,6 +2,8 @@
 // Licensed under the MIT license.
 // Edited for ModMyFactory by Mathis Rech.
 
+using Avalonia.Controls;
+using ReactiveUI;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -9,8 +11,6 @@ using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Reactive.Linq;
-using Avalonia.Controls;
-using ReactiveUI;
 
 namespace Avalonia.ThemeManager
 {
@@ -19,9 +19,9 @@ namespace Avalonia.ThemeManager
     /// </summary>
     public class ThemeSelector : ReactiveObject, IThemeSelector
     {
-        ITheme _selectedTheme;
-        readonly IList<ITheme> _themes;
-        readonly IList<Window> _windows;
+        private readonly IList<ITheme> _themes;
+        private readonly IList<Window> _windows;
+        private ITheme _selectedTheme;
 
         /// <summary>
         /// The currently selected theme.
@@ -61,9 +61,8 @@ namespace Avalonia.ThemeManager
         /// </summary>
         public ReactiveCommand<string, bool> SelectThemeCommand { get; }
 
-        public int Count => _themes.Count;
-
         public bool IsReadOnly => false;
+        public int Count => _themes.Count;
 
         public ThemeSelector(IEnumerable<ITheme> themes)
         {
@@ -76,86 +75,6 @@ namespace Avalonia.ThemeManager
         public ThemeSelector(params ITheme[] themes)
             : this((IEnumerable<ITheme>)themes)
         { }
-
-        public void Add(ITheme theme) => _themes.Add(theme);
-
-        public void AddRange(IEnumerable<ITheme> themes)
-        {
-            foreach (var theme in themes)
-                Add(theme);
-        }
-
-        public void AddRange(params ITheme[] themes)
-        {
-            foreach (var theme in themes)
-                Add(theme);
-        }
-
-        public bool Remove(ITheme theme)
-        {
-            if (theme == SelectedTheme)
-                SelectedTheme = null;
-
-            return _themes.Remove(theme);
-        }
-
-        public void Clear()
-        {
-            _themes.Clear();
-            SelectedTheme = null;
-        }
-
-        public bool Contains(ITheme item) => _themes.Contains(item);
-        void ICollection<ITheme>.CopyTo(ITheme[] array, int arrayIndex) => _themes.CopyTo(array, arrayIndex);
-        public IEnumerator<ITheme> GetEnumerator() => _themes.GetEnumerator();
-        IEnumerator IEnumerable.GetEnumerator() => _themes.GetEnumerator();
-
-        /// <summary>
-        /// Enables theme management on a window.
-        /// </summary>
-        public void EnableThemes(Window window)
-        {
-            if (window is null)
-                throw new ArgumentNullException(nameof(window));
-
-            if (_windows.Contains(window)) return;
-
-            _windows.Add(window);
-            if (!(SelectedTheme is null))
-                window.Styles.Add(SelectedTheme.Style);
-        }
-
-        /// <summary>
-        /// Disables theme management on a window.
-        /// </summary>
-        public bool DisableThemes(Window window)
-        {
-            if (window is null) return false;
-
-            bool result = _windows.Remove(window);
-            if (result && !(SelectedTheme is null))
-                window.Styles.Remove(SelectedTheme.Style);
-            return result;
-        }
-
-        /// <summary>
-        /// Selects a theme by name.
-        /// </summary>
-        public bool SelectTheme(string name)
-        {
-            var candidates = _themes.Where(t => t.Name == name);
-            if (candidates.Any())
-            {
-                var theme = candidates.First();
-                SelectedTheme = theme;
-                return true;
-            }
-            else
-            {
-                return false;
-            }
-        }
-
 
         /// <summary>
         /// Tries to load themes from XAML files in a directory and adds them to a selector.
@@ -237,5 +156,87 @@ namespace Avalonia.ThemeManager
         /// <returns>Returns a selector containg the loaded themes.</returns>
         public static IThemeSelector LoadSafe(string directoryPath)
             => LoadSafe(new DirectoryInfo(directoryPath));
+
+        public void Add(ITheme theme) => _themes.Add(theme);
+
+        public void AddRange(IEnumerable<ITheme> themes)
+        {
+            foreach (var theme in themes)
+                Add(theme);
+        }
+
+        public void AddRange(params ITheme[] themes)
+        {
+            foreach (var theme in themes)
+                Add(theme);
+        }
+
+        public bool Remove(ITheme theme)
+        {
+            if (theme == SelectedTheme)
+                SelectedTheme = null;
+
+            return _themes.Remove(theme);
+        }
+
+        public void Clear()
+        {
+            _themes.Clear();
+            SelectedTheme = null;
+        }
+
+        public bool Contains(ITheme item) => _themes.Contains(item);
+
+        public IEnumerator<ITheme> GetEnumerator() => _themes.GetEnumerator();
+
+        /// <summary>
+        /// Enables theme management on a window.
+        /// </summary>
+        public void EnableThemes(Window window)
+        {
+            if (window is null)
+                throw new ArgumentNullException(nameof(window));
+
+            if (_windows.Contains(window)) return;
+
+            _windows.Add(window);
+            if (!(SelectedTheme is null))
+                window.Styles.Add(SelectedTheme.Style);
+        }
+
+        /// <summary>
+        /// Disables theme management on a window.
+        /// </summary>
+        public bool DisableThemes(Window window)
+        {
+            if (window is null) return false;
+
+            bool result = _windows.Remove(window);
+            if (result && !(SelectedTheme is null))
+                window.Styles.Remove(SelectedTheme.Style);
+            return result;
+        }
+
+        /// <summary>
+        /// Selects a theme by name.
+        /// </summary>
+        public bool SelectTheme(string name)
+        {
+            var candidates = _themes.Where(t => t.Name == name);
+            if (candidates.Any())
+            {
+                var theme = candidates.First();
+                SelectedTheme = theme;
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        void ICollection<ITheme>.CopyTo(ITheme[] array, int arrayIndex) => _themes.CopyTo(array, arrayIndex);
+
+        IEnumerator IEnumerable.GetEnumerator() => _themes.GetEnumerator();
     }
 }

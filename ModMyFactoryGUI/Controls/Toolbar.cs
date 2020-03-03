@@ -14,9 +14,9 @@ using Avalonia.Layout;
 
 namespace ModMyFactoryGUI.Controls
 {
-    class Toolbar : ToolbarBase
+    internal class Toolbar : ToolbarBase
     {
-        static readonly ITemplate<IPanel> DefaultPanel =
+        private static readonly ITemplate<IPanel> DefaultPanel =
             new FuncTemplate<IPanel>(() => new StackPanel { Orientation = Orientation.Horizontal });
 
         static Toolbar()
@@ -31,6 +31,9 @@ namespace ModMyFactoryGUI.Controls
         public Toolbar(IMenuInteractionHandler interactionHandler)
             : base(interactionHandler)
         { }
+
+        protected override IItemContainerGenerator CreateItemContainerGenerator()
+            => new ToolbarItemContainerGenerator(this);
 
         public override void Close()
         {
@@ -61,8 +64,5 @@ namespace ModMyFactoryGUI.Controls
                 Source = this,
             });
         }
-
-        protected override IItemContainerGenerator CreateItemContainerGenerator()
-            => new ToolbarItemContainerGenerator(this);
     }
 }

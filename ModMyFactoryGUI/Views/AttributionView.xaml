@@ -17,26 +17,23 @@ the Free Software Foundation, either version 3 of the License, or
              x:Class="ModMyFactoryGUI.Views.AttributionView">
 
   <StackPanel>
-    
+
     <TextBlock HorizontalAlignment="Center" Margin="0,0,0,4" Classes="h2"
-               Text="{l:LocalizedResource ThirdPartySoftwareHeader}"/>
-    
+               Text="{l:LocalizedResource ThirdPartySoftwareHeader}" />
+
     <ItemsControl Items="{Binding Links}">
       <ItemsControl.ItemsPanel>
         <ItemsPanelTemplate>
-          <WrapPanel Orientation="Vertical" MaxHeight="140" HorizontalAlignment="Center"/>
+          <WrapPanel Orientation="Vertical" MaxHeight="140" HorizontalAlignment="Center" />
         </ItemsPanelTemplate>
       </ItemsControl.ItemsPanel>
-      
+
       <ItemsControl.ItemTemplate>
         <DataTemplate>
           <controls:HyperLink Margin="16,0" HorizontalAlignment="Center"
-                              Text="{Binding LinkText}" Url="{Binding Url}"/>
+                              Text="{Binding LinkText}" Url="{Binding Url}" />
         </DataTemplate>
       </ItemsControl.ItemTemplate>
-      
     </ItemsControl>
-    
   </StackPanel>
-  
 </UserControl>

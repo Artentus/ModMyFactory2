@@ -21,15 +21,33 @@ using System.Text.RegularExpressions;
 
 namespace ModMyFactoryGUI.Controls
 {
-    class FormattingTextBlock : UserControl, IWeakSubscriber<EventArgs>
+    internal class FormattingTextBlock : UserControl, IWeakSubscriber<EventArgs>
     {
-        const string RegexGroupName = "ResourceKey";
-        static readonly string _css;
+        private const string RegexGroupName = "ResourceKey";
+        private static readonly string _css;
+
+        private HtmlLabel _renderer;
 
         public static readonly StyledProperty<string> MarkdownTextProperty
-            = AvaloniaProperty.Register<FormattingTextBlock, string>(nameof(MarkdownText));
+                    = AvaloniaProperty.Register<FormattingTextBlock, string>(nameof(MarkdownText));
 
-        static string ParseMarkdownToHtml(string markdown)
+        public string MarkdownText
+        {
+            get => GetValue(MarkdownTextProperty);
+            set => SetValue(MarkdownTextProperty, value);
+        }
+
+        static FormattingTextBlock()
+        {
+            _css = LoadCss();
+        }
+
+        public FormattingTextBlock()
+        {
+            InitializeComponent();
+        }
+
+        private static string ParseMarkdownToHtml(string markdown)
         {
             if (string.IsNullOrEmpty(markdown)) return string.Empty;
 
@@ -42,31 +60,12 @@ namespace ModMyFactoryGUI.Controls
             return Markdown.ToHtml(markdown, pipeline);
         }
 
-        static string LoadCss()
+        private static string LoadCss()
         {
             var assets = AvaloniaLocator.Current.GetService<IAssetLoader>();
             using var stream = assets.Open(new Uri("avares://ModMyFactoryGUI/Assets/html.css"));
             using var reader = new StreamReader(stream);
             return reader.ReadToEnd();
-        }
-
-        static FormattingTextBlock()
-        {
-            _css = LoadCss();
-        }
-
-
-        HtmlLabel _renderer;
-
-        public string MarkdownText
-        {
-            get => GetValue(MarkdownTextProperty);
-            set => SetValue(MarkdownTextProperty, value);
-        }
-
-        public FormattingTextBlock()
-        {
-            InitializeComponent();
         }
 
         private void InitializeComponent()
@@ -79,7 +78,7 @@ namespace ModMyFactoryGUI.Controls
             ThemeViewModel.SubscribeWeak(this);
         }
 
-        string GetColorResource(string key)
+        private string GetColorResource(string key)
         {
             if (App.Current.TryGetThemeResource<Color>(key, out var color))
                 return $"rgba({color.R},{color.G},{color.B},{color.A})";
@@ -87,13 +86,13 @@ namespace ModMyFactoryGUI.Controls
             return "#000000";
         }
 
-        string EvaluateMatch(Match match)
+        private string EvaluateMatch(Match match)
         {
             var key = match.Groups[RegexGroupName].Value;
             return GetColorResource(key);
         }
 
-        string ParseCss(string css)
+        private string ParseCss(string css)
             => Regex.Replace(css, $"%_(?<{RegexGroupName}>.+)_%", EvaluateMatch);
 
         protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs e)

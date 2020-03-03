@@ -7,7 +7,7 @@
 
 namespace ModMyFactory.ModSettings.Serialization
 {
-    enum PropertyTreeType : byte
+    internal enum PropertyTreeType : byte
     {
         None = 0,
         Bool = 1,

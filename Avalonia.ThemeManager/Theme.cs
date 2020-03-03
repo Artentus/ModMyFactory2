@@ -2,12 +2,12 @@
 // Licensed under the MIT license.
 // Edited for ModMyFactory by Mathis Rech.
 
-using System;
-using System.IO;
 using Avalonia.Markup.Xaml;
 using Avalonia.Markup.Xaml.Styling;
 using Avalonia.Styling;
 using ReactiveUI;
+using System;
+using System.IO;
 
 namespace Avalonia.ThemeManager
 {
@@ -16,6 +16,20 @@ namespace Avalonia.ThemeManager
     /// </summary>
     public class Theme : ReactiveObject, ITheme
     {
+        private static readonly IStyle _light;
+
+        private static readonly IStyle _dark;
+
+        /// <summary>
+        /// The default light theme of Avalonia.
+        /// </summary>
+        public static ITheme DefaultLight => new Theme("Light", _light);
+
+        /// <summary>
+        /// The default dark theme of Avalonia.
+        /// </summary>
+        public static ITheme DefaultDark => new Theme("Dark", _dark);
+
         /// <summary>
         /// The themes name.
         /// </summary>
@@ -31,20 +45,6 @@ namespace Avalonia.ThemeManager
             Name = name;
             Style = style;
         }
-
-
-        static readonly IStyle _light;
-        static readonly IStyle _dark;
-
-        /// <summary>
-        /// The default light theme of Avalonia.
-        /// </summary>
-        public static ITheme DefaultLight => new Theme("Light", _light);
-
-        /// <summary>
-        /// The default dark theme of Avalonia.
-        /// </summary>
-        public static ITheme DefaultDark => new Theme("Dark", _dark);
 
         static Theme()
         {

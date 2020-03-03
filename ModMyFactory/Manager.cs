@@ -19,8 +19,8 @@ namespace ModMyFactory
     /// </summary>
     public sealed class Manager : IEnumerable<ManagedFactorioInstance>
     {
-        readonly List<ManagedFactorioInstance> _managedInstances;
-        readonly Dictionary<AccurateVersion, ModManager> _modManagers;
+        private readonly List<ManagedFactorioInstance> _managedInstances;
+        private readonly Dictionary<AccurateVersion, ModManager> _modManagers;
 
         /// <summary>
         /// The list of instances being managed.
@@ -34,7 +34,7 @@ namespace ModMyFactory
             _modManagers = new Dictionary<AccurateVersion, ModManager>();
         }
 
-        ModManager GetModManager(AccurateVersion factorioVersion)
+        private ModManager GetModManager(AccurateVersion factorioVersion)
         {
             if (!_modManagers.TryGetValue(factorioVersion, out var result))
             {
@@ -52,7 +52,7 @@ namespace ModMyFactory
         {
             instance.HasManagerAttached = true;
             var modManager = GetModManager(instance.Version.ToMajor());
-            
+
             _managedInstances.Add(instance);
         }
 

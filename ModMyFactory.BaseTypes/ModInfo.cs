@@ -66,6 +66,29 @@ namespace ModMyFactory.BaseTypes
                = (name, displayName, version, factorioVersion, author, description, dependencies);
 
         /// <summary>
+        /// Loads mod info from a json string.
+        /// </summary>
+        public static ModInfo FromJson(string json)
+            => JsonConvert.DeserializeObject<ModInfo>(json);
+
+        /// <summary>
+        /// Loads a mod info file.
+        /// </summary>
+        public static async Task<ModInfo> FromFileAsync(FileInfo file)
+        {
+            using var fs = file.OpenRead();
+            using var reader = new StreamReader(fs);
+            string json = await reader.ReadToEndAsync();
+            return FromJson(json);
+        }
+
+        /// <summary>
+        /// Loads a mod info file.
+        /// </summary>
+        public static async Task<ModInfo> FromFileAsync(string fileName)
+            => await FromFileAsync(new FileInfo(fileName));
+
+        /// <summary>
         /// Creates a json string from this mod info.
         /// </summary>
         public string ToJson(Formatting formatting = Formatting.Indented, JsonSerializerSettings settings = null)
@@ -88,28 +111,5 @@ namespace ModMyFactory.BaseTypes
         /// </summary>
         public async Task SaveToFileAsync(string fileName, Formatting formatting = Formatting.Indented, JsonSerializerSettings settings = null)
             => await SaveToFileAsync(new FileInfo(fileName), formatting, settings);
-
-        /// <summary>
-        /// Loads mod info from a json string.
-        /// </summary>
-        public static ModInfo FromJson(string json)
-            => JsonConvert.DeserializeObject<ModInfo>(json);
-
-        /// <summary>
-        /// Loads a mod info file.
-        /// </summary>
-        public static async Task<ModInfo> FromFileAsync(FileInfo file)
-        {
-            using var fs = file.OpenRead();
-            using var reader = new StreamReader(fs);
-            string json = await reader.ReadToEndAsync();
-            return FromJson(json);
-        }
-
-        /// <summary>
-        /// Loads a mod info file.
-        /// </summary>
-        public static async Task<ModInfo> FromFileAsync(string fileName)
-            => await FromFileAsync(new FileInfo(fileName));
     }
 }

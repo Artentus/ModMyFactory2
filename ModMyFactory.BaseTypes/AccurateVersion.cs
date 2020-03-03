@@ -24,10 +24,13 @@ namespace ModMyFactory.BaseTypes
 
         [FieldOffset(0)]
         public readonly ushort Revision;
+
         [FieldOffset(2)]
         public readonly ushort Minor;
+
         [FieldOffset(4)]
         public readonly ushort Major;
+
         [FieldOffset(6)]
         public readonly ushort Main;
 
@@ -152,10 +155,15 @@ namespace ModMyFactory.BaseTypes
 
 
         public static bool operator ==(AccurateVersion first, AccurateVersion second) => first.Equals(second);
+
         public static bool operator !=(AccurateVersion first, AccurateVersion second) => !first.Equals(second);
+
         public static bool operator <(AccurateVersion first, AccurateVersion second) => first.CompareTo(second) < 0;
+
         public static bool operator >(AccurateVersion first, AccurateVersion second) => first.CompareTo(second) > 0;
+
         public static bool operator <=(AccurateVersion first, AccurateVersion second) => first.CompareTo(second) <= 0;
+
         public static bool operator >=(AccurateVersion first, AccurateVersion second) => first.CompareTo(second) >= 0;
 
         public static implicit operator AccurateVersion(ValueTuple<ushort, ushort, ushort, ushort> parts)

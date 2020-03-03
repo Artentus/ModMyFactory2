@@ -10,7 +10,7 @@ using ModMyFactoryGUI.ViewModels;
 
 namespace ModMyFactoryGUI.Views
 {
-    class FactorioView : MainViewBase<FactorioViewModel>
+    internal class FactorioView : MainViewBase<FactorioViewModel>
     {
         public FactorioView()
         {

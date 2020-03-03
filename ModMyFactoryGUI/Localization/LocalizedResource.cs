@@ -11,7 +11,7 @@ using System.ComponentModel;
 
 namespace ModMyFactoryGUI.Localization
 {
-    sealed class LocalizedResource : NotifyPropertyChangedBase, IWeakSubscriber<EventArgs>
+    internal sealed class LocalizedResource : NotifyPropertyChangedBase, IWeakSubscriber<EventArgs>
     {
         public string Key { get; }
 
@@ -24,7 +24,7 @@ namespace ModMyFactoryGUI.Localization
             WeakSubscriptionManager.Subscribe(App.Current.LocaleManager, nameof(LocaleManager.UICultureChanged), this);
         }
 
-        void UICultureChangedHandler(object sender, EventArgs e)
+        private void UICultureChangedHandler(object sender, EventArgs e)
         {
             Value = App.Current.LocaleManager.GetResource(Key);
             OnPropertyChanged(new PropertyChangedEventArgs(nameof(Value)));

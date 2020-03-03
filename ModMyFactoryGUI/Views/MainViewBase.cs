@@ -12,10 +12,10 @@ using ModMyFactoryGUI.ViewModels;
 
 namespace ModMyFactoryGUI.Views
 {
-    interface IMainView : IView<IMainViewModel>, IControl
+    internal interface IMainView : IView<IMainViewModel>, IControl
     { }
 
-    abstract class MainViewBase<T> : ReactiveControlBase<T>, IMainView where T : class, IMainViewModel
+    internal abstract class MainViewBase<T> : ReactiveControlBase<T>, IMainView where T : class, IMainViewModel
     {
         IMainViewModel IView<IMainViewModel>.ViewModel
         {

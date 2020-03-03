@@ -12,7 +12,7 @@ using System.Text;
 
 namespace ModMyFactory.WebApi
 {
-    static class SecureStringExtensions
+    internal static class SecureStringExtensions
     {
         public static unsafe byte[] ToBytes(this SecureString secureString, Encoding encoding)
         {

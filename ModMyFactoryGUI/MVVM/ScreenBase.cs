@@ -9,7 +9,7 @@ using ReactiveUI;
 
 namespace ModMyFactoryGUI.MVVM
 {
-    abstract class ScreenBase<T> : ViewModelBase<T>, IScreen where T : class, IView
+    internal abstract class ScreenBase<T> : ViewModelBase<T>, IScreen where T : class, IView
     {
         public RoutingState Router { get; }
 

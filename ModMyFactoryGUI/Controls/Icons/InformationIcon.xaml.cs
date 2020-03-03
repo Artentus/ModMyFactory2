@@ -10,7 +10,7 @@ using Avalonia.Markup.Xaml;
 
 namespace ModMyFactoryGUI.Controls.Icons
 {
-    class InformationIcon : UserControl
+    internal class InformationIcon : UserControl
     {
         public InformationIcon()
         {

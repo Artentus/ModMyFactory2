@@ -12,31 +12,15 @@ using System.IO;
 
 namespace ModMyFactoryGUI.Localization.Json
 {
-    sealed class JsonLocaleProvider : ILocaleProvider
+    internal sealed class JsonLocaleProvider : ILocaleProvider
     {
-        readonly IDictionary<string, ILocale> _locales;
-
-        public IEnumerable<string> Cultures => Keys;
+        private readonly IDictionary<string, ILocale> _locales;
 
         public ILocale this[string key] => _locales[key];
+        public IEnumerable<string> Cultures => Keys;
         public IEnumerable<string> Keys => _locales.Keys;
         public IEnumerable<ILocale> Values => _locales.Values;
         public int Count => _locales.Count;
-
-        static bool IsValidCulture(string name, out CultureInfo culture)
-        {
-            try
-            {
-                culture = CultureInfo.GetCultureInfo(name);
-            }
-            catch (CultureNotFoundException)
-            {
-                culture = null;
-                return false;
-            }
-
-            return true;
-        }
 
         public JsonLocaleProvider(DirectoryInfo directory)
         {
@@ -51,9 +35,27 @@ namespace ModMyFactoryGUI.Localization.Json
             }
         }
 
+        private static bool IsValidCulture(string name, out CultureInfo culture)
+        {
+            try
+            {
+                culture = CultureInfo.GetCultureInfo(name);
+            }
+            catch (CultureNotFoundException)
+            {
+                culture = null;
+                return false;
+            }
+
+            return true;
+        }
+
         public bool ContainsKey(string key) => _locales.ContainsKey(key);
+
         public bool TryGetValue(string key, out ILocale value) => _locales.TryGetValue(key, out value);
+
         public IEnumerator<KeyValuePair<string, ILocale>> GetEnumerator() => _locales.GetEnumerator();
+
         IEnumerator IEnumerable.GetEnumerator() => ((IEnumerable)_locales).GetEnumerator();
     }
 }

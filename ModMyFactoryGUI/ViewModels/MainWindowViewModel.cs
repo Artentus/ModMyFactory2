@@ -17,16 +17,13 @@ using System.Windows.Input;
 
 namespace ModMyFactoryGUI.ViewModels
 {
-    sealed class MainWindowViewModel : ScreenBase<MainWindow>
+    internal sealed class MainWindowViewModel : ScreenBase<MainWindow>
     {
-        readonly AboutWindowViewModel _aboutWindowViewModel = new AboutWindowViewModel();
-        TabItem _selectedTab;
-        IMainViewModel _selectedViewModel;
+        private readonly AboutWindowViewModel _aboutWindowViewModel = new AboutWindowViewModel();
+        private TabItem _selectedTab;
+        private IMainViewModel _selectedViewModel;
 
         public ICommand OpenAboutWindowCommand { get; }
-
-        public IEnumerable<CultureViewModel> AvailableCultures
-            => App.Current.LocaleManager.AvailableCultures.Select(c => new CultureViewModel(c));
 
         public IEnumerable<ThemeViewModel> AvailableThemes
             => App.Current.ThemeManager.Select(t => new ThemeViewModel(t));
@@ -77,19 +74,22 @@ namespace ModMyFactoryGUI.ViewModels
             }
         }
 
+        public IEnumerable<CultureViewModel> AvailableCultures
+                                                                                                            => App.Current.LocaleManager.AvailableCultures.Select(c => new CultureViewModel(c));
+
         public MainWindowViewModel()
         {
             OpenAboutWindowCommand = ReactiveCommand.CreateFromTask(OpenAboutWindow);
             SelectedViewModel = ManagerViewModel;
         }
 
-        async Task OpenAboutWindow()
+        private async Task OpenAboutWindow()
         {
             var window = View.CreateAndAttach(_aboutWindowViewModel);
             await window.ShowDialog(AttachedView);
         }
 
-        IMainViewModel GetViewModel(TabItem tab)
+        private IMainViewModel GetViewModel(TabItem tab)
         {
             if (tab.Content is IMainView view)
                 return view.ViewModel;
@@ -97,7 +97,7 @@ namespace ModMyFactoryGUI.ViewModels
             throw new ArgumentException("Tab does not contain a valid view", nameof(tab));
         }
 
-        void RebuildMenuItems(IMainViewModel viewModel)
+        private void RebuildMenuItems(IMainViewModel viewModel)
         {
             FileMenuItems = viewModel.FileMenuItems;
             this.RaisePropertyChanged(nameof(FileMenuItems));

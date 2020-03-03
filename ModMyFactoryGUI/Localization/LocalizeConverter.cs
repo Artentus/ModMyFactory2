@@ -10,7 +10,7 @@ using System.Globalization;
 
 namespace ModMyFactoryGUI.Localization
 {
-    sealed class LocalizeConverter : ValueConverterBase<string, string, object>
+    internal sealed class LocalizeConverter : ValueConverterBase<string, string, object>
     {
         protected override string Convert(string value, object parameter, CultureInfo culture)
             => (string)App.Current.LocaleManager.GetResource(value);

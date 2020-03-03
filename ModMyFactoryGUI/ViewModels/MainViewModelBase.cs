@@ -15,29 +15,21 @@ using System.Linq;
 
 namespace ModMyFactoryGUI.ViewModels
 {
-    abstract class MainViewModelBase<T> : RoutableViewModelBase<T>, IMainViewModel where T : class, IMainView
+    internal abstract class MainViewModelBase<T> : RoutableViewModelBase<T>, IMainViewModel where T : class, IMainView
     {
-        IReadOnlyCollection<IMenuItemViewModel> _fileMenuViewModels, _editMenuViewModels;
-        IReadOnlyCollection<IControl> _fileMenuItems, _editMenuItems, _toolbarItems;
+        private IReadOnlyCollection<IMenuItemViewModel> _fileMenuViewModels, _editMenuViewModels;
+        private IReadOnlyCollection<IControl> _fileMenuItems, _editMenuItems, _toolbarItems;
 
-        protected abstract List<IMenuItemViewModel> GetFileMenuViewModels();
-        protected abstract List<IMenuItemViewModel> GetEditMenuViewModels();
+        public IReadOnlyCollection<IControl> FileMenuItems
+            => _fileMenuItems ??= BuildFileMenuItemCollection();
 
-        ICollection<IMenuItemViewModel> GetBaseFileMenuViewModels()
-        {
-            return new List<IMenuItemViewModel>
-            {
-                App.Current.ShutdownItemViewModel
-            };
-        }
+        public IReadOnlyCollection<IControl> EditMenuItems
+            => _editMenuItems ??= BuildEditMenuItemCollection();
 
-        ICollection<IMenuItemViewModel> GetBaseEditMenuViewModels()
-        {
-            // ToDo: implement
-            return new List<IMenuItemViewModel>();
-        }
+        public IReadOnlyCollection<IControl> ToolbarItems
+            => _toolbarItems ??= BuildToolbarItemCollection();
 
-        static IReadOnlyCollection<IMenuItemViewModel> BuildMenuViewModelCollection(List<IMenuItemViewModel> items, ICollection<IMenuItemViewModel> baseItems)
+        private static IReadOnlyCollection<IMenuItemViewModel> BuildMenuViewModelCollection(List<IMenuItemViewModel> items, ICollection<IMenuItemViewModel> baseItems)
         {
             if (items is null) throw new ArgumentNullException(nameof(items));
             if (baseItems is null) throw new ArgumentNullException(nameof(baseItems));
@@ -54,21 +46,7 @@ namespace ModMyFactoryGUI.ViewModels
             return items;
         }
 
-        IReadOnlyCollection<IMenuItemViewModel> BuildFileMenuViewModelCollection()
-        {
-            var items = GetFileMenuViewModels();
-            var baseItems = GetBaseFileMenuViewModels();
-            return BuildMenuViewModelCollection(items, baseItems);
-        }
-
-        IReadOnlyCollection<IMenuItemViewModel> BuildEditMenuViewModelCollection()
-        {
-            var items = GetEditMenuViewModels();
-            var baseItems = GetBaseEditMenuViewModels();
-            return BuildMenuViewModelCollection(items, baseItems);
-        }
-
-        static IControl CreateMenuItem(IMenuItemViewModel viewModel)
+        private static IControl CreateMenuItem(IMenuItemViewModel viewModel)
         {
             if (viewModel is SeparatorMenuItemViewModel)
             {
@@ -98,7 +76,7 @@ namespace ModMyFactoryGUI.ViewModels
             }
         }
 
-        static IReadOnlyCollection<IControl> CreateMenuItems(IReadOnlyCollection<IMenuItemViewModel> viewModels)
+        private static IReadOnlyCollection<IControl> CreateMenuItems(IReadOnlyCollection<IMenuItemViewModel> viewModels)
         {
             var result = new List<IControl>(viewModels.Count);
             foreach (var viewModel in viewModels)
@@ -106,7 +84,7 @@ namespace ModMyFactoryGUI.ViewModels
             return result;
         }
 
-        static IControl CreateToolbarItem(IMenuItemViewModel viewModel, bool isTopLevel)
+        private static IControl CreateToolbarItem(IMenuItemViewModel viewModel, bool isTopLevel)
         {
             if (viewModel is SeparatorMenuItemViewModel)
             {
@@ -146,20 +124,20 @@ namespace ModMyFactoryGUI.ViewModels
             }
         }
 
-        static IControl CreateToolbarItem(IMenuItemViewModel viewModel)
+        private static IControl CreateToolbarItem(IMenuItemViewModel viewModel)
             => CreateToolbarItem(viewModel, false);
 
-        static IControl CreateTopLevelToolbarItem(IMenuItemViewModel viewModel)
+        private static IControl CreateTopLevelToolbarItem(IMenuItemViewModel viewModel)
             => CreateToolbarItem(viewModel, true);
 
-        static IReadOnlyCollection<IControl> CreateToolbarItems(
+        private static IReadOnlyCollection<IControl> CreateToolbarItems(
             IReadOnlyCollection<IMenuItemViewModel> viewModels)
         {
             var filteredViewModels = viewModels.Where(vm => vm.IsInToolbar);
             return filteredViewModels.Select(CreateToolbarItem).ToList();
         }
 
-        static IReadOnlyCollection<IControl> CreateToolbarItems(
+        private static IReadOnlyCollection<IControl> CreateToolbarItems(
             IReadOnlyCollection<IMenuItemViewModel> fileViewModels,
             IReadOnlyCollection<IMenuItemViewModel> editViewModels)
         {
@@ -176,32 +154,55 @@ namespace ModMyFactoryGUI.ViewModels
             return result;
         }
 
-        IReadOnlyCollection<IControl> BuildFileMenuItemCollection()
+        private ICollection<IMenuItemViewModel> GetBaseFileMenuViewModels()
+        {
+            return new List<IMenuItemViewModel>
+            {
+                App.Current.ShutdownItemViewModel
+            };
+        }
+
+        private ICollection<IMenuItemViewModel> GetBaseEditMenuViewModels()
+        {
+            // ToDo: implement
+            return new List<IMenuItemViewModel>();
+        }
+
+        private IReadOnlyCollection<IMenuItemViewModel> BuildFileMenuViewModelCollection()
+        {
+            var items = GetFileMenuViewModels();
+            var baseItems = GetBaseFileMenuViewModels();
+            return BuildMenuViewModelCollection(items, baseItems);
+        }
+
+        private IReadOnlyCollection<IMenuItemViewModel> BuildEditMenuViewModelCollection()
+        {
+            var items = GetEditMenuViewModels();
+            var baseItems = GetBaseEditMenuViewModels();
+            return BuildMenuViewModelCollection(items, baseItems);
+        }
+
+        private IReadOnlyCollection<IControl> BuildFileMenuItemCollection()
         {
             _fileMenuViewModels ??= BuildFileMenuViewModelCollection();
             return CreateMenuItems(_fileMenuViewModels);
         }
 
-        IReadOnlyCollection<IControl> BuildEditMenuItemCollection()
+        private IReadOnlyCollection<IControl> BuildEditMenuItemCollection()
         {
             _editMenuViewModels ??= BuildEditMenuViewModelCollection();
             return CreateMenuItems(_editMenuViewModels);
         }
 
-        IReadOnlyCollection<IControl> BuildToolbarItemCollection()
+        private IReadOnlyCollection<IControl> BuildToolbarItemCollection()
         {
             _fileMenuViewModels ??= BuildFileMenuViewModelCollection();
             _editMenuViewModels ??= BuildEditMenuViewModelCollection();
             return CreateToolbarItems(_fileMenuViewModels, _editMenuViewModels);
         }
 
-        public IReadOnlyCollection<IControl> FileMenuItems
-            => _fileMenuItems ??= BuildFileMenuItemCollection();
+        protected abstract List<IMenuItemViewModel> GetFileMenuViewModels();
 
-        public IReadOnlyCollection<IControl> EditMenuItems
-            => _editMenuItems ??= BuildEditMenuItemCollection();
-
-        public IReadOnlyCollection<IControl> ToolbarItems
-            => _toolbarItems ??= BuildToolbarItemCollection();
+        protected abstract List<IMenuItemViewModel> GetEditMenuViewModels();
     }
 }

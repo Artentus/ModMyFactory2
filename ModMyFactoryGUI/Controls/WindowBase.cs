@@ -21,10 +21,11 @@ using System.Runtime.InteropServices;
 
 namespace ModMyFactoryGUI.Controls
 {
-    abstract class WindowBase : Window, IView, IStyleable
+    internal abstract class WindowBase : Window, IView, IStyleable
     {
         #region Win32
-        enum ClassLongIndex : int
+
+        private enum ClassLongIndex : int
         {
             GCLP_MENUNAME = -8,
             GCLP_HBRBACKGROUND = -10,
@@ -40,12 +41,12 @@ namespace ModMyFactoryGUI.Controls
         }
 
         [DllImport("user32.dll", EntryPoint = "SetClassLongPtr")]
-        static extern IntPtr SetClassLong64(IntPtr hWnd, ClassLongIndex nIndex, IntPtr dwNewLong);
+        private static extern IntPtr SetClassLong64(IntPtr hWnd, ClassLongIndex nIndex, IntPtr dwNewLong);
 
         [DllImport("user32.dll", EntryPoint = "SetClassLong")]
-        static extern IntPtr SetClassLong32(IntPtr hWnd, ClassLongIndex nIndex, IntPtr dwNewLong);
+        private static extern IntPtr SetClassLong32(IntPtr hWnd, ClassLongIndex nIndex, IntPtr dwNewLong);
 
-        static IntPtr SetClassLong(IntPtr hWnd, ClassLongIndex nIndex, IntPtr dwNewLong)
+        private static IntPtr SetClassLong(IntPtr hWnd, ClassLongIndex nIndex, IntPtr dwNewLong)
         {
             if (Environment.Is64BitOperatingSystem)
                 return SetClassLong64(hWnd, nIndex, dwNewLong);
@@ -54,55 +55,53 @@ namespace ModMyFactoryGUI.Controls
         }
 
         [DllImport("user32.dll", EntryPoint = "GetClassLongPtr")]
-        static extern IntPtr GetClassLong64(IntPtr hWnd, ClassLongIndex nIndex);
+        private static extern IntPtr GetClassLong64(IntPtr hWnd, ClassLongIndex nIndex);
 
         [DllImport("user32.dll", EntryPoint = "GetClassLong")]
-        static extern uint GetClassLong32(IntPtr hWnd, ClassLongIndex nIndex);
+        private static extern uint GetClassLong32(IntPtr hWnd, ClassLongIndex nIndex);
 
-        static IntPtr GetClassLong(IntPtr hWnd, ClassLongIndex nIndex)
+        private static IntPtr GetClassLong(IntPtr hWnd, ClassLongIndex nIndex)
         {
             if (Environment.Is64BitOperatingSystem)
                 return GetClassLong64(hWnd, nIndex);
 
             return new IntPtr(GetClassLong32(hWnd, nIndex));
         }
-        #endregion
 
+        #endregion Win32
+
+
+        private Grid _bottomHorizontalGrip;
+
+        private Grid _bottomLeftGrip;
+
+        private Grid _bottomRightGrip;
+
+        private Button _closeButton;
+
+        private Image _icon;
+
+        private Grid _leftVerticalGrip;
+
+        private Button _minimiseButton;
+
+        private Button _restoreButton;
+
+        private Grid _rightVerticalGrip;
+
+        private DockPanel _titleBar;
+
+        private Grid _topHorizontalGrip;
+
+        private Grid _topLeftGrip;
+
+        private Grid _topRightGrip;
 
         public static readonly StyledProperty<Control> TitleBarContentProperty =
-            AvaloniaProperty.Register<WindowBase, Control>(nameof(TitleBarContent));
+                                                                                                                    AvaloniaProperty.Register<WindowBase, Control>(nameof(TitleBarContent));
 
         public static readonly StyledProperty<bool> HasClientDecorationsProperty =
             AvaloniaProperty.Register<WindowBase, bool>(nameof(HasClientDecorations));
-
-        static WindowBase()
-        {
-            PseudoClass<WindowBase, WindowState>(WindowStateProperty, x => x == WindowState.Maximized, ":maximised");
-        }
-
-
-        Grid _bottomHorizontalGrip;
-        Grid _bottomLeftGrip;
-        Grid _bottomRightGrip;
-        Button _closeButton;
-        Image _icon;
-        Grid _leftVerticalGrip;
-        Button _minimiseButton;
-        Button _restoreButton;
-        Grid _rightVerticalGrip;
-
-        private DockPanel _titleBar;
-        private Grid _topHorizontalGrip;
-        private Grid _topLeftGrip;
-        private Grid _topRightGrip;
-
-        object IView.ViewModel
-        {
-            get => DataContext;
-            set => DataContext = value;
-        }
-
-        Type IStyleable.StyleKey => typeof(WindowBase);
 
         public bool HasClientDecorations
         {
@@ -115,6 +114,14 @@ namespace ModMyFactoryGUI.Controls
             get => GetValue(TitleBarContentProperty);
             set => SetValue(TitleBarContentProperty, value);
         }
+
+        object IView.ViewModel
+        {
+            get => DataContext;
+            set => DataContext = value;
+        }
+
+        Type IStyleable.StyleKey => typeof(WindowBase);
 
         protected WindowBase()
         {
@@ -137,6 +144,25 @@ namespace ModMyFactoryGUI.Controls
             {
                 HasSystemDecorations = true;
                 HasClientDecorations = false;
+            }
+        }
+
+        static WindowBase()
+        {
+            PseudoClass<WindowBase, WindowState>(WindowStateProperty, x => x == WindowState.Maximized, ":maximised");
+        }
+
+        private void ToggleWindowState()
+        {
+            switch (WindowState)
+            {
+                case WindowState.Maximized:
+                    WindowState = WindowState.Normal;
+                    break;
+
+                case WindowState.Normal:
+                    WindowState = WindowState.Maximized;
+                    break;
             }
         }
 
@@ -188,20 +214,6 @@ namespace ModMyFactoryGUI.Controls
         protected override void OnPointerReleased(PointerReleasedEventArgs e)
         {
             base.OnPointerReleased(e);
-        }
-
-        private void ToggleWindowState()
-        {
-            switch (WindowState)
-            {
-                case WindowState.Maximized:
-                    WindowState = WindowState.Normal;
-                    break;
-
-                case WindowState.Normal:
-                    WindowState = WindowState.Maximized;
-                    break;
-            }
         }
 
         protected override void OnTemplateApplied(TemplateAppliedEventArgs e)

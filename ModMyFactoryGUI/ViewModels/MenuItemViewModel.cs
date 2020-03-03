@@ -14,14 +14,14 @@ using System.Windows.Input;
 
 namespace ModMyFactoryGUI.ViewModels
 {
-    interface IMenuItemViewModel : IReactiveObject
+    internal interface IMenuItemViewModel : IReactiveObject
     {
         bool IsInToolbar { get; }
     }
 
-    abstract class MenuItemViewModelBase : ReactiveObject, IMenuItemViewModel
+    internal abstract class MenuItemViewModelBase : ReactiveObject, IMenuItemViewModel
     {
-        readonly Func<IControl> _iconFactory;
+        private readonly Func<IControl> _iconFactory;
 
         public MenuHeaderViewModel Header { get; }
 
@@ -36,7 +36,7 @@ namespace ModMyFactoryGUI.ViewModels
         }
     }
 
-    class MenuItemViewModel : MenuItemViewModelBase
+    internal class MenuItemViewModel : MenuItemViewModelBase
     {
         public ICommand Command { get; }
 
@@ -47,7 +47,7 @@ namespace ModMyFactoryGUI.ViewModels
         }
     }
 
-    class ParentMenuItemViewModel : MenuItemViewModelBase
+    internal class ParentMenuItemViewModel : MenuItemViewModelBase
     {
         public IReadOnlyCollection<IMenuItemViewModel> SubItems { get; }
 
@@ -58,7 +58,7 @@ namespace ModMyFactoryGUI.ViewModels
         }
     }
 
-    class SeparatorMenuItemViewModel : ReactiveObject, IMenuItemViewModel
+    internal class SeparatorMenuItemViewModel : ReactiveObject, IMenuItemViewModel
     {
         public bool IsInToolbar { get; }
 

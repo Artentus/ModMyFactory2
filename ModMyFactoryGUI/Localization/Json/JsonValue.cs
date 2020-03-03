@@ -10,7 +10,7 @@ using System;
 
 namespace ModMyFactoryGUI.Localization.Json
 {
-    sealed class JsonValue
+    internal sealed class JsonValue
     {
         [JsonProperty("type")]
         public JsonValueType Type { get; }

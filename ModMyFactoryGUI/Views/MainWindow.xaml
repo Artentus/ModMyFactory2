@@ -20,12 +20,12 @@ the Free Software Foundation, either version 3 of the License, or
         Background="{DynamicResource ThemeBackgroundHighBrush}">
 
   <Window.Resources>
-    <l:LocalizeConverter x:Key="LocalizeConverter"/>
+    <l:LocalizeConverter x:Key="LocalizeConverter" />
   </Window.Resources>
 
   <Window.Styles>
     <Style Selector="TabControl WrapPanel">
-      <Setter Property="Background" Value="{DynamicResource ThemeBackgroundHighBrush}"/>
+      <Setter Property="Background" Value="{DynamicResource ThemeBackgroundHighBrush}" />
     </Style>
   </Window.Styles>
 
@@ -37,9 +37,9 @@ the Free Software Foundation, either version 3 of the License, or
         <DataTemplate DataType="{x:Type models:MenuHeaderViewModel}">
           <DockPanel>
             <TextBlock DockPanel.Dock="Left" HorizontalAlignment="Left"
-                       Text="{Binding HeaderKey, Converter={StaticResource LocalizeConverter}}"/>
+                       Text="{Binding HeaderKey, Converter={StaticResource LocalizeConverter}}" />
             <TextBlock DockPanel.Dock="Right" HorizontalAlignment="Right" Margin="16,0,0,0" Classes="muted"
-                       Text="{Binding InputGestureKey, Converter={StaticResource LocalizeConverter}}" IsVisible="{Binding InputGestureVisible}"/>
+                       Text="{Binding InputGestureKey, Converter={StaticResource LocalizeConverter}}" IsVisible="{Binding InputGestureVisible}" />
           </DockPanel>
         </DataTemplate>
       </Menu.DataTemplates>
@@ -47,12 +47,12 @@ the Free Software Foundation, either version 3 of the License, or
       <!-- File menu (dynamically built) -->
       <MenuItem Header="{l:LocalizedResource FileMenuItem}"
                 IsVisible="{Binding FileMenuVisible}"
-                Items="{Binding FileMenuItems}"/>
+                Items="{Binding FileMenuItems}" />
 
       <!-- Edit menu (dynamically built) -->
       <MenuItem Header="{l:LocalizedResource EditMenuItem}"
                 IsVisible="{Binding EditMenuVisible}"
-                Items="{Binding EditMenuItems}"/>
+                Items="{Binding EditMenuItems}" />
 
       <!-- View menu -->
       <MenuItem Header="{l:LocalizedResource ViewMenuItem}">
@@ -60,73 +60,72 @@ the Free Software Foundation, either version 3 of the License, or
         <!-- Open folders -->
         <MenuItem Header="{l:LocalizedResource OpenFactorioFolderMenuItem}">
           <MenuItem.Icon>
-            <icons:OpenFolderIcon/>
+            <icons:OpenFolderIcon />
           </MenuItem.Icon>
         </MenuItem>
         <MenuItem Header="{l:LocalizedResource OpenModFolderMenuItem}">
           <MenuItem.Icon>
-            <icons:OpenFolderIcon/>
+            <icons:OpenFolderIcon />
           </MenuItem.Icon>
         </MenuItem>
         <MenuItem Header="{l:LocalizedResource OpenSavegameFolderMenuItem}">
           <MenuItem.Icon>
-            <icons:OpenFolderIcon/>
+            <icons:OpenFolderIcon />
           </MenuItem.Icon>
         </MenuItem>
         <MenuItem Header="{l:LocalizedResource OpenScenarioFolderMenuItem}">
           <MenuItem.Icon>
-            <icons:OpenFolderIcon/>
+            <icons:OpenFolderIcon />
           </MenuItem.Icon>
         </MenuItem>
 
-        <Separator/>
+        <Separator />
 
         <!-- Visual theme -->
         <MenuItem Name="ThemeParent" Header="{l:LocalizedResource ThemeMenuItem}" Items="{Binding AvailableThemes}">
           <MenuItem.Icon>
-            <icons:VisualThemeIcon/>
+            <icons:VisualThemeIcon />
           </MenuItem.Icon>
           <MenuItem.Styles>
             <Style Selector="MenuItem#ThemeParent > MenuItem">
-              <Setter Property="Command" Value="{Binding SelectCommand}"/>
+              <Setter Property="Command" Value="{Binding SelectCommand}" />
               <Setter Property="Header">
                 <Setter.Value>
                   <Template>
                     <CheckBox Margin="-7,0,0,0" BorderThickness="0" IsHitTestVisible="False"
-                              IsChecked="{Binding Selected}" Content="{Binding DisplayName}"/>
+                              IsChecked="{Binding Selected}" Content="{Binding DisplayName}" />
                   </Template>
                 </Setter.Value>
               </Setter>
               <Setter Property="Icon">
                 <Setter.Value>
                   <Template>
-                    <Image Source="{Binding Icon}"/>
+                    <Image Source="{Binding Icon}" />
                   </Template>
                 </Setter.Value>
               </Setter>
             </Style>
           </MenuItem.Styles>
         </MenuItem>
-
       </MenuItem>
 
       <!-- Language menu -->
       <MenuItem Name="LangParent" Header="{l:LocalizedResource LanguageMenuItem}" Items="{Binding AvailableCultures}">
         <MenuItem.Styles>
           <Style Selector="MenuItem#LangParent > MenuItem">
-            <Setter Property="Command" Value="{Binding SelectCommand}"/>
+            <Setter Property="Command" Value="{Binding SelectCommand}" />
             <Setter Property="Header">
               <Setter.Value>
                 <Template>
                   <CheckBox Margin="-7,0,0,0" BorderThickness="0" IsHitTestVisible="False"
-                            IsChecked="{Binding Selected}" Content="{Binding DisplayName}"/>
+                            IsChecked="{Binding Selected}" Content="{Binding DisplayName}" />
                 </Template>
               </Setter.Value>
             </Setter>
             <Setter Property="Icon">
               <Setter.Value>
                 <Template>
-                  <Image Source="{Binding Icon}"/>
+                  <Image Source="{Binding Icon}" />
                 </Template>
               </Setter.Value>
             </Setter>
@@ -141,12 +140,12 @@ the Free Software Foundation, either version 3 of the License, or
         <MenuItem>
           <MenuItem.Header>
             <DockPanel>
-              <TextBlock DockPanel.Dock="Left" Text="{l:LocalizedResource HelpMenuItem}" HorizontalAlignment="Left" Margin="0,0,16,0"/>
-              <TextBlock DockPanel.Dock="Right" Text="{l:LocalizedResource HelpHotkey}" HorizontalAlignment="Right" Classes="muted"/>
+              <TextBlock DockPanel.Dock="Left" Text="{l:LocalizedResource HelpMenuItem}" HorizontalAlignment="Left" Margin="0,0,16,0" />
+              <TextBlock DockPanel.Dock="Right" Text="{l:LocalizedResource HelpHotkey}" HorizontalAlignment="Right" Classes="muted" />
             </DockPanel>
           </MenuItem.Header>
           <MenuItem.Icon>
-            <icons:HelpIcon/>
+            <icons:HelpIcon />
           </MenuItem.Icon>
         </MenuItem>
 
@@ -154,57 +153,56 @@ the Free Software Foundation, either version 3 of the License, or
         <MenuItem>
           <MenuItem.Header>
             <DockPanel>
-              <TextBlock DockPanel.Dock="Left" Text="{l:LocalizedResource CheckUpdateMenuItem}" HorizontalAlignment="Left" Margin="0,0,16,0"/>
-              <TextBlock DockPanel.Dock="Right" Text="{l:LocalizedResource CheckUpdateHotkey}" HorizontalAlignment="Right" Classes="muted"/>
+              <TextBlock DockPanel.Dock="Left" Text="{l:LocalizedResource CheckUpdateMenuItem}" HorizontalAlignment="Left" Margin="0,0,16,0" />
+              <TextBlock DockPanel.Dock="Right" Text="{l:LocalizedResource CheckUpdateHotkey}" HorizontalAlignment="Right" Classes="muted" />
             </DockPanel>
           </MenuItem.Header>
           <MenuItem.Icon>
-            <icons:UpdateIcon/>
+            <icons:UpdateIcon />
           </MenuItem.Icon>
         </MenuItem>
 
-        <Separator/>
+        <Separator />
 
         <!-- Web links -->
         <MenuItem Header="factorio.com">
           <MenuItem.Icon>
-            <icons:WebDestinationIcon/>
+            <icons:WebDestinationIcon />
           </MenuItem.Icon>
         </MenuItem>
         <MenuItem Header="mods.factorio.com">
           <MenuItem.Icon>
-            <icons:WebDestinationIcon/>
+            <icons:WebDestinationIcon />
           </MenuItem.Icon>
         </MenuItem>
         <MenuItem Header="{l:LocalizedResource ThreadMenuItem}">
           <MenuItem.Icon>
-            <icons:WebDestinationIcon/>
+            <icons:WebDestinationIcon />
           </MenuItem.Icon>
         </MenuItem>
 
-        <Separator/>
+        <Separator />
 
         <!-- About -->
         <MenuItem Command="{Binding OpenAboutWindowCommand}">
           <MenuItem.Header>
             <DockPanel>
-              <TextBlock DockPanel.Dock="Left" Text="{l:LocalizedResource AboutMenuItem}" HorizontalAlignment="Left" Margin="0,0,16,0"/>
-              <TextBlock DockPanel.Dock="Right" Text="{l:LocalizedResource AboutHotkey}" HorizontalAlignment="Right" Classes="muted"/>
+              <TextBlock DockPanel.Dock="Left" Text="{l:LocalizedResource AboutMenuItem}" HorizontalAlignment="Left" Margin="0,0,16,0" />
+              <TextBlock DockPanel.Dock="Right" Text="{l:LocalizedResource AboutHotkey}" HorizontalAlignment="Right" Classes="muted" />
             </DockPanel>
           </MenuItem.Header>
           <MenuItem.Icon>
-            <icons:InformationIcon/>
+            <icons:InformationIcon />
           </MenuItem.Icon>
         </MenuItem>
       </MenuItem>
-
     </Menu>
 
     <!-- Toolbar -->
     <controls:Toolbar DockPanel.Dock="Top" Items="{Binding ToolbarItems}">
       <controls:Toolbar.DataTemplates>
         <DataTemplate DataType="{x:Type models:MenuHeaderViewModel}">
-          <TextBlock Text="{Binding HeaderKey, Converter={StaticResource LocalizeConverter}}"/>
+          <TextBlock Text="{Binding HeaderKey, Converter={StaticResource LocalizeConverter}}" />
         </DataTemplate>
       </controls:Toolbar.DataTemplates>
     </controls:Toolbar>
@@ -217,52 +215,49 @@ the Free Software Foundation, either version 3 of the License, or
       <TabItem>
         <TabItem.Header>
           <StackPanel Width="120" Margin="0,8">
-            <largeicons:ManagerIcon HorizontalAlignment="Center"/>
-            <TextBlock Text="{l:LocalizedResource ManagerTabHeader}" TextAlignment="Center"/>
+            <largeicons:ManagerIcon HorizontalAlignment="Center" />
+            <TextBlock Text="{l:LocalizedResource ManagerTabHeader}" TextAlignment="Center" />
           </StackPanel>
         </TabItem.Header>
 
-        <views:ManagerView DataContext="{Binding ManagerViewModel}"/>
+        <views:ManagerView DataContext="{Binding ManagerViewModel}" />
       </TabItem>
 
       <!-- Online mods -->
       <TabItem>
         <TabItem.Header>
           <StackPanel Width="120" Margin="0,8">
-            <largeicons:DownloadModsIcon HorizontalAlignment="Center"/>
-            <TextBlock Text="{l:LocalizedResource OnlineModsTabHeader}" TextAlignment="Center"/>
+            <largeicons:DownloadModsIcon HorizontalAlignment="Center" />
+            <TextBlock Text="{l:LocalizedResource OnlineModsTabHeader}" TextAlignment="Center" />
           </StackPanel>
         </TabItem.Header>
 
-        <views:OnlineModsView DataContext="{Binding OnlineModsViewModel}"/>
+        <views:OnlineModsView DataContext="{Binding OnlineModsViewModel}" />
       </TabItem>
 
       <!-- Factorio -->
       <TabItem>
         <TabItem.Header>
           <StackPanel Width="120" Margin="0,8">
-            <largeicons:FactorioIcon HorizontalAlignment="Center"/>
-            <TextBlock Text="{l:LocalizedResource FactorioTabHeader}" TextAlignment="Center"/>
+            <largeicons:FactorioIcon HorizontalAlignment="Center" />
+            <TextBlock Text="{l:LocalizedResource FactorioTabHeader}" TextAlignment="Center" />
           </StackPanel>
         </TabItem.Header>
 
-        <views:FactorioView DataContext="{Binding FactorioViewModel}"/>
+        <views:FactorioView DataContext="{Binding FactorioViewModel}" />
       </TabItem>
 
       <!-- Settings -->
       <TabItem>
         <TabItem.Header>
           <StackPanel Width="120" Margin="0,8">
-            <largeicons:SettingsIcon HorizontalAlignment="Center"/>
-            <TextBlock Text="{l:LocalizedResource SettingsTabHeader}" TextAlignment="Center"/>
+            <largeicons:SettingsIcon HorizontalAlignment="Center" />
+            <TextBlock Text="{l:LocalizedResource SettingsTabHeader}" TextAlignment="Center" />
           </StackPanel>
         </TabItem.Header>
 
-        <views:SettingsView DataContext="{Binding SettingsViewModel}"/>
+        <views:SettingsView DataContext="{Binding SettingsViewModel}" />
       </TabItem>
-      
     </TabControl>
-
   </DockPanel>
-
 </Window>

@@ -5,20 +5,27 @@
 //  the Free Software Foundation, either version 3 of the License, or
 //  (at your option) any later version.
 
+using Microsoft.Win32.SafeHandles;
+using ModMyFactory.Win32;
 using System;
 using System.Diagnostics;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Text;
-using Microsoft.Win32.SafeHandles;
-using ModMyFactory.Win32;
 
 namespace ModMyFactory.IO.Win32
 {
-    static class Junction
+    internal static class Junction
     {
-        const FileAttributes JunctionAttributes = FileAttributes.Directory | FileAttributes.ReparsePoint;
-        const string DestinationPrefix = @"\??\";
+        private enum ReparseTagType : uint
+        {
+            MountPoint = 0xA0000003,
+            Hsm = 0xC0000004,
+            Sis = 0x80000007,
+            Dfs = 0x8000000A,
+            Symlink = 0xA000000C,
+            Dfsr = 0x80000012,
+        }
 
         [StructLayout(LayoutKind.Sequential)]
         private struct ReparseDataBuffer
@@ -33,19 +40,13 @@ namespace ModMyFactory.IO.Win32
             public ushort SubstituteNameLength;
             public ushort PrintNameOffset;
             public ushort PrintNameLength;
+
             [MarshalAs(UnmanagedType.ByValArray, SizeConst = 0x3FF0)]
             public byte[] PathBuffer;
         }
 
-        private enum ReparseTagType : uint
-        {
-            MountPoint = 0xA0000003,
-            Hsm = 0xC0000004,
-            Sis = 0x80000007,
-            Dfs = 0x8000000A,
-            Symlink = 0xA000000C,
-            Dfsr = 0x80000012,
-        }
+        private const FileAttributes JunctionAttributes = FileAttributes.Directory | FileAttributes.ReparsePoint;
+        private const string DestinationPrefix = @"\??\";
 
         private static SafeFileHandle OpenReparsePoint(string path, bool writeAccess)
         {
@@ -60,7 +61,7 @@ namespace ModMyFactory.IO.Win32
                     var privileges = new TokenPrivileges
                     {
                         PrivilegeCount = 1,
-                        Privileges = new []
+                        Privileges = new[]
                         {
                             new Privilege()
                             {

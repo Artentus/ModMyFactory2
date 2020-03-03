@@ -27,35 +27,6 @@ namespace ModMyFactory.Mods
         }
 
         /// <summary>
-        /// Creates a JSON string from this state grouping.
-        /// </summary>
-        public string ToJson(Formatting formatting = Formatting.Indented, JsonSerializerSettings settings = null)
-            => JsonConvert.SerializeObject(this, formatting, settings);
-
-        /// <summary>
-        /// Saves all state information to a file.
-        /// </summary>
-        public async Task SaveToFileAsync(FileInfo file, Formatting formatting = Formatting.Indented, JsonSerializerSettings settings = null)
-        {
-            if (!file.Directory.Exists) file.Directory.Create();
-            using (var fs = file.OpenWrite())
-            {
-                using (var writer = new StreamWriter(fs))
-                {
-                    string json = ToJson(formatting, settings);
-                    await writer.WriteAsync(json);
-                }
-            }
-        }
-
-        /// <summary>
-        /// Saves all state information to a file.
-        /// </summary>
-        public async Task SaveToFileAsync(string fileName, Formatting formatting = Formatting.Indented, JsonSerializerSettings settings = null)
-            => await SaveToFileAsync(new FileInfo(fileName), formatting, settings);
-
-
-        /// <summary>
         /// Creates and groups state information of all families in a mod manager.
         /// </summary>
         public static ModFamilyStateGrouping FromManager(ModManager manager)
@@ -92,5 +63,33 @@ namespace ModMyFactory.Mods
         /// </summary>
         public static async Task<ModFamilyStateGrouping> FromFileAsync(string fileName)
             => await FromFileAsync(new FileInfo(fileName));
+
+        /// <summary>
+        /// Creates a JSON string from this state grouping.
+        /// </summary>
+        public string ToJson(Formatting formatting = Formatting.Indented, JsonSerializerSettings settings = null)
+            => JsonConvert.SerializeObject(this, formatting, settings);
+
+        /// <summary>
+        /// Saves all state information to a file.
+        /// </summary>
+        public async Task SaveToFileAsync(FileInfo file, Formatting formatting = Formatting.Indented, JsonSerializerSettings settings = null)
+        {
+            if (!file.Directory.Exists) file.Directory.Create();
+            using (var fs = file.OpenWrite())
+            {
+                using (var writer = new StreamWriter(fs))
+                {
+                    string json = ToJson(formatting, settings);
+                    await writer.WriteAsync(json);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Saves all state information to a file.
+        /// </summary>
+        public async Task SaveToFileAsync(string fileName, Formatting formatting = Formatting.Indented, JsonSerializerSettings settings = null)
+            => await SaveToFileAsync(new FileInfo(fileName), formatting, settings);
     }
 }

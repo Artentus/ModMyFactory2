@@ -18,18 +18,18 @@ using System;
 
 namespace ModMyFactoryGUI
 {
-    static class Program
+    internal static class Program
     {
         public const int NoError = 0;
         public const int GeneralError = 1;
 
-        static int StartGame(StartGameOptions options)
+        private static int StartGame(StartGameOptions options)
         {
             return NoError;
         }
 
         // Avalonia configuration, don't remove; also used by visual designer.
-        static AppBuilder BuildAvaloniaApp()
+        private static AppBuilder BuildAvaloniaApp()
         {
             return AppBuilder.Configure<App>()
 #if DEBUG
@@ -40,12 +40,12 @@ namespace ModMyFactoryGUI
                 .UseManagedSystemDialogs();
         }
 
-        static int StartApp(string[] args, OptionsBase options)
+        private static int StartApp(string[] args, OptionsBase options)
         {
             return BuildAvaloniaApp().StartWithClassicDesktopLifetime(args, ShutdownMode.OnMainWindowClose);
         }
 
-        static HelpText ConfigureHelpText(HelpText helpText)
+        private static HelpText ConfigureHelpText(HelpText helpText)
         {
             helpText.AdditionalNewLineAfterOption = false;
             return helpText;

@@ -9,7 +9,7 @@ using System.ComponentModel;
 
 namespace ModMyFactoryGUI.ViewModels
 {
-    sealed class MenuHeaderViewModel : INotifyPropertyChanged
+    internal sealed class MenuHeaderViewModel : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;
 

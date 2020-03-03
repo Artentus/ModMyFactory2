@@ -50,64 +50,6 @@ namespace ModMyFactory.BaseTypes
             return Comparison.TestFor(modVersion, CompareVersion);
         }
 
-        /// <summary>
-        /// Checks if a given mod satisfies this dependency.
-        /// If the dependency is inverted, a mod is assumed to satisfy it if it does NOT match the dependency.
-        /// </summary>
-        /// <param name="modName">The name of the mod.</param>
-        /// <param name="modVersion">The version of the mod.</param>
-        public bool IsSatisfiedBy(string modName, AccurateVersion modVersion)
-        {
-            if (Type == DependencyType.Inverted) return !Matches(modName, modVersion);
-            else return Matches(modName, modVersion);
-        }
-
-        public override string ToString()
-        {
-            var sb = new StringBuilder();
-
-            switch (Type)
-            {
-                case DependencyType.Inverted:
-                    sb.Append('!');
-                    break;
-                case DependencyType.Optional:
-                    sb.Append("? ");
-                    break;
-                case DependencyType.Hidden:
-                    sb.Append("(?) ");
-                    break;
-            }
-
-            sb.Append(ModName);
-
-            if (Comparison.Operator != DependencyOperator.None)
-                sb.AppendFormat(" {0} {1}", Comparison.Operator, CompareVersion);
-
-            return sb.ToString();
-        }
-
-        public bool Equals(Dependency other)
-        {
-            if (other is null) return false;
-
-            string opA = this.Comparison.Operator;
-            string opB = other.Comparison.Operator;
-            return (this.Type, this.ModName, opA) == (other.Type, other.ModName, opB)
-                && ((opA == DependencyOperator.None) || (this.CompareVersion == other.CompareVersion)); // If no comparison, version doesn't matter
-        }
-
-        public override bool Equals(object obj) => Equals(obj as Dependency);
-
-        public override int GetHashCode()
-        {
-            string op = Comparison.Operator;
-            int hash = Type.GetHashCode() ^ ModName.GetHashCode() ^ op.GetHashCode();
-            if (op != DependencyOperator.None) hash ^= CompareVersion.GetHashCode();
-            return hash;
-        }
-
-
         public static bool TryParse(string value, out Dependency result)
         {
             result = null;
@@ -156,6 +98,65 @@ namespace ModMyFactory.BaseTypes
         {
             if (TryParse(value, out var result)) return result;
             else throw new FormatException();
+        }
+
+        /// <summary>
+        /// Checks if a given mod satisfies this dependency.
+        /// If the dependency is inverted, a mod is assumed to satisfy it if it does NOT match the dependency.
+        /// </summary>
+        /// <param name="modName">The name of the mod.</param>
+        /// <param name="modVersion">The version of the mod.</param>
+        public bool IsSatisfiedBy(string modName, AccurateVersion modVersion)
+        {
+            if (Type == DependencyType.Inverted) return !Matches(modName, modVersion);
+            else return Matches(modName, modVersion);
+        }
+
+        public override string ToString()
+        {
+            var sb = new StringBuilder();
+
+            switch (Type)
+            {
+                case DependencyType.Inverted:
+                    sb.Append('!');
+                    break;
+
+                case DependencyType.Optional:
+                    sb.Append("? ");
+                    break;
+
+                case DependencyType.Hidden:
+                    sb.Append("(?) ");
+                    break;
+            }
+
+            sb.Append(ModName);
+
+            if (Comparison.Operator != DependencyOperator.None)
+                sb.AppendFormat(" {0} {1}", Comparison.Operator, CompareVersion);
+
+            return sb.ToString();
+        }
+
+        public bool Equals(Dependency other)
+        {
+            if (other is null) return false;
+
+            string opA = this.Comparison.Operator;
+            string opB = other.Comparison.Operator;
+            return (this.Type, this.ModName, opA) == (other.Type, other.ModName, opB)
+                && ((opA == DependencyOperator.None) || (this.CompareVersion == other.CompareVersion)); // If no comparison, version doesn't matter
+        }
+
+        public override bool Equals(object obj) => Equals(obj as Dependency);
+
+        public override int GetHashCode()
+        {
+            string op = Comparison.Operator;
+            int hash = Type.GetHashCode() ^ ModName.GetHashCode() ^ op.GetHashCode();
+            if (op != DependencyOperator.None) hash ^= CompareVersion.GetHashCode();
+            return hash;
         }
     }
 }

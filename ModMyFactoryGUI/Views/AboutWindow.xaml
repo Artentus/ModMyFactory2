@@ -18,53 +18,51 @@ the Free Software Foundation, either version 3 of the License, or
         Width="700" Height="400" WindowStartupLocation="CenterOwner" CanResize="False">
 
   <Window.Resources>
-    <l:LocalizedFormatter x:Key="LocalizedFormatter"/>
+    <l:LocalizedFormatter x:Key="LocalizedFormatter" />
   </Window.Resources>
 
   <Grid Margin="8">
     <Grid.RowDefinitions>
-      <RowDefinition Height="Auto"/>
-      <RowDefinition Height="Auto"/>
-      <RowDefinition Height="Auto"/>
-      <RowDefinition Height="*"/>
-      <RowDefinition Height="Auto"/>
+      <RowDefinition Height="Auto" />
+      <RowDefinition Height="Auto" />
+      <RowDefinition Height="Auto" />
+      <RowDefinition Height="*" />
+      <RowDefinition Height="Auto" />
     </Grid.RowDefinitions>
     <Grid.ColumnDefinitions>
-      <ColumnDefinition Width="*"/>
-      <ColumnDefinition Width="Auto"/>
-      <ColumnDefinition Width="Auto"/>
+      <ColumnDefinition Width="*" />
+      <ColumnDefinition Width="Auto" />
+      <ColumnDefinition Width="Auto" />
     </Grid.ColumnDefinitions>
 
     <TabControl Grid.Row="0" Grid.RowSpan="5" Grid.Column="0" TabStripPlacement="Bottom" Margin="4">
       <TabItem Header="{l:LocalizedResource AttributionsTabHeader}">
-        <views:AttributionView Margin="4,0" DataContext="{Binding Attributions}"/>
+        <views:AttributionView Margin="4,0" DataContext="{Binding Attributions}" />
       </TabItem>
       <TabItem Header="{l:LocalizedResource ChangelogTabHeader}">
-        <controls:FormattingTextBlock Margin="4,0" MarkdownText="{Binding Changelog}"/>
+        <controls:FormattingTextBlock Margin="4,0" MarkdownText="{Binding Changelog}" />
       </TabItem>
     </TabControl>
 
-    <Rectangle Grid.Row="0" Grid.RowSpan="5" Grid.Column="1" Width="1" Margin="8,0" Fill="{DynamicResource ThemeBorderLowBrush}"/>
+    <Rectangle Grid.Row="0" Grid.RowSpan="5" Grid.Column="1" Width="1" Margin="8,0" Fill="{DynamicResource ThemeBorderLowBrush}" />
 
-    <TextBlock Grid.Row="0" Grid.Column="2" Text="{l:LocalizedResource MainWindowTitle}" Classes="h1" Margin="8,0"/>
+    <TextBlock Grid.Row="0" Grid.Column="2" Text="{l:LocalizedResource MainWindowTitle}" Classes="h1" Margin="8,0" />
     <TextBlock Grid.Row="1" Grid.Column="2" Margin="8,0" Classes="muted"
-               Text="{Binding GUIVersion, Converter={StaticResource LocalizedFormatter}, ConverterParameter=VersionFormat}"/>
+               Text="{Binding GUIVersion, Converter={StaticResource LocalizedFormatter}, ConverterParameter=VersionFormat}" />
     <TextBlock Grid.Row="2" Grid.Column="2" Margin="8,0" Classes="muted"
-               Text="{Binding Author, Converter={StaticResource LocalizedFormatter}, ConverterParameter=AuthorFormat}"/>
+               Text="{Binding Author, Converter={StaticResource LocalizedFormatter}, ConverterParameter=AuthorFormat}" />
     <ItemsControl Grid.Row="3" Grid.Column="2" Margin="16,24,16,0" Items="{Binding AssemblyVersions}">
       <ItemsControl.ItemTemplate>
         <DataTemplate DataType="{x:Type vm:AssemblyVersionViewModel}">
           <DockPanel>
-            <TextBlock DockPanel.Dock="Left" Classes="muted" HorizontalAlignment="Left" Margin="0,0,16,0" Text="{Binding AssemblyName}"/>
+            <TextBlock DockPanel.Dock="Left" Classes="muted" HorizontalAlignment="Left" Margin="0,0,16,0" Text="{Binding AssemblyName}" />
             <TextBlock DockPanel.Dock="Right" Classes="muted" HorizontalAlignment="Right"
-                       Text="{Binding AssemblyVersion, Converter={StaticResource LocalizedFormatter}, ConverterParameter=VersionFormat}"/>
+                       Text="{Binding AssemblyVersion, Converter={StaticResource LocalizedFormatter}, ConverterParameter=VersionFormat}" />
           </DockPanel>
         </DataTemplate>
       </ItemsControl.ItemTemplate>
     </ItemsControl>
     <Button Grid.Row="4" Grid.Column="2" Margin="8,0,8,4" HorizontalAlignment="Right" IsDefault="True" IsCancel="True"
-            Content="{l:LocalizedResource CloseButton}" Command="{Binding CloseCommand}"/>
-    
+            Content="{l:LocalizedResource CloseButton}" Command="{Binding CloseCommand}" />
   </Grid>
-
 </Window>

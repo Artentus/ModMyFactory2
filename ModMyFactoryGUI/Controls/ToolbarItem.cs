@@ -22,9 +22,9 @@ using System.Windows.Input;
 
 namespace ModMyFactoryGUI.Controls
 {
-    class ToolbarItem : HeaderedSelectingItemsControl, IToolbarItem, ISelectable
+    internal class ToolbarItem : HeaderedSelectingItemsControl, IToolbarItem, ISelectable
     {
-        class DependencyResolver : IAvaloniaDependencyResolver
+        private class DependencyResolver : IAvaloniaDependencyResolver
         {
             /// <summary>
             /// Gets the default instance of <see cref="DependencyResolver"/>.
@@ -46,8 +46,17 @@ namespace ModMyFactoryGUI.Controls
         }
 
 
+        private static readonly ITemplate<IPanel> DefaultPanel =
+            new FuncTemplate<IPanel>(() => new StackPanel());
+
+        private ICommand _command;
+
+        private bool _commandCanExecute = true;
+
+        private Popup _popup;
+
         public static readonly DirectProperty<ToolbarItem, ICommand> CommandProperty =
-            Button.CommandProperty.AddOwner<ToolbarItem>(
+                                            Button.CommandProperty.AddOwner<ToolbarItem>(
                 toolbarItem => toolbarItem.Command,
                 (toolbarItem, command) => toolbarItem.Command = command,
                 enableDataValidation: true);
@@ -75,28 +84,6 @@ namespace ModMyFactoryGUI.Controls
 
         public static readonly RoutedEvent<RoutedEventArgs> SubmenuOpenedEvent =
             RoutedEvent.Register<ToolbarItem, RoutedEventArgs>(nameof(SubmenuOpened), RoutingStrategies.Bubble);
-
-        static readonly ITemplate<IPanel> DefaultPanel =
-            new FuncTemplate<IPanel>(() => new StackPanel());
-
-        static ToolbarItem()
-        {
-            SelectableMixin.Attach<ToolbarItem>(IsSelectedProperty);
-            CommandProperty.Changed.Subscribe(CommandChanged);
-            FocusableProperty.OverrideDefaultValue<ToolbarItem>(true);
-            HeaderProperty.Changed.AddClassHandler<ToolbarItem>((x, e) => x.HeaderChanged(e));
-            IconProperty.Changed.AddClassHandler<ToolbarItem>((x, e) => x.IconChanged(e));
-            IsSelectedProperty.Changed.AddClassHandler<ToolbarItem>((x, e) => x.IsSelectedChanged(e));
-            ItemsPanelProperty.OverrideDefaultValue<ToolbarItem>(DefaultPanel);
-            ClickEvent.AddClassHandler<ToolbarItem>((x, e) => x.OnClick(e));
-            SubmenuOpenedEvent.AddClassHandler<ToolbarItem>((x, e) => x.OnSubmenuOpened(e));
-            IsSubMenuOpenProperty.Changed.AddClassHandler<ToolbarItem>((x, e) => x.SubMenuOpenChanged(e));
-        }
-
-
-        ICommand _command;
-        bool _commandCanExecute = true;
-        Popup _popup;
 
         public event EventHandler<RoutedEventArgs> Click
         {
@@ -194,14 +181,112 @@ namespace ModMyFactoryGUI.Controls
         IEnumerable<IToolbarItem> IToolbarElement.SubItems
             => ItemContainerGenerator.Containers.Select(x => x.ContainerControl).OfType<IToolbarItem>();
 
-        public void Open() => IsSubMenuOpen = true;
+        static ToolbarItem()
+        {
+            SelectableMixin.Attach<ToolbarItem>(IsSelectedProperty);
+            CommandProperty.Changed.Subscribe(CommandChanged);
+            FocusableProperty.OverrideDefaultValue<ToolbarItem>(true);
+            HeaderProperty.Changed.AddClassHandler<ToolbarItem>((x, e) => x.HeaderChanged(e));
+            IconProperty.Changed.AddClassHandler<ToolbarItem>((x, e) => x.IconChanged(e));
+            IsSelectedProperty.Changed.AddClassHandler<ToolbarItem>((x, e) => x.IsSelectedChanged(e));
+            ItemsPanelProperty.OverrideDefaultValue<ToolbarItem>(DefaultPanel);
+            ClickEvent.AddClassHandler<ToolbarItem>((x, e) => x.OnClick(e));
+            SubmenuOpenedEvent.AddClassHandler<ToolbarItem>((x, e) => x.OnSubmenuOpened(e));
+            IsSubMenuOpenProperty.Changed.AddClassHandler<ToolbarItem>((x, e) => x.SubMenuOpenChanged(e));
+        }
 
-        public void Close() => IsSubMenuOpen = false;
+        private static void CommandChanged(AvaloniaPropertyChangedEventArgs e)
+        {
+            if (e.Sender is ToolbarItem toolbarItem)
+            {
+                if (((ILogical)toolbarItem).IsAttachedToLogicalTree)
+                {
+                    if (e.OldValue is ICommand oldCommand)
+                        oldCommand.CanExecuteChanged -= toolbarItem.CanExecuteChanged;
 
-        bool IMenuElement.MoveSelection(NavigationDirection direction, bool wrap)
-            => MoveSelection(direction, wrap);
+                    if (e.NewValue is ICommand newCommand)
+                        newCommand.CanExecuteChanged += toolbarItem.CanExecuteChanged;
+                }
 
-        void IMenuItem.RaiseClick() => RaiseEvent(new RoutedEventArgs(ClickEvent));
+                toolbarItem.CanExecuteChanged(toolbarItem, EventArgs.Empty);
+            }
+        }
+
+        private void CloseSubmenus()
+        {
+            foreach (var child in ((IToolbarItem)this).SubItems)
+                child.IsSubMenuOpen = false;
+        }
+
+        private void CanExecuteChanged(object sender, EventArgs e)
+        {
+            var canExecute = Command is null || Command.CanExecute(CommandParameter);
+
+            if (canExecute != _commandCanExecute)
+            {
+                _commandCanExecute = canExecute;
+                UpdateIsEffectivelyEnabled();
+            }
+        }
+
+        private void HeaderChanged(AvaloniaPropertyChangedEventArgs e)
+        {
+            if (e.NewValue is string newValue && newValue == "-")
+            {
+                PseudoClasses.Add(":separator");
+                Focusable = false;
+            }
+            else if (e.OldValue is string oldValue && oldValue == "-")
+            {
+                PseudoClasses.Remove(":separator");
+                Focusable = true;
+            }
+        }
+
+        private void IconChanged(AvaloniaPropertyChangedEventArgs e)
+        {
+            if (e.OldValue is ILogical oldValue)
+                LogicalChildren.Remove(oldValue);
+
+            if (e.NewValue is ILogical newValue)
+                LogicalChildren.Add(newValue);
+        }
+
+        private void IsSelectedChanged(AvaloniaPropertyChangedEventArgs e)
+        {
+            if ((bool)e.NewValue)
+                Focus();
+        }
+
+        private void SubMenuOpenChanged(AvaloniaPropertyChangedEventArgs e)
+        {
+            var value = (bool)e.NewValue;
+
+            if (value)
+            {
+                RaiseEvent(new RoutedEventArgs(SubmenuOpenedEvent));
+                IsSelected = true;
+            }
+            else
+            {
+                CloseSubmenus();
+                SelectedIndex = -1;
+            }
+        }
+
+        private void PopupOpened(object sender, EventArgs e)
+        {
+            var selected = SelectedIndex;
+
+            if (selected != -1)
+            {
+                var container = ItemContainerGenerator.ContainerFromIndex(selected);
+                container?.Focus();
+            }
+        }
+
+        private void PopupClosed(object sender, EventArgs e)
+            => SelectedItem = null;
 
         protected override IItemContainerGenerator CreateItemContainerGenerator()
             => new ToolbarItemContainerGenerator(this);
@@ -310,97 +395,13 @@ namespace ModMyFactoryGUI.Controls
             }
         }
 
-        private void CloseSubmenus()
-        {
-            foreach (var child in ((IToolbarItem)this).SubItems)
-                child.IsSubMenuOpen = false;
-        }
+        public void Open() => IsSubMenuOpen = true;
 
-        private static void CommandChanged(AvaloniaPropertyChangedEventArgs e)
-        {
-            if (e.Sender is ToolbarItem toolbarItem)
-            {
-                if (((ILogical)toolbarItem).IsAttachedToLogicalTree)
-                {
-                    if (e.OldValue is ICommand oldCommand)
-                        oldCommand.CanExecuteChanged -= toolbarItem.CanExecuteChanged;
+        public void Close() => IsSubMenuOpen = false;
 
-                    if (e.NewValue is ICommand newCommand)
-                        newCommand.CanExecuteChanged += toolbarItem.CanExecuteChanged;
-                }
+        bool IMenuElement.MoveSelection(NavigationDirection direction, bool wrap)
+            => MoveSelection(direction, wrap);
 
-                toolbarItem.CanExecuteChanged(toolbarItem, EventArgs.Empty);
-            }
-        }
-
-        private void CanExecuteChanged(object sender, EventArgs e)
-        {
-            var canExecute = Command is null || Command.CanExecute(CommandParameter);
-
-            if (canExecute != _commandCanExecute)
-            {
-                _commandCanExecute = canExecute;
-                UpdateIsEffectivelyEnabled();
-            }
-        }
-
-        private void HeaderChanged(AvaloniaPropertyChangedEventArgs e)
-        {
-            if (e.NewValue is string newValue && newValue == "-")
-            {
-                PseudoClasses.Add(":separator");
-                Focusable = false;
-            }
-            else if (e.OldValue is string oldValue && oldValue == "-")
-            {
-                PseudoClasses.Remove(":separator");
-                Focusable = true;
-            }
-        }
-
-        private void IconChanged(AvaloniaPropertyChangedEventArgs e)
-        {
-            if (e.OldValue is ILogical oldValue)
-                LogicalChildren.Remove(oldValue);
-
-            if (e.NewValue is ILogical newValue)
-                LogicalChildren.Add(newValue);
-        }
-
-        private void IsSelectedChanged(AvaloniaPropertyChangedEventArgs e)
-        {
-            if ((bool)e.NewValue)
-                Focus();
-        }
-
-        private void SubMenuOpenChanged(AvaloniaPropertyChangedEventArgs e)
-        {
-            var value = (bool)e.NewValue;
-
-            if (value)
-            {
-                RaiseEvent(new RoutedEventArgs(SubmenuOpenedEvent));
-                IsSelected = true;
-            }
-            else
-            {
-                CloseSubmenus();
-                SelectedIndex = -1;
-            }
-        }
-
-        private void PopupOpened(object sender, EventArgs e)
-        {
-            var selected = SelectedIndex;
-
-            if (selected != -1)
-            {
-                var container = ItemContainerGenerator.ContainerFromIndex(selected);
-                container?.Focus();
-            }
-        }
-
-        private void PopupClosed(object sender, EventArgs e)
-            => SelectedItem = null;
+        void IMenuItem.RaiseClick() => RaiseEvent(new RoutedEventArgs(ClickEvent));
     }
 }

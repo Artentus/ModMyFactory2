@@ -13,13 +13,34 @@ namespace ModMyFactory.Export
 {
     public sealed class ModDefinition
     {
-        static volatile int GlobalUid = 0;
+        private static volatile int GlobalUid = 0;
 
 
         public string Name { get; }
 
         [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         public AccurateVersion Version { get; }
+
+        [DefaultValue(-1)]
+        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
+        public int Uid { get; }
+
+        // -------------- File version 2 --------------
+        [DefaultValue(ExportMode.Version1)]
+        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
+        public ExportMode ExportMode { get; }
+
+        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
+        public AccurateVersion FactorioVersion { get; }
+
+        [JsonIgnore]
+        public ExportMode MaskedExportMode => ExportMode & ExportMode.Mask;
+
+        [JsonIgnore]
+        public bool Included => ExportMode.HasFlag(ExportMode.Included);
+
+        [JsonIgnore]
+        public bool DownloadNewer => ExportMode.HasFlag(ExportMode.DownloadNewer);
 
         [JsonConstructor]
         private ModDefinition(int uid, string name, ExportMode exportMode, AccurateVersion version, AccurateVersion factorioVersion)
@@ -39,28 +60,6 @@ namespace ModMyFactory.Export
             Name = name;
             Version = version;
         }
-
-        // -------------- File version 2 --------------
-
-        [DefaultValue(-1)]
-        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
-        public int Uid { get; }
-
-        [DefaultValue(ExportMode.Version1)]
-        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
-        public ExportMode ExportMode { get; }
-
-        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
-        public AccurateVersion FactorioVersion { get; }
-
-        [JsonIgnore]
-        public bool Included => ExportMode.HasFlag(ExportMode.Included);
-
-        [JsonIgnore]
-        public bool DownloadNewer => ExportMode.HasFlag(ExportMode.DownloadNewer);
-
-        [JsonIgnore]
-        public ExportMode MaskedExportMode => ExportMode & ExportMode.Mask;
 
         public ModDefinition(string name, ExportMode exportMode, AccurateVersion versionOrFactorioVersion = default)
         {

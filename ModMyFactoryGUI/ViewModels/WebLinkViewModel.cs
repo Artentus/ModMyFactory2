@@ -9,7 +9,7 @@ using ReactiveUI;
 
 namespace ModMyFactoryGUI.ViewModels
 {
-    sealed class WebLinkViewModel : ReactiveObject
+    internal sealed class WebLinkViewModel : ReactiveObject
     {
         public string LinkText { get; }
 

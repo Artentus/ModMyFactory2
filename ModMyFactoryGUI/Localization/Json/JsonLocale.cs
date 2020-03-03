@@ -12,13 +12,12 @@ using System.IO;
 
 namespace ModMyFactoryGUI.Localization.Json
 {
-    sealed class JsonLocale : ILocale
+    internal sealed class JsonLocale : ILocale
     {
-        readonly IDictionary<string, object> _values;
-
-        public string Culture { get; }
+        private readonly IDictionary<string, object> _values;
 
         public object this[string key] => _values[key];
+        public string Culture { get; }
         public IEnumerable<string> Keys => _values.Keys;
         public IEnumerable<object> Values => _values.Values;
         public int Count => _values.Count;
@@ -39,8 +38,11 @@ namespace ModMyFactoryGUI.Localization.Json
         }
 
         public bool ContainsKey(string key) => _values.ContainsKey(key);
+
         public bool TryGetValue(string key, out object value) => _values.TryGetValue(key, out value);
+
         public IEnumerator<KeyValuePair<string, object>> GetEnumerator() => _values.GetEnumerator();
+
         IEnumerator IEnumerable.GetEnumerator() => ((IEnumerable)_values).GetEnumerator();
     }
 }

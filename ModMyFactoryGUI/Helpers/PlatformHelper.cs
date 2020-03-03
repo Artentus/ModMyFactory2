@@ -11,7 +11,7 @@ using System.Runtime.InteropServices;
 
 namespace ModMyFactoryGUI.Helpers
 {
-    static class PlatformHelper
+    internal static class PlatformHelper
     {
         public static void OpenWebUrl(string url)
         {

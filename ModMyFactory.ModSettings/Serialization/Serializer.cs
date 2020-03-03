@@ -19,13 +19,13 @@ namespace ModMyFactory.ModSettings.Serialization
 {
     public static class Serializer
     {
-        static readonly AccurateVersion MinVersion = (0, 16);
-        static readonly AccurateVersion ByteSwitch = (0, 17); // Starting with 0.17 there is an additional byte in the file.
-        static readonly AccurateVersion DefaultWriteVersion = (0, 17, 73, 4); // Used by Factorio 0.17.73
+        private static readonly AccurateVersion MinVersion = (0, 16);
+        private static readonly AccurateVersion ByteSwitch = (0, 17); // Starting with 0.17 there is an additional byte in the file.
+        private static readonly AccurateVersion DefaultWriteVersion = (0, 17, 73, 4); // Used by Factorio 0.17.73
 
-        static bool FileVersionSupported(AccurateVersion fileVersion) => fileVersion >= MinVersion;
+        private static bool FileVersionSupported(AccurateVersion fileVersion) => fileVersion >= MinVersion;
 
-        static void ReadList(BinaryReader reader, JsonWriter writer)
+        private static void ReadList(BinaryReader reader, JsonWriter writer)
         {
             writer.WriteStartObject();
 
@@ -39,7 +39,7 @@ namespace ModMyFactory.ModSettings.Serialization
             writer.WriteEndObject();
         }
 
-        static void ReadDictionary(BinaryReader reader, JsonWriter writer)
+        private static void ReadDictionary(BinaryReader reader, JsonWriter writer)
         {
             writer.WriteStartObject();
 
@@ -53,7 +53,7 @@ namespace ModMyFactory.ModSettings.Serialization
             writer.WriteEndObject();
         }
 
-        static void ReadPropertyTree(BinaryReader reader, JsonWriter writer)
+        private static void ReadPropertyTree(BinaryReader reader, JsonWriter writer)
         {
             var type = (PropertyTreeType)reader.ReadByte();
             reader.ReadByte(); // Reserved
@@ -62,23 +62,84 @@ namespace ModMyFactory.ModSettings.Serialization
             {
                 case PropertyTreeType.None:
                     break;
+
                 case PropertyTreeType.Bool:
                     writer.WriteValue(reader.ReadBoolean());
                     break;
+
                 case PropertyTreeType.Number:
                     writer.WriteValue(reader.ReadDouble());
                     break;
+
                 case PropertyTreeType.String:
                     writer.WriteValue(reader.ReadString());
                     break;
+
                 case PropertyTreeType.List:
                     ReadList(reader, writer);
                     break;
+
                 case PropertyTreeType.Dictionary:
                     ReadDictionary(reader, writer);
                     break;
+
                 default:
                     throw new InvalidDataException($"Found unknown type {type} in property tree.");
+            }
+        }
+
+        private static void WriteList(BinaryWriter writer, JToken token)
+        {
+            writer.Write((uint)token.Count());
+
+            foreach (var child in token.Children())
+            {
+                writer.Write(string.Empty); // Write empty key
+                WritePropertyTree(writer, child);
+            }
+        }
+
+        private static void WriteDictionary(BinaryWriter writer, JToken token)
+        {
+            writer.Write((uint)token.Count());
+
+            foreach (var kvp in token.Value<IDictionary<string, JToken>>())
+            {
+                writer.Write(kvp.Key);
+                WritePropertyTree(writer, kvp.Value);
+            }
+        }
+
+        private static void WritePropertyTree(BinaryWriter writer, JToken token)
+        {
+            var type = token.Type.ToTreeType();
+            writer.Write((byte)type);
+            writer.Write(type == PropertyTreeType.String); // Write reserved byte; value taken from Rsedings code, meaning unknown
+
+            switch (type)
+            {
+                case PropertyTreeType.None:
+                    break;
+
+                case PropertyTreeType.Bool:
+                    writer.Write(token.Value<bool>());
+                    break;
+
+                case PropertyTreeType.Number:
+                    writer.Write(token.Value<double>());
+                    break;
+
+                case PropertyTreeType.String:
+                    writer.Write(token.Value<string>());
+                    break;
+
+                case PropertyTreeType.List:
+                    WriteList(writer, token);
+                    break;
+
+                case PropertyTreeType.Dictionary:
+                    WriteDictionary(writer, token);
+                    break;
             }
         }
 
@@ -122,57 +183,6 @@ namespace ModMyFactory.ModSettings.Serialization
         {
             var file = new FileInfo(fileName);
             return LoadFile(file, out fileVersion, formatting);
-        }
-
-
-        static void WriteList(BinaryWriter writer, JToken token)
-        {
-            writer.Write((uint)token.Count());
-
-            foreach (var child in token.Children())
-            {
-                writer.Write(string.Empty); // Write empty key
-                WritePropertyTree(writer, child);
-            }
-        }
-
-        static void WriteDictionary(BinaryWriter writer, JToken token)
-        {
-            writer.Write((uint)token.Count());
-
-            foreach (var kvp in token.Value<IDictionary<string, JToken>>())
-            {
-                writer.Write(kvp.Key);
-                WritePropertyTree(writer, kvp.Value);
-            }
-        }
-
-        static void WritePropertyTree(BinaryWriter writer, JToken token)
-        {
-            var type = token.Type.ToTreeType();
-            writer.Write((byte)type);
-            writer.Write(type == PropertyTreeType.String); // Write reserved byte; value taken from Rsedings code, meaning unknown
-
-            switch (type)
-            {
-                case PropertyTreeType.None:
-                    break;
-                case PropertyTreeType.Bool:
-                    writer.Write(token.Value<bool>());
-                    break;
-                case PropertyTreeType.Number:
-                    writer.Write(token.Value<double>());
-                    break;
-                case PropertyTreeType.String:
-                    writer.Write(token.Value<string>());
-                    break;
-                case PropertyTreeType.List:
-                    WriteList(writer, token);
-                    break;
-                case PropertyTreeType.Dictionary:
-                    WriteDictionary(writer, token);
-                    break;
-            }
         }
 
         /// <summary>

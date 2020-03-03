@@ -21,9 +21,9 @@ using System.Reflection;
 
 namespace ModMyFactoryGUI
 {
-    static class VersionStatistics
+    internal static class VersionStatistics
     {
-        class AssemblyVersionDictionary : IReadOnlyDictionary<Assembly, string>
+        private class AssemblyVersionDictionary : IReadOnlyDictionary<Assembly, string>
         {
             public string this[Assembly key]
             {

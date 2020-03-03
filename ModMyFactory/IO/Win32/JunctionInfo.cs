@@ -10,9 +10,9 @@ using System.IO;
 
 namespace ModMyFactory.IO.Win32
 {
-    sealed class JunctionInfo : ISymlinkInfo
+    internal sealed class JunctionInfo : ISymlinkInfo
     {
-        string? _destinationPath;
+        private string? _destinationPath;
 
         public string Name { get; }
 

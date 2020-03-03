@@ -14,7 +14,7 @@ namespace ModMyFactory.BaseTypes
     /// </summary>
     public class DependencyComparison
     {
-        readonly Func<AccurateVersion, AccurateVersion, bool> comparisonFunction;
+        private readonly Func<AccurateVersion, AccurateVersion, bool> comparisonFunction;
 
         /// <summary>
         /// The operator used for the comparison.

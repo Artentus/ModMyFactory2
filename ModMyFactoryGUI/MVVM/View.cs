@@ -9,7 +9,7 @@ using ReactiveUI;
 
 namespace ModMyFactoryGUI.MVVM
 {
-    static class View
+    internal static class View
     {
         public static TView CreateAndAttach<TView>(ViewModelBase<TView> viewModel)
             where TView : class, IView, new()

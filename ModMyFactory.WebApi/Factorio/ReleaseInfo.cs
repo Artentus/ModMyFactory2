@@ -16,7 +16,7 @@ namespace ModMyFactory.WebApi.Factorio
     /// </summary>
     public class ReleaseInfo
     {
-        static readonly Dictionary<string, FactorioBuild> BuildVersions
+        private static readonly Dictionary<string, FactorioBuild> BuildVersions
             = new Dictionary<string, FactorioBuild>
             {
                 { "alpha", FactorioBuild.Alpha },
@@ -24,13 +24,7 @@ namespace ModMyFactory.WebApi.Factorio
                 { "headless", FactorioBuild.Headless }
             };
 
-        static bool TryGetBuildFromString(string buildString, out FactorioBuild build)
-        {
-            return BuildVersions.TryGetValue(buildString.ToLowerInvariant(), out build);
-        }
-
-
-        readonly Dictionary<FactorioBuild, AccurateVersion> internalDict;
+        private readonly Dictionary<FactorioBuild, AccurateVersion> internalDict;
 
         /// <summary>
         /// Gets the version of a specific build.
@@ -40,7 +34,6 @@ namespace ModMyFactory.WebApi.Factorio
             get => internalDict[build];
             set => throw new NotSupportedException();
         }
-
 
         internal ReleaseInfo()
         {
@@ -59,6 +52,10 @@ namespace ModMyFactory.WebApi.Factorio
             }
         }
 
+        private static bool TryGetBuildFromString(string buildString, out FactorioBuild build)
+        {
+            return BuildVersions.TryGetValue(buildString.ToLowerInvariant(), out build);
+        }
 
         /// <summary>
         /// Checks if there is version information on a specific build.

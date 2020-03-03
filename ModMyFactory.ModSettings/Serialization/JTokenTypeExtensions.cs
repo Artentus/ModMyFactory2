@@ -10,7 +10,7 @@ using System.ComponentModel;
 
 namespace ModMyFactory.ModSettings.Serialization
 {
-    static class JTokenTypeExtensions
+    internal static class JTokenTypeExtensions
     {
         public static PropertyTreeType ToTreeType(this JTokenType type)
         {

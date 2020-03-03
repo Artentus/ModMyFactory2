@@ -14,12 +14,12 @@ using System.Threading.Tasks;
 
 namespace ModMyFactory.WebApi
 {
-    static class WebHelper
+    internal static class WebHelper
     {
-        const string UserAgent = "ModMyFactory_2";
-        const int BufferSize = 65536;
+        private const string UserAgent = "ModMyFactory_2";
+        private const int BufferSize = 65536;
 
-        async static Task<HttpWebRequest> CreateHttpRequestAsync(Uri uri, byte[] content = null)
+        private static async Task<HttpWebRequest> CreateHttpRequestAsync(Uri uri, byte[] content = null)
         {
             var request = WebRequest.CreateHttp(uri);
             request.KeepAlive = true;

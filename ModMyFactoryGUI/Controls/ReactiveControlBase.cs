@@ -11,7 +11,7 @@ using ReactiveUI;
 
 namespace ModMyFactoryGUI.Controls
 {
-    abstract class ReactiveControlBase<T> : ReactiveUserControl<T>, IView<T> where T : class, IRoutableViewModel
+    internal abstract class ReactiveControlBase<T> : ReactiveUserControl<T>, IView<T> where T : class, IRoutableViewModel
     {
         object IView.ViewModel
         {

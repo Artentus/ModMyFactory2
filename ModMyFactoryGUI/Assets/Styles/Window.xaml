@@ -74,7 +74,7 @@ https://github.com/VitalElement/AvalonStudio.Shell/blob/bb220b049fd2537e864624fe
               </Grid>
 
               <Grid Background="Transparent" Width="4" Height="10" Cursor="TopLeftCorner"
-                    Name="topLeftGrip" IsHitTestVisible="{TemplateBinding CanResize}"/>
+                    Name="topLeftGrip" IsHitTestVisible="{TemplateBinding CanResize}" />
               <Grid Background="Transparent" Width="4" Grid.Row="1" Grid.RowSpan="2" Cursor="SizeWestEast"
                     Name="leftVerticalGrip" IsHitTestVisible="{TemplateBinding CanResize}" />
               <Grid Background="Transparent" Width="4" Height="10" Grid.Row="4" Cursor="BottomLeftCorner"
@@ -96,7 +96,7 @@ https://github.com/VitalElement/AvalonStudio.Shell/blob/bb220b049fd2537e864624fe
   <Style Selector="controls|WindowBase /template/ Button#minimiseButton">
     <Setter Property="Content">
       <Template>
-        <Rectangle Fill="{DynamicResource ThemeForegroundBrush}" Height="1" Width="10" Margin="15,0,14,0"/>
+        <Rectangle Fill="{DynamicResource ThemeForegroundBrush}" Height="1" Width="10" Margin="15,0,14,0" />
       </Template>
     </Setter>
   </Style>
@@ -105,7 +105,7 @@ https://github.com/VitalElement/AvalonStudio.Shell/blob/bb220b049fd2537e864624fe
     <Setter Property="Content">
       <Template>
         <Panel Margin="14,0" Height="10" Width="10">
-          <Rectangle Stroke="{DynamicResource ThemeForegroundBrush}" StrokeThickness="1"/>
+          <Rectangle Stroke="{DynamicResource ThemeForegroundBrush}" StrokeThickness="1" />
         </Panel>
       </Template>
     </Setter>
@@ -115,8 +115,8 @@ https://github.com/VitalElement/AvalonStudio.Shell/blob/bb220b049fd2537e864624fe
     <Setter Property="Content">
       <Template>
         <Panel Margin="14,0" Height="10" Width="10">
-          <Rectangle Stroke="{DynamicResource ThemeForegroundBrush}" StrokeThickness="1" Margin="2,0,0,2"/>
-          <Rectangle Stroke="{DynamicResource ThemeForegroundBrush}" StrokeThickness="1" Margin="0,2,2,0" Fill="{DynamicResource ThemeBackgroundBrush}"/>
+          <Rectangle Stroke="{DynamicResource ThemeForegroundBrush}" StrokeThickness="1" Margin="2,0,0,2" />
+          <Rectangle Stroke="{DynamicResource ThemeForegroundBrush}" StrokeThickness="1" Margin="0,2,2,0" Fill="{DynamicResource ThemeBackgroundBrush}" />
         </Panel>
       </Template>
     </Setter>
@@ -143,5 +143,4 @@ https://github.com/VitalElement/AvalonStudio.Shell/blob/bb220b049fd2537e864624fe
   <Style Selector="controls|WindowBase">
     <Setter Property="BorderThickness" Value="1" />
   </Style>
-  
 </Styles>

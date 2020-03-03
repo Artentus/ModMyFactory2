@@ -10,7 +10,7 @@ using ModMyFactoryGUI.ViewModels;
 
 namespace ModMyFactoryGUI.Views
 {
-    class OnlineModsView : MainViewBase<OnlineModsViewModel>
+    internal class OnlineModsView : MainViewBase<OnlineModsViewModel>
     {
         public OnlineModsView()
         {

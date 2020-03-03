@@ -20,6 +20,9 @@ namespace ModMyFactory.Export
 
         public ModpackDefinition[] Modpacks { get; }
 
+        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
+        public bool IncludesVersionInfo { get; }
+
         [JsonConstructor]
         private Package(int version, ModDefinition[] mods, ModpackDefinition[] modpacks, bool includesVersionInfo)
         {
@@ -30,10 +33,6 @@ namespace ModMyFactory.Export
         }
 
         // -------------- File version 1 --------------
-
-        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
-        public bool IncludesVersionInfo { get; }
-
         public Package(ModDefinition[] mods, ModpackDefinition[] modpacks, bool includesVersionInfo)
         {
             Version = 1;

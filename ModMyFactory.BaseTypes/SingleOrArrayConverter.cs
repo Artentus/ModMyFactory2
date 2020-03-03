@@ -10,7 +10,7 @@ using System;
 
 namespace ModMyFactory.BaseTypes
 {
-    sealed class SingleOrArrayConverter<T> : JsonConverter
+    internal sealed class SingleOrArrayConverter<T> : JsonConverter
     {
         public override bool CanConvert(Type objectType)
         {

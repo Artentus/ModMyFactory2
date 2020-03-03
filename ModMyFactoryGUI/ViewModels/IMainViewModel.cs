@@ -11,7 +11,7 @@ using System.Collections.Generic;
 
 namespace ModMyFactoryGUI.ViewModels
 {
-    interface IMainViewModel : IRoutableViewModel
+    internal interface IMainViewModel : IRoutableViewModel
     {
         IReadOnlyCollection<IControl> FileMenuItems { get; }
 

@@ -15,9 +15,9 @@ using System.Threading.Tasks;
 
 namespace ModMyFactory.Game
 {
-    class Steam
+    internal class Steam
     {
-        static bool TryGetSteamPathWin32(out string path)
+        private static bool TryGetSteamPathWin32(out string path)
         {
             RegistryKey softwareKey = null;
             try
@@ -41,14 +41,14 @@ namespace ModMyFactory.Game
             }
         }
 
-        static bool TryGetSteamPathUnix(out string path)
+        private static bool TryGetSteamPathUnix(out string path)
         {
             // Default path when installing through packet manager. Custom paths not supported.
             path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), ".steam", "steam");
             return Directory.Exists(path);
         }
 
-        static bool TryGetSteamPath(out string path)
+        private static bool TryGetSteamPath(out string path)
         {
 #if NETFULL
             return TryGetSteamPathWin32(out path);
@@ -63,7 +63,7 @@ namespace ModMyFactory.Game
 #endif
         }
 
-        static DirectoryInfo GetLibrary(string basePath)
+        private static DirectoryInfo GetLibrary(string basePath)
             => new DirectoryInfo(Path.Combine(basePath, "steamapps", "common"));
 
         /// <summary>
@@ -79,14 +79,14 @@ namespace ModMyFactory.Game
         }
 
 
-        readonly string _path;
+        private readonly string _path;
 
         private Steam(string path)
         {
             _path = path;
         }
 
-        async Task<List<string>> ReadLibraryPathsAsync()
+        private async Task<List<string>> ReadLibraryPathsAsync()
         {
             var libraryPaths = new List<string>();
 

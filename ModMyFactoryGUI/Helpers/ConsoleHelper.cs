@@ -11,7 +11,7 @@ using System;
 namespace ModMyFactoryGUI.Helpers
 {
     // Handling of the standard output stream on Windows is horrible so we need all of this code to somewhat make it work.
-    static class ConsoleHelper
+    internal static class ConsoleHelper
     {
         public static bool TryAttachConsole(out IntPtr consoleHandle)
         {

@@ -18,6 +18,7 @@ namespace ModMyFactory.Win32
 
         // Only for message boxes
         MessageResult = 0x0,
+
         DialogProcedure = 0x4,
         User = 0x8
     }

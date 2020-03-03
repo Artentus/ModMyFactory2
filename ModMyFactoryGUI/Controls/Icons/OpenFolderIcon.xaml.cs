@@ -10,7 +10,7 @@ using Avalonia.Markup.Xaml;
 
 namespace ModMyFactoryGUI.Controls.Icons
 {
-    class OpenFolderIcon : UserControl
+    internal class OpenFolderIcon : UserControl
     {
         public OpenFolderIcon()
         {

@@ -15,6 +15,7 @@ namespace ModMyFactory.Win32
 
         // STORAGE
         StorageCheckVerify = (DeviceType.MassStorage << 16) | (0x0200 << 2) | IOMethod.Buffered | (FileAccess.Read << 14),
+
         StorageCheckVerify2 = (DeviceType.MassStorage << 16) | (0x0200 << 2) | IOMethod.Buffered | (0 << 14),
         StorageMediaRemoval = (DeviceType.MassStorage << 16) | (0x0201 << 2) | IOMethod.Buffered | (FileAccess.Read << 14),
         StorageEjectMedia = (DeviceType.MassStorage << 16) | (0x0202 << 2) | IOMethod.Buffered | (FileAccess.Read << 14),
@@ -37,6 +38,7 @@ namespace ModMyFactory.Win32
 
         // DISK
         DiskGetDriveGeometry = (DeviceType.Disk << 16) | (0x0000 << 2) | IOMethod.Buffered | (0 << 14),
+
         DiskGetDriveGeometryEx = (DeviceType.Disk << 16) | (0x0028 << 2) | IOMethod.Buffered | (0 << 14),
         DiskGetPartitionInfo = (DeviceType.Disk << 16) | (0x0001 << 2) | IOMethod.Buffered | (FileAccess.Read << 14),
         DiskGetPartitionInfoEx = (DeviceType.Disk << 16) | (0x0012 << 2) | IOMethod.Buffered | (0 << 14),
@@ -82,6 +84,7 @@ namespace ModMyFactory.Win32
 
         // CHANGER
         ChangerGetParameters = (DeviceType.Changer << 16) | (0x0000 << 2) | IOMethod.Buffered | (FileAccess.Read << 14),
+
         ChangerGetStatus = (DeviceType.Changer << 16) | (0x0001 << 2) | IOMethod.Buffered | (FileAccess.Read << 14),
         ChangerGetProductData = (DeviceType.Changer << 16) | (0x0002 << 2) | IOMethod.Buffered | (FileAccess.Read << 14),
         ChangerSetAccess = (DeviceType.Changer << 16) | (0x0004 << 2) | IOMethod.Buffered | (FileAccess.ReadWrite << 14),
@@ -95,6 +98,7 @@ namespace ModMyFactory.Win32
 
         // FILESYSTEM
         FsctlRequestOplockLevel1 = (DeviceType.FileSystem << 16) | (0 << 2) | IOMethod.Buffered | (0 << 14),
+
         FsctlRequestOplockLevel2 = (DeviceType.FileSystem << 16) | (1 << 2) | IOMethod.Buffered | (0 << 14),
         FsctlRequestBatchOplock = (DeviceType.FileSystem << 16) | (2 << 2) | IOMethod.Buffered | (0 << 14),
         FsctlOplockBreakAcknowledge = (DeviceType.FileSystem << 16) | (3 << 2) | IOMethod.Buffered | (0 << 14),
@@ -163,6 +167,7 @@ namespace ModMyFactory.Win32
 
         // VIDEO
         VideoQuerySupportedBrightness = (DeviceType.Video << 16) | (0x0125 << 2) | IOMethod.Buffered | (0 << 14),
+
         VideoQueryDisplayBrightness = (DeviceType.Video << 16) | (0x0126 << 2) | IOMethod.Buffered | (0 << 14),
         VideoSetDisplayBrightness = (DeviceType.Video << 16) | (0x0127 << 2) | IOMethod.Buffered | (0 << 14),
     }

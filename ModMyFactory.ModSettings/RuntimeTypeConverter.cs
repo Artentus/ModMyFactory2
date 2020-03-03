@@ -12,7 +12,7 @@ using System.Collections.Generic;
 
 namespace ModMyFactory.ModSettings
 {
-    sealed class RuntimeTypeConverter : JsonConverter<RuntimeType>
+    internal sealed class RuntimeTypeConverter : JsonConverter<RuntimeType>
     {
         private static readonly Dictionary<RuntimeType, string> to =
             new Dictionary<RuntimeType, string>
@@ -21,6 +21,7 @@ namespace ModMyFactory.ModSettings
                 { RuntimeType.Global, "runtime-global" },
                 { RuntimeType.User, "runtime-per-user" },
             };
+
         private static readonly Dictionary<string, RuntimeType> from =
             new Dictionary<string, RuntimeType>
             {

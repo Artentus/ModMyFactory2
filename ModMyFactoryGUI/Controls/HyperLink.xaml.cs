@@ -16,27 +16,15 @@ namespace ModMyFactoryGUI.Controls
 {
     public class HyperLink : UserControl
     {
+        private readonly TextBlock _linkText;
+
+        private string _text;
+
         public static readonly DirectProperty<HyperLink, string> TextProperty
-            = TextBlock.TextProperty.AddOwner<HyperLink>(GetText, SetText, string.Empty);
-
-        static string GetText(HyperLink hyperLink)
-            => hyperLink.Text;
-
-        static void SetText(HyperLink hyperLink, string value)
-            => hyperLink.Text = value;
+                            = TextBlock.TextProperty.AddOwner<HyperLink>(GetText, SetText, string.Empty);
 
         public static readonly DirectProperty<HyperLink, string> UrlProperty
             = AvaloniaProperty.RegisterDirect<HyperLink, string>("Url", GetUrl, SetUrl, string.Empty);
-
-        static string GetUrl(HyperLink hyperLink)
-            => hyperLink.Url;
-
-        static void SetUrl(HyperLink hyperLink, string value)
-            => hyperLink.Url = value;
-
-
-        readonly TextBlock _linkText;
-        string _text;
 
         public string Text
         {
@@ -57,19 +45,31 @@ namespace ModMyFactoryGUI.Controls
             _linkText = this.FindControl<TextBlock>("LinkText");
         }
 
-        private void InitializeComponent()
-        {
-            AvaloniaXamlLoader.Load(this);
+        private static string GetText(HyperLink hyperLink)
+                                            => hyperLink.Text;
 
-            Cursor = new Cursor(StandardCursorType.Hand);
-        }
+        private static void SetText(HyperLink hyperLink, string value)
+            => hyperLink.Text = value;
 
-        static bool IsValidUrl(string url)
+        private static string GetUrl(HyperLink hyperLink)
+            => hyperLink.Url;
+
+        private static void SetUrl(HyperLink hyperLink, string value)
+            => hyperLink.Url = value;
+
+        private static bool IsValidUrl(string url)
         {
             if (string.IsNullOrWhiteSpace(url)) return false;
             if (!Uri.IsWellFormedUriString(url, UriKind.Absolute)) return false;
             if (!Uri.TryCreate(url, UriKind.Absolute, out var tmp)) return false;
             return tmp.Scheme == Uri.UriSchemeHttp || tmp.Scheme == Uri.UriSchemeHttps;
+        }
+
+        private void InitializeComponent()
+        {
+            AvaloniaXamlLoader.Load(this);
+
+            Cursor = new Cursor(StandardCursorType.Hand);
         }
 
         protected override void OnPointerPressed(PointerPressedEventArgs e)

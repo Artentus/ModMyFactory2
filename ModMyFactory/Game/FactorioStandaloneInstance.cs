@@ -11,9 +11,9 @@ using System.IO;
 
 namespace ModMyFactory.Game
 {
-    sealed class FactorioStandaloneInstance : FactorioInstanceBase
+    internal sealed class FactorioStandaloneInstance : FactorioInstanceBase
     {
-        readonly FileInfo _executable;
+        private readonly FileInfo _executable;
 
         internal FactorioStandaloneInstance(DirectoryInfo directory, IModFile coreMod, IModFile baseMod, FileInfo executable)
             : base(directory, coreMod, baseMod,

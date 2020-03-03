@@ -13,7 +13,7 @@ using System.Reflection;
 
 namespace ModMyFactoryGUI.ViewModels
 {
-    class AssemblyVersionViewModel : ReactiveObject, IWeakSubscriber<EventArgs>
+    internal class AssemblyVersionViewModel : ReactiveObject, IWeakSubscriber<EventArgs>
     {
         public string AssemblyName { get; }
 
@@ -26,7 +26,7 @@ namespace ModMyFactoryGUI.ViewModels
             WeakSubscriptionManager.Subscribe(App.Current.LocaleManager, nameof(LocaleManager.UICultureChanged), this);
         }
 
-        void UICultureChangedHandler(object sender, EventArgs e)
+        private void UICultureChangedHandler(object sender, EventArgs e)
         {
             this.RaisePropertyChanged(nameof(AssemblyVersion));
         }

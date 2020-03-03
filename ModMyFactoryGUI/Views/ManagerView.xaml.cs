@@ -10,7 +10,7 @@ using ModMyFactoryGUI.ViewModels;
 
 namespace ModMyFactoryGUI.Views
 {
-    class ManagerView : MainViewBase<ManagerViewModel>
+    internal class ManagerView : MainViewBase<ManagerViewModel>
     {
         public ManagerView()
         {

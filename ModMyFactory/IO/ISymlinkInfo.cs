@@ -7,7 +7,7 @@
 
 namespace ModMyFactory.IO
 {
-    interface ISymlinkInfo
+    internal interface ISymlinkInfo
     {
         string Name { get; }
 

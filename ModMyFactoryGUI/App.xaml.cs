@@ -67,16 +67,16 @@ namespace ModMyFactoryGUI
             return false;
         }
 
-        void Shutdown() => Lifetime.Shutdown();
+        private void Shutdown() => Lifetime.Shutdown();
 
-        async Task ShutdownAsync()
+        private async Task ShutdownAsync()
         {
             var uiDispatcher = Dispatcher.UIThread;
             if (uiDispatcher.CheckAccess()) Shutdown();
             else await uiDispatcher.InvokeAsync(Shutdown, DispatcherPriority.Send);
         }
 
-        DirectoryInfo GetApplicationDataDirectory()
+        private DirectoryInfo GetApplicationDataDirectory()
         {
             string path = null;
 #if NETFULL
@@ -117,7 +117,7 @@ namespace ModMyFactoryGUI
             AvaloniaXamlLoader.Load(this);
         }
 
-        void InitLogger()
+        private void InitLogger()
         {
             var logFile = Path.Combine(ApplicationDataDirectory.FullName, "logs", "log_.txt");
             Log.Logger = new LoggerConfiguration()
@@ -135,13 +135,13 @@ namespace ModMyFactoryGUI
                 Log.Information("{0} v{1}", kvp.Key.GetName().Name, kvp.Value);
         }
 
-        void LoadSettings()
+        private void LoadSettings()
         {
             var settingsFile = Path.Combine(ApplicationDataDirectory.FullName, "settings.json");
             Settings = SettingManager.LoadSafe(settingsFile);
         }
 
-        void LoadLocales()
+        private void LoadLocales()
         {
             var langDir = new DirectoryInfo(Path.Combine(ApplicationDirectory.FullName, "lang"));
             if (langDir.Exists)
@@ -185,7 +185,7 @@ namespace ModMyFactoryGUI
             };
         }
 
-        void LoadThemes()
+        private void LoadThemes()
         {
             var themeDir = Path.Combine(ApplicationDirectory.FullName, "themes");
             ThemeManager = ThemeSelector.LoadSafe(themeDir);
@@ -214,7 +214,7 @@ namespace ModMyFactoryGUI
             };
         }
 
-        void OnExit(object sender, ControlledApplicationLifetimeExitEventArgs e)
+        private void OnExit(object sender, ControlledApplicationLifetimeExitEventArgs e)
         {
             Settings.Save();
             Log.CloseAndFlush();

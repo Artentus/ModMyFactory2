@@ -5,12 +5,12 @@
 //  the Free Software Foundation, either version 3 of the License, or
 //  (at your option) any later version.
 
+using Microsoft.Win32.SafeHandles;
 using System;
 using System.IO;
 using System.Runtime.ConstrainedExecution;
 using System.Runtime.InteropServices;
 using System.Security;
-using Microsoft.Win32.SafeHandles;
 
 namespace ModMyFactory.Win32
 {
@@ -18,10 +18,16 @@ namespace ModMyFactory.Win32
     {
         #region Console
 
-        const int AttachToParentProcess = -1;
+        private const int AttachToParentProcess = -1;
 
         [DllImport("kernel32.dll", EntryPoint = "AttachConsole", SetLastError = true)]
         private static extern bool AttachConsoleNative(int processId);
+
+        [DllImport("kernel32.dll", EntryPoint = "AllocConsole", SetLastError = true)]
+        private static extern bool AllocConsoleNative();
+
+        [DllImport("kernel32.dll", EntryPoint = "FreeConsole", SetLastError = true)]
+        private static extern bool FreeConsoleNative();
 
         /// <summary>
         /// Attaches the calling process to the console of the specified process.
@@ -61,9 +67,6 @@ namespace ModMyFactory.Win32
             return AttachConsoleNative(AttachToParentProcess);
         }
 
-        [DllImport("kernel32.dll", EntryPoint = "AllocConsole", SetLastError = true)]
-        private static extern bool AllocConsoleNative();
-
         /// <summary>
         /// Allocates a new console for the calling process.
         /// </summary>
@@ -75,9 +78,6 @@ namespace ModMyFactory.Win32
                 Marshal.ThrowExceptionForHR(hResult);
             }
         }
-
-        [DllImport("kernel32.dll", EntryPoint = "FreeConsole", SetLastError = true)]
-        private static extern bool FreeConsoleNative();
 
         /// <summary>
         /// Detaches the calling process from its console.
@@ -97,7 +97,7 @@ namespace ModMyFactory.Win32
         [DllImport("kernel32.dll")]
         public static extern IntPtr GetConsoleWindow();
 
-        #endregion
+        #endregion Console
 
         #region DeviceIOControl
 
@@ -172,7 +172,7 @@ namespace ModMyFactory.Win32
         public static void DeviceIOControl(SafeFileHandle deviceHandle, IOControlCode controlCode)
             => DeviceIOControlInternal(deviceHandle, controlCode, IntPtr.Zero, 0, IntPtr.Zero, 0, out _);
 
-        #endregion
+        #endregion DeviceIOControl
 
         #region CreateFile
 
@@ -281,7 +281,7 @@ namespace ModMyFactory.Win32
             return CreateFileInternal(path, (uint)access, share, mode, (uint)attributes | (uint)flags);
         }
 
-        #endregion
+        #endregion CreateFile
 
         #region RemoveDirectory
 
@@ -302,7 +302,7 @@ namespace ModMyFactory.Win32
             }
         }
 
-        #endregion
+        #endregion RemoveDirectory
 
         #region GetFileAttributes
 
@@ -350,7 +350,7 @@ namespace ModMyFactory.Win32
             return true;
         }
 
-        #endregion
+        #endregion GetFileAttributes
 
         #region CloseHandle
 
@@ -372,6 +372,6 @@ namespace ModMyFactory.Win32
             }
         }
 
-        #endregion
+        #endregion CloseHandle
     }
 }

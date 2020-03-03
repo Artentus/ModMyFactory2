@@ -15,6 +15,18 @@ namespace ModMyFactory.Win32
         [DllImport("user32.dll", EntryPoint = "PostMessageA", SetLastError = true)]
         private static extern bool PostMessageNative(IntPtr hWnd, uint msg, int wParam, int lParam);
 
+        [DllImport("user32.dll", EntryPoint = "GetWindowLong", SetLastError = true)]
+        private static extern IntPtr GetWindowLong32(IntPtr hWnd, int nIndex);
+
+        [DllImport("user32.dll", EntryPoint = "GetWindowLongPtr", SetLastError = true)]
+        private static extern IntPtr GetWindowLong64(IntPtr hWnd, int nIndex);
+
+        [DllImport("user32.dll", EntryPoint = "SetWindowLong", SetLastError = true)]
+        private static extern IntPtr SetWindowLong32(IntPtr hWnd, int nIndex, IntPtr dwNewLong);
+
+        [DllImport("user32.dll", EntryPoint = "SetWindowLongPtr", SetLastError = true)]
+        private static extern IntPtr SetWindowLong64(IntPtr hWnd, int nIndex, IntPtr dwNewLong);
+
         /// <summary>
         /// Tries to post a message to a window.
         /// </summary>
@@ -32,12 +44,6 @@ namespace ModMyFactory.Win32
                 Marshal.ThrowExceptionForHR(hResult);
             }
         }
-
-        [DllImport("user32.dll", EntryPoint = "GetWindowLong", SetLastError = true)]
-        private static extern IntPtr GetWindowLong32(IntPtr hWnd, int nIndex);
-
-        [DllImport("user32.dll", EntryPoint = "GetWindowLongPtr", SetLastError = true)]
-        private static extern IntPtr GetWindowLong64(IntPtr hWnd, int nIndex);
 
         /// <summary>
         /// Gets attributes of a window.
@@ -66,12 +72,6 @@ namespace ModMyFactory.Win32
             var result = GetWindowLong(windowHandle, WindowLongIndex.Style);
             return (WindowStyles)((uint)result);
         }
-
-        [DllImport("user32.dll", EntryPoint = "SetWindowLong", SetLastError = true)]
-        private static extern IntPtr SetWindowLong32(IntPtr hWnd, int nIndex, IntPtr dwNewLong);
-
-        [DllImport("user32.dll", EntryPoint = "SetWindowLongPtr", SetLastError = true)]
-        private static extern IntPtr SetWindowLong64(IntPtr hWnd, int nIndex, IntPtr dwNewLong);
 
         /// <summary>
         /// Changes attributes of a window.

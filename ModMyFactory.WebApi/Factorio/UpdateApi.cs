@@ -18,9 +18,17 @@ namespace ModMyFactory.WebApi.Factorio
 {
     public static class UpdateApi
     {
-        const string BaseUrl = "https://updater.factorio.com";
-        const string PacketUrl = BaseUrl + "/get-available-versions";
-        const string DownloadUrl = BaseUrl + "/get-download-link";
+        private const string BaseUrl = "https://updater.factorio.com";
+        private const string PacketUrl = BaseUrl + "/get-available-versions";
+        private const string DownloadUrl = BaseUrl + "/get-download-link";
+
+        private async static Task<string> GetPackageLinkAsync(Platform platform, AccurateVersion from, AccurateVersion to, string username, string token)
+        {
+            string url = $"{DownloadUrl}?apiVersion=2&username={username}&token={token}&package={platform.ToActualString()}&from={from}&to={to}";
+            string document = await WebHelper.RequestDocumentAsync(url);
+            var response = JsonConvert.DeserializeObject<string[]>(document);
+            return response[0];
+        }
 
         /// <summary>
         /// Gets information on available update packages for a given platform.
@@ -51,14 +59,6 @@ namespace ModMyFactory.WebApi.Factorio
             {
                 throw ApiException.FromWebException(ex);
             }
-        }
-
-        private async static Task<string> GetPackageLinkAsync(Platform platform, AccurateVersion from, AccurateVersion to, string username, string token)
-        {
-            string url = $"{DownloadUrl}?apiVersion=2&username={username}&token={token}&package={platform.ToActualString()}&from={from}&to={to}";
-            string document = await WebHelper.RequestDocumentAsync(url);
-            var response = JsonConvert.DeserializeObject<string[]>(document);
-            return response[0];
         }
 
         /// <summary>

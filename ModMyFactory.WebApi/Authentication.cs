@@ -15,10 +15,10 @@ namespace ModMyFactory.WebApi
 {
     public static class Authentication
     {
-        const string BaseUrl = "https://auth.factorio.com";
-        const string LogInUrl = BaseUrl + "/api-login";
+        private const string BaseUrl = "https://auth.factorio.com";
+        private const string LogInUrl = BaseUrl + "/api-login";
 
-        static void DestroyByteArray(byte[] array)
+        private static void DestroyByteArray(byte[] array)
         {
             for (int i = 0; i < array.Length; i++)
                 array[i] = 0;

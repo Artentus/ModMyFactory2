@@ -10,7 +10,7 @@ using Avalonia.Controls.Generators;
 
 namespace ModMyFactoryGUI.Controls
 {
-    class ToolbarItemContainerGenerator : ItemContainerGenerator<ToolbarItem>
+    internal class ToolbarItemContainerGenerator : ItemContainerGenerator<ToolbarItem>
     {
         public ToolbarItemContainerGenerator(IControl owner)
             : base(owner, ToolbarItem.HeaderProperty, null)

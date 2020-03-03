@@ -11,7 +11,7 @@ using ModMyFactoryGUI.ViewModels;
 
 namespace ModMyFactoryGUI.Views
 {
-    class AttributionView : ReactiveControlBase<AttributionViewModel>
+    internal class AttributionView : ReactiveControlBase<AttributionViewModel>
     {
         public AttributionView()
         {

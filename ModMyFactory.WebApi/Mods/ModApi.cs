@@ -16,8 +16,8 @@ namespace ModMyFactory.WebApi.Mods
 {
     public static class ModApi
     {
+        private const string ModsUrl = BaseUrl + "/api/mods";
         internal const string BaseUrl = "https://mods.factorio.com";
-        const string ModsUrl = BaseUrl + "/api/mods";
 
         /// <summary>
         /// Requests a mod page from the server.

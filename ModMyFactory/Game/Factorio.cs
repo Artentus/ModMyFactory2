@@ -8,29 +8,32 @@
 using ModMyFactory.Mods;
 using System.IO;
 using System.Threading.Tasks;
+
 #if NETCORE
+
 using System;
+
 #endif
 
 namespace ModMyFactory.Game
 {
     public static class Factorio
     {
-        static Steam _steam = null;
+        private static Steam _steam = null;
 
-        static async Task<(bool, IModFile)> TryLoadCoreModAsync(DirectoryInfo directory)
+        private static async Task<(bool, IModFile)> TryLoadCoreModAsync(DirectoryInfo directory)
         {
             var coreModPath = Path.Combine(directory.FullName, "data", "core");
             return await ExtractedModFile.TryLoadAsync(coreModPath);
         }
 
-        static async Task<(bool, IModFile)> TryLoadBaseModAsync(DirectoryInfo directory)
+        private static async Task<(bool, IModFile)> TryLoadBaseModAsync(DirectoryInfo directory)
         {
             var baseModPath = Path.Combine(directory.FullName, "data", "base");
             return await ExtractedModFile.TryLoadAsync(baseModPath);
         }
 
-        static bool TryLoadExecutable(DirectoryInfo directory, out FileInfo executable)
+        private static bool TryLoadExecutable(DirectoryInfo directory, out FileInfo executable)
         {
 #if NETFULL
             executable = new FileInfo(Path.Combine(directory.FullName, "bin", "x64", "factorio.exe"));
@@ -96,7 +99,7 @@ namespace ModMyFactory.Game
             return await LoadAsync(dir);
         }
 
-        static async Task<(bool, DirectoryInfo)> TryGetSteamDirectoryAsync(Steam steam)
+        private static async Task<(bool, DirectoryInfo)> TryGetSteamDirectoryAsync(Steam steam)
         {
             var libraries = await steam.GetLibrariesAsync();
             foreach (var library in libraries)

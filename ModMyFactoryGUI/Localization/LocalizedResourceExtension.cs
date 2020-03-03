@@ -5,22 +5,22 @@
 //  the Free Software Foundation, either version 3 of the License, or
 //  (at your option) any later version.
 
+using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Data;
+using Avalonia.Data.Converters;
 using Avalonia.Markup.Xaml;
+using Avalonia.Utilities;
+using ModMyFactoryGUI.Helpers;
 using System;
 using System.ComponentModel;
-using Avalonia.Data.Converters;
-using Avalonia;
-using ModMyFactoryGUI.Helpers;
-using Avalonia.Utilities;
 
 namespace ModMyFactoryGUI.Localization
 {
-    class LocalizedResourceExtension
+    internal class LocalizedResourceExtension
     {
-        readonly LocalizedResource _resource;
-        Control _anchor;
+        private readonly LocalizedResource _resource;
+        private Control _anchor;
 
         public IValueConverter Converter { get; set; }
 
@@ -32,9 +32,6 @@ namespace ModMyFactoryGUI.Localization
 
         public BindingMode Mode { get; set; }
 
-        [ConstructorArgument("key")]
-        public string Key => _resource.Key;
-
         public BindingPriority Priority { get; set; } = BindingPriority.LocalValue;
 
         public string StringFormat { get; set; }
@@ -43,23 +40,26 @@ namespace ModMyFactoryGUI.Localization
 
         public object TargetNullValue { get; set; } = AvaloniaProperty.UnsetValue;
 
+        [ConstructorArgument("key")]
+        public string Key => _resource.Key;
+
         public LocalizedResourceExtension(string key)
         {
             _resource = new LocalizedResource(key);
         }
 
-        void DisconnectAnchor(object sender, EventArgs e)
+        private void DisconnectAnchor(object sender, EventArgs e)
         {
             _anchor.Tag = null;
             _anchor = null;
         }
 
-        void Subscribe(Window window)
+        private void Subscribe(Window window)
         {
             WeakEventHandlerManager.Subscribe<Window, EventArgs, LocalizedResourceExtension>(window, nameof(Window.Closed), DisconnectAnchor);
         }
 
-        void DelayedSubscribe(object sender, EventArgs e)
+        private void DelayedSubscribe(object sender, EventArgs e)
         {
             var userControl = (UserControl)sender;
 
@@ -87,7 +87,7 @@ namespace ModMyFactoryGUI.Localization
             }
         }
 
-        void ConnectAnchor(ITypeDescriptorContext context)
+        private void ConnectAnchor(ITypeDescriptorContext context)
         {
             // This is a horrible hack to have the control keep the binding alive.
             _anchor.Tag = this;
@@ -109,7 +109,7 @@ namespace ModMyFactoryGUI.Localization
             _anchor = context.GetFirstParent<Control>();
             if (_anchor is null) throw new InvalidOperationException("No suitable anchor found");
             ConnectAnchor(context);
-            
+
             return new Binding
             {
                 TypeResolver = context.ResolveType,

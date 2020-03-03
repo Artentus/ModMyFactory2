@@ -17,9 +17,9 @@ namespace ModMyFactory.Mods
     /// </summary>
     public sealed class ModFamily : ICollection<Mod>
     {
-        readonly List<Mod> _mods;
-        Mod _enabledMod;
-        volatile bool _raiseEvent = true;
+        private readonly List<Mod> _mods;
+        private Mod _enabledMod;
+        private volatile bool _raiseEvent = true;
 
         /// <summary>
         /// Is raised if the enabled states of the mods in the family change.
@@ -32,14 +32,14 @@ namespace ModMyFactory.Mods
         public string FamilyName { get; }
 
         /// <summary>
-        /// The number of mods in this family.
-        /// </summary>
-        public int Count => _mods.Count;
-
-        /// <summary>
         /// The currently enabled mod of this family, or null if no mod is enabled.
         /// </summary>
         public Mod EnabledMod => _enabledMod;
+
+        /// <summary>
+        /// The number of mods in this family.
+        /// </summary>
+        public int Count => _mods.Count;
 
         bool ICollection<Mod>.IsReadOnly => false;
 
@@ -56,7 +56,7 @@ namespace ModMyFactory.Mods
             Add(mod);
         }
 
-        void OnModEnabledChanged(object sender, EventArgs e)
+        private void OnModEnabledChanged(object sender, EventArgs e)
         {
             var senderMod = (Mod)sender;
             if (senderMod.Enabled)
@@ -136,9 +136,10 @@ namespace ModMyFactory.Mods
         /// </summary>
         public bool Contains(Mod item) => !(item is null) && string.Equals(item.Name, FamilyName, StringComparison.InvariantCulture) && _mods.Contains(item);
 
+        public IEnumerator<Mod> GetEnumerator() => _mods.GetEnumerator();
+
         void ICollection<Mod>.CopyTo(Mod[] array, int arrayIndex) => _mods.CopyTo(array, arrayIndex);
 
-        public IEnumerator<Mod> GetEnumerator() => _mods.GetEnumerator();
         IEnumerator IEnumerable.GetEnumerator() => _mods.GetEnumerator();
     }
 }

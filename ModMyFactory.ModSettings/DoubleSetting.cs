@@ -17,7 +17,7 @@ namespace ModMyFactory.ModSettings
     /// </summary>
     public sealed class DoubleSetting : Setting<double>
     {
-        double _value;
+        private double _value;
 
         public override SettingType Type => SettingType.Double;
 
@@ -39,7 +39,7 @@ namespace ModMyFactory.ModSettings
                     if (!AllowedValues.Contains(value))
                         throw new ArgumentException("Setting does not allow this value.");
                 }
-                
+
                 _value = value;
             }
         }

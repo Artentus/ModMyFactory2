@@ -11,7 +11,7 @@ using System.Collections.Generic;
 
 namespace ModMyFactoryGUI.ViewModels
 {
-    sealed class AttributionViewModel : RoutableViewModelBase<AttributionView>
+    internal sealed class AttributionViewModel : RoutableViewModelBase<AttributionView>
     {
         public IReadOnlyList<WebLinkViewModel> Links { get; }
 

@@ -13,44 +13,42 @@ the Free Software Foundation, either version 3 of the License, or
              xmlns:controls="clr-namespace:ModMyFactoryGUI.Controls">
 
   <Application.Styles>
-    <StyleInclude Source="avares://Avalonia.Themes.Default/DefaultTheme.xaml"/>
-    <StyleInclude Source="/Assets/Styles/Window.xaml"/>
-    <StyleInclude Source="/Assets/Styles/MenuItem.xaml"/>
-    <StyleInclude Source="/Assets/Styles/Toolbar.xaml"/>
-    <StyleInclude Source="/Assets/Styles/ToolbarItem.xaml"/>
-    <StyleInclude Source="/Assets/Styles/CheckBox.xaml"/>
+    <StyleInclude Source="avares://Avalonia.Themes.Default/DefaultTheme.xaml" />
+    <StyleInclude Source="/Assets/Styles/Window.xaml" />
+    <StyleInclude Source="/Assets/Styles/MenuItem.xaml" />
+    <StyleInclude Source="/Assets/Styles/Toolbar.xaml" />
+    <StyleInclude Source="/Assets/Styles/ToolbarItem.xaml" />
+    <StyleInclude Source="/Assets/Styles/CheckBox.xaml" />
 
     <Style Selector="TextBlock.muted">
-      <Setter Property="Foreground" Value="{DynamicResource ThemeForegroundLowBrush}"/>
+      <Setter Property="Foreground" Value="{DynamicResource ThemeForegroundLowBrush}" />
     </Style>
     <Style Selector="TextBlock.h1">
-      <Setter Property="FontSize" Value="26"/>
-      <Setter Property="FontWeight" Value="Bold"/>
+      <Setter Property="FontSize" Value="26" />
+      <Setter Property="FontWeight" Value="Bold" />
     </Style>
     <Style Selector="TextBlock.h2">
-      <Setter Property="FontSize" Value="{DynamicResource FontSizeLarge}"/>
+      <Setter Property="FontSize" Value="{DynamicResource FontSizeLarge}" />
     </Style>
     <Style Selector="TextBlock.h3">
-      <Setter Property="FontWeight" Value="Bold"/>
+      <Setter Property="FontWeight" Value="Bold" />
     </Style>
 
     <Style Selector="Button">
-      <Setter Property="MinWidth" Value="75"/>
+      <Setter Property="MinWidth" Value="75" />
     </Style>
 
     <Style Selector="TabItem:focus /template/ ContentPresenter#PART_ContentPresenter">
-      <Setter Property="Background" Value="{DynamicResource ThemeAccentBrush4}"/>
+      <Setter Property="Background" Value="{DynamicResource ThemeAccentBrush4}" />
     </Style>
     <Style Selector="TabItem:pointerover /template/ ContentPresenter#PART_ContentPresenter">
-      <Setter Property="Background" Value="{DynamicResource ThemeAccentBrush2}"/>
+      <Setter Property="Background" Value="{DynamicResource ThemeAccentBrush2}" />
     </Style>
     <Style Selector="TabItem:selected /template/ ContentPresenter#PART_ContentPresenter">
-      <Setter Property="Background" Value="{DynamicResource ThemeAccentBrush4}"/>
+      <Setter Property="Background" Value="{DynamicResource ThemeAccentBrush4}" />
     </Style>
     <Style Selector="TabItem:pointerover:selected /template/ ContentPresenter#PART_ContentPresenter">
-      <Setter Property="Background" Value="{DynamicResource ThemeAccentBrush3}"/>
+      <Setter Property="Background" Value="{DynamicResource ThemeAccentBrush3}" />
     </Style>
-
   </Application.Styles>
-
 </Application>

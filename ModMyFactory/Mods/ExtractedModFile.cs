@@ -5,20 +5,20 @@
 //  the Free Software Foundation, either version 3 of the License, or
 //  (at your option) any later version.
 
-using System;
-using System.IO;
-using System.Threading.Tasks;
 using ModMyFactory.BaseTypes;
 using ModMyFactory.IO;
 using SharpCompress.Common;
 using SharpCompress.Writers;
 using SharpCompress.Writers.Zip;
+using System;
+using System.IO;
+using System.Threading.Tasks;
 
 namespace ModMyFactory.Mods
 {
     public class ExtractedModFile : IModFile
     {
-        DirectoryInfo _directory;
+        private DirectoryInfo _directory;
 
         public string FilePath => _directory.FullName;
 
@@ -49,27 +49,15 @@ namespace ModMyFactory.Mods
             }
         }
 
-        public void Delete()
+        internal ExtractedModFile(DirectoryInfo directory, ModInfo info, Stream thumbnail)
+            => (_directory, Info, Thumbnail) = (directory, info, thumbnail);
+
+        ~ExtractedModFile()
         {
-            Thumbnail.Dispose();
-            _directory.Delete(true);
+            Dispose(false);
         }
 
-        public async Task<IModFile> CopyToAsync(string destination)
-        {
-            var fullPath = Path.Combine(destination, _directory.Name);
-            var newDir = await _directory.CopyToAsync(fullPath);
-            var newThumbnail = ModFile.LoadThumbnail(newDir);
-            return new ExtractedModFile(newDir, Info, newThumbnail);
-        }
-
-        public async Task MoveToAsync(string destination)
-        {
-            var fullPath = Path.Combine(destination, _directory.Name);
-            _directory = await _directory.MoveToAsync(fullPath);
-        }
-
-        void PopulateZipArchive(ZipWriter writer, DirectoryInfo directory, string path)
+        private void PopulateZipArchive(ZipWriter writer, DirectoryInfo directory, string path)
         {
             foreach (var file in directory.EnumerateFiles())
                 writer.Write(path + "/" + file.Name, file);
@@ -78,61 +66,11 @@ namespace ModMyFactory.Mods
                 PopulateZipArchive(writer, subDir, path + "/" + subDir.Name);
         }
 
-        /// <summary>
-        /// Packs this mod file.
-        /// </summary>
-        /// <param name="destination">The path to pack this mod file at, excluding the mod files name itself.</param>
-        public async Task<ZippedModFile> PackAsync(string destination)
-        {
-            bool wasEnabled = Enabled;
-            if (!wasEnabled) Enabled = true;
-
-            var newFile = new FileInfo(Path.Combine(destination, _directory.Name + ".zip"));
-            if (!newFile.Directory.Exists) newFile.Directory.Create();
-            
-            await Task.Run(() =>
-            {
-                using var fs = newFile.OpenWrite();
-                using var writer = new ZipWriter(fs, new ZipWriterOptions(CompressionType.Deflate));
-                PopulateZipArchive(writer, _directory, _directory.Name);
-            });
-            
-            var newThumbnail = await ModFile.CopyThumbnailAsync(Thumbnail);
-            var zippedFile = new ZippedModFile(newFile, Info, newThumbnail);
-
-            if (!wasEnabled)
-            {
-                zippedFile.Enabled = false;
-                Enabled = false;
-            }
-            return zippedFile;
-        }
-
-        /// <summary>
-        /// Packs this mod file in the same location.
-        /// </summary>
-        public async Task<ZippedModFile> PackAsync() => await PackAsync(_directory.Parent.FullName);
-
         protected virtual void Dispose(bool disposing)
         {
             if (disposing)
                 Thumbnail.Dispose();
         }
-
-        public void Dispose()
-        {
-            Dispose(true);
-            GC.SuppressFinalize(this);
-        }
-
-        ~ExtractedModFile()
-        {
-            Dispose(false);
-        }
-
-        internal ExtractedModFile(DirectoryInfo directory, ModInfo info, Stream thumbnail)
-            => (_directory, Info, Thumbnail) = (directory, info, thumbnail);
-
 
         /// <summary>
         /// Tries to load a mod file.
@@ -193,6 +131,67 @@ namespace ModMyFactory.Mods
         {
             var dir = new DirectoryInfo(path);
             return await LoadAsync(dir);
+        }
+
+        public void Delete()
+        {
+            Thumbnail.Dispose();
+            _directory.Delete(true);
+        }
+
+        public async Task<IModFile> CopyToAsync(string destination)
+        {
+            var fullPath = Path.Combine(destination, _directory.Name);
+            var newDir = await _directory.CopyToAsync(fullPath);
+            var newThumbnail = ModFile.LoadThumbnail(newDir);
+            return new ExtractedModFile(newDir, Info, newThumbnail);
+        }
+
+        public async Task MoveToAsync(string destination)
+        {
+            var fullPath = Path.Combine(destination, _directory.Name);
+            _directory = await _directory.MoveToAsync(fullPath);
+        }
+
+        /// <summary>
+        /// Packs this mod file.
+        /// </summary>
+        /// <param name="destination">The path to pack this mod file at, excluding the mod files name itself.</param>
+        public async Task<ZippedModFile> PackAsync(string destination)
+        {
+            bool wasEnabled = Enabled;
+            if (!wasEnabled) Enabled = true;
+
+            var newFile = new FileInfo(Path.Combine(destination, _directory.Name + ".zip"));
+            if (!newFile.Directory.Exists) newFile.Directory.Create();
+
+            await Task.Run(() =>
+            {
+                using var fs = newFile.OpenWrite();
+                using var writer = new ZipWriter(fs, new ZipWriterOptions(CompressionType.Deflate));
+                PopulateZipArchive(writer, _directory, _directory.Name);
+            });
+
+            var newThumbnail = await ModFile.CopyThumbnailAsync(Thumbnail);
+            var zippedFile = new ZippedModFile(newFile, Info, newThumbnail);
+
+            if (!wasEnabled)
+            {
+                zippedFile.Enabled = false;
+                Enabled = false;
+            }
+            return zippedFile;
+        }
+
+        /// <summary>
+        /// Packs this mod file in the same location.
+        /// </summary>
+        public async Task<ZippedModFile> PackAsync() => await PackAsync(_directory.Parent.FullName);
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
         }
     }
 }

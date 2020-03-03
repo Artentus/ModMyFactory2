@@ -15,7 +15,7 @@ namespace ModMyFactory.Localization
     /// </summary>
     public sealed class Locale
     {
-        readonly IniFile _iniFile;
+        private readonly IniFile _iniFile;
 
         /// <summary>
         /// The culture of this locale.

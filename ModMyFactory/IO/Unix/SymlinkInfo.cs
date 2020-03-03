@@ -5,18 +5,14 @@
 //  the Free Software Foundation, either version 3 of the License, or
 //  (at your option) any later version.
 
-using System.IO;
 using Mono.Unix;
+using System.IO;
 
 namespace ModMyFactory.IO.Unix
 {
-    sealed class SymlinkInfo : ISymlinkInfo
+    internal sealed class SymlinkInfo : ISymlinkInfo
     {
-        readonly UnixSymbolicLinkInfo link;
-
-        public string Name => link.Name;
-
-        public string FullName => link.FullName;
+        private readonly UnixSymbolicLinkInfo link;
 
         public string DestinationPath
         {
@@ -24,6 +20,9 @@ namespace ModMyFactory.IO.Unix
             set => link.CreateSymbolicLinkTo(value);
         }
 
+        public string Name => link.Name;
+
+        public string FullName => link.FullName;
         public bool Exists => link.Exists && link.IsSymbolicLink && link.HasContents;
 
         public SymlinkInfo(string path)

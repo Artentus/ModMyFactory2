@@ -10,7 +10,7 @@ using Avalonia.Markup.Xaml;
 
 namespace ModMyFactoryGUI.Controls.Icons
 {
-    class WebDestinationIcon : UserControl
+    internal class WebDestinationIcon : UserControl
     {
         public WebDestinationIcon()
         {

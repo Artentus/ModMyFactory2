@@ -10,7 +10,7 @@ using System.IO;
 
 namespace ModMyFactory.ModSettings.Serialization
 {
-    static class BinaryReaderExtensions
+    internal static class BinaryReaderExtensions
     {
         public static AccurateVersion ReadVersion(this BinaryReader reader)
         {

@@ -10,7 +10,7 @@ using Avalonia.Markup.Xaml;
 
 namespace ModMyFactoryGUI.Controls.Icons
 {
-    class CloseIcon : UserControl
+    internal class CloseIcon : UserControl
     {
         public CloseIcon()
         {

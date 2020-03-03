@@ -15,9 +15,8 @@ namespace ModMyFactory.Mods
 {
     public sealed class ModManager : ICollection<Mod>
     {
+        private readonly Dictionary<string, ModFamily> _families;
         internal static readonly AccurateVersion FormatSwitch = new AccurateVersion(0, 17); // Native support for multiple mods in Factorio 0.17 and onwards
-
-        readonly Dictionary<string, ModFamily> _families;
 
         /// <summary>
         /// Is raised if mods in a family change their enabled state.
@@ -39,6 +38,8 @@ namespace ModMyFactory.Mods
         /// </summary>
         public int Count => Families.Sum(family => family.Count());
 
+        bool ICollection<Mod>.IsReadOnly => false;
+
         /// <param name="factorioVersion">The version of Factorio getting managed. Only considers major version.</param>
         public ModManager(AccurateVersion factorioVersion)
         {
@@ -47,13 +48,13 @@ namespace ModMyFactory.Mods
             Families = _families.Values;
         }
 
-        void OnFamilyModsEnabledChanged(object sender, EventArgs e)
+        private void OnFamilyModsEnabledChanged(object sender, EventArgs e)
         {
             var family = (ModFamily)sender;
             FamilyEnabledChanged?.Invoke(this, new ModFamilyEnabledChangedEventArgs(family));
         }
 
-        ModFamily GetFamily(string name)
+        private ModFamily GetFamily(string name)
         {
             if (!_families.TryGetValue(name, out var result))
             {
@@ -64,7 +65,7 @@ namespace ModMyFactory.Mods
             return result;
         }
 
-        bool TryGetFamily(string name, out ModFamily result) => _families.TryGetValue(name, out result);
+        private bool TryGetFamily(string name, out ModFamily result) => _families.TryGetValue(name, out result);
 
         /// <summary>
         /// Adds a mod to be managed.
@@ -126,8 +127,6 @@ namespace ModMyFactory.Mods
         }
 
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
-
-        bool ICollection<Mod>.IsReadOnly => false;
 
         void ICollection<Mod>.CopyTo(Mod[] array, int arrayIndex) => throw new NotSupportedException();
     }

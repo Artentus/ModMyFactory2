@@ -9,9 +9,9 @@ using System.Collections.Generic;
 
 namespace ModMyFactory.WebApi.Factorio
 {
-    static class EnumExtensions
+    internal static class EnumExtensions
     {
-        static readonly Dictionary<FactorioBuild, string> BuildVersions
+        private static readonly Dictionary<FactorioBuild, string> BuildVersions
             = new Dictionary<FactorioBuild, string>
             {
                 { FactorioBuild.Alpha, "alpha" },
@@ -19,7 +19,7 @@ namespace ModMyFactory.WebApi.Factorio
                 { FactorioBuild.Headless, "headless" }
             };
 
-        static readonly Dictionary<Platform, string> Platforms
+        private static readonly Dictionary<Platform, string> Platforms
             = new Dictionary<Platform, string>
             {
                 { Platform.Win64, "win64" },
@@ -28,7 +28,7 @@ namespace ModMyFactory.WebApi.Factorio
                 { Platform.Linux64, "linux64" }
             };
 
-        static readonly Dictionary<UpdatePlatform, string> UpdatePlatforms
+        private static readonly Dictionary<UpdatePlatform, string> UpdatePlatforms
             = new Dictionary<UpdatePlatform, string>
             {
                 { UpdatePlatform.Win64, "core-win64" },

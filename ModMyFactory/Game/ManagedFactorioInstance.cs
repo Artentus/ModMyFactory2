@@ -18,8 +18,9 @@ namespace ModMyFactory.Game
     /// </summary>
     public sealed class ManagedFactorioInstance : IFactorioInstance
     {
-        readonly IFactorioInstance _baseInstance;
+        private readonly IFactorioInstance _baseInstance;
 
+        internal bool HasManagerAttached { get; set; }
         public DirectoryInfo Directory => _baseInstance.Directory;
 
         public IModFile CoreMod => _baseInstance.CoreMod;
@@ -34,12 +35,52 @@ namespace ModMyFactory.Game
 
         public DirectoryInfo ModDirectory => _baseInstance.ModDirectory;
 
-        internal bool HasManagerAttached { get; set; }
-
         private ManagedFactorioInstance(IFactorioInstance baseInstance)
         {
             _baseInstance = baseInstance;
         }
+
+        ~ManagedFactorioInstance()
+        {
+            Dispose(false);
+        }
+
+        private static void LinkDirectory(DirectoryInfo directory, string destination)
+        {
+            var link = Symlink.FromPath(directory.FullName);
+            if (link.Exists)
+            {
+                link.DestinationPath = destination;
+            }
+            else
+            {
+                if (directory.Exists) directory.Delete(true);
+                link.Create(destination);
+            }
+        }
+
+        private static void UnlinkDirectory(DirectoryInfo directory)
+        {
+            var link = Symlink.FromPath(directory.FullName);
+            if (link.Exists) link.Delete();
+        }
+
+        private void Dispose(bool disposing)
+        {
+            if (disposing)
+                _baseInstance.Dispose();
+        }
+
+        internal static ManagedFactorioInstance FromInstance(IFactorioInstance instance)
+        {
+            if (instance is ManagedFactorioInstance)
+                return (ManagedFactorioInstance)instance;
+            return new ManagedFactorioInstance(instance);
+        }
+
+        internal void LinkModDirectoryInternal(string destination) => LinkDirectory(ModDirectory, destination);
+
+        internal void UnlinkModDirectoryInternal() => UnlinkDirectory(ModDirectory);
 
         public void Start(string[] args) => _baseInstance.Start(args);
 
@@ -67,8 +108,6 @@ namespace ModMyFactory.Game
         /// </summary>
         public void UnlinkScenarioDirectory() => UnlinkDirectory(ScenarioDirectory);
 
-        internal void LinkModDirectoryInternal(string destination) => LinkDirectory(ModDirectory, destination);
-
         /// <summary>
         /// Links this instances mod directory to another location.
         /// All contents in the old directory will be deleted!
@@ -81,8 +120,6 @@ namespace ModMyFactory.Game
             LinkModDirectoryInternal(destination);
         }
 
-        internal void UnlinkModDirectoryInternal() => UnlinkDirectory(ModDirectory);
-
         /// <summary>
         /// Unlinks this instances mod directory so it points to its original location.
         /// </summary>
@@ -93,49 +130,10 @@ namespace ModMyFactory.Game
             UnlinkModDirectoryInternal();
         }
 
-        void Dispose(bool disposing)
-        {
-            if (disposing)
-                _baseInstance.Dispose();
-        }
-
         public void Dispose()
         {
             Dispose(true);
             GC.SuppressFinalize(this);
-        }
-
-        ~ManagedFactorioInstance()
-        {
-            Dispose(false);
-        }
-
-
-        internal static ManagedFactorioInstance FromInstance(IFactorioInstance instance)
-        {
-            if (instance is ManagedFactorioInstance)
-                return (ManagedFactorioInstance)instance;
-            return new ManagedFactorioInstance(instance);
-        }
-
-        static void LinkDirectory(DirectoryInfo directory, string destination)
-        {
-            var link = Symlink.FromPath(directory.FullName);
-            if (link.Exists)
-            {
-                link.DestinationPath = destination;
-            }
-            else
-            {
-                if (directory.Exists) directory.Delete(true);
-                link.Create(destination);
-            }
-        }
-
-        static void UnlinkDirectory(DirectoryInfo directory)
-        {
-            var link = Symlink.FromPath(directory.FullName);
-            if (link.Exists) link.Delete();
         }
     }
 }

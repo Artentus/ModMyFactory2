@@ -19,9 +19,9 @@ namespace ModMyFactory.WebApi.Factorio
 {
     public static class DownloadApi
     {
-        const string BaseUrl = "https://www.factorio.com";
-        const string ReleasesUrl = BaseUrl + "/api/latest-releases";
-        const string DownloadUrl = BaseUrl + "/get-download";
+        private const string BaseUrl = "https://www.factorio.com";
+        private const string ReleasesUrl = BaseUrl + "/api/latest-releases";
+        private const string DownloadUrl = BaseUrl + "/get-download";
 
         /// <summary>
         /// Gets information about the latest stable and experimental releases of Factorio.

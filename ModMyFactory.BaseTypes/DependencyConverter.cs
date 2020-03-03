@@ -10,7 +10,7 @@ using System;
 
 namespace ModMyFactory.BaseTypes
 {
-    sealed class DependencyConverter : JsonConverter<Dependency>
+    internal sealed class DependencyConverter : JsonConverter<Dependency>
     {
         public override Dependency ReadJson(JsonReader reader, Type objectType, Dependency existingValue, bool hasExistingValue, JsonSerializer serializer)
         {

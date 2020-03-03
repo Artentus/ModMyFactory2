@@ -12,7 +12,7 @@ using System.Linq;
 
 namespace ModMyFactoryGUI.Controls
 {
-    abstract class ToolbarBase : MenuBase, IToolbar
+    internal abstract class ToolbarBase : MenuBase, IToolbar
     {
         IToolbarItem IToolbarElement.SelectedItem
         {

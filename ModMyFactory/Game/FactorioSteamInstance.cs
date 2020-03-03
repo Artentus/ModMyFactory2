@@ -11,11 +11,11 @@ using System.IO;
 
 namespace ModMyFactory.Game
 {
-    sealed class FactorioSteamInstance : FactorioInstanceBase
+    internal sealed class FactorioSteamInstance : FactorioInstanceBase
     {
-        readonly static string SavegamePath;
-        readonly static string ScenarioPath;
-        readonly static string ModPath;
+        private static readonly string SavegamePath;
+        private static readonly string ScenarioPath;
+        private static readonly string ModPath;
 
         static FactorioSteamInstance()
         {
@@ -37,7 +37,7 @@ namespace ModMyFactory.Game
         }
 
 
-        readonly Steam _steam;
+        private readonly Steam _steam;
 
         internal FactorioSteamInstance(DirectoryInfo directory, IModFile coreMod, IModFile baseMod, Steam steam)
             : base(directory, coreMod, baseMod,

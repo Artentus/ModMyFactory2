@@ -10,7 +10,7 @@ using CommandLine;
 namespace ModMyFactoryGUI.CommandLine
 {
     [Verb("start-game", HelpText = "Starts a Factorio instance.")]
-    sealed class StartGameOptions : OptionsBase
+    internal sealed class StartGameOptions : OptionsBase
     {
         [Option("uid", Required = true, SetName = "_uid", HelpText = "The unique ID of the Factorio instance to start.")]
         public string Uid { get; }

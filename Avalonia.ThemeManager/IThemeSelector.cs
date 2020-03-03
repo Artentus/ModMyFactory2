@@ -2,9 +2,9 @@
 // Licensed under the MIT license.
 // Edited for ModMyFactory by Mathis Rech.
 
-using System.Collections.Generic;
 using Avalonia.Controls;
 using ReactiveUI;
+using System.Collections.Generic;
 
 namespace Avalonia.ThemeManager
 {
@@ -24,6 +24,11 @@ namespace Avalonia.ThemeManager
         IReadOnlyList<Window> Windows { get; }
 
         /// <summary>
+        /// Executes <see cref="SelectTheme"/>, useful for command bindings.
+        /// </summary>
+        ReactiveCommand<string, bool> SelectThemeCommand { get; }
+
+        /// <summary>
         /// Enables theme management on a window.
         /// </summary>
         void EnableThemes(Window window);
@@ -37,10 +42,5 @@ namespace Avalonia.ThemeManager
         /// Selects a theme by name.
         /// </summary>
         bool SelectTheme(string name);
-
-        /// <summary>
-        /// Executes <see cref="SelectTheme"/>, useful for command bindings.
-        /// </summary>
-        ReactiveCommand<string, bool> SelectThemeCommand { get; }
     }
 }

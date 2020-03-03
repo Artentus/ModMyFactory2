@@ -10,7 +10,7 @@ using System;
 
 namespace ModMyFactory.BaseTypes
 {
-    sealed class AccurateVersionConverter : JsonConverter<AccurateVersion>
+    internal sealed class AccurateVersionConverter : JsonConverter<AccurateVersion>
     {
         public override AccurateVersion ReadJson(JsonReader reader, Type objectType, AccurateVersion existingValue, bool hasExistingValue, JsonSerializer serializer)
         {

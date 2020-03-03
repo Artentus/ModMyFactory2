@@ -14,10 +14,10 @@ using System.Text;
 
 namespace ModMyFactoryGUI
 {
-    sealed class SettingManager
+    internal sealed class SettingManager
     {
-        readonly string _filePath;
-        readonly IDictionary<string, object> _table;
+        private readonly string _filePath;
+        private readonly IDictionary<string, object> _table;
 
         private SettingManager(string filePath, IDictionary<string, object> table)
             => (_filePath, _table) = (filePath, table);
@@ -26,30 +26,7 @@ namespace ModMyFactoryGUI
             : this(filePath, new Dictionary<string, object>())
         { }
 
-        public void Set(string key, object value)
-            => _table[key] = value;
-
-        public object Get(string key, object defaultValue = default)
-        {
-            if (!_table.TryGetValue(key, out var value))
-            {
-                value = defaultValue;
-                _table.Add(key, value);
-            }
-            return value;
-        }
-
-        public T Get<T>(string key, T defaultValue = default)
-            => (T)Get(key, (object)defaultValue);
-
-        public void Save()
-        {
-            var json = JsonConvert.SerializeObject(_table, Formatting.Indented);
-            File.WriteAllText(_filePath, json, Encoding.UTF8);
-            Log.Debug("Settings saved to '{0}'.", _filePath);
-        }
-
-        static bool TryLoad(string filePath, out SettingManager manager)
+        private static bool TryLoad(string filePath, out SettingManager manager)
         {
             manager = default;
             if (!File.Exists(filePath)) return false;
@@ -80,6 +57,29 @@ namespace ModMyFactoryGUI
                     manager._table.Select(kvp => string.Format("{0}: {1}", kvp.Key, kvp.Value))));
             }
             return manager;
+        }
+
+        public void Set(string key, object value)
+                            => _table[key] = value;
+
+        public object Get(string key, object defaultValue = default)
+        {
+            if (!_table.TryGetValue(key, out var value))
+            {
+                value = defaultValue;
+                _table.Add(key, value);
+            }
+            return value;
+        }
+
+        public T Get<T>(string key, T defaultValue = default)
+            => (T)Get(key, (object)defaultValue);
+
+        public void Save()
+        {
+            var json = JsonConvert.SerializeObject(_table, Formatting.Indented);
+            File.WriteAllText(_filePath, json, Encoding.UTF8);
+            Log.Debug("Settings saved to '{0}'.", _filePath);
         }
     }
 }

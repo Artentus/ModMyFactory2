@@ -11,13 +11,13 @@ using System.Text;
 
 namespace ModMyFactory.ModSettings.Serialization
 {
-    class AccurateBinaryReader : BinaryReader
+    internal class AccurateBinaryReader : BinaryReader
     {
         public AccurateBinaryReader(Stream stream)
             : base(stream, Encoding.UTF8)
         { }
 
-        byte[] ReadRaw(int size)
+        private byte[] ReadRaw(int size)
         {
             var buffer = new byte[size];
             if (Read(buffer, 0, size) < size) throw new EndOfStreamException();
@@ -26,13 +26,21 @@ namespace ModMyFactory.ModSettings.Serialization
         }
 
         public override bool ReadBoolean() => BitConverter.ToBoolean(ReadRaw(sizeof(bool)), 0);
+
         public override short ReadInt16() => BitConverter.ToInt16(ReadRaw(sizeof(short)), 0);
+
         public override ushort ReadUInt16() => BitConverter.ToUInt16(ReadRaw(sizeof(ushort)), 0);
+
         public override int ReadInt32() => BitConverter.ToInt32(ReadRaw(sizeof(int)), 0);
+
         public override uint ReadUInt32() => BitConverter.ToUInt32(ReadRaw(sizeof(uint)), 0);
+
         public override long ReadInt64() => BitConverter.ToInt64(ReadRaw(sizeof(long)), 0);
+
         public override ulong ReadUInt64() => BitConverter.ToUInt64(ReadRaw(sizeof(ulong)), 0);
+
         public override float ReadSingle() => BitConverter.ToSingle(ReadRaw(sizeof(float)), 0);
+
         public override double ReadDouble() => BitConverter.ToDouble(ReadRaw(sizeof(double)), 0);
 
         public override string ReadString()
@@ -50,10 +58,15 @@ namespace ModMyFactory.ModSettings.Serialization
 
         // Unsupported data types
         public override char ReadChar() => throw new NotSupportedException();
+
         public override char[] ReadChars(int count) => throw new NotSupportedException();
+
         public override int PeekChar() => throw new NotSupportedException();
+
         public override int Read(char[] buffer, int index, int count) => throw new NotSupportedException();
+
         public override int Read() => throw new NotSupportedException();
+
         public override decimal ReadDecimal() => throw new NotSupportedException();
     }
 }

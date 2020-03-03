@@ -11,7 +11,7 @@ using System.Reactive.Disposables;
 
 namespace ModMyFactoryGUI.MVVM
 {
-    abstract class RoutableViewModelBase<T> : ViewModelBase<T>, IRoutableViewModel, IActivatableViewModel where T : class, IView
+    internal abstract class RoutableViewModelBase<T> : ViewModelBase<T>, IRoutableViewModel, IActivatableViewModel where T : class, IView
     {
         public IScreen HostScreen { get; }
 

@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace ModMyFactory.IO
 {
-    static class FileInfoExtensions
+    internal static class FileInfoExtensions
     {
         public static async Task<FileInfo> CopyToAsync(this FileInfo file, string path)
         {

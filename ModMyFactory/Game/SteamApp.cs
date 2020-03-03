@@ -7,7 +7,7 @@
 
 namespace ModMyFactory.Game
 {
-    enum SteamApp : long
+    internal enum SteamApp : long
     {
         Factorio = 427520,
     }

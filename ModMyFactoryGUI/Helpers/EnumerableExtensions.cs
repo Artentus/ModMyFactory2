@@ -9,7 +9,7 @@ using System.Collections.Generic;
 
 namespace ModMyFactoryGUI.Helpers
 {
-    static class EnumerableExtensions
+    internal static class EnumerableExtensions
     {
         public static IEnumerable<T> ToEnumerable<T>(this T obj)
         {

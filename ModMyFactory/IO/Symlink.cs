@@ -6,14 +6,17 @@
 //  (at your option) any later version.
 
 using ModMyFactory.IO.Win32;
+
 #if NETCORE
+
 using ModMyFactory.IO.Unix;
 using System;
+
 #endif
 
 namespace ModMyFactory.IO
 {
-    static class Symlink
+    internal static class Symlink
     {
         public static ISymlinkInfo FromPath(string path)
         {

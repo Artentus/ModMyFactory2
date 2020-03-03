@@ -10,7 +10,7 @@ using System.IO;
 
 namespace ModMyFactory.ModSettings.Serialization
 {
-    static class BinaryWriterExtensions
+    internal static class BinaryWriterExtensions
     {
         public static void Write(this BinaryWriter writer, AccurateVersion version)
         {

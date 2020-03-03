@@ -11,26 +11,34 @@ using System.Text;
 
 namespace ModMyFactory.ModSettings.Serialization
 {
-    class AccurateBinaryWriter : BinaryWriter
+    internal class AccurateBinaryWriter : BinaryWriter
     {
         public AccurateBinaryWriter(Stream stream)
             : base(stream, Encoding.UTF8)
         { }
 
-        void WriteRaw(byte[] buffer)
+        private void WriteRaw(byte[] buffer)
         {
             if (!BitConverter.IsLittleEndian) Array.Reverse(buffer); // All x86 systems are little endian but others may not be
             Write(buffer);
         }
 
         public override void Write(bool value) => WriteRaw(BitConverter.GetBytes(value));
+
         public override void Write(short value) => WriteRaw(BitConverter.GetBytes(value));
+
         public override void Write(ushort value) => WriteRaw(BitConverter.GetBytes(value));
+
         public override void Write(int value) => WriteRaw(BitConverter.GetBytes(value));
+
         public override void Write(uint value) => WriteRaw(BitConverter.GetBytes(value));
+
         public override void Write(long value) => WriteRaw(BitConverter.GetBytes(value));
+
         public override void Write(ulong value) => WriteRaw(BitConverter.GetBytes(value));
+
         public override void Write(float value) => WriteRaw(BitConverter.GetBytes(value));
+
         public override void Write(double value) => WriteRaw(BitConverter.GetBytes(value));
 
         public override void Write(string value)
@@ -55,8 +63,11 @@ namespace ModMyFactory.ModSettings.Serialization
 
         // Unsupported data types
         public override void Write(char value) => throw new NotSupportedException();
+
         public override void Write(char[] chars) => throw new NotSupportedException();
+
         public override void Write(char[] chars, int index, int count) => throw new NotSupportedException();
+
         public override void Write(decimal value) => throw new NotSupportedException();
     }
 }

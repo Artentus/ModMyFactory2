@@ -16,9 +16,9 @@ using System.Windows.Input;
 
 namespace ModMyFactoryGUI.ViewModels
 {
-    sealed class ThemeViewModel : ReactiveObject, IWeakSubscriber<EventArgs>
+    internal sealed class ThemeViewModel : ReactiveObject, IWeakSubscriber<EventArgs>
     {
-        class EventManager
+        private class EventManager
         {
             public event EventHandler SelectedThemeChanged;
 
@@ -27,12 +27,8 @@ namespace ModMyFactoryGUI.ViewModels
         }
 
 
-        const string ResourcePrefix = "__theme__.";
-        static readonly EventManager InternalEventManager = new EventManager();
-
-        public static void SubscribeWeak(IWeakSubscriber<EventArgs> subscriber)
-            => WeakSubscriptionManager.Subscribe(InternalEventManager, nameof(EventManager.SelectedThemeChanged), subscriber);
-
+        private const string ResourcePrefix = "__theme__.";
+        private static readonly EventManager InternalEventManager = new EventManager();
 
         public ITheme Theme { get; }
 
@@ -57,15 +53,18 @@ namespace ModMyFactoryGUI.ViewModels
             WeakSubscriptionManager.Subscribe(App.Current.LocaleManager, nameof(LocaleManager.UICultureChanged), this);
         }
 
+        private void SelectedThemeChangedHandler() => this.RaisePropertyChanged(nameof(Selected));
+
+        private void UICultureChangedHandler() => this.RaisePropertyChanged(nameof(DisplayName));
+
+        public static void SubscribeWeak(IWeakSubscriber<EventArgs> subscriber)
+                                                                            => WeakSubscriptionManager.Subscribe(InternalEventManager, nameof(EventManager.SelectedThemeChanged), subscriber);
+
         public void Select()
         {
             App.Current.ThemeManager.SelectedTheme = Theme;
             InternalEventManager.RaiseEvent();
         }
-
-        void SelectedThemeChangedHandler() => this.RaisePropertyChanged(nameof(Selected));
-
-        void UICultureChangedHandler() => this.RaisePropertyChanged(nameof(DisplayName));
 
         void IWeakSubscriber<EventArgs>.OnEvent(object sender, EventArgs e)
         {

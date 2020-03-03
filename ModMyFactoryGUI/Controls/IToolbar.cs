@@ -9,6 +9,6 @@ using Avalonia.Controls;
 
 namespace ModMyFactoryGUI.Controls
 {
-    interface IToolbar : IToolbarElement, IMenu
+    internal interface IToolbar : IToolbarElement, IMenu
     { }
 }

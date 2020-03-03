@@ -17,7 +17,7 @@ namespace ModMyFactory.ModSettings
     /// </summary>
     public sealed class StringSetting : Setting<string>
     {
-        string _value;
+        private string _value;
 
         public override SettingType Type => SettingType.String;
 
@@ -39,7 +39,7 @@ namespace ModMyFactory.ModSettings
                     if (!AllowedValues.Contains(value))
                         throw new ArgumentException("Setting does not allow this value.");
                 }
-                
+
                 _value = value;
             }
         }

@@ -12,9 +12,9 @@ using System.Collections.Generic;
 
 namespace ModMyFactory.ModSettings
 {
-    sealed class SettingTypeConverter : JsonConverter<SettingType>
+    internal sealed class SettingTypeConverter : JsonConverter<SettingType>
     {
-        static readonly Dictionary<SettingType, string> to =
+        private static readonly Dictionary<SettingType, string> to =
             new Dictionary<SettingType, string>
             {
                 { SettingType.Boolean, "bool-setting" },
@@ -22,7 +22,8 @@ namespace ModMyFactory.ModSettings
                 { SettingType.Double, "double-setting" },
                 { SettingType.String, "string-setting" },
             };
-        static readonly Dictionary<string, SettingType> from =
+
+        private static readonly Dictionary<string, SettingType> from =
             new Dictionary<string, SettingType>
             {
                 { "bool-setting", SettingType.Boolean },

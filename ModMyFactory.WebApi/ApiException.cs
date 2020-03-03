@@ -12,6 +12,10 @@ namespace ModMyFactory.WebApi
 {
     public class ApiException : Exception
     {
+        protected ApiException(string message, Exception innerException = null)
+            : base(message, innerException)
+        { }
+
         public static ApiException FromWebException(WebException ex)
         {
             var response = (HttpWebResponse)ex.Response;
@@ -24,9 +28,5 @@ namespace ModMyFactory.WebApi
                 _ => new ApiException("General API exception") // No matching exception found
             };
         }
-
-        protected ApiException(string message, Exception innerException = null)
-            : base(message, innerException)
-        { }
     }
 }

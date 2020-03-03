@@ -12,11 +12,11 @@ using System.Linq;
 
 namespace ModMyFactoryGUI.Localization
 {
-    sealed class LocaleManager
+    internal sealed class LocaleManager
     {
-        readonly ILocaleProvider _localeProvider;
-        readonly ILocale _defaultLocale;
-        CultureInfo _uiCulture;
+        private readonly ILocaleProvider _localeProvider;
+        private readonly ILocale _defaultLocale;
+        private CultureInfo _uiCulture;
 
         public event EventHandler UICultureChanged;
 
@@ -53,13 +53,13 @@ namespace ModMyFactoryGUI.Localization
             : this(LocaleProvider.Empty)
         { }
 
-        object GetDefaultResource(string key)
+        private object GetDefaultResource(string key)
         {
             if (_defaultLocale.TryGetValue(key, out var resource)) return resource;
             else return $"Missing key '{key}'";
         }
 
-        object GetResource(ILocale locale, string key)
+        private object GetResource(ILocale locale, string key)
         {
             if (locale.TryGetValue(key, out var resource)) return resource;
             else return GetDefaultResource(key);

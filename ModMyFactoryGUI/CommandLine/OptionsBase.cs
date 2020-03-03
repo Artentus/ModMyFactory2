@@ -9,7 +9,7 @@ using CommandLine;
 
 namespace ModMyFactoryGUI.CommandLine
 {
-    abstract class OptionsBase
+    internal abstract class OptionsBase
     {
         [Option('v', "verbose", SetName = "_log_active", HelpText = "Enables verbose logging.")]
         public bool Verbose { get; }

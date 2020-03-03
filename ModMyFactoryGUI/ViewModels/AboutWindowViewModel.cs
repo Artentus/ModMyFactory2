@@ -18,7 +18,7 @@ using System.Windows.Input;
 
 namespace ModMyFactoryGUI.ViewModels
 {
-    sealed class AboutWindowViewModel : ScreenBase<AboutWindow>, IWeakSubscriber<EventArgs>
+    internal sealed class AboutWindowViewModel : ScreenBase<AboutWindow>, IWeakSubscriber<EventArgs>
     {
         public string Author => "Mathis Rech";
 
@@ -41,7 +41,7 @@ namespace ModMyFactoryGUI.ViewModels
             Attributions = new AttributionViewModel();
         }
 
-        void UICultureChangedHandler(object sender, EventArgs e)
+        private void UICultureChangedHandler(object sender, EventArgs e)
         {
             this.RaisePropertyChanged(nameof(GUIVersion));
         }

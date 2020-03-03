@@ -17,7 +17,7 @@ namespace ModMyFactory.ModSettings
     /// </summary>
     public sealed class IntegerSetting : Setting<int>
     {
-        int _value;
+        private int _value;
 
         public override SettingType Type => SettingType.Integer;
 

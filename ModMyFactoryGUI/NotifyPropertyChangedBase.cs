@@ -9,7 +9,7 @@ using System.ComponentModel;
 
 namespace ModMyFactoryGUI
 {
-    abstract class NotifyPropertyChangedBase : INotifyPropertyChanged
+    internal abstract class NotifyPropertyChangedBase : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;
 

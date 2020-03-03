@@ -16,7 +16,6 @@ the Free Software Foundation, either version 3 of the License, or
              x:Class="ModMyFactoryGUI.Controls.FormattingTextBlock">
 
   <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
-    <htmlcontrols:HtmlLabel x:Name="Renderer"/>
+    <htmlcontrols:HtmlLabel x:Name="Renderer" />
   </ScrollViewer>
-
 </UserControl>

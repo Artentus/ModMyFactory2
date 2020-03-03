@@ -10,7 +10,7 @@ using System.Collections.Generic;
 
 namespace ModMyFactoryGUI.ViewModels
 {
-    sealed class OnlineModsViewModel : MainViewModelBase<OnlineModsView>
+    internal sealed class OnlineModsViewModel : MainViewModelBase<OnlineModsView>
     {
         protected override List<IMenuItemViewModel> GetEditMenuViewModels()
         {

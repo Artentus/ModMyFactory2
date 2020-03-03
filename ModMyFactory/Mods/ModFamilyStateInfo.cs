@@ -9,7 +9,7 @@ using ModMyFactory.BaseTypes;
 using Newtonsoft.Json;
 
 namespace ModMyFactory.Mods
-{ 
+{
     /// <summary>
     /// Stores information about the state of a mod family.
     /// </summary>

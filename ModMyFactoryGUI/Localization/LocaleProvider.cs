@@ -12,15 +12,12 @@ using System.Linq;
 
 namespace ModMyFactoryGUI.Localization
 {
-    static class LocaleProvider
+    internal static class LocaleProvider
     {
-        public const string DefaultCulture = "en";
-
-        class EmptyLocale : ILocale
+        private class EmptyLocale : ILocale
         {
-            public string Culture => DefaultCulture;
-
             public object this[string key] => $"Missing key '{key}'";
+            public string Culture => DefaultCulture;
             public IEnumerable<string> Keys => Enumerable.Empty<string>();
             public IEnumerable<object> Values => Enumerable.Empty<object>();
             public int Count => 0;
@@ -32,17 +29,18 @@ namespace ModMyFactoryGUI.Localization
             }
 
             public bool ContainsKey(string key) => true;
+
             public IEnumerator<KeyValuePair<string, object>> GetEnumerator() => Enumerable.Empty<KeyValuePair<string, object>>().GetEnumerator();
+
             IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
         }
 
-        class EmptyLocaleProvider : ILocaleProvider
+        private class EmptyLocaleProvider : ILocaleProvider
         {
-            readonly ILocale _locale;
-
-            public IEnumerable<string> Cultures => Keys;
+            private readonly ILocale _locale;
 
             public ILocale this[string key] => _locale;
+            public IEnumerable<string> Cultures => Keys;
             public IEnumerable<string> Keys => DefaultCulture.ToEnumerable();
             public IEnumerable<ILocale> Values => _locale.ToEnumerable();
             public int Count => 1;
@@ -59,10 +57,13 @@ namespace ModMyFactoryGUI.Localization
             }
 
             public bool ContainsKey(string key) => true;
+
             public IEnumerator<KeyValuePair<string, ILocale>> GetEnumerator() => (new KeyValuePair<string, ILocale>(DefaultCulture, _locale)).ToEnumerable().GetEnumerator();
+
             IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
         }
 
+        public const string DefaultCulture = "en";
 
         // Fallback value if no locales are found for some reason.
         public static readonly ILocaleProvider Empty;

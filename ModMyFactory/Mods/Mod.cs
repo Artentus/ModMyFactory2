@@ -17,8 +17,8 @@ namespace ModMyFactory.Mods
     /// </summary>
     public class Mod : IDisposable
     {
-        readonly IModFile _file;
-        bool _enabled;
+        private readonly IModFile _file;
+        private bool _enabled;
 
         /// <summary>
         /// Is raised if the enabled state of this mod changes.
@@ -121,27 +121,20 @@ namespace ModMyFactory.Mods
                 _file.Enabled = true; // Starting with Factorio 0.17 mod files should always be enabled
         }
 
-        protected virtual void Dispose(bool disposing)
-        {
-            if (disposing) _file?.Dispose();
-        }
-
-        public void Dispose()
-        {
-            Dispose(true);
-            GC.SuppressFinalize(this);
-        }
-
         ~Mod()
         {
             Dispose(false);
         }
 
-
-        static Mod FromFile(IModFile file)
+        private static Mod FromFile(IModFile file)
         {
             if (file is null) return null;
             return new Mod(file);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposing) _file?.Dispose();
         }
 
         /// <summary>
@@ -182,6 +175,12 @@ namespace ModMyFactory.Mods
         {
             var file = await ModFile.LoadAsync(fileSystemInfo);
             return FromFile(file);
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
         }
     }
 }

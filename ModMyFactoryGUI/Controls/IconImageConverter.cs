@@ -20,7 +20,7 @@ using System.IO;
 
 namespace ModMyFactoryGUI.Controls
 {
-    class IconImageConverter : IValueConverter
+    internal class IconImageConverter : IValueConverter
     {
         public static IconImageConverter Converter { get; } = new IconImageConverter();
 

@@ -14,8 +14,9 @@ using System.Windows.Input;
 
 namespace ModMyFactoryGUI.ViewModels
 {
-    sealed class CultureViewModel : ReactiveObject, IDisposable
+    internal sealed class CultureViewModel : ReactiveObject, IDisposable
     {
+        private bool disposed = false;
         public CultureInfo Culture { get; }
 
         public string DisplayName { get; }
@@ -40,14 +41,14 @@ namespace ModMyFactoryGUI.ViewModels
             App.Current.LocaleManager.UICultureChanged += UICultureChangedHandler;
         }
 
-        public void Select() => App.Current.LocaleManager.UICulture = Culture;
+        ~CultureViewModel()
+        {
+            Dispose(false);
+        }
 
-        void UICultureChangedHandler(object sender, EventArgs e) => this.RaisePropertyChanged(nameof(Selected));
+        private void UICultureChangedHandler(object sender, EventArgs e) => this.RaisePropertyChanged(nameof(Selected));
 
-
-        private bool disposed = false;
-
-        void Dispose(bool disposing)
+        private void Dispose(bool disposing)
         {
             if (!disposed)
             {
@@ -57,10 +58,7 @@ namespace ModMyFactoryGUI.ViewModels
             }
         }
 
-        ~CultureViewModel()
-        {
-            Dispose(false);
-        }
+        public void Select() => App.Current.LocaleManager.UICulture = Culture;
 
         public void Dispose()
         {

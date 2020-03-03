@@ -13,6 +13,37 @@ namespace ModMyFactory.Mods
 {
     public static class ModFile
     {
+        internal static Stream LoadThumbnail(DirectoryInfo directory)
+        {
+            Stream thumbnail = null;
+            var thumbnailFile = new FileInfo(Path.Combine(directory.FullName, "thumbnail.png"));
+            if (thumbnailFile.Exists) thumbnail = thumbnailFile.Open(FileMode.Open, FileAccess.Read, FileShare.Read);
+            return thumbnail;
+        }
+
+        internal static async Task<Stream> CopyThumbnailAsync(Stream thumbnail)
+        {
+            if (thumbnail is null) return null;
+
+            var newStream = new MemoryStream((int)thumbnail.Length);
+            await thumbnail.CopyToAsync(newStream);
+            return newStream;
+        }
+
+        internal static bool TryParseFileName(string fileName, out string name, out AccurateVersion version)
+        {
+            (name, version) = (null, default);
+
+            int index = fileName.LastIndexOf('_');
+            if ((index < 1) || (index >= fileName.Length - 1)) return false;
+
+            name = fileName.Substring(0, index);
+            if (string.IsNullOrWhiteSpace(name)) return false;
+
+            var versionString = fileName.Substring(index + 1);
+            return AccurateVersion.TryParse(versionString, out version);
+        }
+
         /// <summary>
         /// Tries to load a mod file.
         /// </summary>
@@ -50,36 +81,5 @@ namespace ModMyFactory.Mods
         /// </summary>
         /// <param name="fileSystemInfo">The path to load the mod from.</param>
         public static async Task<IModFile> LoadAsync(FileSystemInfo fileSystemInfo) => await LoadAsync(fileSystemInfo.FullName);
-
-        internal static Stream LoadThumbnail(DirectoryInfo directory)
-        {
-            Stream thumbnail = null;
-            var thumbnailFile = new FileInfo(Path.Combine(directory.FullName, "thumbnail.png"));
-            if (thumbnailFile.Exists) thumbnail = thumbnailFile.Open(FileMode.Open, FileAccess.Read, FileShare.Read);
-            return thumbnail;
-        }
-
-        internal static async Task<Stream> CopyThumbnailAsync(Stream thumbnail)
-        {
-            if (thumbnail is null) return null;
-
-            var newStream = new MemoryStream((int)thumbnail.Length);
-            await thumbnail.CopyToAsync(newStream);
-            return newStream;
-        }
-
-        internal static bool TryParseFileName(string fileName, out string name, out AccurateVersion version)
-        {
-            (name, version) = (null, default);
-
-            int index = fileName.LastIndexOf('_');
-            if ((index < 1) || (index >= fileName.Length - 1)) return false;
-
-            name = fileName.Substring(0, index);
-            if (string.IsNullOrWhiteSpace(name)) return false;
-
-            var versionString = fileName.Substring(index + 1);
-            return AccurateVersion.TryParse(versionString, out version);
-        }
     }
 }

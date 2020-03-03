@@ -15,7 +15,7 @@ namespace ModMyFactory.Win32
         /*
          * Directory
          */
-        
+
         /// <summary>
         /// For a directory, the right to create a file in the directory.
         /// </summary>
@@ -46,7 +46,7 @@ namespace ModMyFactory.Win32
         /*
          * File
          */
-        
+
         /// <summary>
         /// For a file, the right to append data to the file.
         /// For local files, write operations will not overwrite existing data if this flag is specified without FileAccessRights.WriteData.
@@ -63,7 +63,7 @@ namespace ModMyFactory.Win32
         /*
          * File and directory
          */
-        
+
         /// <summary>
         /// The right to read extended file or directory attributes.
         /// </summary>
@@ -78,7 +78,7 @@ namespace ModMyFactory.Win32
         /*
          * Pipe
          */
-        
+
         /// <summary>
         /// For a named pipe, the right to create a pipe.
         /// </summary>
@@ -88,7 +88,7 @@ namespace ModMyFactory.Win32
         /*
          * File and pipe
          */
-        
+
         /// <summary>
         /// For a file or named pipe, the right to read the corresponding file or pipe data.
         /// </summary>
@@ -103,7 +103,7 @@ namespace ModMyFactory.Win32
         /*
          * All
          */
-        
+
         /// <summary>
         /// The right to read attributes.
         /// </summary>
@@ -119,7 +119,7 @@ namespace ModMyFactory.Win32
         /*
          * Generic
          */
-        
+
         GenericRead = ReadData | ReadAttributes | ReadExtendedAttributes | StandardAccessRights.Read | StandardAccessRights.Synchronize,
         GenericWrite = WriteData | AppendData | WriteAttributes | WriteExtendedAttributes | StandardAccessRights.Write | StandardAccessRights.Synchronize,
         GenericExecute = Execute | ReadAttributes | StandardAccessRights.Execute | StandardAccessRights.Synchronize,

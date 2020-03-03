@@ -37,7 +37,7 @@ namespace ModMyFactory.Win32
             return tokenHandle;
         }
 
-        #endregion
+        #endregion OpenProcessToken
 
         #region LookupPrivilegeValue
 
@@ -77,7 +77,7 @@ namespace ModMyFactory.Win32
             return LookupPrivilegeValueInternal(name, null);
         }
 
-        #endregion
+        #endregion LookupPrivilegeValue
 
         #region AdjustTokenPrivileges
 
@@ -149,6 +149,6 @@ namespace ModMyFactory.Win32
             }
         }
 
-        #endregion
+        #endregion AdjustTokenPrivileges
     }
 }
