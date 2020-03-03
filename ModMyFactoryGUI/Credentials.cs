@@ -5,12 +5,19 @@
 //  the Free Software Foundation, either version 3 of the License, or
 //  (at your option) any later version.
 
+using Newtonsoft.Json;
+
 namespace ModMyFactoryGUI
 {
-    internal static class SettingName
+    internal readonly struct Credentials
     {
-        public const string UICulture = "language";
-        public const string Theme = "theme";
-        public const string Credentials = "credentials";
+        [JsonProperty("username")]
+        public string Username { get; }
+
+        [JsonProperty("token")]
+        public string ApiToken { get; }
+
+        public Credentials(string userName, string apiToken)
+            => (Username, ApiToken) = (userName, apiToken);
     }
 }

@@ -54,5 +54,31 @@ namespace ModMyFactory.WebApi
                 DestroyByteArray(content);
             }
         }
+
+        /// <summary>
+        /// Logs into the API to receive a token. The token can be used to authenticate to other API endpoints.
+        /// </summary>
+        /// <param name="username">The username to log in.</param>
+        /// <param name="password">The password to log in.</param>
+        public async static Task<(string username, string token)> LogInAsync(string username, string password)
+        {
+            string contentString = $"api_version=2&require_game_ownership=true&username={username}&password={password}";
+            var content = Encoding.UTF8.GetBytes(contentString);
+
+            try
+            {
+                string document = await WebHelper.RequestDocumentAsync(LogInUrl, content);
+                dynamic response = JsonConvert.DeserializeObject(document);
+                return (response.username, response.token);
+            }
+            catch (WebException ex)
+            {
+                throw ApiException.FromWebException(ex);
+            }
+            finally
+            {
+                DestroyByteArray(content);
+            }
+        }
     }
 }

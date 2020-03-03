@@ -32,7 +32,7 @@ the Free Software Foundation, either version 3 of the License, or
   <DockPanel>
 
     <!-- Main Menu -->
-    <Menu DockPanel.Dock="Top">
+    <Menu DockPanel.Dock="Top" Margin="4,0,0,0">
       <Menu.DataTemplates>
         <DataTemplate DataType="{x:Type models:MenuHeaderViewModel}">
           <DockPanel>
@@ -137,7 +137,7 @@ the Free Software Foundation, either version 3 of the License, or
       <MenuItem Header="{l:LocalizedResource InfoMenuItem}">
 
         <!-- Help -->
-        <MenuItem>
+        <MenuItem Command="{Binding NavigateToUrlCommand}" CommandParameter="https://github.com/Artentus/ModMyFactory2/wiki">
           <MenuItem.Header>
             <DockPanel>
               <TextBlock DockPanel.Dock="Left" Text="{l:LocalizedResource HelpMenuItem}" HorizontalAlignment="Left" Margin="0,0,16,0" />
@@ -202,7 +202,7 @@ the Free Software Foundation, either version 3 of the License, or
     </Menu>
 
     <!-- Toolbar -->
-    <controls:Toolbar DockPanel.Dock="Top" Items="{Binding ToolbarItems}">
+    <controls:Toolbar DockPanel.Dock="Top" Items="{Binding ToolbarItems}" Margin="4,0,0,0">
       <controls:Toolbar.DataTemplates>
         <DataTemplate DataType="{x:Type models:MenuHeaderViewModel}">
           <TextBlock Text="{Binding HeaderKey, Converter={StaticResource LocalizeConverter}}" />
@@ -211,8 +211,8 @@ the Free Software Foundation, either version 3 of the License, or
     </controls:Toolbar>
 
     <!-- Main View -->
-    <TabControl DockPanel.Dock="Bottom" TabStripPlacement="Right" Background="{DynamicResource ThemeBackgroundBrush}"
-                SelectedItem="{Binding SelectedTab, Mode=TwoWay}">
+    <TabControl DockPanel.Dock="Bottom" TabStripPlacement="Right" SelectedItem="{Binding SelectedTab, Mode=TwoWay}"
+                Background="{DynamicResource ThemeBackgroundBrush}" BorderBrush="{DynamicResource ThemeBackgroundHighBrush}" BorderThickness="4,0,0,8">
 
       <!-- Manager -->
       <TabItem>

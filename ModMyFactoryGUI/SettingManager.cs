@@ -6,6 +6,7 @@
 //  (at your option) any later version.
 
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using Serilog;
 using System.Collections.Generic;
 using System.IO;
@@ -73,7 +74,13 @@ namespace ModMyFactoryGUI
         }
 
         public T Get<T>(string key, T defaultValue = default)
-            => (T)Get(key, (object)defaultValue);
+        {
+            var obj = Get(key, (object)defaultValue);
+            if (obj is T result) return result;
+
+            var token = (JToken)obj;
+            return token.ToObject<T>();
+        }
 
         public void Save()
         {

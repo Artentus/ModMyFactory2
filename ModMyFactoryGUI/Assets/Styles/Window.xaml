@@ -54,7 +54,7 @@ https://github.com/VitalElement/AvalonStudio.Shell/blob/bb220b049fd2537e864624fe
                       </Grid>
 
                       <TextBlock Text="{TemplateBinding Title}" Foreground="{TemplateBinding Foreground}" Margin="3,-1,10,0" DockPanel.Dock="Top"
-                                 VerticalAlignment="Center" HorizontalAlignment="Left" IsVisible="{TemplateBinding HasClientDecorations}" FontSize="14" />
+                                 VerticalAlignment="Center" HorizontalAlignment="Left" IsVisible="{TemplateBinding HasClientDecorations}" FontSize="{DynamicResource FontSizeMedium}" />
                     </DockPanel>
                     <Grid Grid.Row="1">
                       <ContentPresenter Name="PART_ContentPresenter" Content="{TemplateBinding Content}" Margin="0" />

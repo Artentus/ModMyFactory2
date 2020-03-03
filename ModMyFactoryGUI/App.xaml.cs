@@ -108,6 +108,7 @@ namespace ModMyFactoryGUI
             ApplicationDataDirectory = GetApplicationDataDirectory();
             if (!ApplicationDataDirectory.Exists) ApplicationDataDirectory.Create();
 
+            // Global shutdown command
             var shutdownCommand = ReactiveCommand.CreateFromTask(ShutdownAsync);
             ShutdownItemViewModel = new MenuItemViewModel(shutdownCommand, false, () => new CloseIcon(), "CloseMenuItem", "CloseHotkey");
         }

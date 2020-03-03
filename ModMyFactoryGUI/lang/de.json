@@ -183,6 +183,28 @@
     "value": "Einstellungen"
   },
 
+  // --------- Settings view ---------
+  "CredentialsHeader": {
+    "type": "string",
+    "value": "Anmeldeinformationen"
+  },
+  "Username": {
+    "type": "string",
+    "value": "Benutzername oder Email"
+  },
+  "Password": {
+    "type": "string",
+    "value": "Passwort"
+  },
+  "AcceptButton": {
+    "type": "string",
+    "value": "Übernehmen"
+  },
+  "DiscardButton": {
+    "type": "string",
+    "value": "Verwerfen"
+  },
+
   // --------- About window ---------
   "AboutWindowTitle": {
     "type": "string",

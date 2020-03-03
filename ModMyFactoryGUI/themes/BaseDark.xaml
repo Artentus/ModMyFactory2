@@ -12,7 +12,7 @@ the Free Software Foundation, either version 3 of the License, or
 
   <Style.Resources>
 
-    <Color x:Key="ThemeAccentColor">#CC119EDA</Color>
+    <Color x:Key="ThemeAccentColor">#FF0073bf</Color>
     <Color x:Key="ThemeAccentColor2">#FF3e3e40</Color>
     <Color x:Key="ThemeAccentColor3">#FF1c97ea</Color>
     <Color x:Key="ThemeAccentColor4">#FF007acc</Color>
@@ -101,6 +101,7 @@ the Free Software Foundation, either version 3 of the License, or
 
     <x:Double x:Key="FontSizeSmall">10</x:Double>
     <x:Double x:Key="FontSizeNormal">12</x:Double>
+    <x:Double x:Key="FontSizeMedium">14</x:Double>
     <x:Double x:Key="FontSizeLarge">16</x:Double>
 
     <x:Double x:Key="ScrollBarThickness">18</x:Double>

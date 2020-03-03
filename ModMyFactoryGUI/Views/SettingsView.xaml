@@ -11,7 +11,31 @@ the Free Software Foundation, either version 3 of the License, or
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             xmlns:l="clr-namespace:ModMyFactoryGUI.Localization"
              x:Class="ModMyFactoryGUI.Views.SettingsView">
-    Welcome to Avalonia!
+
+  <UserControl.Styles>
+    <Style Selector="WrapPanel">
+      <Setter Property="Background" Value="{DynamicResource ThemeBackgroundBrush}" />
+    </Style>
+  </UserControl.Styles>
+
+  <Border BorderThickness="1" BorderBrush="{DynamicResource ThemeBorderMidBrush}">
+    <Grid RowDefinitions="*,Auto" ColumnDefinitions="*,Auto" Margin="4">
+
+      <WrapPanel Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2">
+        <StackPanel>
+          <TextBlock Margin="4" Text="{l:LocalizedResource CredentialsHeader}" />
+          <TextBox Margin="4" Watermark="{l:LocalizedResource Username}" Width="200" />
+          <TextBox Margin="4" Watermark="{l:LocalizedResource Password}" Width="200" />
+        </StackPanel>
+      </WrapPanel>
+
+      <Button Grid.Row="1" Grid.Column="0" Content="{l:LocalizedResource DiscardButton}"
+              Margin="4" HorizontalAlignment="Right" Command="{Binding ResetCommand}" />
+      <Button Grid.Row="1" Grid.Column="1" Content="{l:LocalizedResource AcceptButton}"
+              Margin="4" HorizontalAlignment="Right" Command="{Binding ApplyCommand}" />
+    </Grid>
+  </Border>
+
 </UserControl>
