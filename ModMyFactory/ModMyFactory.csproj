@@ -18,12 +18,12 @@
   <ItemGroup>
     <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
     <PackageReference Include="sharpcompress" Version="0.24.0" />
-    <PackageReference Include="ModMyFactory.BaseTypes" Version="1.0.0.4-alpha" />
-    <PackageReference Include="ModMyFactory.Export" Version="1.0.0.2-alpha" />
-    <PackageReference Include="ModMyFactory.Localization" Version="1.0.0.2-alpha" />
-    <PackageReference Include="ModMyFactory.ModSettings" Version="1.0.0.3-alpha" />
-    <PackageReference Include="ModMyFactory.WebApi" Version="1.0.0.3-alpha" />
-    <PackageReference Include="ModMyFactory.Win32" Version="1.0.0.3-alpha" />
+    <PackageReference Include="ModMyFactory.BaseTypes" Version="1.0.0.6-alpha" />
+    <PackageReference Include="ModMyFactory.Export" Version="1.0.0.4-alpha" />
+    <PackageReference Include="ModMyFactory.Localization" Version="1.0.0.4-alpha" />
+    <PackageReference Include="ModMyFactory.ModSettings" Version="1.0.0.5-alpha" />
+    <PackageReference Include="ModMyFactory.WebApi" Version="1.0.0.5-alpha" />
+    <PackageReference Include="ModMyFactory.Win32" Version="1.0.0.5-alpha" />
   </ItemGroup>
 
   <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0' OR '$(TargetFramework)' == 'netcoreapp3.0'">
