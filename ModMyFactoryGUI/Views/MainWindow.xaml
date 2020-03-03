@@ -165,17 +165,20 @@ the Free Software Foundation, either version 3 of the License, or
         <Separator />
 
         <!-- Web links -->
-        <MenuItem Header="factorio.com">
+        <MenuItem Header="factorio.com"
+                  Command="{Binding NavigateToUrlCommand}" CommandParameter="https://www.factorio.com/">
           <MenuItem.Icon>
             <icons:WebDestinationIcon />
           </MenuItem.Icon>
         </MenuItem>
-        <MenuItem Header="mods.factorio.com">
+        <MenuItem Header="mods.factorio.com"
+                  Command="{Binding NavigateToUrlCommand}" CommandParameter="https://mods.factorio.com/">
           <MenuItem.Icon>
             <icons:WebDestinationIcon />
           </MenuItem.Icon>
         </MenuItem>
-        <MenuItem Header="{l:LocalizedResource ThreadMenuItem}">
+        <MenuItem Header="{l:LocalizedResource ThreadMenuItem}"
+                  Command="{Binding NavigateToUrlCommand}" CommandParameter="https://forums.factorio.com/viewtopic.php?f=137&amp;t=33370">
           <MenuItem.Icon>
             <icons:WebDestinationIcon />
           </MenuItem.Icon>

@@ -6,6 +6,7 @@
 //  (at your option) any later version.
 
 using Avalonia.Controls;
+using ModMyFactoryGUI.Helpers;
 using ModMyFactoryGUI.MVVM;
 using ModMyFactoryGUI.Views;
 using ReactiveUI;
@@ -22,6 +23,8 @@ namespace ModMyFactoryGUI.ViewModels
         private readonly AboutWindowViewModel _aboutWindowViewModel = new AboutWindowViewModel();
         private TabItem _selectedTab;
         private IMainViewModel _selectedViewModel;
+
+        public ICommand NavigateToUrlCommand { get; }
 
         public ICommand OpenAboutWindowCommand { get; }
 
@@ -75,13 +78,17 @@ namespace ModMyFactoryGUI.ViewModels
         }
 
         public IEnumerable<CultureViewModel> AvailableCultures
-                                                                                                            => App.Current.LocaleManager.AvailableCultures.Select(c => new CultureViewModel(c));
+            => App.Current.LocaleManager.AvailableCultures.Select(c => new CultureViewModel(c));
 
         public MainWindowViewModel()
         {
+            NavigateToUrlCommand = ReactiveCommand.Create<string>(NavigateToUrl);
             OpenAboutWindowCommand = ReactiveCommand.CreateFromTask(OpenAboutWindow);
             SelectedViewModel = ManagerViewModel;
         }
+
+        private void NavigateToUrl(string url)
+            => PlatformHelper.OpenWebUrl(url);
 
         private async Task OpenAboutWindow()
         {
