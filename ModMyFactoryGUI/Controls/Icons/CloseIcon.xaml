@@ -1,0 +1,12 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             x:Class="ModMyFactoryGUI.Controls.Icons.CloseIcon">
+
+  <Grid Width="16" Height="16">
+    <Path Fill="{DynamicResource IconBaseBrush1}" Data="F1M10.8945,1.9996L7.9825,4.9126 5.0695,1.9996 -0.000499999999998835,1.9996 -0.000499999999998835,3.0876 4.9045,7.9996 -0.000499999999998835,12.9126 -0.000499999999998835,14.0006 5.0695,14.0006 7.9825,11.0856 10.8945,14.0006 16.0005,14.0006 16.0005,12.9486 11.0585,7.9996 16.0005,3.0506 16.0005,1.9996z"/>
+    <Path Fill="{DynamicResource IconBaseBrush2}" Data="F1M1.3286,3.0186L4.6556,3.0186 7.9816,6.3456 11.3086,3.0186 14.6346,3.0186 9.6446,8.0096 14.6346,12.9996 11.3086,12.9996 7.9816,9.6716 4.6556,12.9996 1.3286,12.9996 6.3186,8.0096z"/>
+  </Grid>
+  
+</UserControl>

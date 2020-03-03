@@ -38,9 +38,9 @@
 
     <Color x:Key="IconBaseColor1">#FFFFFFFF</Color>
     <Color x:Key="IconBaseColor2">#FF414141</Color>
-    <Color x:Key="IconColor1">#FF7ac1ff</Color>
+    <Color x:Key="IconColor1">#FF1ba1e2</Color>
     <Color x:Key="IconColor2">#FF8dd28a</Color>
-    <Color x:Key="IconColor3">#FFd7ac6a</Color>
+    <Color x:Key="IconColor3">#FFDCB679</Color>
     <Color x:Key="IconColor4">#FFf0ca94</Color>
     <Color x:Key="IconColor5">#FFf38b76</Color>
 

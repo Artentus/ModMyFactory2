@@ -14,17 +14,6 @@
     <l:LocalizeConverter x:Key="LocalizeConverter"/>
   </Window.Resources>
 
-  <Window.DataTemplates>
-    <DataTemplate DataType="{x:Type models:MenuHeaderViewModel}">
-      <DockPanel>
-        <TextBlock DockPanel.Dock="Left" HorizontalAlignment="Left"
-                   Text="{Binding HeaderKey, Converter={StaticResource LocalizeConverter}}"/>
-        <TextBlock DockPanel.Dock="Right" HorizontalAlignment="Right" Margin="16,0,0,0" Classes="muted"
-                   Text="{Binding InputGestureKey, Converter={StaticResource LocalizeConverter}}" IsVisible="{Binding InputGestureVisible}"/>
-      </DockPanel>
-    </DataTemplate>
-  </Window.DataTemplates>
-
   <Window.Styles>
     <Style Selector="TabControl WrapPanel">
       <Setter Property="Background" Value="{DynamicResource ThemeBackgroundHighBrush}"/>
@@ -35,6 +24,16 @@
 
     <!-- Main Menu -->
     <Menu DockPanel.Dock="Top">
+      <Menu.DataTemplates>
+        <DataTemplate DataType="{x:Type models:MenuHeaderViewModel}">
+          <DockPanel>
+            <TextBlock DockPanel.Dock="Left" HorizontalAlignment="Left"
+                       Text="{Binding HeaderKey, Converter={StaticResource LocalizeConverter}}"/>
+            <TextBlock DockPanel.Dock="Right" HorizontalAlignment="Right" Margin="16,0,0,0" Classes="muted"
+                       Text="{Binding InputGestureKey, Converter={StaticResource LocalizeConverter}}" IsVisible="{Binding InputGestureVisible}"/>
+          </DockPanel>
+        </DataTemplate>
+      </Menu.DataTemplates>
 
       <!-- File menu (dynamically built) -->
       <MenuItem Header="{l:LocalizedResource FileMenuItem}"
@@ -52,22 +51,22 @@
         <!-- Open folders -->
         <MenuItem Header="{l:LocalizedResource OpenFactorioFolderMenuItem}">
           <MenuItem.Icon>
-            <Image Source="/Assets/Icons/OpenFolder.png"/>
+            <icons:OpenFolderIcon/>
           </MenuItem.Icon>
         </MenuItem>
         <MenuItem Header="{l:LocalizedResource OpenModFolderMenuItem}">
           <MenuItem.Icon>
-            <Image Source="/Assets/Icons/OpenFolder.png"/>
+            <icons:OpenFolderIcon/>
           </MenuItem.Icon>
         </MenuItem>
         <MenuItem Header="{l:LocalizedResource OpenSavegameFolderMenuItem}">
           <MenuItem.Icon>
-            <Image Source="/Assets/Icons/OpenFolder.png"/>
+            <icons:OpenFolderIcon/>
           </MenuItem.Icon>
         </MenuItem>
         <MenuItem Header="{l:LocalizedResource OpenScenarioFolderMenuItem}">
           <MenuItem.Icon>
-            <Image Source="/Assets/Icons/OpenFolder.png"/>
+            <icons:OpenFolderIcon/>
           </MenuItem.Icon>
         </MenuItem>
 
@@ -76,7 +75,7 @@
         <!-- Visual theme -->
         <MenuItem Name="ThemeParent" Header="{l:LocalizedResource ThemeMenuItem}" Items="{Binding AvailableThemes}">
           <MenuItem.Icon>
-            <Image Source="/Assets/Icons/Themes.png"/>
+            <icons:VisualThemeIcon/>
           </MenuItem.Icon>
           <MenuItem.Styles>
             <Style Selector="MenuItem#ThemeParent > MenuItem">
@@ -138,7 +137,7 @@
             </DockPanel>
           </MenuItem.Header>
           <MenuItem.Icon>
-            <Image Source="/Assets/Icons/Help.png"/>
+            <icons:HelpIcon/>
           </MenuItem.Icon>
         </MenuItem>
 
@@ -151,7 +150,7 @@
             </DockPanel>
           </MenuItem.Header>
           <MenuItem.Icon>
-            <Image Source="/Assets/Icons/Update.png"/>
+            <icons:UpdateIcon/>
           </MenuItem.Icon>
         </MenuItem>
 
@@ -160,17 +159,17 @@
         <!-- Web links -->
         <MenuItem Header="factorio.com">
           <MenuItem.Icon>
-            <Image Source="/Assets/Icons/WebDestination.png"/>
+            <icons:WebDestinationIcon/>
           </MenuItem.Icon>
         </MenuItem>
         <MenuItem Header="mods.factorio.com">
           <MenuItem.Icon>
-            <Image Source="/Assets/Icons/WebDestination.png"/>
+            <icons:WebDestinationIcon/>
           </MenuItem.Icon>
         </MenuItem>
         <MenuItem Header="{l:LocalizedResource ThreadMenuItem}">
           <MenuItem.Icon>
-            <Image Source="/Assets/Icons/WebDestination.png"/>
+            <icons:WebDestinationIcon/>
           </MenuItem.Icon>
         </MenuItem>
 
@@ -185,7 +184,7 @@
             </DockPanel>
           </MenuItem.Header>
           <MenuItem.Icon>
-            <Image Source="/Assets/Icons/Information.png"/>
+            <icons:InformationIcon/>
           </MenuItem.Icon>
         </MenuItem>
       </MenuItem>
@@ -193,7 +192,13 @@
     </Menu>
 
     <!-- Toolbar -->
-    <controls:Toolbar DockPanel.Dock="Top" Items="{Binding ToolbarItems}"/>
+    <controls:Toolbar DockPanel.Dock="Top" Items="{Binding ToolbarItems}">
+      <controls:Toolbar.DataTemplates>
+        <DataTemplate DataType="{x:Type models:MenuHeaderViewModel}">
+          <TextBlock Text="{Binding HeaderKey, Converter={StaticResource LocalizeConverter}}"/>
+        </DataTemplate>
+      </controls:Toolbar.DataTemplates>
+    </controls:Toolbar>
 
     <!-- Main View -->
     <TabControl DockPanel.Dock="Bottom" TabStripPlacement="Right" Background="{DynamicResource ThemeBackgroundBrush}"

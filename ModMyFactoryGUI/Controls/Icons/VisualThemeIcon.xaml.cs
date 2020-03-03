@@ -1,11 +1,11 @@
 using Avalonia.Controls;
 using Avalonia.Markup.Xaml;
 
-namespace ModMyFactoryGUI.Controls.Icons.Large
+namespace ModMyFactoryGUI.Controls.Icons
 {
-    public class ManagerIcon : UserControl
+    class VisualThemeIcon : UserControl
     {
-        public ManagerIcon()
+        public VisualThemeIcon()
         {
             InitializeComponent();
         }

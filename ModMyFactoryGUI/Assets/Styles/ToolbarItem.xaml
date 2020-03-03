@@ -21,12 +21,6 @@
                               Margin="3"
                               HorizontalAlignment="Center"
                               VerticalAlignment="Center"/>
-            <Path Name="check"
-                  Fill="{TemplateBinding Foreground}"
-                  Data="F1M10,1.2L4.7,9.1 4.5,9.1 0,5.2 1.3,3.5 4.3,6.1 8.3,0 10,1.2z"
-                  IsVisible="False"
-                  Margin="3"
-                  VerticalAlignment="Center"/>
             <ContentPresenter Name="PART_HeaderPresenter"
                               Content="{TemplateBinding Header}"
                               Margin="{TemplateBinding Padding}"
@@ -38,12 +32,6 @@
                 </DataTemplate>
               </ContentPresenter.DataTemplates>
             </ContentPresenter>
-            <Path Name="rightArrow"
-                  Data="M0,0L4,3.5 0,7z"
-                  Fill="{DynamicResource ThemeForegroundBrush}"
-                  Margin="10,0,0,0"
-                  VerticalAlignment="Center"
-                  Grid.Column="3"/>
             <Popup Name="PART_Popup"
                    PlacementMode="Right"
                    StaysOpen="True"
@@ -67,23 +55,28 @@
   </Style>
 
   <Style Selector="controls|Toolbar > controls|ToolbarItem">
-    <Setter Property="Padding" Value="8,3"/>
+    <Setter Property="Background" Value="Transparent"/>
     <Setter Property="Template">
       <ControlTemplate>
         <Border Name="root"
                 Background="{TemplateBinding Background}"
                 BorderBrush="{TemplateBinding BorderBrush}"
                 BorderThickness="{TemplateBinding BorderThickness}">
-          <Panel>
-            <ContentPresenter Name="PART_HeaderPresenter"
-                              Content="{TemplateBinding Header}"
-                              Margin="{TemplateBinding Padding}">
-              <ContentPresenter.DataTemplates>
-                <DataTemplate DataType="x:String">
-                  <AccessText Text="{Binding}"/>
-                </DataTemplate>
-              </ContentPresenter.DataTemplates>
+          
+          <Grid>
+
+            <ContentPresenter Name="icon"
+                              Content="{TemplateBinding Icon}"
+                              Width="16"
+                              Height="16"
+                              Margin="8"
+                              HorizontalAlignment="Center"
+                              VerticalAlignment="Center">
+              <ContentPresenter.RenderTransform>
+                <ScaleTransform ScaleX="1.5" ScaleY="1.5"/>
+              </ContentPresenter.RenderTransform>
             </ContentPresenter>
+            
             <Popup Name="PART_Popup"
                    IsOpen="{TemplateBinding IsSubMenuOpen, Mode=TwoWay}"
                    StaysOpen="True">
@@ -99,7 +92,9 @@
                 </ScrollViewer>
               </Border>
             </Popup>
-          </Panel>
+
+          </Grid>
+
         </Border>
       </ControlTemplate>
     </Setter>

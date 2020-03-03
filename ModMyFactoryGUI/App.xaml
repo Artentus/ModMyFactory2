@@ -7,7 +7,9 @@
     <StyleInclude Source="avares://Avalonia.Themes.Default/DefaultTheme.xaml"/>
     <StyleInclude Source="/Assets/Styles/Window.xaml"/>
     <StyleInclude Source="/Assets/Styles/MenuItem.xaml"/>
+    <StyleInclude Source="/Assets/Styles/Toolbar.xaml"/>
     <StyleInclude Source="/Assets/Styles/ToolbarItem.xaml"/>
+    <StyleInclude Source="/Assets/Styles/CheckBox.xaml"/>
 
     <Style Selector="TextBlock.muted">
       <Setter Property="Foreground" Value="{DynamicResource ThemeForegroundLowBrush}"/>

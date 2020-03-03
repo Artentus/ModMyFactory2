@@ -99,7 +99,7 @@ namespace ModMyFactoryGUI.ViewModels
             return result;
         }
 
-        static IControl CreateToolbarItem(IMenuItemViewModel viewModel)
+        static IControl CreateToolbarItem(IMenuItemViewModel viewModel, bool isTopLevel)
         {
             if (viewModel is SeparatorMenuItemViewModel)
             {
@@ -107,27 +107,43 @@ namespace ModMyFactoryGUI.ViewModels
             }
             else if (viewModel is MenuItemViewModel itemViewModel)
             {
-                return new ToolbarItem
+                var item = new ToolbarItem
                 {
                     Header = itemViewModel.Header,
                     Icon = itemViewModel.Icon,
                     Command = itemViewModel.Command
                 };
+
+                if (isTopLevel)
+                    item.SetValue(ToolTip.TipProperty, itemViewModel.Header);
+
+                return item;
             }
             else if (viewModel is ParentMenuItemViewModel parentViewModel)
             {
-                return new ToolbarItem
+                var item = new ToolbarItem
                 {
                     Header = parentViewModel.Header,
                     Icon = parentViewModel.Icon,
                     Items = CreateToolbarItems(parentViewModel.SubItems)
                 };
+
+                if (isTopLevel)
+                    item.SetValue(ToolTip.TipProperty, parentViewModel.Header);
+
+                return item;
             }
             else
             {
                 throw new ArgumentException("Unknown view model type", nameof(viewModel));
             }
         }
+
+        static IControl CreateToolbarItem(IMenuItemViewModel viewModel)
+            => CreateToolbarItem(viewModel, false);
+
+        static IControl CreateTopLevelToolbarItem(IMenuItemViewModel viewModel)
+            => CreateToolbarItem(viewModel, true);
 
         static IReadOnlyCollection<IControl> CreateToolbarItems(
             IReadOnlyCollection<IMenuItemViewModel> viewModels)
@@ -147,9 +163,9 @@ namespace ModMyFactoryGUI.ViewModels
             int totalCount = filteredEditViewModels.Count + filteredEditViewModels.Count + (addSeparator ? 1 : 0);
             var result = new List<IControl>(totalCount);
 
-            result.AddRange(filteredFileViewModels.ConvertAll(CreateToolbarItem));
+            result.AddRange(filteredFileViewModels.ConvertAll(CreateTopLevelToolbarItem));
             if (addSeparator) result.Add(new Separator());
-            result.AddRange(filteredEditViewModels.ConvertAll(CreateToolbarItem));
+            result.AddRange(filteredEditViewModels.ConvertAll(CreateTopLevelToolbarItem));
             return result;
         }
 

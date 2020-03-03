@@ -3,6 +3,7 @@ using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
 using Avalonia.ThemeManager;
 using Avalonia.Threading;
+using ModMyFactoryGUI.Controls.Icons;
 using ModMyFactoryGUI.Localization;
 using ModMyFactoryGUI.Localization.Json;
 using ModMyFactoryGUI.MVVM;
@@ -101,7 +102,7 @@ namespace ModMyFactoryGUI
             if (!ApplicationDataDirectory.Exists) ApplicationDataDirectory.Create();
 
             var shutdownCommand = ReactiveCommand.CreateFromTask(ShutdownAsync);
-            ShutdownItemViewModel = new MenuItemViewModel(shutdownCommand, false, null, "CloseMenuItem", "CloseHotkey");
+            ShutdownItemViewModel = new MenuItemViewModel(shutdownCommand, false, () => new CloseIcon(), "CloseMenuItem", "CloseHotkey");
         }
 
         public override void Initialize()

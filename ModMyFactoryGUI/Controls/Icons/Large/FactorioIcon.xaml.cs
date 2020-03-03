@@ -1,4 +1,3 @@
-﻿using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Markup.Xaml;
 
@@ -8,7 +7,7 @@ namespace ModMyFactoryGUI.Controls.Icons.Large
     {
         public FactorioIcon()
         {
-            this.InitializeComponent();
+            InitializeComponent();
         }
 
         private void InitializeComponent()
