@@ -1,6 +1,7 @@
 // Copyright (c) Wiesław Šoltés. All rights reserved.
 // Licensed under the MIT license.
 // Edited for ModMyFactory by Mathis Rech.
+
 using Avalonia.Styling;
 using ReactiveUI;
 

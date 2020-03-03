@@ -1,11 +1,12 @@
+<!--
+Window style taken from
+https://github.com/VitalElement/AvalonStudio.Shell/blob/bb220b049fd2537e864624fe23d24a1a63865986/src/AvalonStudio.Shell/Controls/MetroWindow.paml
+-->
+
 <Styles xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:controls="clr-namespace:ModMyFactoryGUI.Controls">
 
-  <!--
-    Window style taken from
-    https://github.com/VitalElement/AvalonStudio.Shell/blob/bb220b049fd2537e864624fe23d24a1a63865986/src/AvalonStudio.Shell/Controls/MetroWindow.paml
-    -->
   <Style Selector="controls|WindowBase">
     <Setter Property="Background" Value="{DynamicResource ThemeBackgroundBrush}" />
     <Setter Property="BorderBrush" Value="{DynamicResource ThemeBorderMidBrush}" />

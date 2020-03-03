@@ -1,6 +1,7 @@
 // Copyright (c) Wiesław Šoltés. All rights reserved.
 // Licensed under the MIT license.
 // Edited for ModMyFactory by Mathis Rech.
+
 using System;
 using System.IO;
 using Avalonia.Markup.Xaml;

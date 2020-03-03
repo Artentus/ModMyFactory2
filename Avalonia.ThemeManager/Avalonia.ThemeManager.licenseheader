@@ -1,0 +1,5 @@
+extensions: designer.cs generated.cs
+extensions: .cs
+// Copyright (c) Wiesław Šoltés. All rights reserved.
+// Licensed under the MIT license.
+// Edited for ModMyFactory by Mathis Rech.
