@@ -25,7 +25,7 @@ namespace ModMyFactory.WebApi
             request.KeepAlive = true;
             request.UserAgent = UserAgent;
 
-            if ((content == null) || (content.Length == 0))
+            if ((content is null) || (content.Length == 0))
             {
                 request.Method = WebRequestMethods.Http.Get;
             }

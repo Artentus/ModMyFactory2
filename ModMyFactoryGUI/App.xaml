@@ -19,6 +19,7 @@ the Free Software Foundation, either version 3 of the License, or
     <StyleInclude Source="/Assets/Styles/Toolbar.xaml" />
     <StyleInclude Source="/Assets/Styles/ToolbarItem.xaml" />
     <StyleInclude Source="/Assets/Styles/CheckBox.xaml" />
+    <StyleInclude Source="/Assets/Styles/GridSplitter.xaml" />
 
     <Style Selector="TextBlock.muted">
       <Setter Property="Foreground" Value="{DynamicResource ThemeForegroundLowBrush}" />
@@ -64,5 +65,6 @@ the Free Software Foundation, either version 3 of the License, or
     <Style Selector="TabControl[TabStripPlacement=Right]">
       <Setter Property="Padding" Value="0" />
     </Style>
+
   </Application.Styles>
 </Application>

@@ -153,7 +153,7 @@ namespace ModMyFactory.WebApi.Mods
             Score = score;
             Category = category;
 
-            if (thumbnailUrl.EndsWith("/.thumb.png")) ThumbnailUrl = null; // No thumbnail available
+            if (!string.IsNullOrEmpty(thumbnailUrl) && thumbnailUrl.EndsWith("/.thumb.png")) ThumbnailUrl = null; // No thumbnail available
             else ThumbnailUrl = "https://mods-data.factorio.com" + thumbnailUrl;
 
             LatestRelease = latestRelease;

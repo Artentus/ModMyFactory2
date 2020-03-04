@@ -70,8 +70,8 @@
     <PackageReference Include="ModMyFactory.ModSettings" Version="1.0.0.5-alpha" />
     <PackageReference Include="ModMyFactory.WebApi" Version="1.0.0.6-alpha" />
     <PackageReference Include="ModMyFactory.Win32" Version="1.0.0.5-alpha" />
-    <PackageReference Include="ModMyFactory" Version="1.0.0.7-alpha" />
-    <ProjectReference Include="..\Avalonia.ThemeManager\Avalonia.ThemeManager.csproj" />
+    <PackageReference Include="ModMyFactory" Version="1.0.0.8-alpha" />
+    <ProjectReference Include="..\ModMyFactory.WebApi\ModMyFactory.WebApi.csproj" />
   </ItemGroup>
 
   <ItemGroup>
@@ -83,4 +83,5 @@
   <ItemGroup Condition="'$(TargetFramework)' == 'netcoreapp3.0'">
     <PackageReference Include="System.Reactive" Version="4.3.2" />
   </ItemGroup>
+
 </Project>
