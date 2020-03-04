@@ -15,9 +15,10 @@ namespace ModMyFactoryGUI
         public string Username { get; }
 
         [JsonProperty("token")]
-        public string ApiToken { get; }
+        public string Token { get; }
 
-        public Credentials(string userName, string apiToken)
-            => (Username, ApiToken) = (userName, apiToken);
+        [JsonConstructor]
+        public Credentials(string username, string token)
+            => (Username, Token) = (username, token);
     }
 }

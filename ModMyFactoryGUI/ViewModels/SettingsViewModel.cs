@@ -5,9 +5,11 @@
 //  the Free Software Foundation, either version 3 of the License, or
 //  (at your option) any later version.
 
+using ModMyFactory.WebApi;
 using ModMyFactoryGUI.Views;
 using ReactiveUI;
 using System.Collections.Generic;
+using System.Net;
 using System.Threading.Tasks;
 using System.Windows.Input;
 
@@ -18,19 +20,14 @@ namespace ModMyFactoryGUI.ViewModels
         private bool _settingsChanged;
 
         private string _username;
-        private bool _usernameChanged;
+        private string _password;
+        private bool _credentialsChanged;
+        private bool _credentialsError;
 
         public bool SettingsChanged
         {
             get => _settingsChanged;
-            set
-            {
-                if (value != _settingsChanged)
-                {
-                    _settingsChanged = value;
-                    this.RaisePropertyChanged(nameof(SettingsChanged));
-                }
-            }
+            set => this.RaiseAndSetIfChanged(ref _settingsChanged, value, nameof(SettingsChanged));
         }
 
         public string Username
@@ -41,15 +38,35 @@ namespace ModMyFactoryGUI.ViewModels
                 if (value != _username)
                 {
                     _username = value;
-                    _usernameChanged = true;
                     this.RaisePropertyChanged(nameof(Username));
 
+                    _credentialsChanged = true;
                     SettingsChanged = true;
                 }
             }
         }
 
-        public string Password { get; set; }
+        public string Password
+        {
+            get => _password;
+            set
+            {
+                if (value != _password)
+                {
+                    _password = value;
+                    this.RaisePropertyChanging(nameof(Password));
+
+                    _credentialsChanged = true;
+                    SettingsChanged = true;
+                }
+            }
+        }
+
+        public bool CredentialsError
+        {
+            get => _credentialsError;
+            set => this.RaiseAndSetIfChanged(ref _credentialsError, value, nameof(CredentialsError));
+        }
 
         public ICommand ApplyCommand { get; }
 
@@ -62,19 +79,73 @@ namespace ModMyFactoryGUI.ViewModels
             ResetCommand = ReactiveCommand.Create(Reset);
         }
 
+        private async Task ApplyCredentialChangesAsync()
+        {
+            if (_credentialsChanged)
+            {
+                _credentialsChanged = false;
+
+                try
+                {
+                    var (actualName, token) = await Authentication.LogInAsync(Username, Password);
+
+                    // Don't call the property directly since the name hasn't really changed
+                    _username = actualName;
+                    this.RaisePropertyChanged(nameof(Username));
+                    CredentialsError = false;
+
+                    App.Current.Settings.Set(SettingName.Credentials, new Credentials(actualName, token));
+                }
+                catch (WebException ex) when (ex.Status == WebExceptionStatus.ProtocolError)
+                {
+                    if (ex.Response is HttpWebResponse response)
+                    {
+                        if ((response.StatusCode == HttpStatusCode.Unauthorized)
+                            || (response.StatusCode == HttpStatusCode.Forbidden))
+                        {
+                            _username = string.Empty;
+                            _password = string.Empty;
+                            this.RaisePropertyChanged(nameof(Username));
+                            this.RaisePropertyChanged(nameof(Password));
+                            CredentialsError = true;
+                        }
+                        else if ((response.StatusCode == HttpStatusCode.InternalServerError)
+                            || (response.StatusCode == HttpStatusCode.Conflict))
+                        {
+                            // Server error
+                            _username = App.Current.Settings.Get<Credentials>(SettingName.Credentials).Username;
+                            this.RaisePropertyChanged(nameof(Username));
+                            _password = string.Empty;
+                            this.RaisePropertyChanged(nameof(Password));
+                            CredentialsError = false;
+
+                            // ToDo: show error message
+                        }
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+                catch (WebException ex)
+                when ((ex.Status == WebExceptionStatus.ConnectFailure)
+                || (ex.Status == WebExceptionStatus.Timeout))
+                {
+                    // Connection error
+                    _username = App.Current.Settings.Get<Credentials>(SettingName.Credentials).Username;
+                    this.RaisePropertyChanged(nameof(Username));
+                    _password = string.Empty;
+                    this.RaisePropertyChanged(nameof(Password));
+                    CredentialsError = false;
+
+                    // ToDo: show error message
+                }
+            }
+        }
+
         private async Task ApplyChangesAsync()
         {
-            //if (_usernameChanged)
-            //{
-            //    var (actualName, token) = await Authentication.LogInAsync(Username, Password);
-
-            //    // Don't call the property directly since the name hasn't really changed
-            //    _username = actualName;
-            //    _usernameChanged = false;
-            //    this.RaisePropertyChanged(nameof(Username));
-
-            //    App.Current.Settings.Set(SettingName.Credentials, new Credentials(actualName, token));
-            //}
+            await ApplyCredentialChangesAsync();
 
             SettingsChanged = false;
             App.Current.Settings.Save();
@@ -82,10 +153,14 @@ namespace ModMyFactoryGUI.ViewModels
 
         private void Reset()
         {
-            _settingsChanged = false;
+            SettingsChanged = false;
 
             _username = App.Current.Settings.Get<Credentials>(SettingName.Credentials).Username;
-            _usernameChanged = false;
+            this.RaisePropertyChanged(nameof(Username));
+            _password = string.Empty;
+            this.RaisePropertyChanged(nameof(Password));
+            _credentialsChanged = false;
+            CredentialsError = false;
         }
 
         protected override List<IMenuItemViewModel> GetEditMenuViewModels()

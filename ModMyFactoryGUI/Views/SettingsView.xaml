@@ -26,15 +26,17 @@ the Free Software Foundation, either version 3 of the License, or
       <WrapPanel Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2">
         <StackPanel>
           <TextBlock Margin="4" Text="{l:LocalizedResource CredentialsHeader}" />
-          <TextBox Margin="4" Watermark="{l:LocalizedResource Username}" Width="200" />
-          <TextBox Margin="4" Watermark="{l:LocalizedResource Password}" Width="200" />
+          <TextBox Margin="4" Watermark="{l:LocalizedResource Username}" Width="200"
+                   UseFloatingWatermark="True" Text="{Binding Username, Mode=TwoWay}" />
+          <TextBox Margin="4" Watermark="{l:LocalizedResource Password}" Width="200"
+                   UseFloatingWatermark="True" Text="{Binding Password, Mode=TwoWay}" PasswordChar="*" />
         </StackPanel>
       </WrapPanel>
 
       <Button Grid.Row="1" Grid.Column="0" Content="{l:LocalizedResource DiscardButton}"
-              Margin="4" HorizontalAlignment="Right" Command="{Binding ResetCommand}" />
+              Margin="4" HorizontalAlignment="Right" Command="{Binding ResetCommand}" IsEnabled="{Binding SettingsChanged}" />
       <Button Grid.Row="1" Grid.Column="1" Content="{l:LocalizedResource AcceptButton}"
-              Margin="4" HorizontalAlignment="Right" Command="{Binding ApplyCommand}" />
+              Margin="4" HorizontalAlignment="Right" Command="{Binding ApplyCommand}" IsEnabled="{Binding SettingsChanged}" />
     </Grid>
   </Border>
 
