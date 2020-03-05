@@ -10,6 +10,7 @@ using ModMyFactoryGUI.Views;
 using ReactiveUI;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using System.Windows.Input;
 
 namespace ModMyFactoryGUI.ViewModels
 {
@@ -21,6 +22,8 @@ namespace ModMyFactoryGUI.ViewModels
 
         public IReadOnlyCollection<OnlineModViewModel> OnlineMods { get; private set; }
 
+        public ICommand RefreshCommand { get; }
+
         public OnlineModViewModel SelectedMod
         {
             get => _selectedMod;
@@ -29,6 +32,8 @@ namespace ModMyFactoryGUI.ViewModels
 
         public OnlineModsViewModel()
         {
+            RefreshCommand = ReactiveCommand.CreateFromTask(RefreshOnlineModsAsync);
+
             // This is fire-and-forget intentionally
 #pragma warning disable CS4014
             RefreshOnlineModsAsync();

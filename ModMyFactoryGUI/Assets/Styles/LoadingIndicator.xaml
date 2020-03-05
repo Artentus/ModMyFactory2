@@ -1,0 +1,34 @@
+<!--
+Copyright (C) 2020 Mathis Rech
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+-->
+
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:controls="clr-namespace:ModMyFactoryGUI.Controls">
+
+  <Style Selector="controls|LoadingIndicator">
+    <Setter Property="DotCount" Value="12" />
+    <Setter Property="DotSize" Value="13" />
+    <Setter Property="Radius" Value="32" />
+    <Setter Property="AnimationSize" Value="80" />
+    <Setter Property="RevolutionDuration" Value="0:0:1.2" />
+    <Setter Property="Template">
+      <ControlTemplate TargetType="{x:Type controls:LoadingIndicator}">
+        <StackPanel>
+          <controls:LoadingAnimation HorizontalAlignment="Center" Radius="{TemplateBinding Radius}"
+                                     Width="{TemplateBinding AnimationSize}" Height="{TemplateBinding AnimationSize}"
+                                     DotCount="{TemplateBinding DotCount}" DotSize="{TemplateBinding DotSize}"
+                                     RevolutionDuration="{TemplateBinding RevolutionDuration}" />
+          <TextBlock Margin="4" Classes="muted" Text="{TemplateBinding Text}" FontSize="{DynamicResource FontSizeMedium}"
+                     HorizontalAlignment="Center" TextAlignment="Center" />
+        </StackPanel>
+      </ControlTemplate>
+    </Setter>
+  </Style>
+
+</Styles>

@@ -1,0 +1,28 @@
+<!--
+Copyright (C) 2020 Mathis Rech
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+-->
+
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:controls="clr-namespace:ModMyFactoryGUI.Controls">
+
+  <Style Selector="controls|LoadingAnimation">
+    <Setter Property="Template">
+      <ControlTemplate TargetType="{x:Type controls:LoadingAnimation}">
+        <Canvas x:Name="PART_DotCanvas" UseLayoutRounding="False">
+          <Canvas.Styles>
+            <Style Selector="Ellipse">
+              <Setter Property="Fill" Value="{DynamicResource ThemeBorderMidBrush}" />
+            </Style>
+          </Canvas.Styles>
+        </Canvas>
+      </ControlTemplate>
+    </Setter>
+  </Style>
+
+</Styles>

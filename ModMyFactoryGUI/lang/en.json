@@ -191,6 +191,16 @@
     "value": "Settings"
   },
 
+  // --------- Online mods view ---------
+  "LoadingMessage": {
+    "type": "string",
+    "value": "Fetching mods\nfrom server..."
+  },
+  "RefreshButton": {
+    "type": "string",
+    "value": "Refresh"
+  },
+
   // --------- Settings view ---------
   "CredentialsHeader": {
     "type": "string",

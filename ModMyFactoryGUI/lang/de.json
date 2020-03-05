@@ -183,6 +183,16 @@
     "value": "Einstellungen"
   },
 
+  // --------- Online mods view ---------
+  "LoadingMessage": {
+    "type": "string",
+    "value": "Mods werden\nabgerufen..."
+  },
+  "RefreshButton": {
+    "type": "string",
+    "value": "Aktualisieren"
+  },
+
   // --------- Settings view ---------
   "CredentialsHeader": {
     "type": "string",

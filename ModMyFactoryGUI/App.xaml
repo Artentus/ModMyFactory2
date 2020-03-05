@@ -21,6 +21,9 @@ the Free Software Foundation, either version 3 of the License, or
     <StyleInclude Source="/Assets/Styles/CheckBox.xaml" />
     <StyleInclude Source="/Assets/Styles/GridSplitter.xaml" />
     <StyleInclude Source="/Assets/Styles/ListBoxItem.xaml" />
+    <StyleInclude Source="/Assets/Styles/LoadingAnimation.xaml" />
+    <StyleInclude Source="/Assets/Styles/LoadingIndicator.xaml" />
+    <StyleInclude Source="/Assets/Styles/ScrollBar.xaml" />
 
     <Style Selector="TextBlock.muted">
       <Setter Property="Foreground" Value="{DynamicResource ThemeForegroundLowBrush}" />
@@ -65,6 +68,11 @@ the Free Software Foundation, either version 3 of the License, or
 
     <Style Selector="TabControl[TabStripPlacement=Right]">
       <Setter Property="Padding" Value="0" />
+    </Style>
+
+    <Style Selector="ListBox">
+      <Setter Property="BorderBrush" Value="{DynamicResource ThemeBorderMidBrush}" />
+      <Setter Property="Background" Value="{DynamicResource ThemeBackgroundLowBrush}" />
     </Style>
 
   </Application.Styles>
