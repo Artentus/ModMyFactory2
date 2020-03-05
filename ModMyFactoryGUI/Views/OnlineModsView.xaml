@@ -17,19 +17,32 @@ the Free Software Foundation, either version 3 of the License, or
   <Border BorderThickness="1" BorderBrush="{DynamicResource ThemeBorderMidBrush}">
 
     <Grid Margin="4" ColumnDefinitions="*,Auto,*">
-      <ListBox Grid.Column="0" Margin="4,4,0,4" Background="{DynamicResource ThemeBackgroundLowBrush}"
-               Items="{Binding OnlineMods}">
+      <ListBox Grid.Column="0" Margin="4,4,0,4" Grid.IsSharedSizeScope="True"
+               Background="{DynamicResource ThemeBackgroundLowBrush}" IsVisible="{Binding ModsLoaded}"
+               Items="{Binding OnlineMods}" SelectedItem="{Binding SelectedMod}">
         <ListBox.ItemTemplate>
           <DataTemplate DataType="{x:Type models:OnlineModViewModel}">
-            <Border BorderThickness="1" BorderBrush="{DynamicResource ThemeBorderMidBrush}"
-                    Background="{DynamicResource ThemeBackgroundBrush}">
-              <Grid ColumnDefinitions="Auto,Auto,*,Auto">
-                <TextBlock Text="{Binding DisplayName}" />
-              </Grid>
-            </Border>
+            <Grid>
+              <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" SharedSizeGroup="dlcount" />
+              </Grid.ColumnDefinitions>
+
+              <TextBlock Grid.Column="0" Margin="4" Text="{Binding DisplayName}" />
+              <TextBlock Grid.Column="1" Margin="0,4,4,4" Text="{Binding Author}" Classes="muted" />
+              <TextBlock Grid.Column="3" Margin="4" Text="{Binding DownloadCount}" HorizontalAlignment="Right" />
+            </Grid>
           </DataTemplate>
         </ListBox.ItemTemplate>
       </ListBox>
+      <Border  Grid.Column="0" Margin="4,4,0,4" IsVisible="{Binding !ModsLoaded}"
+               BorderThickness="1" BorderBrush="{DynamicResource ThemeBorderMidBrush}"
+               Background="{DynamicResource ThemeBackgroundLowBrush}">
+        <!-- Placeholder -->
+        <TextBlock TextAlignment="Center" Text="Loading" />
+      </Border>
 
       <GridSplitter Grid.Column="1" Width="8" Background="{DynamicResource ThemeBackgroundBrush}" />
 

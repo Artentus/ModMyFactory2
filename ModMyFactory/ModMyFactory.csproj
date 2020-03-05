@@ -22,7 +22,7 @@
     <PackageReference Include="ModMyFactory.Export" Version="1.0.0.4-alpha" />
     <PackageReference Include="ModMyFactory.Localization" Version="1.0.0.4-alpha" />
     <PackageReference Include="ModMyFactory.ModSettings" Version="1.0.0.5-alpha" />
-    <PackageReference Include="ModMyFactory.WebApi" Version="1.0.0.6-alpha" />
+    <PackageReference Include="ModMyFactory.WebApi" Version="1.0.0.7-alpha" />
     <PackageReference Include="ModMyFactory.Win32" Version="1.0.0.5-alpha" />
   </ItemGroup>
 

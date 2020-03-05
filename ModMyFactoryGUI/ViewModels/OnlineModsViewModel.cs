@@ -15,7 +15,17 @@ namespace ModMyFactoryGUI.ViewModels
 {
     internal sealed class OnlineModsViewModel : MainViewModelBase<OnlineModsView>
     {
+        private OnlineModViewModel _selectedMod;
+
+        public bool ModsLoaded { get; private set; }
+
         public IReadOnlyCollection<OnlineModViewModel> OnlineMods { get; private set; }
+
+        public OnlineModViewModel SelectedMod
+        {
+            get => _selectedMod;
+            set => this.RaiseAndSetIfChanged(ref _selectedMod, value, nameof(SelectedMod));
+        }
 
         public OnlineModsViewModel()
         {
@@ -37,8 +47,16 @@ namespace ModMyFactoryGUI.ViewModels
 
         private async Task RefreshOnlineModsAsync()
         {
+            ModsLoaded = false;
+            this.RaisePropertyChanged(nameof(ModsLoaded));
+            SelectedMod = null;
+
+            // ToDo: Error handling, since the caller doesn't
             OnlineMods = await LoadOnlineModsAsync();
             this.RaisePropertyChanged(nameof(OnlineMods));
+
+            ModsLoaded = true;
+            this.RaisePropertyChanged(nameof(ModsLoaded));
         }
 
         protected override List<IMenuItemViewModel> GetEditMenuViewModels()
