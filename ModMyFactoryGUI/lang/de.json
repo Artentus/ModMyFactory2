@@ -4,6 +4,14 @@
     "type": "string",
     "value": "Schließen"
   },
+  "ServerError": {
+    "type": "string",
+    "value": "Auf dem Server ist ein Fehler aufgetreten,\nbitte versuchen Sie es später erneut."
+  },
+  "ConnectionError": {
+    "type": "string",
+    "value": "Verbindung mit dem Server ist fehlgeschlagen.\nStellen Sie sicher, dass Sie mit dem Internet verbunden sind,\nund versuchen Sie es dann erneut."
+  },
 
   // --------- Main window ---------
   "MainWindowTitle": {

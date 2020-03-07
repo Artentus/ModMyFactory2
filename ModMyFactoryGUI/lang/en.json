@@ -4,6 +4,14 @@
     "type": "string",
     "value": "Close"
   },
+  "ServerError": {
+    "type": "string",
+    "value": "A server-side error occured,\nplease try again later."
+  },
+  "ConnectionError": {
+    "type": "string",
+    "value": "Unable to connect to the server.\nMake sure you have a stable connection to the internet,\nthen try again."
+  },
 
   // --------- Main window ---------
   "MainWindowTitle": {

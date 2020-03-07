@@ -13,7 +13,9 @@ namespace ModMyFactoryGUI.Localization
     internal sealed class LocalizeConverter : ValueConverterBase<string, string, object>
     {
         protected override string Convert(string value, object parameter, CultureInfo culture)
-            => (string)App.Current.LocaleManager.GetResource(value);
+            => string.IsNullOrEmpty(value)
+            ? string.Empty
+            : (string)App.Current.LocaleManager.GetResource(value);
 
         protected override string ConvertBack(string value, object parameter, CultureInfo culture)
             => throw new NotSupportedException();

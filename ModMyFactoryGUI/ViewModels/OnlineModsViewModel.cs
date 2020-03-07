@@ -9,6 +9,7 @@ using ModMyFactory.WebApi.Mods;
 using ModMyFactoryGUI.Views;
 using ReactiveUI;
 using System.Collections.Generic;
+using System.Net;
 using System.Threading.Tasks;
 using System.Windows.Input;
 
@@ -19,6 +20,10 @@ namespace ModMyFactoryGUI.ViewModels
         private OnlineModViewModel _selectedMod;
 
         public bool ModsLoaded { get; private set; }
+
+        public bool LoadingErrorOccurred { get; private set; }
+
+        public string ErrorMessageKey { get; private set; }
 
         public IReadOnlyCollection<OnlineModViewModel> OnlineMods { get; private set; }
 
@@ -54,10 +59,42 @@ namespace ModMyFactoryGUI.ViewModels
         {
             ModsLoaded = false;
             this.RaisePropertyChanged(nameof(ModsLoaded));
+            LoadingErrorOccurred = false;
+            this.RaisePropertyChanged(nameof(LoadingErrorOccurred));
             SelectedMod = null;
 
-            // ToDo: Error handling, since the caller doesn't
-            OnlineMods = await LoadOnlineModsAsync();
+            try
+            {
+                OnlineMods = await LoadOnlineModsAsync();
+            }
+            catch (WebException ex) when (ex.Status == WebExceptionStatus.ProtocolError)
+            {
+                if (ex.Response is HttpWebResponse response
+                    && (response.StatusCode == HttpStatusCode.InternalServerError
+                    || response.StatusCode == HttpStatusCode.Conflict))
+                {
+                    // Server error
+                    LoadingErrorOccurred = true;
+                    this.RaisePropertyChanged(nameof(LoadingErrorOccurred));
+                    ErrorMessageKey = "ServerError";
+                    this.RaisePropertyChanged(nameof(ErrorMessageKey));
+                }
+                else
+                {
+                    throw;
+                }
+            }
+            catch (WebException ex)
+                when ((ex.Status == WebExceptionStatus.ConnectFailure)
+                || (ex.Status == WebExceptionStatus.Timeout))
+            {
+                // Connection error
+                LoadingErrorOccurred = true;
+                this.RaisePropertyChanged(nameof(LoadingErrorOccurred));
+                ErrorMessageKey = "ConnectionError";
+                this.RaisePropertyChanged(nameof(ErrorMessageKey));
+            }
+
             this.RaisePropertyChanged(nameof(OnlineMods));
 
             ModsLoaded = true;
