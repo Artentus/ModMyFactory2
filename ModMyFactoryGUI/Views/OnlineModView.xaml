@@ -1,0 +1,102 @@
+<!--
+Copyright (C) 2020 Mathis Rech
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+-->
+
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:local="clr-namespace:ModMyFactoryGUI"
+             xmlns:l="clr-namespace:ModMyFactoryGUI.Localization"
+             xmlns:controls="clr-namespace:ModMyFactoryGUI.Controls"
+             x:Class="ModMyFactoryGUI.Views.OnlineModView">
+
+  <UserControl.Resources>
+    <l:LocalizedFormatter x:Key="LocalizedFormatter" />
+  </UserControl.Resources>
+
+  <UserControl.Styles>
+    <Style Selector="WrapPanel">
+      <Setter Property="Background" Value="{DynamicResource ThemeBackgroundBrush}" />
+    </Style>
+  </UserControl.Styles>
+
+  <Grid ColumnDefinitions="Auto,*">
+    <Grid.RowDefinitions>
+      <RowDefinition Height="Auto" />
+      <RowDefinition Height="*" />
+      <RowDefinition Height="Auto" />
+      <RowDefinition Height="*" />
+    </Grid.RowDefinitions>
+
+    <!-- Thumbnail -->
+    <Border Grid.Column="0" Grid.Row="0" Width="140" Height="140" VerticalAlignment="Top"
+            BorderThickness="1" BorderBrush="{DynamicResource ThemeBorderLowBrush}" Background="{DynamicResource ThemeBackgroundLowBrush}">
+      <Image Margin="-1" Stretch="UniformToFill" Source="{Binding Thumbnail}" />
+    </Border>
+
+    <Grid ColumnDefinitions="Auto,*" RowDefinitions="Auto,Auto,*,Auto,Auto,Auto,*" Grid.Column="1" Grid.Row="0" Margin="8,0,0,0">
+
+      <!-- Title -->
+      <Border Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="0" Background="{DynamicResource ThemeAccentBrush4}">
+        <TextBlock Margin="8,1,8,4" Classes="h1" Text="{Binding DisplayName}" />
+      </Border>
+
+      <!-- Author -->
+      <TextBlock Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="1" Margin="8,2" Classes="h3 muted"
+                 Text="{Binding Author, Converter={StaticResource LocalizedFormatter}, ConverterParameter=AuthorFormat}" />
+
+      <!-- Homepage -->
+      <TextBlock Grid.Column="0" Grid.Row="3" Margin="16,0,8,1" Text="{l:LocalizedResource HomepageHeader}" />
+      <controls:HyperLink Grid.Column="1" Grid.Row="3" Text="{Binding Homepage}" IsVisible="{Binding HasHomepage}" Url="{Binding Homepage}" />
+
+      <!-- GitHub -->
+      <TextBlock Grid.Column="0" Grid.Row="4" Margin="16,0,8,1" Text="{l:LocalizedResource GitHubHeader}" />
+      <controls:HyperLink Grid.Column="1" Grid.Row="4" Text="{Binding GitHubUrl}" IsVisible="{Binding HasGitHub}" Url="{Binding GitHubUrl}" />
+
+      <!-- License -->
+      <TextBlock Grid.Column="0" Grid.Row="5" Margin="16,0,8,1" Text="{l:LocalizedResource LicenseHeader}" />
+      <controls:HyperLink Grid.Column="1" Grid.Row="5" Text="{Binding LicenseName}" IsVisible="{Binding HasLicense}" Url="{Binding LicenseUrl}" />
+    </Grid>
+
+    <TabControl Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="1" Margin="0,8,0,0">
+
+      <!-- Description -->
+      <TabItem Header="{l:LocalizedResource DescriptionHeader}">
+        <Border BorderThickness="1" BorderBrush="{DynamicResource ThemeBorderLowBrush}" Background="{DynamicResource ThemeBackgroundLowBrush}">
+          <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+            <controls:FormattingTextBlock Margin="4" MarkdownText="{Binding Description}" />
+          </ScrollViewer>
+        </Border>
+      </TabItem>
+
+      <!-- Changelog -->
+      <TabItem Header="{l:LocalizedResource ChangelogHeader}" IsVisible="{Binding HasChangelog}">
+        <Border BorderThickness="1" BorderBrush="{DynamicResource ThemeBorderLowBrush}" Background="{DynamicResource ThemeBackgroundLowBrush}">
+          <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+            <controls:FormattingTextBlock Margin="4" MarkdownText="{Binding Changelog}" />
+          </ScrollViewer>
+        </Border>
+      </TabItem>
+
+      <!-- Faq -->
+      <TabItem Header="{l:LocalizedResource FaqHeader}" IsVisible="{Binding HasFaq}">
+        <Border BorderThickness="1" BorderBrush="{DynamicResource ThemeBorderLowBrush}" Background="{DynamicResource ThemeBackgroundLowBrush}">
+          <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+            <controls:FormattingTextBlock Margin="4" MarkdownText="{Binding Faq}" />
+          </ScrollViewer>
+        </Border>
+      </TabItem>
+
+    </TabControl>
+
+    <GridSplitter Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="2" Height="8" Background="{DynamicResource ThemeBackgroundBrush}" />
+
+  </Grid>
+
+</UserControl>

@@ -12,12 +12,14 @@ the Free Software Foundation, either version 3 of the License, or
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:models="clr-namespace:ModMyFactoryGUI.ViewModels"
+             xmlns:views="clr-namespace:ModMyFactoryGUI.Views"
              xmlns:controls="clr-namespace:ModMyFactoryGUI.Controls"
              xmlns:l="clr-namespace:ModMyFactoryGUI.Localization"
              x:Class="ModMyFactoryGUI.Views.OnlineModsView">
 
   <UserControl.Resources>
     <l:LocalizeConverter x:Key="LocalizeConverter" />
+    <l:LocalizedFormatter x:Key="LocalizedFormatter" />
   </UserControl.Resources>
 
   <Border BorderThickness="1" BorderBrush="{DynamicResource ThemeBorderMidBrush}">
@@ -45,7 +47,8 @@ the Free Software Foundation, either version 3 of the License, or
               </Grid.ColumnDefinitions>
 
               <TextBlock Grid.Column="0" Margin="4" Text="{Binding DisplayName}" />
-              <TextBlock Grid.Column="1" Margin="0,4,4,4" Text="{Binding Author}" Classes="muted" />
+              <TextBlock Grid.Column="1" Margin="0,4,4,4" Classes="muted"
+                         Text="{Binding Author, Converter={StaticResource LocalizedFormatter}, ConverterParameter=AuthorFormat}" />
               <TextBlock Grid.Column="3" Margin="4" Text="{Binding DownloadCount}" HorizontalAlignment="Right" />
             </Grid>
           </DataTemplate>
@@ -75,7 +78,7 @@ the Free Software Foundation, either version 3 of the License, or
 
       <GridSplitter Grid.Column="1" Width="8" Background="{DynamicResource ThemeBackgroundBrush}" />
 
-      <StackPanel Grid.Column="2" Grid.Row="0" Grid.RowSpan="2" Margin="0,4,4,4" />
+      <views:OnlineModView Grid.Column="2" Grid.Row="0" Grid.RowSpan="2" Margin="0,4,4,4" DataContext="{Binding SelectedMod}" />
     </Grid>
 
   </Border>

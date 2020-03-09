@@ -5,14 +5,7 @@
 //  the Free Software Foundation, either version 3 of the License, or
 //  (at your option) any later version.
 
-// ----------------------------------------------------------------------------------------------------------------------
-// File taken from
-// https://github.com/VitalElement/AvalonStudio.Shell/blob/master/src/AvalonStudio.Shell/Converters/IconImageConverter.cs
-// ----------------------------------------------------------------------------------------------------------------------
-
-
 using Avalonia.Controls;
-using Avalonia.Data.Converters;
 using Avalonia.Media.Imaging;
 using System;
 using System.Globalization;
@@ -20,30 +13,20 @@ using System.IO;
 
 namespace ModMyFactoryGUI.Controls
 {
-    internal class IconImageConverter : IValueConverter
+    internal class IconImageConverter : ValueConverterBase<WindowIcon, IBitmap>
     {
         public static IconImageConverter Converter { get; } = new IconImageConverter();
 
-        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        protected override IBitmap Convert(WindowIcon value, CultureInfo culture)
         {
-            if (value is WindowIcon)
-            {
-                Bitmap result = null;
+            using var stream = new MemoryStream();
+            value.Save(stream);
+            stream.Seek(0, SeekOrigin.Begin);
 
-                using (var stream = new MemoryStream())
-                {
-                    (value as WindowIcon).Save(stream);
-                    stream.Seek(0, SeekOrigin.Begin);
-                    result = new Bitmap(stream);
-                }
-
-                return result;
-            }
-
-            return null;
+            return new Bitmap(stream);
         }
 
-        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        protected override WindowIcon ConvertBack(IBitmap value, CultureInfo culture)
             => throw new NotSupportedException();
     }
 }

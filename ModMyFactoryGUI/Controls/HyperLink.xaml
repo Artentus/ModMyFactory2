@@ -34,8 +34,8 @@ the Free Software Foundation, either version 3 of the License, or
     </Grid.ColumnDefinitions>
 
     <TextBlock x:Name="LinkText" Grid.Row="0" Grid.Column="0" />
-    <Rectangle Grid.Row="1" Grid.Column="0" Margin="-1,-2,-1,2"
-               Fill="{DynamicResource HyperlinkHighlightBrush}"
+    <Rectangle Grid.Row="1" Grid.Column="0" Margin="-1,-2,-1,2" Height="1"
+               Fill="{DynamicResource HyperlinkHighlightBrush}" MaxHeight="1"
                IsVisible="{Binding IsPointerOver, ElementName=LinkText}"
                IsHitTestVisible="False" />
   </Grid>

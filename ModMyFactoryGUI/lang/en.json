@@ -208,6 +208,30 @@
     "type": "string",
     "value": "Refresh"
   },
+  "HomepageHeader": {
+    "type": "string",
+    "value": "Homepage:"
+  },
+  "GitHubHeader": {
+    "type": "string",
+    "value": "GitHub:"
+  },
+  "LicenseHeader": {
+    "type": "string",
+    "value": "License:"
+  },
+  "DescriptionHeader": {
+    "type": "string",
+    "value": "Description"
+  },
+  "ChangelogHeader": {
+    "type": "string",
+    "value": "Changelog"
+  },
+  "FaqHeader": {
+    "type": "string",
+    "value": "FAQ"
+  },
 
   // --------- Settings view ---------
   "CredentialsHeader": {

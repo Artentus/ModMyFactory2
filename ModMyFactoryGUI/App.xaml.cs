@@ -45,6 +45,8 @@ namespace ModMyFactoryGUI
 
         public SettingManager Settings { get; private set; }
 
+        public LayoutSettings LayoutSettings { get; private set; }
+
         public LocaleManager LocaleManager { get; private set; }
 
         public IThemeSelector ThemeManager { get; private set; }
@@ -140,6 +142,7 @@ namespace ModMyFactoryGUI
         {
             var settingsFile = Path.Combine(ApplicationDataDirectory.FullName, "settings.json");
             Settings = SettingManager.LoadSafe(settingsFile);
+            LayoutSettings = new LayoutSettings(Settings);
         }
 
         private void LoadLocales()

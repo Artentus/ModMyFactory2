@@ -9,6 +9,7 @@ using ModMyFactory.WebApi.Mods;
 using ModMyFactoryGUI.Views;
 using ReactiveUI;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Net;
 using System.Threading.Tasks;
 using System.Windows.Input;
@@ -32,7 +33,14 @@ namespace ModMyFactoryGUI.ViewModels
         public OnlineModViewModel SelectedMod
         {
             get => _selectedMod;
-            set => this.RaiseAndSetIfChanged(ref _selectedMod, value, nameof(SelectedMod));
+            set
+            {
+                if (value != _selectedMod)
+                {
+                    _selectedMod = value;
+                    this.RaisePropertyChanged(nameof(SelectedMod));
+                }
+            }
         }
 
         public OnlineModsViewModel()
@@ -40,9 +48,16 @@ namespace ModMyFactoryGUI.ViewModels
             RefreshCommand = ReactiveCommand.CreateFromTask(RefreshOnlineModsAsync);
 
             // This is fire-and-forget intentionally
-#pragma warning disable CS4014
-            RefreshOnlineModsAsync();
-#pragma warning restore CS4014
+            async void Refresh() => await RefreshOnlineModsAsync();
+            Refresh();
+
+            PropertyChanged += async (s, e) => await OnPropertyChanged(s, e);
+        }
+
+        private async Task OnPropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if ((e.PropertyName == nameof(SelectedMod)) && !(SelectedMod is null))
+                await SelectedMod.LoadExtendedInfoAsync();
         }
 
         private async Task<IReadOnlyCollection<OnlineModViewModel>> LoadOnlineModsAsync()
@@ -55,6 +70,15 @@ namespace ModMyFactoryGUI.ViewModels
             return result;
         }
 
+        private void DisposeOnlineMods()
+        {
+            if (!(OnlineMods is null))
+            {
+                foreach (var onlineMod in OnlineMods)
+                    onlineMod.Dispose();
+            }
+        }
+
         private async Task RefreshOnlineModsAsync()
         {
             ModsLoaded = false;
@@ -62,6 +86,9 @@ namespace ModMyFactoryGUI.ViewModels
             LoadingErrorOccurred = false;
             this.RaisePropertyChanged(nameof(LoadingErrorOccurred));
             SelectedMod = null;
+
+            // Avoid memory leak
+            DisposeOnlineMods();
 
             try
             {

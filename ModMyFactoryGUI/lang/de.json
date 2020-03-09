@@ -200,6 +200,22 @@
     "type": "string",
     "value": "Aktualisieren"
   },
+  "LicenseHeader": {
+    "type": "string",
+    "value": "Lizenz:"
+  },
+  "DescriptionHeader": {
+    "type": "string",
+    "value": "Beschreibung"
+  },
+  "ChangelogHeader": {
+    "type": "string",
+    "value": "Änderungsverlauf"
+  },
+  "FaqHeader": {
+    "type": "string",
+    "value": "FAQ"
+  },
 
   // --------- Settings view ---------
   "CredentialsHeader": {
@@ -238,7 +254,7 @@
   },
   "ChangelogTabHeader": {
     "type": "string",
-    "value": "Änderungen"
+    "value": "Änderungsverlauf"
   },
   "ThirdPartySoftwareHeader": {
     "type": "string",

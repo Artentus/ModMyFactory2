@@ -30,6 +30,14 @@
   </ItemGroup>
 
   <ItemGroup>
+    <AvaloniaResource Remove="Views\OnlineModView.xaml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="Views\OnlineModView.xaml" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Update="lang\*.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -71,6 +79,9 @@
     <PackageReference Include="ModMyFactory.WebApi" Version="1.0.0.7-alpha" />
     <PackageReference Include="ModMyFactory.Win32" Version="1.0.0.5-alpha" />
     <PackageReference Include="ModMyFactory" Version="1.0.0.8-alpha" />
+    <EmbeddedResource Include="Views\OnlineModView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </EmbeddedResource>
     <ProjectReference Include="..\Avalonia.ThemeManager\Avalonia.ThemeManager.csproj" />
   </ItemGroup>
 
