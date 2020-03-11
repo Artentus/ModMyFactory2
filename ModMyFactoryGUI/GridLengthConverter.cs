@@ -6,20 +6,15 @@
 //  (at your option) any later version.
 
 using Avalonia.Controls;
-using Avalonia.Markup.Xaml;
 
-namespace ModMyFactoryGUI.Views
+namespace ModMyFactoryGUI
 {
-    public class OnlineModView : UserControl
+    internal sealed class GridLengthConverter : StringJsonConverter<GridLength>
     {
-        public OnlineModView()
-        {
-            InitializeComponent();
-        }
+        protected override GridLength Create(string token)
+            => GridLength.Parse(token);
 
-        private void InitializeComponent()
-        {
-            AvaloniaXamlLoader.Load(this);
-        }
+        protected override string Tokenize(GridLength value)
+            => value.ToString();
     }
 }

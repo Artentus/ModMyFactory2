@@ -8,6 +8,7 @@
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Serilog;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -17,11 +18,23 @@ namespace ModMyFactoryGUI
 {
     internal sealed class SettingManager
     {
+        private static readonly JsonSerializerSettings _settings;
         private readonly string _filePath;
         private readonly IDictionary<string, object> _table;
 
         private SettingManager(string filePath, IDictionary<string, object> table)
             => (_filePath, _table) = (filePath, table);
+
+        static SettingManager()
+        {
+            _settings = new JsonSerializerSettings
+            {
+                Converters = new JsonConverter[]
+                {
+                    new GridLengthConverter()
+                }
+            };
+        }
 
         public SettingManager(string filePath)
             : this(filePath, new Dictionary<string, object>())
@@ -35,7 +48,7 @@ namespace ModMyFactoryGUI
             var json = File.ReadAllText(filePath, Encoding.UTF8);
             try
             {
-                var table = JsonConvert.DeserializeObject<IDictionary<string, object>>(json);
+                var table = JsonConvert.DeserializeObject<IDictionary<string, object>>(json, _settings);
                 manager = new SettingManager(filePath, table);
                 return true;
             }
@@ -43,6 +56,24 @@ namespace ModMyFactoryGUI
             {
                 return false;
             }
+        }
+
+        private static bool TryFindConverter(Type tokenType, Type targetType, out IExtendedJsonConverter converter)
+        {
+            foreach (var c in _settings.Converters)
+            {
+                if (c is IExtendedJsonConverter exC)
+                {
+                    if (c.CanConvert(targetType) && exC.CanConvertFrom(tokenType))
+                    {
+                        converter = exC;
+                        return true;
+                    }
+                }
+            }
+
+            converter = null;
+            return false;
         }
 
         public static SettingManager LoadSafe(string filePath)
@@ -61,7 +92,7 @@ namespace ModMyFactoryGUI
         }
 
         public void Set(string key, object value)
-                            => _table[key] = value;
+            => _table[key] = value;
 
         public object Get(string key, object defaultValue = default)
         {
@@ -75,16 +106,23 @@ namespace ModMyFactoryGUI
 
         public T Get<T>(string key, T defaultValue = default)
         {
+            // First try to directly cast to the desired type
             var obj = Get(key, (object)defaultValue);
             if (obj is T result) return result;
 
+            // Then try to find a suitable converter
+            if (TryFindConverter(obj.GetType(), typeof(T), out var converter))
+                return (T)converter.CreateFromToken(obj);
+
+            // We couldn't cast the object, let Json.NET do the work for us
+            // This may not always work as expected, consider creating a converter
             var token = (JToken)obj;
             return token.ToObject<T>();
         }
 
         public void Save()
         {
-            var json = JsonConvert.SerializeObject(_table, Formatting.Indented);
+            var json = JsonConvert.SerializeObject(_table, Formatting.Indented, _settings);
             File.WriteAllText(_filePath, json, Encoding.UTF8);
             Log.Debug("Settings saved to '{0}'.", _filePath);
         }

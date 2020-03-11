@@ -11,6 +11,7 @@ the Free Software Foundation, either version 3 of the License, or
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:local="clr-namespace:ModMyFactoryGUI"
              xmlns:models="clr-namespace:ModMyFactoryGUI.ViewModels"
              xmlns:views="clr-namespace:ModMyFactoryGUI.Views"
              xmlns:controls="clr-namespace:ModMyFactoryGUI.Controls"
@@ -24,7 +25,12 @@ the Free Software Foundation, either version 3 of the License, or
 
   <Border BorderThickness="1" BorderBrush="{DynamicResource ThemeBorderMidBrush}">
 
-    <Grid Margin="4" ColumnDefinitions="*,Auto,*" RowDefinitions="*,Auto">
+    <Grid Margin="4" RowDefinitions="*,Auto">
+      <Grid.ColumnDefinitions>
+        <ColumnDefinition Width="{local:SettingBinding OnlineGridLength1, Mode=TwoWay}" />
+        <ColumnDefinition Width="Auto" />
+        <ColumnDefinition Width="{local:SettingBinding OnlineGridLength2, Mode=TwoWay}" />
+      </Grid.ColumnDefinitions>
 
       <!-- Mod list -->
       <ListBox Grid.Column="0" Grid.Row="0" Margin="4,4,0,4" Grid.IsSharedSizeScope="True"

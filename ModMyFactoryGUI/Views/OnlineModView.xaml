@@ -29,9 +29,9 @@ the Free Software Foundation, either version 3 of the License, or
   <Grid ColumnDefinitions="Auto,*">
     <Grid.RowDefinitions>
       <RowDefinition Height="Auto" />
-      <RowDefinition Height="*" />
+      <RowDefinition Height="{local:SettingBinding OnlineSubGridLength1, Mode=TwoWay}" />
       <RowDefinition Height="Auto" />
-      <RowDefinition Height="*" />
+      <RowDefinition Height="{local:SettingBinding OnlineSubGridLength2, Mode=TwoWay}" />
     </Grid.RowDefinitions>
 
     <!-- Thumbnail -->

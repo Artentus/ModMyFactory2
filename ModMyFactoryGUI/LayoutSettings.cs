@@ -10,48 +10,69 @@ using System.ComponentModel;
 
 namespace ModMyFactoryGUI
 {
+    // This class houses setting properties we want to bind to independently from view models.
     internal sealed class LayoutSettings : NotifyPropertyChangedBase
     {
         private static readonly GridLength DefaultGridLength = new GridLength(1, GridUnitType.Star);
         private readonly SettingManager _manager;
 
-        public GridLength MainGridLength1
+        public GridLength ManagerGridLength1
         {
-            get => _manager.Get(SettingName.MainGridLength1, DefaultGridLength);
+            get => _manager.Get(SettingName.ManagerGridLength1, DefaultGridLength);
             set
             {
-                _manager.Set(SettingName.MainGridLength1, value);
-                OnPropertyChanged(new PropertyChangedEventArgs(nameof(MainGridLength1)));
+                _manager.Set(SettingName.ManagerGridLength1, value);
+                OnPropertyChanged(new PropertyChangedEventArgs(nameof(ManagerGridLength1)));
             }
         }
 
-        public GridLength MainGridLength2
+        public GridLength ManagerGridLength2
         {
-            get => _manager.Get(SettingName.MainGridLength2, DefaultGridLength);
+            get => _manager.Get(SettingName.ManagerGridLength2, DefaultGridLength);
             set
             {
-                _manager.Set(SettingName.MainGridLength2, value);
-                OnPropertyChanged(new PropertyChangedEventArgs(nameof(MainGridLength2)));
+                _manager.Set(SettingName.ManagerGridLength2, value);
+                OnPropertyChanged(new PropertyChangedEventArgs(nameof(ManagerGridLength2)));
             }
         }
 
-        public GridLength SubGridLength1
+        public GridLength OnlineGridLength1
         {
-            get => _manager.Get(SettingName.SubGridLength1, DefaultGridLength);
+            get => _manager.Get(SettingName.OnlineGridLength1, DefaultGridLength);
             set
             {
-                _manager.Set(SettingName.SubGridLength1, value);
-                OnPropertyChanged(new PropertyChangedEventArgs(nameof(SubGridLength1)));
+                _manager.Set(SettingName.OnlineGridLength1, value);
+                OnPropertyChanged(new PropertyChangedEventArgs(nameof(OnlineGridLength1)));
             }
         }
 
-        public GridLength SubGridLength2
+        public GridLength OnlineGridLength2
         {
-            get => _manager.Get(SettingName.SubGridLength2, DefaultGridLength);
+            get => _manager.Get(SettingName.OnlineGridLength2, DefaultGridLength);
             set
             {
-                _manager.Set(SettingName.SubGridLength2, value);
-                OnPropertyChanged(new PropertyChangedEventArgs(nameof(SubGridLength2)));
+                _manager.Set(SettingName.OnlineGridLength2, value);
+                OnPropertyChanged(new PropertyChangedEventArgs(nameof(OnlineGridLength2)));
+            }
+        }
+
+        public GridLength OnlineSubGridLength1
+        {
+            get => _manager.Get(SettingName.OnlineSubGridLength1, DefaultGridLength);
+            set
+            {
+                _manager.Set(SettingName.OnlineSubGridLength1, value);
+                OnPropertyChanged(new PropertyChangedEventArgs(nameof(OnlineSubGridLength1)));
+            }
+        }
+
+        public GridLength OnlineSubGridLength2
+        {
+            get => _manager.Get(SettingName.OnlineSubGridLength2, DefaultGridLength);
+            set
+            {
+                _manager.Set(SettingName.OnlineSubGridLength2, value);
+                OnPropertyChanged(new PropertyChangedEventArgs(nameof(OnlineSubGridLength2)));
             }
         }
 
