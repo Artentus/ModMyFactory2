@@ -18,15 +18,21 @@ namespace ModMyFactory.WebApi
 
         public static ApiException FromWebException(WebException ex)
         {
-            var response = (HttpWebResponse)ex.Response;
-            return (ex.Status, response.StatusCode) switch
+            if (ex?.Response is HttpWebResponse response)
             {
-                (WebExceptionStatus.ProtocolError, HttpStatusCode.NotFound) => new ResourceNotFoundException(ex),
-                (WebExceptionStatus.ProtocolError, HttpStatusCode.Unauthorized) => new AuthenticationFailureException(ex),
-                (WebExceptionStatus.Timeout, _) => new TimeoutException(ex),
-                (WebExceptionStatus.ConnectFailure, _) => new ConnectFailureException(ex),
-                _ => new ApiException("General API exception") // No matching exception found
-            };
+                return (ex.Status, response.StatusCode) switch
+                {
+                    (WebExceptionStatus.ProtocolError, HttpStatusCode.NotFound) => new ResourceNotFoundException(ex),
+                    (WebExceptionStatus.ProtocolError, HttpStatusCode.Unauthorized) => new AuthenticationFailureException(ex),
+                    (WebExceptionStatus.Timeout, _) => new TimeoutException(ex),
+                    (WebExceptionStatus.ConnectFailure, _) => new ConnectFailureException(ex),
+                    _ => new ApiException("General API exception") // No matching exception found
+                };
+            }
+            else
+            {
+                return new ApiException("Unknown web exception"); // Exception is not related to the actual API
+            }
         }
     }
 }
