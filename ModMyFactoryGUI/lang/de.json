@@ -12,6 +12,14 @@
     "type": "string",
     "value": "Verbindung mit dem Server ist fehlgeschlagen.\nStellen Sie sicher, dass Sie mit dem Internet verbunden sind,\nund versuchen Sie es dann erneut."
   },
+  "DownloadButton": {
+    "type": "string",
+    "value": "Herunterladen"
+  },
+  "DeleteButton": {
+    "type": "string",
+    "value": "Löschen"
+  },
 
   // --------- Main window ---------
   "MainWindowTitle": {
@@ -215,6 +223,10 @@
   "FaqHeader": {
     "type": "string",
     "value": "FAQ"
+  },
+  "ReleasesHeader": {
+    "type": "string",
+    "value": "Veröffentlichte Versionen"
   },
 
   // --------- Settings view ---------

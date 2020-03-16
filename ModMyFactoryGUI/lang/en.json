@@ -12,6 +12,14 @@
     "type": "string",
     "value": "Unable to connect to the server.\nMake sure you have a stable connection to the internet,\nthen try again."
   },
+  "DownloadButton": {
+    "type": "string",
+    "value": "Download"
+  },
+  "DeleteButton": {
+    "type": "string",
+    "value": "Delete"
+  },
 
   // --------- Main window ---------
   "MainWindowTitle": {
@@ -231,6 +239,10 @@
   "FaqHeader": {
     "type": "string",
     "value": "FAQ"
+  },
+  "ReleasesHeader": {
+    "type": "string",
+    "value": "Releases"
   },
 
   // --------- Settings view ---------

@@ -18,10 +18,12 @@ namespace ModMyFactoryGUI.ViewModels
 {
     internal sealed class OnlineModViewModel : ReactiveObject, IDisposable
     {
-        private static readonly ModReleaseInfo[] _emptyReleases = new ModReleaseInfo[0];
+        private static readonly ModReleaseViewModel[] _emptyReleases = new ModReleaseViewModel[0];
 
         private ApiModInfo _info;
         private bool _isExtended;
+        private ModReleaseViewModel[] _releases;
+        private ModReleaseViewModel _selectedRelease;
 
         private bool isDisposed = false;
 
@@ -41,7 +43,6 @@ namespace ModMyFactoryGUI.ViewModels
                 this.RaisePropertyChanged(nameof(Changelog));
                 this.RaisePropertyChanged(nameof(HasFaq));
                 this.RaisePropertyChanged(nameof(Faq));
-                this.RaisePropertyChanged(nameof(Releases));
             }
         }
 
@@ -61,6 +62,15 @@ namespace ModMyFactoryGUI.ViewModels
 
         public bool HasChangelog => !string.IsNullOrWhiteSpace(Changelog);
         public bool HasFaq => !string.IsNullOrWhiteSpace(Faq);
+
+        public IReadOnlyCollection<ModReleaseViewModel> Releases => _isExtended ? _releases : _emptyReleases;
+
+        public ModReleaseViewModel SelectedRelease
+        {
+            get => _selectedRelease;
+            set => this.RaiseAndSetIfChanged(ref _selectedRelease, value, nameof(SelectedRelease));
+        }
+
         public string Changelog => Info.Changelog;
         public string Faq => Info.Faq;
 
@@ -73,8 +83,6 @@ namespace ModMyFactoryGUI.ViewModels
         public string Summary => Info.Summary;
 
         public string Description => Info.Description;
-
-        public IReadOnlyCollection<ModReleaseInfo> Releases => _isExtended ? Info.Releases ?? _emptyReleases : _emptyReleases;
 
         public OnlineModViewModel(ApiModInfo info)
             => _info = info;
@@ -124,6 +132,22 @@ namespace ModMyFactoryGUI.ViewModels
             }
         }
 
+        private void LoadReleases()
+        {
+            if (Info.Releases is null)
+            {
+                _releases = new ModReleaseViewModel[0];
+            }
+            else
+            {
+                _releases = new ModReleaseViewModel[Info.Releases.Length];
+                for (int i = 0; i < _releases.Length; i++)
+                    _releases[i] = new ModReleaseViewModel(Info.Releases[i]);
+            }
+
+            this.RaisePropertyChanged(nameof(Releases));
+        }
+
         private async Task LoadThumbnail()
         {
             HasThumbnail = !string.IsNullOrWhiteSpace(Info.ThumbnailUrl);
@@ -167,6 +191,7 @@ namespace ModMyFactoryGUI.ViewModels
                 LoadHomepage();
                 LoadGitHub();
                 LoadLicense();
+                LoadReleases();
                 await LoadThumbnail();
             }
         }
