@@ -6,6 +6,7 @@
 //  (at your option) any later version.
 
 using Avalonia.Controls;
+using ModMyFactoryGUI.Controls;
 using System.ComponentModel;
 
 namespace ModMyFactoryGUI
@@ -15,6 +16,16 @@ namespace ModMyFactoryGUI
     {
         private static readonly GridLength DefaultGridLength = new GridLength(1, GridUnitType.Star);
         private readonly SettingManager _manager;
+
+        public WindowRestoreState MainWindowRestoreState
+        {
+            get => _manager.Get(SettingName.MainWindowRestoreState, WindowRestoreState.Undefined);
+            set
+            {
+                _manager.Set(SettingName.MainWindowRestoreState, value);
+                OnPropertyChanged(new PropertyChangedEventArgs(nameof(MainWindowRestoreState)));
+            }
+        }
 
         public GridLength ManagerGridLength1
         {

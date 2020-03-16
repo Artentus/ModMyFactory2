@@ -6,12 +6,15 @@
 //  (at your option) any later version.
 
 using Avalonia;
+using Avalonia.Controls;
 using Avalonia.Markup.Xaml;
 using ModMyFactoryGUI.Controls;
+using System;
+using System.ComponentModel;
 
 namespace ModMyFactoryGUI.Views
 {
-    partial class MainWindow : WindowBase
+    partial class MainWindow : RestorableWindow
     {
         public MainWindow()
         {
@@ -24,6 +27,21 @@ namespace ModMyFactoryGUI.Views
         private void InitializeComponent()
         {
             AvaloniaXamlLoader.Load(this);
+        }
+
+        protected override void OnOpened(EventArgs e)
+        {
+            base.OnOpened(e);
+
+            if (App.Current.Settings.Get(SettingName.MainWindowMaximized, false))
+                WindowState = WindowState.Maximized;
+        }
+
+        protected override void OnClosing(CancelEventArgs e)
+        {
+            base.OnClosing(e);
+
+            App.Current.Settings.Set(SettingName.MainWindowMaximized, WindowState == WindowState.Maximized);
         }
     }
 }

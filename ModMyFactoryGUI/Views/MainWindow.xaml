@@ -10,6 +10,7 @@ the Free Software Foundation, either version 3 of the License, or
 <Window x:Class="ModMyFactoryGUI.Views.MainWindow"
         xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:local="clr-namespace:ModMyFactoryGUI"
         xmlns:l="clr-namespace:ModMyFactoryGUI.Localization"
         xmlns:icons="clr-namespace:ModMyFactoryGUI.Controls.Icons"
         xmlns:largeicons="clr-namespace:ModMyFactoryGUI.Controls.Icons.Large"
@@ -17,7 +18,8 @@ the Free Software Foundation, either version 3 of the License, or
         xmlns:models="clr-namespace:ModMyFactoryGUI.ViewModels"
         xmlns:controls="clr-namespace:ModMyFactoryGUI.Controls"
         Icon="/Assets/MMF_Icon.ico" Title="{l:LocalizedResource MainWindowTitle}"
-        Background="{DynamicResource ThemeBackgroundHighBrush}">
+        Background="{DynamicResource ThemeBackgroundHighBrush}"
+        RestoreState="{local:SettingBinding MainWindowRestoreState, Mode=TwoWay}">
 
   <Window.Resources>
     <l:LocalizeConverter x:Key="LocalizeConverter" />

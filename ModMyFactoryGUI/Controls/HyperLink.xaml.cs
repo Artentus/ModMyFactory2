@@ -19,6 +19,7 @@ namespace ModMyFactoryGUI.Controls
         private readonly TextBlock _linkText;
 
         private string _text;
+        private string _url;
 
         public static readonly DirectProperty<HyperLink, string> TextProperty
                             = TextBlock.TextProperty.AddOwner<HyperLink>(GetText, SetText, string.Empty);
@@ -31,12 +32,16 @@ namespace ModMyFactoryGUI.Controls
             get => _text;
             set
             {
-                _text = value;
-                _linkText.Text = value;
+                if (SetAndRaise(TextProperty, ref _text, value))
+                    _linkText.Text = value;
             }
         }
 
-        public string Url { get; set; }
+        public string Url
+        {
+            get => _url;
+            set => SetAndRaise(UrlProperty, ref _url, value);
+        }
 
         public HyperLink()
         {
