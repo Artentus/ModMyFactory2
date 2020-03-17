@@ -82,7 +82,8 @@ the Free Software Foundation, either version 3 of the License, or
                 IsEnabled="{Binding ModsLoaded}" Command="{Binding RefreshCommand} " />
       </DockPanel>
 
-      <GridSplitter Grid.Column="1" Width="8" Background="{DynamicResource ThemeBackgroundBrush}" />
+      <GridSplitter Grid.Column="1" Grid.Row="0" Grid.RowSpan="2" Width="8"
+                    Background="{DynamicResource ThemeBackgroundBrush}" />
 
       <views:OnlineModView Grid.Column="2" Grid.Row="0" Grid.RowSpan="2" Margin="0,4,4,4" DataContext="{Binding SelectedMod}" />
     </Grid>

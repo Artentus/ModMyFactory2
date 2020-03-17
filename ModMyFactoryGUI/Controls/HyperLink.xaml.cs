@@ -22,7 +22,7 @@ namespace ModMyFactoryGUI.Controls
         private string _url;
 
         public static readonly DirectProperty<HyperLink, string> TextProperty
-                            = TextBlock.TextProperty.AddOwner<HyperLink>(GetText, SetText, string.Empty);
+            = TextBlock.TextProperty.AddOwner<HyperLink>(GetText, SetText, string.Empty);
 
         public static readonly DirectProperty<HyperLink, string> UrlProperty
             = AvaloniaProperty.RegisterDirect<HyperLink, string>("Url", GetUrl, SetUrl, string.Empty);
@@ -45,13 +45,13 @@ namespace ModMyFactoryGUI.Controls
 
         public HyperLink()
         {
-            this.InitializeComponent();
+            InitializeComponent();
 
             _linkText = this.FindControl<TextBlock>("LinkText");
         }
 
         private static string GetText(HyperLink hyperLink)
-                                            => hyperLink.Text;
+            => hyperLink.Text;
 
         private static void SetText(HyperLink hyperLink, string value)
             => hyperLink.Text = value;

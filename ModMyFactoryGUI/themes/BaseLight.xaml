@@ -23,7 +23,7 @@ the Free Software Foundation, either version 3 of the License, or
 
     <Color x:Key="ThemeBorderLowColor">#FFcccedb</Color>
     <Color x:Key="ThemeBorderMidColor">#FFcccedb</Color>
-    <Color x:Key="ThemeBorderHighColor">#FFeeeef2</Color>
+    <Color x:Key="ThemeBorderHighColor">#FFe1e1e5</Color>
 
     <Color x:Key="ThemeControlLowColor">#FF868999</Color>
     <Color x:Key="ThemeControlMidColor">#FFF5F5F5</Color>

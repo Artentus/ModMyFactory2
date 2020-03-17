@@ -10,6 +10,7 @@ using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
 using Avalonia.ThemeManager;
 using Avalonia.Threading;
+using ModMyFactory;
 using ModMyFactoryGUI.Controls.Icons;
 using ModMyFactoryGUI.Localization;
 using ModMyFactoryGUI.Localization.Json;
@@ -50,6 +51,10 @@ namespace ModMyFactoryGUI
         public LocaleManager LocaleManager { get; private set; }
 
         public IThemeSelector ThemeManager { get; private set; }
+
+        public Manager Manager { get; private set; }
+
+        public LocationManager Locations { get; private set; }
 
         public bool TryGetThemeResource(string key, out object resource)
             => ThemeManager.SelectedTheme.Style.TryGetResource(key, out resource);
@@ -235,6 +240,9 @@ namespace ModMyFactoryGUI
 
                 Settings.Save();
                 lifetime.Exit += OnExit;
+
+                Manager = new Manager();
+                Locations = new LocationManager(Manager, Settings);
 
                 Loaded?.Invoke(this, EventArgs.Empty);
 

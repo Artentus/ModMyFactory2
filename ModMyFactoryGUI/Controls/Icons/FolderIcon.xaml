@@ -1,0 +1,19 @@
+<!--
+Copyright (C) 2020 Mathis Rech
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+-->
+
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             x:Class="ModMyFactoryGUI.Controls.Icons.FolderIcon">
+
+  <Grid Width="16" Height="16">
+    <Path Fill="{DynamicResource ThemeForegroundBrush}" Data="F1M14.0039,4L7.5079,4 8.0079,3 8.0119,3 14.0039,3z M14.4999,2L7.0079,2 6.0079,4 2.5039,4C2.2269,4,2.0039,4.224,2.0039,4.5L2.0039,12.5C2.0039,12.776,2.2269,13,2.5039,13L14.4999,13C14.7749,13,14.9999,12.776,14.9999,12.5L14.9999,2.5C14.9999,2.224,14.7749,2,14.4999,2" />
+  </Grid>
+</UserControl>

@@ -12,6 +12,7 @@ the Free Software Foundation, either version 3 of the License, or
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:l="clr-namespace:ModMyFactoryGUI.Localization"
+             xmlns:controls="clr-namespace:ModMyFactoryGUI.Controls"
              x:Class="ModMyFactoryGUI.Views.SettingsView">
 
   <UserControl.Styles>
@@ -23,14 +24,58 @@ the Free Software Foundation, either version 3 of the License, or
   <Border BorderThickness="1" BorderBrush="{DynamicResource ThemeBorderMidBrush}">
     <Grid RowDefinitions="*,Auto" ColumnDefinitions="*,Auto" Margin="4">
 
-      <WrapPanel Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2">
+      <WrapPanel Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Orientation="Vertical"
+                 HorizontalAlignment="Center" VerticalAlignment="Center">
+
+        <!-- Credentials -->
         <StackPanel>
-          <TextBlock Margin="4" Text="{l:LocalizedResource CredentialsHeader}" />
-          <TextBox Margin="4" Watermark="{l:LocalizedResource Username}" Width="200"
+          <Border Margin="4" Background="{DynamicResource ThemeAccentBrush2}">
+            <TextBlock Margin="4,2" Text="{l:LocalizedResource CredentialsHeader}" Classes="h3" />
+          </Border>
+          <TextBox Margin="4" Watermark="{l:LocalizedResource Username}" MinWidth="300"
                    UseFloatingWatermark="True" Text="{Binding Username, Mode=TwoWay}" />
-          <TextBox Margin="4" Watermark="{l:LocalizedResource Password}" Width="200"
+          <TextBox Margin="4" Watermark="{l:LocalizedResource Password}" MinWidth="300"
                    UseFloatingWatermark="True" Text="{Binding Password, Mode=TwoWay}" PasswordChar="*" />
         </StackPanel>
+
+        <!-- Factorio folder -->
+        <StackPanel>
+          <Border Margin="4" Background="{DynamicResource ThemeAccentBrush2}">
+            <TextBlock Margin="4,2" Text="{l:LocalizedResource FactorioLocationHeader}" Classes="h3" />
+          </Border>
+          <RadioButton Margin="8,2" IsChecked="{Binding FactorioLocationIsAppData, Mode=TwoWay}">
+            <TextBlock Margin="4,2" Text="{l:LocalizedResource AppDataOption}" />
+          </RadioButton>
+          <RadioButton Margin="8,2" IsChecked="{Binding FactorioLocationIsBinDir, Mode=TwoWay}">
+            <TextBlock Margin="4,2" Text="{l:LocalizedResource BinDirOption}" />
+          </RadioButton>
+          <RadioButton Margin="8,2" IsChecked="{Binding FactorioLocationIsCustom, Mode=TwoWay}">
+            <StackPanel>
+              <TextBlock Margin="4,2" Text="{l:LocalizedResource CustomOption}" />
+              <controls:FolderBrowserTextBox Margin="4,2" Text="{Binding CustomFactorioLocation, Mode=TwoWay}" MinWidth="400" />
+            </StackPanel>
+          </RadioButton>
+        </StackPanel>
+
+        <!-- Mod folder -->
+        <StackPanel>
+          <Border Margin="4" Background="{DynamicResource ThemeAccentBrush2}">
+            <TextBlock Margin="4,2" Text="{l:LocalizedResource ModLocationHeader}" Classes="h3" />
+          </Border>
+          <RadioButton Margin="8,2" IsChecked="{Binding ModLocationIsAppData, Mode=TwoWay}">
+            <TextBlock Margin="4,2" Text="{l:LocalizedResource AppDataOption}" />
+          </RadioButton>
+          <RadioButton Margin="8,2" IsChecked="{Binding ModLocationIsBinDir, Mode=TwoWay}">
+            <TextBlock Margin="4,2" Text="{l:LocalizedResource BinDirOption}" />
+          </RadioButton>
+          <RadioButton Margin="8,2" IsChecked="{Binding ModLocationIsCustom, Mode=TwoWay}">
+            <StackPanel>
+              <TextBlock Margin="4,2" Text="{l:LocalizedResource CustomOption}" />
+              <controls:FolderBrowserTextBox Margin="4,2" Text="{Binding CustomModLocation, Mode=TwoWay}" MinWidth="400" />
+            </StackPanel>
+          </RadioButton>
+        </StackPanel>
+
       </WrapPanel>
 
       <Button Grid.Row="1" Grid.Column="0" Content="{l:LocalizedResource DiscardButton}"

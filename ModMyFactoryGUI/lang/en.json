@@ -258,6 +258,26 @@
     "type": "string",
     "value": "Password"
   },
+  "FactorioLocationHeader": {
+    "type": "string",
+    "value": "Location of Factorio instances"
+  },
+  "ModLocationHeader": {
+    "type": "string",
+    "value": "Location of mods"
+  },
+  "AppDataOption": {
+    "type": "string",
+    "value": "Default application data directory"
+  },
+  "BinDirOption": {
+    "type": "string",
+    "value": "Installation directory"
+  },
+  "CustomOption": {
+    "type": "string",
+    "value": "Custom directory"
+  },
   "AcceptButton": {
     "type": "string",
     "value": "Accept"

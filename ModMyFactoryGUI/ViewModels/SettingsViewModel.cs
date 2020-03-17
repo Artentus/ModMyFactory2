@@ -9,7 +9,6 @@ using ModMyFactory.WebApi;
 using ModMyFactoryGUI.Views;
 using ReactiveUI;
 using System.Collections.Generic;
-using System.Net;
 using System.Threading.Tasks;
 using System.Windows.Input;
 
@@ -23,6 +22,10 @@ namespace ModMyFactoryGUI.ViewModels
         private string _password;
         private bool _credentialsChanged;
         private bool _credentialsError;
+
+        private bool _factorioLocationIsAppData, _factorioLocationIsBinDir, _factorioLocationIsCustom;
+        private bool _modLocationIsAppData, _modLocationIsBinDir, _modLocationIsCustom;
+        private string _customFactorioLocation, _customModLocation;
 
         public bool SettingsChanged
         {
@@ -54,7 +57,7 @@ namespace ModMyFactoryGUI.ViewModels
                 if (value != _password)
                 {
                     _password = value;
-                    this.RaisePropertyChanging(nameof(Password));
+                    this.RaisePropertyChanged(nameof(Password));
 
                     _credentialsChanged = true;
                     SettingsChanged = true;
@@ -68,6 +71,86 @@ namespace ModMyFactoryGUI.ViewModels
             set => this.RaiseAndSetIfChanged(ref _credentialsError, value, nameof(CredentialsError));
         }
 
+        public bool FactorioLocationIsAppData
+        {
+            get => _factorioLocationIsAppData;
+            set
+            {
+                this.RaiseAndSetIfChanged(ref _factorioLocationIsAppData, value, nameof(FactorioLocationIsAppData));
+                SettingsChanged = true;
+            }
+        }
+
+        public bool FactorioLocationIsBinDir
+        {
+            get => _factorioLocationIsBinDir;
+            set
+            {
+                this.RaiseAndSetIfChanged(ref _factorioLocationIsBinDir, value, nameof(FactorioLocationIsBinDir));
+                SettingsChanged = true;
+            }
+        }
+
+        public bool FactorioLocationIsCustom
+        {
+            get => _factorioLocationIsCustom;
+            set
+            {
+                this.RaiseAndSetIfChanged(ref _factorioLocationIsCustom, value, nameof(FactorioLocationIsCustom));
+                SettingsChanged = true;
+            }
+        }
+
+        public bool ModLocationIsAppData
+        {
+            get => _modLocationIsAppData;
+            set
+            {
+                this.RaiseAndSetIfChanged(ref _modLocationIsAppData, value, nameof(ModLocationIsAppData));
+                SettingsChanged = true;
+            }
+        }
+
+        public bool ModLocationIsBinDir
+        {
+            get => _modLocationIsBinDir;
+            set
+            {
+                this.RaiseAndSetIfChanged(ref _modLocationIsBinDir, value, nameof(ModLocationIsBinDir));
+                SettingsChanged = true;
+            }
+        }
+
+        public bool ModLocationIsCustom
+        {
+            get => _modLocationIsCustom;
+            set
+            {
+                this.RaiseAndSetIfChanged(ref _modLocationIsCustom, value, nameof(ModLocationIsCustom));
+                SettingsChanged = true;
+            }
+        }
+
+        public string CustomFactorioLocation
+        {
+            get => _customFactorioLocation;
+            set
+            {
+                this.RaiseAndSetIfChanged(ref _customFactorioLocation, value, nameof(CustomFactorioLocation));
+                if (FactorioLocationIsCustom) SettingsChanged = true;
+            }
+        }
+
+        public string CustomModLocation
+        {
+            get => _customModLocation;
+            set
+            {
+                this.RaiseAndSetIfChanged(ref _customModLocation, value, nameof(CustomModLocation));
+                if (ModLocationIsCustom) SettingsChanged = true;
+            }
+        }
+
         public ICommand ApplyCommand { get; }
 
         public ICommand ResetCommand { get; }
@@ -79,7 +162,7 @@ namespace ModMyFactoryGUI.ViewModels
             ResetCommand = ReactiveCommand.Create(Reset);
         }
 
-        private async Task ApplyCredentialChangesAsync()
+        private async ValueTask ApplyCredentialChangesAsync()
         {
             if (_credentialsChanged)
             {
@@ -96,56 +179,64 @@ namespace ModMyFactoryGUI.ViewModels
 
                     App.Current.Settings.Set(SettingName.Credentials, new Credentials(actualName, token));
                 }
-                catch (WebException ex) when (ex.Status == WebExceptionStatus.ProtocolError)
+                catch (AuthenticationFailureException)
                 {
-                    if (ex.Response is HttpWebResponse response)
-                    {
-                        if ((response.StatusCode == HttpStatusCode.Unauthorized)
-                            || (response.StatusCode == HttpStatusCode.Forbidden))
-                        {
-                            _username = string.Empty;
-                            _password = string.Empty;
-                            this.RaisePropertyChanged(nameof(Username));
-                            this.RaisePropertyChanged(nameof(Password));
-                            CredentialsError = true;
-                        }
-                        else if ((response.StatusCode == HttpStatusCode.InternalServerError)
-                            || (response.StatusCode == HttpStatusCode.Conflict))
-                        {
-                            // Server error
-                            _username = App.Current.Settings.Get<Credentials>(SettingName.Credentials).Username;
-                            this.RaisePropertyChanged(nameof(Username));
-                            _password = string.Empty;
-                            this.RaisePropertyChanged(nameof(Password));
-                            CredentialsError = false;
-
-                            // ToDo: show error message
-                        }
-                    }
-                    else
-                    {
-                        throw;
-                    }
+                    _username = string.Empty;
+                    _password = string.Empty;
+                    this.RaisePropertyChanged(nameof(Username));
+                    this.RaisePropertyChanged(nameof(Password));
+                    CredentialsError = true;
                 }
-                catch (WebException ex)
-                when ((ex.Status == WebExceptionStatus.ConnectFailure)
-                || (ex.Status == WebExceptionStatus.Timeout))
+                catch (ApiException ex)
                 {
-                    // Connection error
                     _username = App.Current.Settings.Get<Credentials>(SettingName.Credentials).Username;
                     this.RaisePropertyChanged(nameof(Username));
                     _password = string.Empty;
                     this.RaisePropertyChanged(nameof(Password));
                     CredentialsError = false;
 
-                    // ToDo: show error message
+                    if (ex is ConnectFailureException || ex is TimeoutException)
+                    {
+                        // Connection error
+
+                        // ToDo: show error message
+                    }
+                    else
+                    {
+                        // Server error
+
+                        // ToDo: show error message
+                    }
                 }
             }
+        }
+
+        private async ValueTask ApplyLocationChangesAsync()
+        {
+            Location factorioLocation = FactorioLocationIsAppData
+                ? Location.AppData
+                : FactorioLocationIsBinDir
+                    ? Location.BinDir
+                    : Location.Custom;
+
+            if (factorioLocation != App.Current.Locations.FactorioLocation)
+                await App.Current.Locations.MoveFactorioLocationAsync(factorioLocation, _customFactorioLocation);
+
+
+            Location modLocation = ModLocationIsAppData
+                ? Location.AppData
+                : ModLocationIsBinDir
+                    ? Location.BinDir
+                    : Location.Custom;
+
+            if (modLocation != App.Current.Locations.ModLocation)
+                await App.Current.Locations.MoveModLocationAsync(modLocation, _customModLocation);
         }
 
         private async Task ApplyChangesAsync()
         {
             await ApplyCredentialChangesAsync();
+            await ApplyLocationChangesAsync();
 
             SettingsChanged = false;
             App.Current.Settings.Save();
@@ -153,14 +244,46 @@ namespace ModMyFactoryGUI.ViewModels
 
         private void Reset()
         {
-            SettingsChanged = false;
-
             _username = App.Current.Settings.Get<Credentials>(SettingName.Credentials).Username;
             this.RaisePropertyChanged(nameof(Username));
             _password = string.Empty;
             this.RaisePropertyChanged(nameof(Password));
             _credentialsChanged = false;
             CredentialsError = false;
+
+            switch (App.Current.Locations.FactorioLocation)
+            {
+                case Location.AppData:
+                    FactorioLocationIsAppData = true;
+                    break;
+
+                case Location.BinDir:
+                    FactorioLocationIsBinDir = true;
+                    break;
+
+                case Location.Custom:
+                    FactorioLocationIsCustom = true;
+                    CustomFactorioLocation = App.Current.Locations.CustomFactorioPath;
+                    break;
+            }
+
+            switch (App.Current.Locations.ModLocation)
+            {
+                case Location.AppData:
+                    ModLocationIsAppData = true;
+                    break;
+
+                case Location.BinDir:
+                    ModLocationIsBinDir = true;
+                    break;
+
+                case Location.Custom:
+                    ModLocationIsCustom = true;
+                    CustomFactorioLocation = App.Current.Locations.CustomModPath;
+                    break;
+            }
+
+            SettingsChanged = false;
         }
 
         protected override List<IMenuItemViewModel> GetEditMenuViewModels()

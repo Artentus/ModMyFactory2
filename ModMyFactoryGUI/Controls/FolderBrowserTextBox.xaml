@@ -1,0 +1,24 @@
+<!--
+Copyright (C) 2020 Mathis Rech
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+-->
+
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:icons="clr-namespace:ModMyFactoryGUI.Controls.Icons"
+             x:Class="ModMyFactoryGUI.Controls.FolderBrowserTextBox">
+
+  <DockPanel>
+    <Button x:Name="Button" DockPanel.Dock="Right" Margin="4,0,0,0" Padding="5,0" MinWidth="1">
+      <icons:FolderIcon />
+    </Button>
+    <TextBox x:Name="TextBox" DockPanel.Dock="Left" />
+  </DockPanel>
+
+</UserControl>

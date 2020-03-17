@@ -7,7 +7,6 @@
 
 using Avalonia;
 using Avalonia.Controls;
-using Avalonia.Dialogs;
 using Avalonia.Logging.Serilog;
 using Avalonia.ReactiveUI;
 using CommandLine;
@@ -36,8 +35,7 @@ namespace ModMyFactoryGUI
                 .LogToDebug()
 #endif
                 .UsePlatformDetect()
-                .UseReactiveUI()
-                .UseManagedSystemDialogs();
+                .UseReactiveUI();
         }
 
         private static int StartApp(string[] args, OptionsBase options)

@@ -242,6 +242,26 @@
     "type": "string",
     "value": "Passwort"
   },
+  "FactorioLocationHeader": {
+    "type": "string",
+    "value": "Speicherort für Factorio-Instanzen"
+  },
+  "ModLocationHeader": {
+    "type": "string",
+    "value": "Speicherort für Mods"
+  },
+  "AppDataOption": {
+    "type": "string",
+    "value": "Verzeichnis für Anwendungsdateien"
+  },
+  "BinDirOption": {
+    "type": "string",
+    "value": "Installationsverzeichnis"
+  },
+  "CustomOption": {
+    "type": "string",
+    "value": "Benutzerdefiniertes Verzeichnis"
+  },
   "AcceptButton": {
     "type": "string",
     "value": "Übernehmen"

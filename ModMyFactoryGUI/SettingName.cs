@@ -12,7 +12,10 @@ namespace ModMyFactoryGUI
     {
         public const string UICulture = "language";
         public const string Theme = "theme";
+
         public const string Credentials = "credentials";
+        public const string FactorioLocation = "factorio_location";
+        public const string ModLocation = "mod_location";
 
         public const string MainWindowRestoreState = "window_restore_state";
         public const string MainWindowMaximized = "window_maximized";
