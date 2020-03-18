@@ -19,6 +19,8 @@ namespace ModMyFactoryGUI.Controls
 
         protected override IBitmap Convert(WindowIcon value, CultureInfo culture)
         {
+            if (value is null) return null;
+
             using var stream = new MemoryStream();
             value.Save(stream);
             stream.Seek(0, SeekOrigin.Begin);

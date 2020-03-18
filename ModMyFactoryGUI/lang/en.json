@@ -4,14 +4,6 @@
     "type": "string",
     "value": "Close"
   },
-  "ServerError": {
-    "type": "string",
-    "value": "A server-side error occured,\nplease try again later."
-  },
-  "ConnectionError": {
-    "type": "string",
-    "value": "Unable to connect to the server.\nMake sure you have a stable connection to the internet,\nthen try again."
-  },
   "DownloadButton": {
     "type": "string",
     "value": "Download"
@@ -19,6 +11,58 @@
   "DeleteButton": {
     "type": "string",
     "value": "Delete"
+  },
+
+  // --------- Messages ---------
+  "ServerError_Title": {
+    "type": "string",
+    "value": "Server Error"
+  },
+  "ConnectionError_Title": {
+    "type": "string",
+    "value": "Connection Error"
+  },
+  "TimeoutError_Title": {
+    "type": "string",
+    "value": "Connection Timeout"
+  },
+  "ServerError_Message": {
+    "type": "string",
+    "value": "A server-side error occured,\nplease try again later."
+  },
+  "ConnectionError_Message": {
+    "type": "string",
+    "value": "Unable to connect to the server.\nMake sure you have a stable connection to the internet,\nthen try again."
+  },
+  "TimeoutError_Message": {
+    "type": "string",
+    "value": "The connection to the server timed out.\nMake sure you have a stable connection to the internet,\nthen try again."
+  },
+
+  // --------- Dialog options ---------
+  "OkButton": {
+    "type": "string",
+    "value": "OK"
+  },
+  "CancelButton": {
+    "type": "string",
+    "value": "Cancel"
+  },
+  "YesButton": {
+    "type": "string",
+    "value": "Yes"
+  },
+  "NoButton": {
+    "type": "string",
+    "value": "No"
+  },
+  "RetryButton": {
+    "type": "string",
+    "value": "Retry"
+  },
+  "AbortButton": {
+    "type": "string",
+    "value": "Abort"
   },
 
   // --------- Main window ---------

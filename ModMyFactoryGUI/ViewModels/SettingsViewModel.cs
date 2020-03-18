@@ -5,7 +5,6 @@
 //  the Free Software Foundation, either version 3 of the License, or
 //  (at your option) any later version.
 
-using ModMyFactory.WebApi;
 using ModMyFactoryGUI.Views;
 using ReactiveUI;
 using System.Collections.Generic;
@@ -168,45 +167,35 @@ namespace ModMyFactoryGUI.ViewModels
             {
                 _credentialsChanged = false;
 
-                try
+                var (success, actualName, _) = await App.Current.Credentials.TryLogInAsync(Username, Password);
+                if (success.HasValue)
                 {
-                    var (actualName, token) = await Authentication.LogInAsync(Username, Password);
-
-                    // Don't call the property directly since the name hasn't really changed
-                    _username = actualName;
-                    this.RaisePropertyChanged(nameof(Username));
-                    CredentialsError = false;
-
-                    App.Current.Settings.Set(SettingName.Credentials, new Credentials(actualName, token));
-                }
-                catch (AuthenticationFailureException)
-                {
-                    _username = string.Empty;
-                    _password = string.Empty;
-                    this.RaisePropertyChanged(nameof(Username));
-                    this.RaisePropertyChanged(nameof(Password));
-                    CredentialsError = true;
-                }
-                catch (ApiException ex)
-                {
-                    _username = App.Current.Settings.Get<Credentials>(SettingName.Credentials).Username;
-                    this.RaisePropertyChanged(nameof(Username));
-                    _password = string.Empty;
-                    this.RaisePropertyChanged(nameof(Password));
-                    CredentialsError = false;
-
-                    if (ex is ConnectFailureException || ex is TimeoutException)
+                    if (success.Value)
                     {
-                        // Connection error
-
-                        // ToDo: show error message
+                        // Success
+                        // Don't call the property directly since the name hasn't really changed
+                        _username = actualName;
+                        this.RaisePropertyChanged(nameof(Username));
+                        CredentialsError = false;
                     }
                     else
                     {
-                        // Server error
-
-                        // ToDo: show error message
+                        // Invalid credentials
+                        _username = string.Empty;
+                        _password = string.Empty;
+                        this.RaisePropertyChanged(nameof(Username));
+                        this.RaisePropertyChanged(nameof(Password));
+                        CredentialsError = true;
                     }
+                }
+                else
+                {
+                    // Error
+                    _username = actualName;
+                    _password = string.Empty;
+                    this.RaisePropertyChanged(nameof(Username));
+                    this.RaisePropertyChanged(nameof(Password));
+                    CredentialsError = false;
                 }
             }
         }
@@ -244,7 +233,8 @@ namespace ModMyFactoryGUI.ViewModels
 
         private void Reset()
         {
-            _username = App.Current.Settings.Get<Credentials>(SettingName.Credentials).Username;
+            if (!App.Current.Credentials.TryGetCredentials(out _username, out _))
+                _username = string.Empty;
             this.RaisePropertyChanged(nameof(Username));
             _password = string.Empty;
             this.RaisePropertyChanged(nameof(Password));

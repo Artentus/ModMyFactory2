@@ -6,7 +6,9 @@
 //  (at your option) any later version.
 
 using Avalonia.Media.Imaging;
+using ModMyFactory.WebApi;
 using ModMyFactory.WebApi.Mods;
+using ModMyFactoryGUI.Helpers;
 using ReactiveUI;
 using System;
 using System.Collections.Generic;
@@ -21,7 +23,7 @@ namespace ModMyFactoryGUI.ViewModels
         private static readonly ModReleaseViewModel[] _emptyReleases = new ModReleaseViewModel[0];
 
         private ApiModInfo _info;
-        private bool _isExtended;
+        private volatile bool _isExtended;
         private ModReleaseViewModel[] _releases;
         private ModReleaseViewModel _selectedRelease;
 
@@ -185,14 +187,22 @@ namespace ModMyFactoryGUI.ViewModels
         {
             if (!_isExtended)
             {
-                _isExtended = true;
-                Info = await ModApi.RequestModInfoAsync(Info.Name);
+                try
+                {
+                    _isExtended = true;
+                    Info = await ModApi.RequestModInfoAsync(Info.Name);
 
-                LoadHomepage();
-                LoadGitHub();
-                LoadLicense();
-                LoadReleases();
-                await LoadThumbnail();
+                    LoadHomepage();
+                    LoadGitHub();
+                    LoadLicense();
+                    LoadReleases();
+                    await LoadThumbnail();
+                }
+                catch (ApiException ex)
+                {
+                    _isExtended = false;
+                    await MessageHelper.ShowMessageForApiException(ex);
+                }
             }
         }
 

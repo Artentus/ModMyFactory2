@@ -4,14 +4,6 @@
     "type": "string",
     "value": "Schließen"
   },
-  "ServerError": {
-    "type": "string",
-    "value": "Auf dem Server ist ein Fehler aufgetreten,\nbitte versuchen Sie es später erneut."
-  },
-  "ConnectionError": {
-    "type": "string",
-    "value": "Verbindung mit dem Server ist fehlgeschlagen.\nStellen Sie sicher, dass Sie mit dem Internet verbunden sind,\nund versuchen Sie es dann erneut."
-  },
   "DownloadButton": {
     "type": "string",
     "value": "Herunterladen"
@@ -19,6 +11,58 @@
   "DeleteButton": {
     "type": "string",
     "value": "Löschen"
+  },
+
+  // --------- Messages ---------
+  "ServerError_Title": {
+    "type": "string",
+    "value": "Serverfehler"
+  },
+  "ConnectionError_Title": {
+    "type": "string",
+    "value": "Verbindungsfehler"
+  },
+  "TimeoutError_Title": {
+    "type": "string",
+    "value": "Zeitüberschreitung"
+  },
+  "ServerError_Message": {
+    "type": "string",
+    "value": "Auf dem Server ist ein Fehler aufgetreten,\nbitte versuchen Sie es später erneut."
+  },
+  "ConnectionError_Message": {
+    "type": "string",
+    "value": "Verbindung mit dem Server ist fehlgeschlagen.\nStellen Sie sicher, dass Sie mit dem Internet verbunden sind,\nund versuchen Sie es dann erneut."
+  },
+  "TimeoutError_Message": {
+    "type": "string",
+    "value": "Zeitüberschreitung beim Verbinden mit dem Server.\nStellen Sie sicher, dass Sie mit dem Internet verbunden sind,\nund versuchen Sie es dann erneut."
+  },
+
+  // --------- Dialog options ---------
+  "OkButton": {
+    "type": "string",
+    "value": "OK"
+  },
+  "CancelButton": {
+    "type": "string",
+    "value": "Abbrechen"
+  },
+  "YesButton": {
+    "type": "string",
+    "value": "Ja"
+  },
+  "NoButton": {
+    "type": "string",
+    "value": "Nein"
+  },
+  "RetryButton": {
+    "type": "string",
+    "value": "Wiederholen"
+  },
+  "AbortButton": {
+    "type": "string",
+    "value": "Abbrechen"
   },
 
   // --------- Main window ---------

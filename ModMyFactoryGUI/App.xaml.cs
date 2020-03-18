@@ -56,6 +56,8 @@ namespace ModMyFactoryGUI
 
         public LocationManager Locations { get; private set; }
 
+        public CredentialsManager Credentials { get; private set; }
+
         public bool TryGetThemeResource(string key, out object resource)
             => ThemeManager.SelectedTheme.Style.TryGetResource(key, out resource);
 
@@ -243,6 +245,7 @@ namespace ModMyFactoryGUI
 
                 Manager = new Manager();
                 Locations = new LocationManager(Manager, Settings);
+                Credentials = new CredentialsManager(Settings);
 
                 Loaded?.Invoke(this, EventArgs.Empty);
 

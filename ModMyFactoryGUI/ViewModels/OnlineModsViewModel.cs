@@ -5,12 +5,12 @@
 //  the Free Software Foundation, either version 3 of the License, or
 //  (at your option) any later version.
 
+using ModMyFactory.WebApi;
 using ModMyFactory.WebApi.Mods;
 using ModMyFactoryGUI.Views;
 using ReactiveUI;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Net;
 using System.Threading.Tasks;
 using System.Windows.Input;
 
@@ -94,32 +94,32 @@ namespace ModMyFactoryGUI.ViewModels
             {
                 OnlineMods = await LoadOnlineModsAsync();
             }
-            catch (WebException ex) when (ex.Status == WebExceptionStatus.ProtocolError)
+            catch (ApiException ex)
             {
-                if (ex.Response is HttpWebResponse response
-                    && (response.StatusCode == HttpStatusCode.InternalServerError
-                    || response.StatusCode == HttpStatusCode.Conflict))
+                if (ex is ConnectFailureException)
                 {
-                    // Server error
+                    // Connection error
                     LoadingErrorOccurred = true;
                     this.RaisePropertyChanged(nameof(LoadingErrorOccurred));
-                    ErrorMessageKey = "ServerError";
+                    ErrorMessageKey = "ConnectionError_Message";
+                    this.RaisePropertyChanged(nameof(ErrorMessageKey));
+                }
+                else if (ex is TimeoutException)
+                {
+                    // Timeout
+                    LoadingErrorOccurred = true;
+                    this.RaisePropertyChanged(nameof(LoadingErrorOccurred));
+                    ErrorMessageKey = "TimeoutError_Message";
                     this.RaisePropertyChanged(nameof(ErrorMessageKey));
                 }
                 else
                 {
-                    throw;
+                    // Server error
+                    LoadingErrorOccurred = true;
+                    this.RaisePropertyChanged(nameof(LoadingErrorOccurred));
+                    ErrorMessageKey = "ServerError_Message";
+                    this.RaisePropertyChanged(nameof(ErrorMessageKey));
                 }
-            }
-            catch (WebException ex)
-                when ((ex.Status == WebExceptionStatus.ConnectFailure)
-                || (ex.Status == WebExceptionStatus.Timeout))
-            {
-                // Connection error
-                LoadingErrorOccurred = true;
-                this.RaisePropertyChanged(nameof(LoadingErrorOccurred));
-                ErrorMessageKey = "ConnectionError";
-                this.RaisePropertyChanged(nameof(ErrorMessageKey));
             }
 
             this.RaisePropertyChanged(nameof(OnlineMods));

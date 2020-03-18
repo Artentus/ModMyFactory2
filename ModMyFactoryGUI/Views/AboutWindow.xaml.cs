@@ -18,7 +18,7 @@ namespace ModMyFactoryGUI.Views
     {
         public AboutWindow()
         {
-            this.InitializeComponent();
+            InitializeComponent();
 #if DEBUG
             this.AttachDevTools();
 #endif

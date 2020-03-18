@@ -6,6 +6,7 @@
 //  (at your option) any later version.
 
 using System;
+using System.Collections.Generic;
 
 namespace ModMyFactoryGUI.Helpers
 {
@@ -24,5 +25,17 @@ namespace ModMyFactoryGUI.Helpers
             var intFlag = (long)Convert.ChangeType(flag, typeof(long));
             return (T)Enum.ToObject(typeof(T), intValue & ~intFlag);
         }
+
+        public static IEnumerable<T> GetValues<T>()
+            where T : Enum
+        {
+            var arr = Enum.GetValues(typeof(T));
+            foreach (var val in arr)
+                yield return (T)val;
+        }
+
+        public static string Name<T>(this T value)
+            where T : Enum
+            => Enum.GetName(typeof(T), value);
     }
 }

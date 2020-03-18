@@ -1,0 +1,113 @@
+<!--
+Copyright (C) 2020 Mathis Rech
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+-->
+
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:l="clr-namespace:ModMyFactoryGUI.Localization"
+        xmlns:controls="clr-namespace:ModMyFactoryGUI.Controls"
+        xmlns:largeicons="clr-namespace:ModMyFactoryGUI.Controls.Icons.Large"
+        x:Class="ModMyFactoryGUI.Controls.MessageBox"
+        MaxWidth="500" MaxHeight="250" ShowInTaskbar="False" CanResize="False"
+        HasSystemDecorations="False" WindowStartupLocation="CenterOwner">
+
+  <Window.Styles>
+    <Style Selector="controls|WindowBase">
+      <Setter Property="Background" Value="{DynamicResource ThemeBackgroundBrush}" />
+      <Setter Property="BorderBrush" Value="{DynamicResource ThemeBorderMidBrush}" />
+      <Setter Property="Foreground" Value="{DynamicResource ThemeForegroundBrush}" />
+      <Setter Property="FontSize" Value="{DynamicResource FontSizeNormal}" />
+      <Setter Property="UseLayoutRounding" Value="True" />
+      <Setter Property="Template">
+        <ControlTemplate>
+          <Border BorderThickness="{TemplateBinding BorderThickness}" BorderBrush="{TemplateBinding BorderBrush}" Background="{TemplateBinding Background}" Padding="0">
+            <VisualLayerManager>
+              <Grid ColumnDefinitions="Auto, *, Auto" RowDefinitions="Auto,Auto,*,Auto,Auto" Background="Transparent">
+                <Grid Grid.Row="0" Grid.RowSpan="5" Margin="-4" Grid.Column="1" RowDefinitions="Auto * Auto" ColumnDefinitions="Auto,Auto,*,Auto,Auto">
+                  <Grid Grid.Row="1" Margin="0" Grid.Column="0" Grid.ColumnSpan="5" Background="{TemplateBinding Background}">
+                    <Grid RowDefinitions="Auto, *">
+
+                      <DockPanel Name="titlebar" Margin="0" Background="Transparent">
+
+                        <Image Name="icon" Height="24" Width="0" Margin="5" DockPanel.Dock="Left" />
+
+                        <ContentControl Grid.ColumnSpan="1" Content="{TemplateBinding TitleBarContent}" Margin="0" DockPanel.Dock="Left" Background="{DynamicResource ThemeBackgroundBrush}" />
+
+                        <Grid DockPanel.Dock="Right" HorizontalAlignment="Right" IsVisible="False">
+                          <StackPanel Orientation="Horizontal">
+                            <Button Name="minimiseButton" />
+                            <Button Name="restoreButton" />
+                            <Button Name="closeButton" />
+                          </StackPanel>
+                        </Grid>
+
+                        <TextBlock Text="{TemplateBinding Title}" Foreground="{TemplateBinding Foreground}" Margin="3,-1,10,0" DockPanel.Dock="Top"
+                                   VerticalAlignment="Center" HorizontalAlignment="Left" IsVisible="{TemplateBinding HasClientDecorations}" FontSize="{DynamicResource FontSizeMedium}" />
+                      </DockPanel>
+                      <Grid Grid.Row="1">
+                        <ContentPresenter Name="PART_ContentPresenter" Content="{TemplateBinding Content}" Margin="0" />
+                      </Grid>
+                    </Grid>
+                  </Grid>
+
+                  <Grid Background="Transparent" Grid.Column="1" Height="4" Grid.ColumnSpan="2"
+                        Name="topHorizontalGrip" IsHitTestVisible="False" />
+
+                  <Grid Background="Transparent" Grid.Column="1" Height="4" Grid.ColumnSpan="2" Grid.Row="2"
+                        Name="bottomHorizontalGrip" IsHitTestVisible="False" />
+                </Grid>
+
+                <Grid Background="Transparent" Width="4" Height="10"
+                      Name="topLeftGrip" IsHitTestVisible="False" />
+                <Grid Background="Transparent" Width="4" Grid.Row="1" Grid.RowSpan="2"
+                      Name="leftVerticalGrip" IsHitTestVisible="False" />
+                <Grid Background="Transparent" Width="4" Height="10" Grid.Row="4"
+                      Name="bottomLeftGrip" IsHitTestVisible="False" />
+
+                <Grid Background="Transparent" Width="4" Height="10" Grid.Column="2"
+                      Name="topRightGrip" IsHitTestVisible="False" />
+                <Grid Background="Transparent" Width="4" Grid.Row="1" Grid.RowSpan="2" Grid.Column="2"
+                      Name="rightVerticalGrip" IsHitTestVisible="False" />
+                <Grid Background="Transparent" Width="4" Height="10" Grid.Row="4" Grid.Column="2"
+                      Name="bottomRightGrip" IsHitTestVisible="False" />
+              </Grid>
+            </VisualLayerManager>
+          </Border>
+        </ControlTemplate>
+      </Setter>
+    </Style>
+  </Window.Styles>
+
+  <Grid RowDefinitions="*,Auto">
+    <Grid Margin="4" Grid.Row="0" ColumnDefinitions="Auto,*">
+      <Panel Margin="12,4" Grid.Column="0" VerticalAlignment="Top">
+        <largeicons:InformationMessageIcon x:Name="InformationIcon" />
+        <largeicons:QuestionMessageIcon x:Name="QuestionIcon" />
+        <largeicons:WarningMessageIcon x:Name="WarningIcon" />
+        <largeicons:ErrorMessageIcon x:Name="ErrorIcon" />
+      </Panel>
+
+      <TextBlock Margin="4,4,12,4" x:Name="MessageBlock" Grid.Column="1" TextWrapping="Wrap" />
+    </Grid>
+
+    <Border Grid.Row="1" Background="{DynamicResource ThemeBackgroundHighBrush}"
+            BorderThickness="0,1,0,0" BorderBrush="{DynamicResource ThemeBorderMidBrush}">
+      <StackPanel Margin="4" Orientation="Horizontal" HorizontalAlignment="Center">
+        <Button Margin="4" x:Name="AbortButton" Content="{l:LocalizedResource AbortButton}" />
+        <Button Margin="4" x:Name="CancelButton" Content="{l:LocalizedResource CancelButton}" />
+        <Button Margin="4" x:Name="NoButton" Content="{l:LocalizedResource NoButton}" />
+        <Button Margin="4" x:Name="YesButton" Content="{l:LocalizedResource YesButton}" />
+        <Button Margin="4" x:Name="OkButton" Content="{l:LocalizedResource OkButton}" />
+        <Button Margin="4" x:Name="RetryButton" Content="{l:LocalizedResource RetryButton}" />
+      </StackPanel>
+    </Border>
+  </Grid>
+
+</Window>

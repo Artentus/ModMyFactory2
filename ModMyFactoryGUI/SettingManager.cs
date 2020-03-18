@@ -78,6 +78,21 @@ namespace ModMyFactoryGUI
             return false;
         }
 
+        private static T Cast<T>(object obj)
+        {
+            // First try to directly cast to the desired type
+            if (obj is T result) return result;
+
+            // Then try to find a suitable converter
+            if (TryFindConverter(obj.GetType(), typeof(T), out var converter))
+                return (T)converter.CreateFromToken(obj);
+
+            // We couldn't cast the object, let Json.NET do the work for us
+            // This may not always work as expected, consider creating a converter
+            var token = (JToken)obj;
+            return token.ToObject<T>();
+        }
+
         public static SettingManager LoadSafe(string filePath)
         {
             if (!TryLoad(filePath, out var manager))
@@ -108,19 +123,29 @@ namespace ModMyFactoryGUI
 
         public T Get<T>(string key, T defaultValue = default)
         {
-            // First try to directly cast to the desired type
             var obj = Get(key, (object)defaultValue);
-            if (obj is T result) return result;
-
-            // Then try to find a suitable converter
-            if (TryFindConverter(obj.GetType(), typeof(T), out var converter))
-                return (T)converter.CreateFromToken(obj);
-
-            // We couldn't cast the object, let Json.NET do the work for us
-            // This may not always work as expected, consider creating a converter
-            var token = (JToken)obj;
-            return token.ToObject<T>();
+            return Cast<T>(obj);
         }
+
+        public bool TryGet(string key, out object result)
+            => _table.TryGetValue(key, out result);
+
+        public bool TryGet<T>(string key, out T result)
+        {
+            if (TryGet(key, out object obj))
+            {
+                result = Cast<T>(obj);
+                return true;
+            }
+            else
+            {
+                result = default;
+                return false;
+            }
+        }
+
+        public bool Remove(string key)
+            => _table.Remove(key);
 
         public void Save()
         {
