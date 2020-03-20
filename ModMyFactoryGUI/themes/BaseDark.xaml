@@ -97,8 +97,8 @@ the Free Software Foundation, either version 3 of the License, or
     <Thickness x:Key="ThemeBorderThickness">1</Thickness>
     <x:Double x:Key="ThemeDisabledOpacity">0.5</x:Double>
 
-    <x:Double x:Key="FontSizeSmall">10</x:Double>
-    <x:Double x:Key="FontSizeNormal">12</x:Double>
+    <x:Double x:Key="FontSizeSmall">11</x:Double>
+    <x:Double x:Key="FontSizeNormal">12.5</x:Double>
     <x:Double x:Key="FontSizeMedium">14</x:Double>
     <x:Double x:Key="FontSizeLarge">16</x:Double>
 

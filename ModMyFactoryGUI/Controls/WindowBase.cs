@@ -98,7 +98,7 @@ namespace ModMyFactoryGUI.Controls
         private Grid _topRightGrip;
 
         public static readonly StyledProperty<Control> TitleBarContentProperty =
-                                                                                                                    AvaloniaProperty.Register<WindowBase, Control>(nameof(TitleBarContent));
+            AvaloniaProperty.Register<WindowBase, Control>(nameof(TitleBarContent));
 
         public static readonly StyledProperty<bool> HasClientDecorationsProperty =
             AvaloniaProperty.Register<WindowBase, bool>(nameof(HasClientDecorations));

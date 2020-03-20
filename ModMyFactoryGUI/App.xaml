@@ -25,6 +25,7 @@ the Free Software Foundation, either version 3 of the License, or
     <StyleInclude Source="/Assets/Styles/LoadingIndicator.xaml" />
     <StyleInclude Source="/Assets/Styles/ScrollBar.xaml" />
     <StyleInclude Source="/Assets/Styles/RadioButton.xaml" />
+    <StyleInclude Source="/Assets/Styles/TextBox.xaml" />
 
     <Style Selector="TextBlock.muted">
       <Setter Property="Foreground" Value="{DynamicResource ThemeForegroundLowBrush}" />
@@ -37,7 +38,7 @@ the Free Software Foundation, either version 3 of the License, or
       <Setter Property="FontSize" Value="{DynamicResource FontSizeLarge}" />
     </Style>
     <Style Selector="TextBlock.h3">
-      <Setter Property="FontWeight" Value="Bold" />
+      <Setter Property="FontWeight" Value="SemiBold" />
     </Style>
 
     <Style Selector="Button">

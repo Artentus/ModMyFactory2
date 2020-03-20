@@ -39,6 +39,15 @@
     "value": "The connection to the server timed out.\nMake sure you have a stable connection to the internet,\nthen try again."
   },
 
+  "LogInRequired_Title": {
+    "type": "string",
+    "value": "Login required"
+  },
+  "LoginError_Message": {
+    "type": "string",
+    "value": "Invalid username or password"
+  },
+
   // --------- Dialog options ---------
   "OkButton": {
     "type": "string",
@@ -63,6 +72,10 @@
   "AbortButton": {
     "type": "string",
     "value": "Abort"
+  },
+  "LogInButton": {
+    "type": "string",
+    "value": "Log in"
   },
 
   // --------- Main window ---------

@@ -14,7 +14,7 @@ namespace ModMyFactoryGUI.Views
     {
         public OnlineModsView()
         {
-            this.InitializeComponent();
+            InitializeComponent();
         }
 
         private void InitializeComponent()

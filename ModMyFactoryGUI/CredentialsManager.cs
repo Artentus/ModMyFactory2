@@ -6,8 +6,10 @@
 //  (at your option) any later version.
 
 using ModMyFactory.WebApi;
+using ModMyFactoryGUI.Controls;
 using ModMyFactoryGUI.Helpers;
 using Newtonsoft.Json;
+using ReactiveUI;
 using System.Threading.Tasks;
 
 namespace ModMyFactoryGUI
@@ -50,9 +52,39 @@ namespace ModMyFactoryGUI
             }
         }
 
-        private async Task<(bool success, string username, string token)> TryLogInWithDialogAsync()
+        private async Task AcceptDialog(LoginDialog dialog)
         {
-            return (false, null, null);
+            var (success, _, _) = await TryLogInAsync(dialog.Username, dialog.Password);
+            if (success.HasValue)
+            {
+                if (success.Value)
+                {
+                    dialog.Close(DialogResult.Ok);
+                }
+                else
+                {
+                    dialog.IndicateError = true;
+                }
+            }
+            else
+            {
+                dialog.Close(DialogResult.Abort);
+            }
+        }
+
+        private async Task<(bool? success, string username, string token)> TryLogInWithDialogAsync()
+        {
+            var dialog = new LoginDialog();
+            dialog.CancelCommand = ReactiveCommand.Create(() => dialog.Close(DialogResult.Cancel));
+            dialog.AcceptCommand = ReactiveCommand.CreateFromTask(async () => await AcceptDialog(dialog));
+
+            var result = await dialog.ShowDialog<DialogResult>(App.Current.MainWindow);
+            return result switch
+            {
+                DialogResult.Ok => (true, _username, _token),
+                DialogResult.Abort => (null, _username, _token),
+                _ => (false, null, null)
+            };
         }
 
         public bool TryGetCredentials(out string username, out string token)
@@ -61,7 +93,7 @@ namespace ModMyFactoryGUI
             return _isLoggedIn;
         }
 
-        public async ValueTask<(bool success, string username, string token)> TryLogInAsync()
+        public async ValueTask<(bool? success, string username, string token)> TryLogInAsync()
         {
             if (_isLoggedIn) return (true, _username, _token);
             else return await TryLogInWithDialogAsync();

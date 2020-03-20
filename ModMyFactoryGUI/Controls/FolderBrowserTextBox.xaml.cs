@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace ModMyFactoryGUI.Controls
 {
-    public class FolderBrowserTextBox : UserControl
+    internal class FolderBrowserTextBox : UserControl
     {
         private readonly TextBox _textBox;
 

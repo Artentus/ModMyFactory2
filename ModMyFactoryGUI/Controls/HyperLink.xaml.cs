@@ -14,7 +14,7 @@ using System;
 
 namespace ModMyFactoryGUI.Controls
 {
-    public class HyperLink : UserControl
+    internal class HyperLink : UserControl
     {
         private readonly TextBlock _linkText;
 

@@ -8,10 +8,8 @@
 using Avalonia.Controls;
 using Avalonia.Markup.Xaml;
 using Avalonia.Styling;
-using ModMyFactory.Win32;
 using ModMyFactoryGUI.Helpers;
 using ReactiveUI;
-using System;
 using System.Threading.Tasks;
 using System.Windows.Input;
 
@@ -26,7 +24,7 @@ namespace ModMyFactoryGUI.Controls
         Error,
     }
 
-    internal sealed class MessageBox : WindowBase
+    internal sealed class MessageBox : DialogBase
     {
         private readonly ICommand _buttonCommand;
 
@@ -89,25 +87,13 @@ namespace ModMyFactoryGUI.Controls
         private void InitializeComponent()
         {
             AvaloniaXamlLoader.Load(this);
-
-            // Need to disable resize buttons manually on Windows since Avalonia doesn't.
-            if (Environment.OSVersion.Platform == PlatformID.Win32NT)
-            {
-                var handle = PlatformImpl.Handle.Handle;
-                var styles = User32.GetWindowStyles(handle);
-                styles = styles.UnsetFlag(WindowStyles.MaximizeBox | WindowStyles.MinimizeBox);
-                User32.SetWindowStyles(handle, styles);
-            }
         }
 
         public static Task<DialogResult> Show(
-            string title, string message, MessageKind messageKind, DialogOptions options)
+            string title, string message, MessageKind messageKind = MessageKind.None, DialogOptions options = DialogOptions.Ok)
         {
             var box = new MessageBox(title, message, messageKind, options);
             return box.ShowDialog<DialogResult>(App.Current.MainWindow);
         }
-
-        public void Close(DialogResult result)
-            => Close((object)result);
     }
 }

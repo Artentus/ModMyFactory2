@@ -15,7 +15,7 @@ namespace ModMyFactoryGUI.Views
     {
         public AttributionView()
         {
-            this.InitializeComponent();
+            InitializeComponent();
         }
 
         private void InitializeComponent()

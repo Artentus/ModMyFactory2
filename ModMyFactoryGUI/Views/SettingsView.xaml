@@ -30,18 +30,18 @@ the Free Software Foundation, either version 3 of the License, or
         <!-- Credentials -->
         <StackPanel>
           <Border Margin="4" Background="{DynamicResource ThemeAccentBrush2}">
-            <TextBlock Margin="4,2" Text="{l:LocalizedResource CredentialsHeader}" Classes="h3" />
+            <TextBlock Margin="4,3,4,2" Text="{l:LocalizedResource CredentialsHeader}" Classes="h3" />
           </Border>
-          <TextBox Margin="4" Watermark="{l:LocalizedResource Username}" MinWidth="300"
-                   UseFloatingWatermark="True" Text="{Binding Username, Mode=TwoWay}" />
-          <TextBox Margin="4" Watermark="{l:LocalizedResource Password}" MinWidth="300"
-                   UseFloatingWatermark="True" Text="{Binding Password, Mode=TwoWay}" PasswordChar="*" />
+          <controls:LoginFormular Margin="4" MinWidth="300"
+                                  Username="{Binding Username, Mode=TwoWay}"
+                                  Password="{Binding Password, Mode=TwoWay}"
+                                  IndicateError="{Binding CredentialsError}" />
         </StackPanel>
 
         <!-- Factorio folder -->
         <StackPanel>
           <Border Margin="4" Background="{DynamicResource ThemeAccentBrush2}">
-            <TextBlock Margin="4,2" Text="{l:LocalizedResource FactorioLocationHeader}" Classes="h3" />
+            <TextBlock Margin="4,3,4,2" Text="{l:LocalizedResource FactorioLocationHeader}" Classes="h3" />
           </Border>
           <RadioButton Margin="8,2" IsChecked="{Binding FactorioLocationIsAppData, Mode=TwoWay}">
             <TextBlock Margin="4,2" Text="{l:LocalizedResource AppDataOption}" />
@@ -60,7 +60,7 @@ the Free Software Foundation, either version 3 of the License, or
         <!-- Mod folder -->
         <StackPanel>
           <Border Margin="4" Background="{DynamicResource ThemeAccentBrush2}">
-            <TextBlock Margin="4,2" Text="{l:LocalizedResource ModLocationHeader}" Classes="h3" />
+            <TextBlock Margin="4,3,4,2" Text="{l:LocalizedResource ModLocationHeader}" Classes="h3" />
           </Border>
           <RadioButton Margin="8,2" IsChecked="{Binding ModLocationIsAppData, Mode=TwoWay}">
             <TextBlock Margin="4,2" Text="{l:LocalizedResource AppDataOption}" />

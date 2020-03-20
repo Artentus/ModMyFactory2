@@ -14,7 +14,7 @@ namespace ModMyFactoryGUI.Views
     {
         public SettingsView()
         {
-            this.InitializeComponent();
+            InitializeComponent();
         }
 
         private void InitializeComponent()

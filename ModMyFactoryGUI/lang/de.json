@@ -39,6 +39,15 @@
     "value": "Zeitüberschreitung beim Verbinden mit dem Server.\nStellen Sie sicher, dass Sie mit dem Internet verbunden sind,\nund versuchen Sie es dann erneut."
   },
 
+  "LogInRequired_Title": {
+    "type": "string",
+    "value": "Anmeldung erforderlich"
+  },
+  "LoginError_Message": {
+    "type": "string",
+    "value": "Falscher Benutzernahme oder falsches Passwort"
+  },
+
   // --------- Dialog options ---------
   "OkButton": {
     "type": "string",
@@ -63,6 +72,10 @@
   "AbortButton": {
     "type": "string",
     "value": "Abbrechen"
+  },
+  "LogInButton": {
+    "type": "string",
+    "value": "Anmelden"
   },
 
   // --------- Main window ---------

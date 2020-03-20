@@ -14,7 +14,7 @@ namespace ModMyFactoryGUI.Views
     {
         public FactorioView()
         {
-            this.InitializeComponent();
+            InitializeComponent();
         }
 
         private void InitializeComponent()

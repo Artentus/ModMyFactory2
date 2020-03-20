@@ -7,6 +7,7 @@
 
 using ModMyFactory.BaseTypes;
 using ModMyFactory.WebApi.Mods;
+using ModMyFactoryGUI.Helpers;
 using ReactiveUI;
 using System.Threading.Tasks;
 using System.Windows.Input;
@@ -38,7 +39,11 @@ namespace ModMyFactoryGUI.ViewModels
         {
             if (!IsInstalled)
             {
-                // ToDo implement
+                var (success, username, token) = await App.Current.Credentials.TryLogInAsync();
+                if (success.IsTrue())
+                {
+                    // ToDo implement
+                }
             }
         }
 

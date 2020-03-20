@@ -10,7 +10,7 @@ using Avalonia.Markup.Xaml;
 
 namespace ModMyFactoryGUI.Views
 {
-    public class OnlineModView : UserControl
+    internal class OnlineModView : UserControl
     {
         public OnlineModView()
         {
