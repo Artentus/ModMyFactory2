@@ -17,7 +17,7 @@
 
   <ItemGroup>
     <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
-    <PackageReference Include="ModMyFactory.BaseTypes" Version="1.0.0.6-alpha" />
+    <PackageReference Include="ModMyFactory.BaseTypes" Version="1.0.0.9-alpha" />
   </ItemGroup>
 
 </Project>
