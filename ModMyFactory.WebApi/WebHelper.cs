@@ -93,7 +93,7 @@ namespace ModMyFactory.WebApi
 
                     if ((responseLength > 0) && (progress != null))
                         progress.Report((double)bytesWritten / responseLength);
-                } while (bytesRead == BufferSize);
+                } while (bytesRead > 0);
             }
             catch (TaskCanceledException)
             {
