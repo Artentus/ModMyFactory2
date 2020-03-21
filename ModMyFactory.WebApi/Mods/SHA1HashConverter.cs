@@ -15,7 +15,7 @@ namespace ModMyFactory.WebApi.Mods
     {
         public override SHA1Hash ReadJson(JsonReader reader, Type objectType, SHA1Hash existingValue, bool hasExistingValue, JsonSerializer serializer)
         {
-            string s = reader.ReadAsString();
+            string s = (string)reader.Value;
             return SHA1Hash.Parse(s);
         }
 

@@ -21,7 +21,7 @@ namespace ModMyFactoryGUI
 
         public override T ReadJson(JsonReader reader, Type objectType, T existingValue, bool hasExistingValue, JsonSerializer serializer)
         {
-            string s = reader.ReadAsString();
+            string s = (string)reader.Value;
             return Create(s);
         }
 
