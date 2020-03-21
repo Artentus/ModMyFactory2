@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <Import Project="..\package.targets" />
   <Import Project="..\constants.targets" />
   <Import Project="..\references.targets" />
@@ -64,13 +64,13 @@
     <PackageReference Include="Serilog.Sinks.Console" Version="3.1.1" />
     <PackageReference Include="Serilog.Sinks.Debug" Version="1.0.1" />
     <PackageReference Include="Serilog.Sinks.File" Version="4.1.0" />
-    <PackageReference Include="ModMyFactory.BaseTypes" Version="1.0.0.6-alpha" />
+    <PackageReference Include="ModMyFactory.BaseTypes" Version="1.0.0.9-alpha" />
     <PackageReference Include="ModMyFactory.Export" Version="1.0.0.4-alpha" />
     <PackageReference Include="ModMyFactory.Localization" Version="1.0.0.4-alpha" />
     <PackageReference Include="ModMyFactory.ModSettings" Version="1.0.0.5-alpha" />
-    <PackageReference Include="ModMyFactory.WebApi" Version="1.0.0.8-alpha" />
+    <PackageReference Include="ModMyFactory.WebApi" Version="1.0.0.10-alpha" />
     <PackageReference Include="ModMyFactory.Win32" Version="1.0.0.5-alpha" />
-    <PackageReference Include="ModMyFactory" Version="1.0.0.9-alpha" />
+    <PackageReference Include="ModMyFactory" Version="1.0.0.10-alpha" />
     <PackageReference Include="System.Threading.Tasks.Dataflow" Version="4.11.0" />
     <ProjectReference Include="..\Avalonia.ThemeManager\Avalonia.ThemeManager.csproj" />
   </ItemGroup>

@@ -1,6 +1,8 @@
+using ModMyFactory.BaseTypes;
 using ModMyFactoryGUI.Controls;
 using Serilog;
 using System;
+using System.IO;
 using System.Threading.Tasks;
 
 namespace ModMyFactoryGUI
@@ -26,7 +28,7 @@ namespace ModMyFactoryGUI
             internal Message(string key, MessageKind kind, DialogOptions options)
                 => (_key, _kind, _options) = (key, kind, options);
 
-            public Task<DialogResult> Show()
+            public virtual Task<DialogResult> Show()
             {
                 string titleKey = _key + "_Title";
                 string messageKey = _key + "_Message";
@@ -37,6 +39,21 @@ namespace ModMyFactoryGUI
             }
         }
 
+        private class WarningMessage : Message
+        {
+            private readonly string _messageTemplate;
+
+            internal WarningMessage(string key, string messageTemplate)
+                : base(key, MessageKind.Warning, DialogOptions.Ok)
+                => _messageTemplate = messageTemplate;
+
+            public override Task<DialogResult> Show()
+            {
+                Log.Warning(_messageTemplate);
+                return base.Show();
+            }
+        }
+
         private class ErrorMessage : Message, IErrorMessage
         {
             private readonly string _messageTemplate;
@@ -44,6 +61,12 @@ namespace ModMyFactoryGUI
             internal ErrorMessage(string key, string messageTemplate)
                 : base(key, MessageKind.Error, DialogOptions.Ok)
                 => _messageTemplate = messageTemplate;
+
+            public override Task<DialogResult> Show()
+            {
+                Log.Error(_messageTemplate);
+                return base.Show();
+            }
 
             public Task<DialogResult> Show(Exception exception)
             {
@@ -58,5 +81,11 @@ namespace ModMyFactoryGUI
             = new ErrorMessage("TimeoutError", "Timeout while trying to connect to server");
         public static readonly IErrorMessage ServerError
             = new ErrorMessage("ServerError", "An unknown server error occurred");
+
+        public static IErrorMessage FileIntegrityError(FileInfo file, SHA1Hash expected, SHA1Hash actual)
+            => new ErrorMessage("FileIntegrityError", $"Checksum mismatch for file {file.Name}, expected {expected} but got {actual}");
+
+        public static IMessage InvalidModFile(FileInfo file)
+            => new WarningMessage("InvalidModFile", $"File {file.Name} is not a valid mod");
     }
 }

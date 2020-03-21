@@ -17,6 +17,8 @@ namespace ModMyFactoryGUI.Tasks.Web
     {
         public FileInfo File { get; private set; }
 
+        public abstract string Description { get; }
+
         protected abstract Task<FileInfo> DownloadFile(CancellationToken cancellationToken, IProgress<double> progress);
 
         public async Task Run(CancellationToken cancellationToken, IProgress<double> progress)
@@ -31,8 +33,10 @@ namespace ModMyFactoryGUI.Tasks.Web
 
         public ModReleaseInfo Release { get; }
 
-        public DownloadModReleaseJob(ModReleaseInfo release, string username, string token)
-            => (Release, _username, _token) = (release, username, token);
+        public override string Description { get; }
+
+        public DownloadModReleaseJob(ModReleaseInfo release, string modDisplayName, string username, string token)
+            => (Release, Description, _username, _token) = (release, modDisplayName, username, token);
 
         protected override Task<FileInfo> DownloadFile(CancellationToken cancellationToken, IProgress<double> progress)
         {

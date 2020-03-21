@@ -26,6 +26,14 @@
     "type": "string",
     "value": "Zeitüberschreitung"
   },
+  "FileIntegrityError_Title": {
+    "type": "string",
+    "value": "Integritätsabgleich fehlgeschlagen"
+  },
+  "InvalidModFile_Title": {
+    "type": "string",
+    "value": "Laden der Mod fehlgeschlagen"
+  },
   "ServerError_Message": {
     "type": "string",
     "value": "Auf dem Server ist ein Fehler aufgetreten,\nbitte versuchen Sie es später erneut."
@@ -37,6 +45,14 @@
   "TimeoutError_Message": {
     "type": "string",
     "value": "Zeitüberschreitung beim Verbinden mit dem Server.\nStellen Sie sicher, dass Sie mit dem Internet verbunden sind,\nund versuchen Sie es dann erneut."
+  },
+  "FileIntegrityError_Message": {
+    "type": "string",
+    "value": "Die heruntergeladene Datei war beschädigt und konnte nicht geladen werden,\nbitte versuchen Sie es erneut."
+  },
+  "InvalidModFile_Message": {
+    "type": "string",
+    "value": "Die zu ladende Datei war keine gültige Mod"
   },
 
   "LogInRequired_Title": {
@@ -254,6 +270,16 @@
   "SettingsTabHeader": {
     "type": "string",
     "value": "Einstellungen"
+  },
+
+  // Download status
+  "EmptyQueueText": {
+    "type": "string",
+    "value": "Keine Downloads in der Warteschlange"
+  },
+  "DownloadingFormat": {
+    "type": "string",
+    "value": "{0} wird heruntergeladen"
   },
 
   // --------- Online mods view ---------

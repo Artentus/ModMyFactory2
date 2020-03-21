@@ -13,6 +13,7 @@ using ModMyFactoryGUI.Tasks;
 using ModMyFactoryGUI.Tasks.Web;
 using ModMyFactoryGUI.Views;
 using ReactiveUI;
+using Serilog;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -33,6 +34,12 @@ namespace ModMyFactoryGUI.ViewModels
         public ICommand OpenAboutWindowCommand { get; }
 
         public DownloadManager DownloadManager { get; }
+
+        public bool IsDownloading { get; private set; }
+
+        public string DownloadDescription { get; private set; }
+
+        public double DownloadProgress { get; private set; }
 
         public IEnumerable<ThemeViewModel> AvailableThemes
             => App.Current.ThemeManager.Select(t => new ThemeViewModel(t));
@@ -94,12 +101,18 @@ namespace ModMyFactoryGUI.ViewModels
             _downloadProgress = new Progress<(DownloadJob, double)>(OnDownloadProgressChanged);
             DownloadManager = new DownloadManager(_downloadProgress);
             DownloadManager.JobCompleted += OnDownloadJobCompleted;
+            DownloadManager.StartQueue();
+            App.ShuttingDown += (sender, e) => DownloadManager.StopQueue();
 
             ManagerViewModel = new ManagerViewModel();
             OnlineModsViewModel = new OnlineModsViewModel(DownloadManager);
             FactorioViewModel = new FactorioViewModel(DownloadManager);
             SettingsViewModel = new SettingsViewModel();
             SelectedViewModel = ManagerViewModel;
+
+            // Property doesn't actually change but we need to refresh the formatter
+            App.Current.LocaleManager.UICultureChanged += (sender, e)
+                => this.RaisePropertyChanged(nameof(DownloadDescription));
         }
 
         private void NavigateToUrl(string url)
@@ -111,34 +124,53 @@ namespace ModMyFactoryGUI.ViewModels
             await window.ShowDialog(AttachedView);
         }
 
-        private async void OnDownloadProgressChanged((DownloadJob, double) progress)
+        private void OnDownloadProgressChanged((DownloadJob, double) progress)
         {
+            if (!IsDownloading)
+            {
+                IsDownloading = true;
+                this.RaisePropertyChanged(nameof(IsDownloading));
+                DownloadDescription = progress.Item1.Description;
+                this.RaisePropertyChanged(nameof(DownloadDescription));
+            }
+
+            DownloadProgress = progress.Item2;
+            this.RaisePropertyChanged(nameof(DownloadProgress));
         }
 
-        private async Task OnDownloadModRelease(DownloadModReleaseJob job)
+        private async Task OnDownloadModCompleted(DownloadModReleaseJob job)
         {
             var fileHash = await job.File.ComputeSHA1Async();
-            var targetHash = SHA1Hash.Parse(job.Release.Checksum);
+            var targetHash = job.Release.Checksum;
             if (fileHash == targetHash)
             {
                 var (success, mod) = await Mod.TryLoadAsync(job.File);
                 if (success)
                 {
                     // Mod successfully downloaded
-
-                    return;
+                    App.Current.Manager.AddMod(mod);
+                    Log.Information($"Mod {mod.Name} version {mod.Version} successfully loaded");
+                }
+                else
+                {
+                    await Messages.InvalidModFile(job.File).Show();
                 }
             }
-
-            // File is invalid
+            else
+            {
+                await Messages.FileIntegrityError(job.File, targetHash, fileHash).Show();
+            }
         }
 
         private async void OnDownloadJobCompleted(object sender, JobCompletedEventArgs<DownloadJob> e)
         {
+            IsDownloading = false;
+            this.RaisePropertyChanged(nameof(IsDownloading));
+
             switch (e.Job)
             {
                 case DownloadModReleaseJob j:
-                    await OnDownloadModRelease(j);
+                    await OnDownloadModCompleted(j);
                     break;
             }
         }
@@ -148,6 +180,7 @@ namespace ModMyFactoryGUI.ViewModels
             if (tab.Content is IMainView view)
                 return view.ViewModel;
 
+            // This shouldn't happen
             throw new ArgumentException("Tab does not contain a valid view", nameof(tab));
         }
 

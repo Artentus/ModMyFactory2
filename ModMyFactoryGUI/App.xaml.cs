@@ -32,7 +32,9 @@ namespace ModMyFactoryGUI
     {
         public static new App Current => Application.Current as App;
 
-        public static EventHandler Loaded;
+        public static event EventHandler Loaded;
+
+        public static event EventHandler ShuttingDown;
 
         public IClassicDesktopStyleApplicationLifetime Lifetime => (IClassicDesktopStyleApplicationLifetime)ApplicationLifetime;
 
@@ -248,6 +250,7 @@ namespace ModMyFactoryGUI
                 Credentials = new CredentialsManager(Settings);
 
                 Loaded?.Invoke(this, EventArgs.Empty);
+                lifetime.Exit += (sender, e) => ShuttingDown(this, EventArgs.Empty);
 
                 var mainViewModel = new MainWindowViewModel();
                 var mainView = View.CreateAndAttach(mainViewModel);

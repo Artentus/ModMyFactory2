@@ -23,6 +23,7 @@ the Free Software Foundation, either version 3 of the License, or
 
   <Window.Resources>
     <l:LocalizeConverter x:Key="LocalizeConverter" />
+    <l:LocalizedFormatter x:Key="LocalizedFormatter" />
   </Window.Resources>
 
   <Window.Styles>
@@ -212,9 +213,19 @@ the Free Software Foundation, either version 3 of the License, or
       </controls:Toolbar.DataTemplates>
     </controls:Toolbar>
 
+    <!-- Download status -->
+    <Border DockPanel.Dock="Bottom" Background="{DynamicResource ThemeBackgroundHighBrush}">
+      <StackPanel Margin="4" Orientation="Horizontal">
+        <TextBlock Margin="2,0" Text="{l:LocalizedResource EmptyQueueText}" Classes="muted" IsVisible="{Binding !IsDownloading}" />
+        <ProgressBar Minimum="0" Maximum="1" IsVisible="{Binding IsDownloading}" Value="{Binding DownloadProgress}" />
+        <TextBlock Margin="8,0" IsVisible="{Binding IsDownloading}"
+                   Text="{Binding DownloadDescription, Converter={StaticResource LocalizedFormatter}, ConverterParameter=DownloadingFormat}" />
+      </StackPanel>
+    </Border>
+
     <!-- Main View -->
-    <TabControl DockPanel.Dock="Bottom" TabStripPlacement="Right" SelectedItem="{Binding SelectedTab, Mode=TwoWay}"
-                Background="{DynamicResource ThemeBackgroundBrush}" BorderBrush="{DynamicResource ThemeBackgroundHighBrush}" BorderThickness="4,0,0,8">
+    <TabControl TabStripPlacement="Right" SelectedItem="{Binding SelectedTab, Mode=TwoWay}"
+                Background="{DynamicResource ThemeBackgroundBrush}" BorderBrush="{DynamicResource ThemeBackgroundHighBrush}" BorderThickness="4,0,0,0">
 
       <!-- Manager -->
       <TabItem>
@@ -264,5 +275,6 @@ the Free Software Foundation, either version 3 of the License, or
         <views:SettingsView DataContext="{Binding SettingsViewModel}" />
       </TabItem>
     </TabControl>
+
   </DockPanel>
 </Window>

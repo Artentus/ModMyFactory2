@@ -146,7 +146,7 @@ namespace ModMyFactoryGUI.ViewModels
             {
                 _releases = new ModReleaseViewModel[Info.Releases.Length];
                 for (int i = 0; i < _releases.Length; i++)
-                    _releases[i] = new ModReleaseViewModel(Info.Releases[i], _downloadManager);
+                    _releases[i] = new ModReleaseViewModel(Info.Releases[i], Info.DisplayName, _downloadManager);
             }
 
             this.RaisePropertyChanged(nameof(Releases));

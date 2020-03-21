@@ -26,6 +26,14 @@
     "type": "string",
     "value": "Connection Timeout"
   },
+  "FileIntegrityError_Title": {
+    "type": "string",
+    "value": "File integrity check failed"
+  },
+  "InvalidModFile_Title": {
+    "type": "string",
+    "value": "Failed to load mod"
+  },
   "ServerError_Message": {
     "type": "string",
     "value": "A server-side error occured,\nplease try again later."
@@ -37,6 +45,14 @@
   "TimeoutError_Message": {
     "type": "string",
     "value": "The connection to the server timed out.\nMake sure you have a stable connection to the internet,\nthen try again."
+  },
+  "FileIntegrityError_Message": {
+    "type": "string",
+    "value": "The downloaded file was corrupt and could not be loaded,\nplease try again."
+  },
+  "InvalidModFile_Message": {
+    "type": "string",
+    "value": "The file to be loaded was not a valid mod file"
   },
 
   "LogInRequired_Title": {
@@ -262,6 +278,16 @@
   "SettingsTabHeader": {
     "type": "string",
     "value": "Settings"
+  },
+
+  // Download status
+  "EmptyQueueText": {
+    "type": "string",
+    "value": "No downloads in queue"
+  },
+  "DownloadingFormat": {
+    "type": "string",
+    "value": "Downloading {0}"
   },
 
   // --------- Online mods view ---------
