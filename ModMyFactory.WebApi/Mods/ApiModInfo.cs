@@ -11,31 +11,31 @@ using System;
 namespace ModMyFactory.WebApi.Mods
 {
     /// <summary>
-    /// Contains information about a mod.
+    /// Contains information about a mod
     /// </summary>
     public struct ApiModInfo
     {
         /// <summary>
-        /// The display name of the mod.
+        /// The display name of the mod
         /// </summary>
         [JsonProperty("title")]
         readonly public string DisplayName;
 
         /// <summary>
-        /// How many times this mod has been downloaded.
+        /// How many times this mod has been downloaded
         /// </summary>
         [JsonProperty("downloads_count")]
         readonly public int DownloadCount;
 
         /// <summary>
-        /// The unique name of this mod.
+        /// The unique name of this mod
         /// </summary>
         [JsonProperty("name")]
         readonly public string Name;
 
         /// <summary>
         /// A short description of the mod.
-        /// Contains certain escaped characters like '\n'.
+        /// Contains certain escaped characters like '\n'
         /// </summary>
         [JsonProperty("summary")]
         readonly public string Summary;
@@ -47,26 +47,26 @@ namespace ModMyFactory.WebApi.Mods
         readonly public string Author;
 
         /// <summary>
-        /// A weighted score value indicating the importance of this mod.
-        /// Specific implementation unknown.
+        /// A weighted score value indicating the importance of this mod
+        /// Specific implementation unknown
         /// </summary>
         [JsonProperty("score")]
         readonly public double Score;
 
         /// <summary>
-        /// The category of the mod.
+        /// The category of the mod
         /// </summary>
         [JsonProperty("category")]
         readonly public string Category;
 
         /// <summary>
-        /// The URL to this mods thumbnail.
+        /// The URL to this mods thumbnail
         /// </summary>
         [JsonProperty("thumbnail")]
         readonly public string ThumbnailUrl;
 
         /// <summary>
-        /// The latest release of this mod.
+        /// The latest release of this mod
         /// </summary>
         [JsonProperty("latest_release")]
         readonly public ModReleaseInfo LatestRelease;
@@ -75,67 +75,67 @@ namespace ModMyFactory.WebApi.Mods
         // -------------- Extended data --------------
 
         /// <summary>
-        /// A long description of the mod.
-        /// Only part of extended info.
-        /// Formatted in markdown.
+        /// A long description of the mod
+        /// Only part of extended info
+        /// Formatted in markdown
         /// </summary>
         [JsonProperty("description")]
         readonly public string Description;
 
         /// <summary>
-        /// The mods changelog.
-        /// Only part of extended info.
-        /// Formatted in markdown.
+        /// The mods changelog
+        /// Only part of extended info
+        /// Formatted in markdown
         /// </summary>
         [JsonProperty("changelog")]
         readonly public string Changelog;
 
         /// <summary>
-        /// Frequently asked questions about the mod and their answers.
-        /// Only part of extended info.
-        /// Formatted in markdown.
+        /// Frequently asked questions about the mod and their answers
+        /// Only part of extended info
+        /// Formatted in markdown
         /// </summary>
         [JsonProperty("faq")]
         readonly public string Faq;
 
         /// <summary>
-        /// The mods homepage URL.
-        /// Only part of extended info.
+        /// The mods homepage URL
+        /// Only part of extended info
         /// </summary>
         [JsonProperty("homepage")]
         readonly public string Homepage;
 
         /// <summary>
-        /// Url to the mods GitHub repository.
-        /// Only part of extended info.
+        /// Url to the mods GitHub repository
+        /// Only part of extended info
         /// </summary>
         [JsonProperty("github_path")]
         readonly public string GitHubUrl;
 
         /// <summary>
-        /// The mods license.
-        /// Only part of extended info.
+        /// The mods license
+        /// Only part of extended info
         /// </summary>
         [JsonProperty("license")]
         readonly public License License;
 
         /// <summary>
-        /// The releases of this mod.
-        /// Only part of extended info.
+        /// The releases of this mod
+        /// Only part of extended info
         /// </summary>
         [JsonProperty("releases")]
         readonly public ModReleaseInfo[] Releases;
 
         /// <summary>
-        /// The date at which the mod was first uploaded.
-        /// Only part of extended info.
+        /// The date at which the mod was first uploaded
+        /// Only part of extended info
         /// </summary>
         [JsonProperty("created_at")]
         readonly public DateTime CreationDate;
 
         /// <summary>
-        /// The last date this mod was updated at.
-        /// Only part of extended info.
+        /// The last date this mod was updated at
+        /// Only part of extended info
         /// </summary>
         [JsonProperty("updated_at")]
         readonly public DateTime LastUpdateDate;
