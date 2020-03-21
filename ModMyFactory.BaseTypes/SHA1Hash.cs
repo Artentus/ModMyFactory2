@@ -13,12 +13,16 @@ using System.Text;
 
 namespace ModMyFactory.BaseTypes
 {
-    internal readonly struct SHA1Hash : IEquatable<SHA1Hash>
+    /// <summary>
+    /// A SHA1 hash
+    /// </summary>
+    public readonly struct SHA1Hash : IEquatable<SHA1Hash>
     {
         private const int SHA1Size = 20; // Size of a SHA1 hash in bytes
 
         private readonly byte[] _bytes;
 
+        /// <param name="bytes">The 20 hash bytes</param>
         public SHA1Hash(byte[] bytes)
         {
             if (bytes is null) throw new ArgumentNullException(nameof(bytes));
@@ -27,6 +31,9 @@ namespace ModMyFactory.BaseTypes
             _bytes = bytes;
         }
 
+        /// <summary>
+        /// Tries to parse a string as a SHA1 hash
+        /// </summary>
         public static bool TryParse(string s, out SHA1Hash result)
         {
             result = default;
@@ -45,6 +52,9 @@ namespace ModMyFactory.BaseTypes
             return true;
         }
 
+        /// <summary>
+        /// Parses a string as a SHA1 hash
+        /// </summary>
         public static SHA1Hash Parse(string s)
         {
             if (TryParse(s, out var result)) return result;
