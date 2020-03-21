@@ -15,7 +15,7 @@ using System.Collections.ObjectModel;
 namespace ModMyFactory
 {
     /// <summary>
-    /// Manages Factorio instances and their mods.
+    /// Manages Factorio instances and their mods
     /// </summary>
     public sealed class Manager : IEnumerable<ManagedFactorioInstance>
     {
@@ -23,7 +23,7 @@ namespace ModMyFactory
         private readonly Dictionary<AccurateVersion, ModManager> _modManagers;
 
         /// <summary>
-        /// The list of instances being managed.
+        /// The list of instances being managed
         /// </summary>
         public IReadOnlyList<ManagedFactorioInstance> ManagedInstances { get; }
 
@@ -34,8 +34,23 @@ namespace ModMyFactory
             _modManagers = new Dictionary<AccurateVersion, ModManager>();
         }
 
-        private ModManager GetModManager(AccurateVersion factorioVersion)
+        /// <summary>
+        /// Tries to gets the mod manager associated with a specific version of Factorio
+        /// Fails if no mod manager has been created for the specified version yet
+        /// </summary>
+        public bool TryGetModManager(AccurateVersion factorioVersion, out ModManager result)
         {
+            factorioVersion = factorioVersion.ToMajor();
+            return _modManagers.TryGetValue(factorioVersion, out result);
+        }
+
+        /// <summary>
+        /// Gets the mod manager associated with a specific version of Factorio
+        /// </summary>
+        public ModManager GetModManager(AccurateVersion factorioVersion)
+        {
+            factorioVersion = factorioVersion.ToMajor();
+
             if (!_modManagers.TryGetValue(factorioVersion, out var result))
             {
                 result = new ModManager(factorioVersion);
@@ -45,37 +60,47 @@ namespace ModMyFactory
         }
 
         /// <summary>
-        /// Adds a Factorio instance to the manager.
+        /// Adds a Factorio instance to the manager
         /// </summary>
-        /// <param name="instance">The instance to add.</param>
-        public void AddInstance(ManagedFactorioInstance instance)
+        /// <param name="instance">The instance to add</param>
+        public ManagedFactorioInstance AddInstance(in IFactorioInstance instance)
         {
-            instance.HasManagerAttached = true;
-            var modManager = GetModManager(instance.Version.ToMajor());
+            var modManager = GetModManager(instance.Version);
+            var managedInstance = ManagedFactorioInstance.CreateInternal(instance, modManager);
 
-            _managedInstances.Add(instance);
-        }
-
-        /// <summary>
-        /// Adds a Factorio instance to the manager.
-        /// </summary>
-        /// <param name="instance">The instance to add.</param>
-        public ManagedFactorioInstance AddInstance(IFactorioInstance instance)
-        {
-            var managedInstance = instance.ToManaged();
             AddInstance(managedInstance);
             return managedInstance;
         }
 
         /// <summary>
-        /// Removes a Factorio instance from the manager.
+        /// Removes a Factorio instance from the manager
         /// </summary>
-        /// <param name="instance">The instance to remove.</param>
-        public void RemoveInstance(ManagedFactorioInstance instance)
+        /// <param name="instance">The instance to remove</param>
+        public bool RemoveInstance(in ManagedFactorioInstance instance)
+            => _managedInstances.Remove(instance);
+
+        /// <summary>
+        /// Adds a mod to the corresponding mod manager
+        /// </summary>
+        public void AddMod(Mod mod)
         {
-            _managedInstances.Remove(instance);
-            instance.UnlinkModDirectoryInternal();
-            instance.HasManagerAttached = false;
+            var modManager = GetModManager(mod.FactorioVersion);
+            modManager.Add(mod);
+        }
+
+        /// <summary>
+        /// Removes a mod from its corresponding mod manager
+        /// </summary>
+        public bool RemoveMod(Mod mod)
+        {
+            if (TryGetModManager(mod.FactorioVersion, out var modManager))
+            {
+                return modManager.Remove(mod);
+            }
+            else
+            {
+                return false;
+            }
         }
 
         public IEnumerator<ManagedFactorioInstance> GetEnumerator() => _managedInstances.GetEnumerator();

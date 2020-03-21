@@ -7,6 +7,7 @@
 
 using ModMyFactory.WebApi;
 using ModMyFactory.WebApi.Mods;
+using ModMyFactoryGUI.Tasks.Web;
 using ModMyFactoryGUI.Views;
 using ReactiveUI;
 using System.Collections.Generic;
@@ -18,6 +19,7 @@ namespace ModMyFactoryGUI.ViewModels
 {
     internal sealed class OnlineModsViewModel : MainViewModelBase<OnlineModsView>
     {
+        private readonly DownloadManager _downloadManager;
         private OnlineModViewModel _selectedMod;
 
         public bool ModsLoaded { get; private set; }
@@ -43,8 +45,9 @@ namespace ModMyFactoryGUI.ViewModels
             }
         }
 
-        public OnlineModsViewModel()
+        public OnlineModsViewModel(DownloadManager downloadManager)
         {
+            _downloadManager = downloadManager;
             RefreshCommand = ReactiveCommand.CreateFromTask(RefreshOnlineModsAsync);
 
             // This is fire-and-forget intentionally
@@ -66,7 +69,7 @@ namespace ModMyFactoryGUI.ViewModels
             var result = new List<OnlineModViewModel>(page.Mods.Length);
 
             foreach (var info in page.Mods)
-                result.Add(new OnlineModViewModel(info));
+                result.Add(new OnlineModViewModel(info, _downloadManager));
             return result;
         }
 

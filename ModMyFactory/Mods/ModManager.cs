@@ -19,22 +19,22 @@ namespace ModMyFactory.Mods
         internal static readonly AccurateVersion FormatSwitch = new AccurateVersion(0, 17); // Native support for multiple mods in Factorio 0.17 and onwards
 
         /// <summary>
-        /// Is raised if mods in a family change their enabled state.
+        /// Is raised if mods in a family change their enabled state
         /// </summary>
         public event EventHandler<ModFamilyEnabledChangedEventArgs> FamilyEnabledChanged;
 
         /// <summary>
-        /// The version of Factorio being managed.
+        /// The version of Factorio being managed
         /// </summary>
         public AccurateVersion FactorioVersion { get; }
 
         /// <summary>
-        /// A collection of mod families formed by the managed mods.
+        /// A collection of mod families formed by the managed mods
         /// </summary>
         public IReadOnlyCollection<ModFamily> Families { get; }
 
         /// <summary>
-        /// The number of mods managed.
+        /// The number of mods managed
         /// </summary>
         public int Count => Families.Sum(family => family.Count());
 
@@ -44,8 +44,9 @@ namespace ModMyFactory.Mods
         public ModManager(AccurateVersion factorioVersion)
         {
             _families = new Dictionary<string, ModFamily>();
-            FactorioVersion = factorioVersion.ToMajor();
             Families = _families.Values;
+
+            FactorioVersion = factorioVersion.ToMajor();
         }
 
         private void OnFamilyModsEnabledChanged(object sender, EventArgs e)
@@ -68,10 +69,12 @@ namespace ModMyFactory.Mods
         private bool TryGetFamily(string name, out ModFamily result) => _families.TryGetValue(name, out result);
 
         /// <summary>
-        /// Adds a mod to be managed.
+        /// Adds a mod to be managed
         /// </summary>
         public void Add(Mod mod)
         {
+            // ToDo: check directory
+
             if (mod is null) throw new ArgumentNullException();
             if (mod.FactorioVersion.ToMajor() != FactorioVersion) throw new ArgumentException("Mod has incorrect Factorio version.");
 
@@ -81,7 +84,7 @@ namespace ModMyFactory.Mods
         }
 
         /// <summary>
-        /// Removes a mod from the manager.
+        /// Removes a mod from the manager
         /// </summary>
         public bool Remove(Mod mod)
         {
@@ -98,7 +101,7 @@ namespace ModMyFactory.Mods
         }
 
         /// <summary>
-        /// Removes all managed mods.
+        /// Removes all managed mods
         /// </summary>
         public void Clear()
         {
@@ -108,7 +111,7 @@ namespace ModMyFactory.Mods
         }
 
         /// <summary>
-        /// Checks if a mod is managed by this manager.
+        /// Checks if a mod is managed by this manager
         /// </summary>
         public bool Contains(Mod mod)
         {

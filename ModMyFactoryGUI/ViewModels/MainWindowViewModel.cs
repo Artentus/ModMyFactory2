@@ -6,8 +6,11 @@
 //  (at your option) any later version.
 
 using Avalonia.Controls;
+using ModMyFactory.Mods;
 using ModMyFactoryGUI.Helpers;
 using ModMyFactoryGUI.MVVM;
+using ModMyFactoryGUI.Tasks;
+using ModMyFactoryGUI.Tasks.Web;
 using ModMyFactoryGUI.Views;
 using ReactiveUI;
 using System;
@@ -21,6 +24,7 @@ namespace ModMyFactoryGUI.ViewModels
     internal sealed class MainWindowViewModel : ScreenBase<MainWindow>
     {
         private readonly AboutWindowViewModel _aboutWindowViewModel = new AboutWindowViewModel();
+        private readonly Progress<(DownloadJob, double)> _downloadProgress;
         private TabItem _selectedTab;
         private IMainViewModel _selectedViewModel;
 
@@ -28,16 +32,18 @@ namespace ModMyFactoryGUI.ViewModels
 
         public ICommand OpenAboutWindowCommand { get; }
 
+        public DownloadManager DownloadManager { get; }
+
         public IEnumerable<ThemeViewModel> AvailableThemes
             => App.Current.ThemeManager.Select(t => new ThemeViewModel(t));
 
-        public ManagerViewModel ManagerViewModel { get; } = new ManagerViewModel();
+        public ManagerViewModel ManagerViewModel { get; }
 
-        public OnlineModsViewModel OnlineModsViewModel { get; } = new OnlineModsViewModel();
+        public OnlineModsViewModel OnlineModsViewModel { get; }
 
-        public FactorioViewModel FactorioViewModel { get; } = new FactorioViewModel();
+        public FactorioViewModel FactorioViewModel { get; }
 
-        public SettingsViewModel SettingsViewModel { get; } = new SettingsViewModel();
+        public SettingsViewModel SettingsViewModel { get; }
 
         public IReadOnlyCollection<IControl> FileMenuItems { get; private set; }
 
@@ -84,6 +90,15 @@ namespace ModMyFactoryGUI.ViewModels
         {
             NavigateToUrlCommand = ReactiveCommand.Create<string>(NavigateToUrl);
             OpenAboutWindowCommand = ReactiveCommand.CreateFromTask(OpenAboutWindow);
+
+            _downloadProgress = new Progress<(DownloadJob, double)>(OnDownloadProgressChanged);
+            DownloadManager = new DownloadManager(_downloadProgress);
+            DownloadManager.JobCompleted += OnDownloadJobCompleted;
+
+            ManagerViewModel = new ManagerViewModel();
+            OnlineModsViewModel = new OnlineModsViewModel(DownloadManager);
+            FactorioViewModel = new FactorioViewModel(DownloadManager);
+            SettingsViewModel = new SettingsViewModel();
             SelectedViewModel = ManagerViewModel;
         }
 
@@ -94,6 +109,38 @@ namespace ModMyFactoryGUI.ViewModels
         {
             var window = View.CreateAndAttach(_aboutWindowViewModel);
             await window.ShowDialog(AttachedView);
+        }
+
+        private async void OnDownloadProgressChanged((DownloadJob, double) progress)
+        {
+        }
+
+        private async Task OnDownloadModRelease(DownloadModReleaseJob job)
+        {
+            var fileHash = await job.File.ComputeSHA1Async();
+            var targetHash = SHA1Hash.Parse(job.Release.Checksum);
+            if (fileHash == targetHash)
+            {
+                var (success, mod) = await Mod.TryLoadAsync(job.File);
+                if (success)
+                {
+                    // Mod successfully downloaded
+
+                    return;
+                }
+            }
+
+            // File is invalid
+        }
+
+        private async void OnDownloadJobCompleted(object sender, JobCompletedEventArgs<DownloadJob> e)
+        {
+            switch (e.Job)
+            {
+                case DownloadModReleaseJob j:
+                    await OnDownloadModRelease(j);
+                    break;
+            }
         }
 
         private IMainViewModel GetViewModel(TabItem tab)

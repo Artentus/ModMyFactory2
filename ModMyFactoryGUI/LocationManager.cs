@@ -6,6 +6,7 @@
 //  (at your option) any later version.
 
 using ModMyFactory;
+using ModMyFactory.BaseTypes;
 using System;
 using System.ComponentModel;
 using System.IO;
@@ -158,6 +159,9 @@ namespace ModMyFactoryGUI
 
         public DirectoryInfo GetModDir()
             => GetLocationDir(_modLocation, "mods", _customModPath);
+
+        public DirectoryInfo GetModDir(AccurateVersion factorioVersion)
+            => GetModDir().CreateSubdirectory(factorioVersion.ToMajor().ToString(2));
 
         public async Task MoveFactorioLocationAsync(Location location, string customPath)
         {

@@ -8,6 +8,7 @@
 using ModMyFactory.BaseTypes;
 using ModMyFactory.WebApi.Mods;
 using ModMyFactoryGUI.Helpers;
+using ModMyFactoryGUI.Tasks.Web;
 using ReactiveUI;
 using System.Threading.Tasks;
 using System.Windows.Input;
@@ -16,6 +17,8 @@ namespace ModMyFactoryGUI.ViewModels
 {
     internal sealed class ModReleaseViewModel : ReactiveObject
     {
+        private readonly DownloadManager _downloadManager;
+
         public ModReleaseInfo Info { get; }
 
         public ICommand DownloadCommand { get; }
@@ -28,9 +31,11 @@ namespace ModMyFactoryGUI.ViewModels
 
         public AccurateVersion FactorioVersion => Info.Info.FactorioVersion;
 
-        public ModReleaseViewModel(ModReleaseInfo info)
+        public ModReleaseViewModel(ModReleaseInfo info, DownloadManager downloadManager)
         {
             Info = info;
+            _downloadManager = downloadManager;
+
             DownloadCommand = ReactiveCommand.CreateFromTask(Download);
             DeleteCommand = ReactiveCommand.Create(Delete);
         }
@@ -42,7 +47,8 @@ namespace ModMyFactoryGUI.ViewModels
                 var (success, username, token) = await App.Current.Credentials.TryLogInAsync();
                 if (success.IsTrue())
                 {
-                    // ToDo implement
+                    var job = new DownloadModReleaseJob(Info, username, token);
+                    _downloadManager.AddJob(job);
                 }
             }
         }

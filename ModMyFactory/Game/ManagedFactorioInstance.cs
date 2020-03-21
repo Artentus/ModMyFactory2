@@ -14,13 +14,22 @@ using System.IO;
 namespace ModMyFactory.Game
 {
     /// <summary>
-    /// A Factorio instance that is managed by ModMyFactory.
+    /// A Factorio instance that is managed by ModMyFactory
     /// </summary>
     public sealed class ManagedFactorioInstance : IFactorioInstance
     {
         private readonly IFactorioInstance _baseInstance;
 
-        internal bool HasManagerAttached { get; set; }
+        /// <summary>
+        /// Indicates whether this instance was created by an instance manager
+        /// </summary>
+        public bool HasManagerAttached { get; }
+
+        /// <summary>
+        /// The mod manager associated with this instance
+        /// </summary>
+        public ModManager ModManager { get; }
+
         public DirectoryInfo Directory => _baseInstance.Directory;
 
         public IModFile CoreMod => _baseInstance.CoreMod;
@@ -35,9 +44,11 @@ namespace ModMyFactory.Game
 
         public DirectoryInfo ModDirectory => _baseInstance.ModDirectory;
 
-        private ManagedFactorioInstance(IFactorioInstance baseInstance)
+        private ManagedFactorioInstance(IFactorioInstance baseInstance, ModManager modManager, bool hasManagerAttached)
         {
             _baseInstance = baseInstance;
+            ModManager = modManager;
+            HasManagerAttached = hasManagerAttached;
         }
 
         ~ManagedFactorioInstance()
@@ -71,16 +82,40 @@ namespace ModMyFactory.Game
                 _baseInstance.Dispose();
         }
 
-        internal static ManagedFactorioInstance FromInstance(IFactorioInstance instance)
+        internal static ManagedFactorioInstance CreateInternal(IFactorioInstance instance, ModManager modManager)
         {
+            if (instance is null) throw new ArgumentNullException(nameof(instance));
+            if (modManager is null) throw new ArgumentNullException(nameof(modManager));
+
             if (instance is ManagedFactorioInstance)
-                return (ManagedFactorioInstance)instance;
-            return new ManagedFactorioInstance(instance);
+                throw new InvalidOperationException("Already managed instances cannot be added");
+
+            return new ManagedFactorioInstance(instance, modManager, true);
         }
 
         internal void LinkModDirectoryInternal(string destination) => LinkDirectory(ModDirectory, destination);
 
         internal void UnlinkModDirectoryInternal() => UnlinkDirectory(ModDirectory);
+
+        /// <summary>
+        /// Creates a managed Factorio instance from an existing instance
+        /// The created instance will not be associated with an instance manager
+        /// If the instance is already managed it will be returned directly
+        /// </summary>
+        public static ManagedFactorioInstance FromInstance(IFactorioInstance instance, ModManager modManager)
+        {
+            if (instance is null) throw new ArgumentNullException(nameof(instance));
+            if (modManager is null) throw new ArgumentNullException(nameof(modManager));
+
+            if (instance is ManagedFactorioInstance managedInstance)
+            {
+                if (managedInstance.ModManager != modManager)
+                    throw new InvalidOperationException("Managed instance already has another associated mod manager");
+                return managedInstance;
+            }
+
+            return new ManagedFactorioInstance(instance, modManager, false);
+        }
 
         public void Start(string[] args) => _baseInstance.Start(args);
 
@@ -113,22 +148,12 @@ namespace ModMyFactory.Game
         /// All contents in the old directory will be deleted!
         /// </summary>
         /// <param name="destination">The location to link to.</param>
-        public void LinkModDirectory(string destination)
-        {
-            if (HasManagerAttached)
-                throw new InvalidOperationException("Mod directory cannot be linked manually while the instance is attached to a manager.");
-            LinkModDirectoryInternal(destination);
-        }
+        public void LinkModDirectory(string destination) => LinkDirectory(ModDirectory, destination);
 
         /// <summary>
         /// Unlinks this instances mod directory so it points to its original location.
         /// </summary>
-        public void UnlinkModDirectory()
-        {
-            if (HasManagerAttached)
-                throw new InvalidOperationException("Mod directory cannot be unlinked while the instance is attached to a manager.");
-            UnlinkModDirectoryInternal();
-        }
+        public void UnlinkModDirectory() => UnlinkDirectory(ModDirectory);
 
         public void Dispose()
         {

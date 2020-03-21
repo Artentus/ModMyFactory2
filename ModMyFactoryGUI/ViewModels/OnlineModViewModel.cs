@@ -9,6 +9,7 @@ using Avalonia.Media.Imaging;
 using ModMyFactory.WebApi;
 using ModMyFactory.WebApi.Mods;
 using ModMyFactoryGUI.Helpers;
+using ModMyFactoryGUI.Tasks.Web;
 using ReactiveUI;
 using System;
 using System.Collections.Generic;
@@ -22,6 +23,7 @@ namespace ModMyFactoryGUI.ViewModels
     {
         private static readonly ModReleaseViewModel[] _emptyReleases = new ModReleaseViewModel[0];
 
+        private readonly DownloadManager _downloadManager;
         private ApiModInfo _info;
         private volatile bool _isExtended;
         private ModReleaseViewModel[] _releases;
@@ -86,8 +88,8 @@ namespace ModMyFactoryGUI.ViewModels
 
         public string Description => Info.Description;
 
-        public OnlineModViewModel(ApiModInfo info)
-            => _info = info;
+        public OnlineModViewModel(ApiModInfo info, DownloadManager downloadManager)
+            => (_info, _downloadManager) = (info, downloadManager);
 
         ~OnlineModViewModel()
         {
@@ -144,7 +146,7 @@ namespace ModMyFactoryGUI.ViewModels
             {
                 _releases = new ModReleaseViewModel[Info.Releases.Length];
                 for (int i = 0; i < _releases.Length; i++)
-                    _releases[i] = new ModReleaseViewModel(Info.Releases[i]);
+                    _releases[i] = new ModReleaseViewModel(Info.Releases[i], _downloadManager);
             }
 
             this.RaisePropertyChanged(nameof(Releases));
