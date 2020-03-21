@@ -49,7 +49,7 @@ namespace ModMyFactory.BaseTypes
         /// <summary>
         /// Creates a version object containing only the main and major version parts of this version object.
         /// </summary>
-        public AccurateVersion ToMajor() => new AccurateVersion(Binary & 0xFFFF0000);
+        public AccurateVersion ToMajor() => new AccurateVersion(Binary & 0xFFFFFFFF00000000);
 
         public void Deconstruct(out ushort main, out ushort major, out ushort minor, out ushort revision)
             => (main, major, minor, revision) = (Main, Major, Minor, Revision);
