@@ -33,7 +33,7 @@ namespace ModMyFactoryGUI.Views
         {
             base.OnOpened(e);
 
-            if (App.Current.Settings.Get(SettingName.MainWindowMaximized, false))
+            if (Program.Settings.Get(SettingName.MainWindowMaximized, false))
                 WindowState = WindowState.Maximized;
         }
 
@@ -41,7 +41,7 @@ namespace ModMyFactoryGUI.Views
         {
             base.OnClosing(e);
 
-            App.Current.Settings.Set(SettingName.MainWindowMaximized, WindowState == WindowState.Maximized);
+            Program.Settings.Set(SettingName.MainWindowMaximized, WindowState == WindowState.Maximized);
         }
     }
 }

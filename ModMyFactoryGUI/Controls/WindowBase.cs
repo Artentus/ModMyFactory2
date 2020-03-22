@@ -125,7 +125,7 @@ namespace ModMyFactoryGUI.Controls
 
         protected WindowBase()
         {
-            App.Current.ThemeManager.EnableThemes(this);
+            App.Current.Themes.EnableThemes(this);
 
             if (!RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
             {

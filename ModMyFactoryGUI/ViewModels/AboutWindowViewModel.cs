@@ -34,7 +34,7 @@ namespace ModMyFactoryGUI.ViewModels
 
         public AboutWindowViewModel()
         {
-            WeakSubscriptionManager.Subscribe(App.Current.LocaleManager, nameof(LocaleManager.UICultureChanged), this);
+            WeakSubscriptionManager.Subscribe(App.Current.Locales, nameof(LocaleManager.UICultureChanged), this);
             AssemblyVersions = VersionStatistics.LoadedAssemblyVersions.Select(kvp => new AssemblyVersionViewModel(kvp.Key, kvp.Value));
             CloseCommand = ReactiveCommand.Create(() => AttachedView.Close());
             Changelog = File.ReadAllText("Changelog.md");

@@ -27,7 +27,7 @@ namespace ModMyFactoryGUI.ViewModels
             // This isn't a memory leak since the object stays alive for the entire application lifetime anyway
             App.Loaded += (s1, e1) =>
             {
-                App.Current.LocaleManager.UICultureChanged += (s2, e2) =>
+                App.Current.Locales.UICultureChanged += (s2, e2) =>
                 {
                     // These properties don't really change, but the localization changes
                     PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(HeaderKey)));

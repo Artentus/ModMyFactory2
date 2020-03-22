@@ -32,25 +32,25 @@ namespace ModMyFactoryGUI.ViewModels
 
         public ITheme Theme { get; }
 
-        public string DisplayName => (string)App.Current.LocaleManager.GetResource(ResourcePrefix + Theme.Name);
+        public string DisplayName => (string)App.Current.Locales.GetResource(ResourcePrefix + Theme.Name);
 
         public IBitmap Icon { get; }
 
         public ICommand SelectCommand { get; }
 
-        public bool Selected => App.Current.ThemeManager.SelectedTheme == Theme;
+        public bool Selected => App.Current.Themes.SelectedTheme == Theme;
 
         public ThemeViewModel(ITheme theme)
         {
             Theme = theme;
 
-            string iconPath = Path.Combine(App.Current.ApplicationDirectory.FullName,
+            string iconPath = Path.Combine(Program.ApplicationDirectory.FullName,
                 "themes", "assets", "icons", theme.Name + ".png");
             if (File.Exists(iconPath)) Icon = new Bitmap(iconPath);
 
             SelectCommand = ReactiveCommand.Create(Select);
             WeakSubscriptionManager.Subscribe(InternalEventManager, nameof(EventManager.SelectedThemeChanged), this);
-            WeakSubscriptionManager.Subscribe(App.Current.LocaleManager, nameof(LocaleManager.UICultureChanged), this);
+            WeakSubscriptionManager.Subscribe(App.Current.Locales, nameof(LocaleManager.UICultureChanged), this);
         }
 
         private void SelectedThemeChangedHandler() => this.RaisePropertyChanged(nameof(Selected));
@@ -62,7 +62,7 @@ namespace ModMyFactoryGUI.ViewModels
 
         public void Select()
         {
-            App.Current.ThemeManager.SelectedTheme = Theme;
+            App.Current.Themes.SelectedTheme = Theme;
             InternalEventManager.RaiseEvent();
         }
 

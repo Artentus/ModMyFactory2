@@ -28,6 +28,7 @@ namespace ModMyFactoryGUI
 
         private readonly Manager _manager;
         private readonly SettingManager _settingManager;
+        private readonly DirectoryInfo _binDir, _dataDir;
 
         private Location _factorioLocation, _modLocation;
         private string _customFactorioPath, _customModPath;
@@ -84,10 +85,11 @@ namespace ModMyFactoryGUI
             }
         }
 
-        public LocationManager(Manager manager, SettingManager settingManager)
+        public LocationManager(Manager manager, SettingManager settingManager, DirectoryInfo binDir, DirectoryInfo dataDir)
         {
             _manager = manager;
             _settingManager = settingManager;
+            (_binDir, _dataDir) = (binDir, dataDir);
 
             string factorioLocationString = settingManager.Get(SettingName.FactorioLocation, AppDataValue);
             _factorioLocation = factorioLocationString switch
@@ -112,8 +114,8 @@ namespace ModMyFactoryGUI
         {
             return location switch
             {
-                Location.AppData => App.Current.ApplicationDataDirectory.CreateSubdirectory(dirName),
-                Location.BinDir => App.Current.ApplicationDirectory.CreateSubdirectory(dirName),
+                Location.AppData => _dataDir.CreateSubdirectory(dirName),
+                Location.BinDir => _binDir.CreateSubdirectory(dirName),
                 Location.Custom => Directory.CreateDirectory(customPath),
                 _ => throw new InvalidOperationException() // Shouldn't happen
             };

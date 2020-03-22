@@ -10,7 +10,6 @@ using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
 using Avalonia.ThemeManager;
 using Avalonia.Threading;
-using ModMyFactory;
 using ModMyFactoryGUI.Controls.Icons;
 using ModMyFactoryGUI.Localization;
 using ModMyFactoryGUI.Localization.Json;
@@ -19,49 +18,145 @@ using ModMyFactoryGUI.ViewModels;
 using ModMyFactoryGUI.Views;
 using ReactiveUI;
 using Serilog;
-using Serilog.Events;
 using System;
 using System.IO;
 using System.Linq;
-using System.Reflection;
 using System.Threading.Tasks;
 
 namespace ModMyFactoryGUI
 {
     partial class App : Application
     {
-        public static new App Current => Application.Current as App;
-
         public static event EventHandler Loaded;
 
         public static event EventHandler ShuttingDown;
 
-        public IClassicDesktopStyleApplicationLifetime Lifetime => (IClassicDesktopStyleApplicationLifetime)ApplicationLifetime;
-
-        public MainWindow MainWindow => Lifetime.MainWindow as MainWindow;
+        public IClassicDesktopStyleApplicationLifetime Lifetime { get; private set; }
 
         public MenuItemViewModel ShutdownItemViewModel { get; }
 
-        public DirectoryInfo ApplicationDirectory { get; }
+        public LayoutSettings LayoutSettings { get; }
 
-        public DirectoryInfo ApplicationDataDirectory { get; }
+        public LocaleManager Locales { get; }
 
-        public SettingManager Settings { get; private set; }
+        public IThemeSelector Themes { get; }
 
-        public LayoutSettings LayoutSettings { get; private set; }
+        public CredentialsManager Credentials { get; }
 
-        public LocaleManager LocaleManager { get; private set; }
+        public static new App Current => Application.Current as App;
 
-        public IThemeSelector ThemeManager { get; private set; }
+        public MainWindow MainWindow => Lifetime.MainWindow as MainWindow;
 
-        public Manager Manager { get; private set; }
+        public App()
+        {
+            // GUI-specific global singletons
+            LayoutSettings = new LayoutSettings(Program.Settings);
+            Locales = LoadLocales();
+            Themes = LoadThemes();
+            Credentials = new CredentialsManager(Program.Settings);
 
-        public LocationManager Locations { get; private set; }
+            Program.Settings.Save();
 
-        public CredentialsManager Credentials { get; private set; }
+            // Global shutdown command
+            var shutdownCommand = ReactiveCommand.CreateFromTask(ShutdownAsync);
+            ShutdownItemViewModel = new MenuItemViewModel(shutdownCommand, false, () => new CloseIcon(), "CloseMenuItem", "CloseHotkey");
+        }
+
+        private static LocaleManager LoadLocales()
+        {
+            LocaleManager locales;
+
+            var langDir = new DirectoryInfo(Path.Combine(Program.ApplicationDirectory.FullName, "lang"));
+            if (langDir.Exists)
+            {
+                var localeProvider = new JsonLocaleProvider(langDir);
+                try
+                {
+                    locales = new LocaleManager(localeProvider);
+                    Log.Information("Language files successfully loaded. Available languages: {0}",
+                        string.Join(", ", locales.AvailableCultures.Select(c => c.EnglishName)));
+                }
+                catch (LocaleException ex)
+                {
+                    locales = new LocaleManager();
+                    Log.Warning(ex, "Language files could not be loaded");
+                }
+            }
+            else
+            {
+                locales = new LocaleManager();
+                Log.Warning("Language files not found");
+            }
+
+            var cultureName = Program.Settings.Get(SettingName.UICulture, LocaleProvider.DefaultCulture);
+            var selectedCulture = locales.AvailableCultures.Where(c => string.Equals(c.TwoLetterISOLanguageName, cultureName)).FirstOrDefault();
+            if (selectedCulture is null)
+            {
+                Log.Warning("Language '{0}' not available, reverting to default", cultureName);
+                selectedCulture = locales.DefaultCulture;
+                Program.Settings.Set(SettingName.UICulture, selectedCulture.TwoLetterISOLanguageName);
+            }
+            else
+            {
+                Log.Information("Language set to {0}", selectedCulture.EnglishName);
+            }
+            locales.UICulture = selectedCulture;
+            locales.UICultureChanged += (sender, e) =>
+            {
+                Program.Settings.Set(SettingName.UICulture, locales.UICulture.TwoLetterISOLanguageName);
+                Program.Settings.Save();
+            };
+
+            return locales;
+        }
+
+        private static IThemeSelector LoadThemes()
+        {
+            var themeDir = Path.Combine(Program.ApplicationDirectory.FullName, "themes");
+            var themes = ThemeSelector.LoadSafe(themeDir);
+            Log.Information("Themes successfully loaded; available themes: {0}",
+                string.Join(", ", themes.Select(t => t.Name)));
+
+            var themeName = Program.Settings.Get(SettingName.Theme, themes.First().Name);
+            if (!themes.SelectTheme(themeName))
+            {
+                Log.Warning("Theme '{0}' not available, reverting to default", themeName);
+                themes.SelectedTheme = themes.First();
+                Program.Settings.Set(SettingName.Theme, themes.SelectedTheme.Name);
+            }
+            else
+            {
+                Log.Information("Theme set to {0}", themeName);
+            }
+
+            themes.PropertyChanged += (sender, e) =>
+            {
+                if (e.PropertyName == nameof(ThemeSelector.SelectedTheme))
+                {
+                    Program.Settings.Set(SettingName.Theme, themes.SelectedTheme.Name);
+                    Program.Settings.Save();
+                }
+            };
+
+            return themes;
+        }
+
+        private void Shutdown() => Lifetime.Shutdown();
+
+        private async Task ShutdownAsync()
+        {
+            var uiDispatcher = Dispatcher.UIThread;
+            if (uiDispatcher.CheckAccess()) Shutdown();
+            else await uiDispatcher.InvokeAsync(Shutdown, DispatcherPriority.Send);
+        }
+
+        private void OnExit(object sender, ControlledApplicationLifetimeExitEventArgs e)
+        {
+            ShuttingDown?.Invoke(this, e);
+        }
 
         public bool TryGetThemeResource(string key, out object resource)
-            => ThemeManager.SelectedTheme.Style.TryGetResource(key, out resource);
+            => Themes.SelectedTheme.Style.TryGetResource(key, out resource);
 
         public bool TryGetThemeResource<T>(string key, out T resource)
         {
@@ -78,179 +173,19 @@ namespace ModMyFactoryGUI
             return false;
         }
 
-        private void Shutdown() => Lifetime.Shutdown();
-
-        private async Task ShutdownAsync()
-        {
-            var uiDispatcher = Dispatcher.UIThread;
-            if (uiDispatcher.CheckAccess()) Shutdown();
-            else await uiDispatcher.InvokeAsync(Shutdown, DispatcherPriority.Send);
-        }
-
-        private DirectoryInfo GetApplicationDataDirectory()
-        {
-            string path = null;
-#if NETFULL
-            path = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
-            path = Path.Combine(path, "ModMyFactoryGUI");
-#elif NETCORE
-            var os = Environment.OSVersion;
-            if (os.Platform == PlatformID.Win32NT)
-            {
-                path = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
-                path = Path.Combine(path, "ModMyFactoryGUI");
-            }
-            else if (os.Platform == PlatformID.Unix)
-            {
-                path = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
-                path = Path.Combine(path, ".modmyfactorygui");
-            }
-#endif
-            return new DirectoryInfo(path);
-        }
-
-        public App()
-        {
-            // Application directory
-            var assembly = Assembly.GetEntryAssembly();
-            ApplicationDirectory = new DirectoryInfo(Path.GetDirectoryName(assembly.Location));
-
-            // Data directory
-            ApplicationDataDirectory = GetApplicationDataDirectory();
-            if (!ApplicationDataDirectory.Exists) ApplicationDataDirectory.Create();
-
-            // Global shutdown command
-            var shutdownCommand = ReactiveCommand.CreateFromTask(ShutdownAsync);
-            ShutdownItemViewModel = new MenuItemViewModel(shutdownCommand, false, () => new CloseIcon(), "CloseMenuItem", "CloseHotkey");
-        }
-
         public override void Initialize()
         {
             AvaloniaXamlLoader.Load(this);
-        }
-
-        private void InitLogger()
-        {
-            var logFile = Path.Combine(ApplicationDataDirectory.FullName, "logs", "log_.txt");
-            Log.Logger = new LoggerConfiguration()
-                .WriteTo.Console(restrictedToMinimumLevel: LogEventLevel.Information)
-                .WriteTo.File(logFile, restrictedToMinimumLevel: LogEventLevel.Information,
-                              rollingInterval: RollingInterval.Day, retainedFileCountLimit: 7)
-#if DEBUG
-                .WriteTo.Debug(restrictedToMinimumLevel: LogEventLevel.Verbose)
-#endif
-                .MinimumLevel.Verbose()
-                .CreateLogger();
-
-            Log.Information("GUI version: {0}", VersionStatistics.AppVersion);
-            foreach (var kvp in VersionStatistics.LoadedAssemblyVersions)
-                Log.Information("{0} v{1}", kvp.Key.GetName().Name, kvp.Value);
-        }
-
-        private void LoadSettings()
-        {
-            var settingsFile = Path.Combine(ApplicationDataDirectory.FullName, "settings.json");
-            Settings = SettingManager.LoadSafe(settingsFile);
-            LayoutSettings = new LayoutSettings(Settings);
-        }
-
-        private void LoadLocales()
-        {
-            var langDir = new DirectoryInfo(Path.Combine(ApplicationDirectory.FullName, "lang"));
-            if (langDir.Exists)
-            {
-                var localeProvider = new JsonLocaleProvider(langDir);
-                try
-                {
-                    LocaleManager = new LocaleManager(localeProvider);
-                    Log.Information("Language files successfully loaded. Available languages: {0}",
-                        string.Join(", ", LocaleManager.AvailableCultures.Select(c => c.EnglishName)));
-                }
-                catch (LocaleException ex)
-                {
-                    LocaleManager = new LocaleManager();
-                    Log.Warning(ex, "Language files could not be loaded.");
-                }
-            }
-            else
-            {
-                LocaleManager = new LocaleManager();
-                Log.Warning("Language files not found.");
-            }
-
-            var cultureName = Settings.Get(SettingName.UICulture, LocaleProvider.DefaultCulture);
-            var selectedCulture = LocaleManager.AvailableCultures.Where(c => string.Equals(c.TwoLetterISOLanguageName, cultureName)).FirstOrDefault();
-            if (selectedCulture is null)
-            {
-                Log.Warning("Language '{0}' not available, reverting to default.", cultureName);
-                selectedCulture = LocaleManager.DefaultCulture;
-                Settings.Set(SettingName.UICulture, selectedCulture.TwoLetterISOLanguageName);
-            }
-            else
-            {
-                Log.Information("Language set to {0}.", selectedCulture.EnglishName);
-            }
-            LocaleManager.UICulture = selectedCulture;
-            LocaleManager.UICultureChanged += (sender, e) =>
-            {
-                Settings.Set(SettingName.UICulture, LocaleManager.UICulture.TwoLetterISOLanguageName);
-                Settings.Save();
-            };
-        }
-
-        private void LoadThemes()
-        {
-            var themeDir = Path.Combine(ApplicationDirectory.FullName, "themes");
-            ThemeManager = ThemeSelector.LoadSafe(themeDir);
-            Log.Information("Themes successfully loaded. Available themes: {0}",
-                string.Join(", ", ThemeManager.Select(t => t.Name)));
-
-            var themeName = Settings.Get(SettingName.Theme, ThemeManager.First().Name);
-            if (!ThemeManager.SelectTheme(themeName))
-            {
-                Log.Warning("Theme '{0}' not available, reverting to default.", themeName);
-                ThemeManager.SelectedTheme = ThemeManager.First();
-                Settings.Set(SettingName.Theme, ThemeManager.SelectedTheme.Name);
-            }
-            else
-            {
-                Log.Information("Theme set to {0}.", themeName);
-            }
-
-            ThemeManager.PropertyChanged += (sender, e) =>
-            {
-                if (e.PropertyName == nameof(ThemeSelector.SelectedTheme))
-                {
-                    Settings.Set(SettingName.Theme, ThemeManager.SelectedTheme.Name);
-                    Settings.Save();
-                }
-            };
-        }
-
-        private void OnExit(object sender, ControlledApplicationLifetimeExitEventArgs e)
-        {
-            Settings.Save();
-            Log.CloseAndFlush();
         }
 
         public override void OnFrameworkInitializationCompleted()
         {
             if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime lifetime)
             {
-                InitLogger();
-                LoadSettings();
-                LoadLocales();
-                LoadThemes();
-
-                Settings.Save();
-                lifetime.Exit += OnExit;
-
-                Manager = new Manager();
-                Locations = new LocationManager(Manager, Settings);
-                Credentials = new CredentialsManager(Settings);
+                Lifetime = lifetime;
 
                 Loaded?.Invoke(this, EventArgs.Empty);
-                lifetime.Exit += (sender, e) => ShuttingDown(this, EventArgs.Empty);
+                lifetime.Exit += OnExit;
 
                 var mainViewModel = new MainWindowViewModel();
                 var mainView = View.CreateAndAttach(mainViewModel);

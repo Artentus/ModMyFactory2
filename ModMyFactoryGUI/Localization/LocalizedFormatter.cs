@@ -14,7 +14,7 @@ namespace ModMyFactoryGUI.Localization
     {
         protected override string Convert(object value, string parameter, CultureInfo culture)
         {
-            var formatString = (string)App.Current.LocaleManager.GetResource(parameter);
+            var formatString = (string)App.Current.Locales.GetResource(parameter);
             return string.Format(formatString, value);
         }
 

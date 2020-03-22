@@ -42,7 +42,7 @@ namespace ModMyFactoryGUI.ViewModels
         public double DownloadProgress { get; private set; }
 
         public IEnumerable<ThemeViewModel> AvailableThemes
-            => App.Current.ThemeManager.Select(t => new ThemeViewModel(t));
+            => App.Current.Themes.Select(t => new ThemeViewModel(t));
 
         public ManagerViewModel ManagerViewModel { get; }
 
@@ -91,7 +91,7 @@ namespace ModMyFactoryGUI.ViewModels
         }
 
         public IEnumerable<CultureViewModel> AvailableCultures
-            => App.Current.LocaleManager.AvailableCultures.Select(c => new CultureViewModel(c));
+            => App.Current.Locales.AvailableCultures.Select(c => new CultureViewModel(c));
 
         public MainWindowViewModel()
         {
@@ -111,7 +111,7 @@ namespace ModMyFactoryGUI.ViewModels
             SelectedViewModel = ManagerViewModel;
 
             // Property doesn't actually change but we need to refresh the formatter
-            App.Current.LocaleManager.UICultureChanged += (sender, e)
+            App.Current.Locales.UICultureChanged += (sender, e)
                 => this.RaisePropertyChanged(nameof(DownloadDescription));
         }
 
@@ -148,7 +148,7 @@ namespace ModMyFactoryGUI.ViewModels
                 if (success)
                 {
                     // Mod successfully downloaded
-                    App.Current.Manager.AddMod(mod);
+                    Program.Manager.AddMod(mod);
                     Log.Information($"Mod {mod.Name} version {mod.Version} successfully loaded");
                 }
                 else
@@ -171,6 +171,10 @@ namespace ModMyFactoryGUI.ViewModels
             {
                 case DownloadModReleaseJob j:
                     await OnDownloadModCompleted(j);
+                    break;
+
+                case DownloadFactorioJob j:
+                    // ToDo
                     break;
             }
         }

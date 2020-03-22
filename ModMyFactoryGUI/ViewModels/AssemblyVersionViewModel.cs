@@ -23,7 +23,7 @@ namespace ModMyFactoryGUI.ViewModels
         {
             AssemblyName = assembly.GetName().Name;
             AssemblyVersion = version;
-            WeakSubscriptionManager.Subscribe(App.Current.LocaleManager, nameof(LocaleManager.UICultureChanged), this);
+            WeakSubscriptionManager.Subscribe(App.Current.Locales, nameof(LocaleManager.UICultureChanged), this);
         }
 
         private void UICultureChangedHandler(object sender, EventArgs e)

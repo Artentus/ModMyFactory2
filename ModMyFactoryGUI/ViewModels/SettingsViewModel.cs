@@ -208,8 +208,8 @@ namespace ModMyFactoryGUI.ViewModels
                     ? Location.BinDir
                     : Location.Custom;
 
-            if (factorioLocation != App.Current.Locations.FactorioLocation)
-                await App.Current.Locations.MoveFactorioLocationAsync(factorioLocation, _customFactorioLocation);
+            if (factorioLocation != Program.Locations.FactorioLocation)
+                await Program.Locations.MoveFactorioLocationAsync(factorioLocation, _customFactorioLocation);
 
 
             Location modLocation = ModLocationIsAppData
@@ -218,8 +218,8 @@ namespace ModMyFactoryGUI.ViewModels
                     ? Location.BinDir
                     : Location.Custom;
 
-            if (modLocation != App.Current.Locations.ModLocation)
-                await App.Current.Locations.MoveModLocationAsync(modLocation, _customModLocation);
+            if (modLocation != Program.Locations.ModLocation)
+                await Program.Locations.MoveModLocationAsync(modLocation, _customModLocation);
         }
 
         private async Task ApplyChangesAsync()
@@ -228,7 +228,7 @@ namespace ModMyFactoryGUI.ViewModels
             await ApplyLocationChangesAsync();
 
             SettingsChanged = false;
-            App.Current.Settings.Save();
+            Program.Settings.Save();
         }
 
         private void Reset()
@@ -241,7 +241,7 @@ namespace ModMyFactoryGUI.ViewModels
             _credentialsChanged = false;
             CredentialsError = false;
 
-            switch (App.Current.Locations.FactorioLocation)
+            switch (Program.Locations.FactorioLocation)
             {
                 case Location.AppData:
                     FactorioLocationIsAppData = true;
@@ -253,11 +253,11 @@ namespace ModMyFactoryGUI.ViewModels
 
                 case Location.Custom:
                     FactorioLocationIsCustom = true;
-                    CustomFactorioLocation = App.Current.Locations.CustomFactorioPath;
+                    CustomFactorioLocation = Program.Locations.CustomFactorioPath;
                     break;
             }
 
-            switch (App.Current.Locations.ModLocation)
+            switch (Program.Locations.ModLocation)
             {
                 case Location.AppData:
                     ModLocationIsAppData = true;
@@ -269,7 +269,7 @@ namespace ModMyFactoryGUI.ViewModels
 
                 case Location.Custom:
                     ModLocationIsCustom = true;
-                    CustomFactorioLocation = App.Current.Locations.CustomModPath;
+                    CustomFactorioLocation = Program.Locations.CustomModPath;
                     break;
             }
 

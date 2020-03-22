@@ -5,6 +5,8 @@
 //  the Free Software Foundation, either version 3 of the License, or
 //  (at your option) any later version.
 
+using ModMyFactory.BaseTypes;
+using ModMyFactory.WebApi.Factorio;
 using ModMyFactory.WebApi.Mods;
 using System;
 using System.IO;
@@ -40,9 +42,32 @@ namespace ModMyFactoryGUI.Tasks.Web
 
         protected override Task<FileInfo> DownloadFile(CancellationToken cancellationToken, IProgress<double> progress)
         {
-            var dir = App.Current.Locations.GetModDir(Release.Info.FactorioVersion);
+            var dir = Program.Locations.GetModDir(Release.Info.FactorioVersion);
             string fileName = Path.Combine(dir.FullName, Release.FileName);
             return ModApi.DownloadModReleaseAsync(Release, _username, _token, fileName, cancellationToken, progress);
+        }
+    }
+
+    internal sealed class DownloadFactorioJob : DownloadJob
+    {
+        private readonly string _username, _token;
+        private readonly AccurateVersion _version;
+        private readonly FactorioBuild _build;
+        private readonly Platform _platform;
+
+        public override string Description => $"Factorio {_version}";
+
+        public DownloadFactorioJob(string username, string token, AccurateVersion version, FactorioBuild build, Platform platform)
+        {
+            (_username, _token) = (username, token);
+            (_version, _build, _platform) = (version, build, platform);
+        }
+
+        protected override Task<FileInfo> DownloadFile(CancellationToken cancellationToken, IProgress<double> progress)
+        {
+            var dir = Program.TemporaryDirectory;
+            string fileName = Path.Combine(dir.FullName, $"Factorio_{_version}.tmp"); // Dummy extension because it could be either ZIP or TAR.GZ
+            return DownloadApi.DownloadReleaseAsync(_version, _build, _platform, _username, _token, fileName, cancellationToken, progress);
         }
     }
 }

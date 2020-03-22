@@ -32,8 +32,8 @@ namespace ModMyFactoryGUI
             {
                 string titleKey = _key + "_Title";
                 string messageKey = _key + "_Message";
-                string title = (string)App.Current.LocaleManager.GetResource(titleKey);
-                string message = (string)App.Current.LocaleManager.GetResource(messageKey);
+                string title = (string)App.Current.Locales.GetResource(titleKey);
+                string message = (string)App.Current.Locales.GetResource(messageKey);
 
                 return MessageBox.Show(title, message, _kind, _options);
             }

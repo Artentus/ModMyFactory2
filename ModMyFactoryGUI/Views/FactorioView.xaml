@@ -14,7 +14,11 @@ the Free Software Foundation, either version 3 of the License, or
              x:Class="ModMyFactoryGUI.Views.FactorioView">
 
   <Border BorderThickness="1" BorderBrush="{DynamicResource ThemeBorderMidBrush}">
+    <Grid Margin="4">
+      <ListBox Margin="4">
 
+      </ListBox>
+    </Grid>
   </Border>
 
 </UserControl>

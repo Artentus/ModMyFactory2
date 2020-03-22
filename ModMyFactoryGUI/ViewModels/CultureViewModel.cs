@@ -25,7 +25,7 @@ namespace ModMyFactoryGUI.ViewModels
 
         public ICommand SelectCommand { get; }
 
-        public bool Selected => string.Equals(App.Current.LocaleManager.UICulture.TwoLetterISOLanguageName,
+        public bool Selected => string.Equals(App.Current.Locales.UICulture.TwoLetterISOLanguageName,
             Culture.TwoLetterISOLanguageName, StringComparison.OrdinalIgnoreCase);
 
         public CultureViewModel(CultureInfo culture)
@@ -33,12 +33,12 @@ namespace ModMyFactoryGUI.ViewModels
             Culture = culture;
             DisplayName = $"{culture.NativeName} ({culture.EnglishName})";
 
-            string iconPath = Path.Combine(App.Current.ApplicationDirectory.FullName,
+            string iconPath = Path.Combine(Program.ApplicationDirectory.FullName,
                 "lang", "assets", "icons", culture.TwoLetterISOLanguageName + ".png");
             if (File.Exists(iconPath)) Icon = new Bitmap(iconPath);
 
             SelectCommand = ReactiveCommand.Create(Select);
-            App.Current.LocaleManager.UICultureChanged += UICultureChangedHandler;
+            App.Current.Locales.UICultureChanged += UICultureChangedHandler;
         }
 
         ~CultureViewModel()
@@ -54,11 +54,11 @@ namespace ModMyFactoryGUI.ViewModels
             {
                 disposed = true;
                 if (disposing) Icon.Dispose();
-                App.Current.LocaleManager.UICultureChanged -= UICultureChangedHandler;
+                App.Current.Locales.UICultureChanged -= UICultureChangedHandler;
             }
         }
 
-        public void Select() => App.Current.LocaleManager.UICulture = Culture;
+        public void Select() => App.Current.Locales.UICulture = Culture;
 
         public void Dispose()
         {

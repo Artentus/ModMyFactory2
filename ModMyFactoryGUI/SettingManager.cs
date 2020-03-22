@@ -6,6 +6,7 @@
 //  (at your option) any later version.
 
 using ModMyFactoryGUI.Controls;
+using ModMyFactoryGUI.Helpers;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Serilog;
@@ -14,6 +15,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace ModMyFactoryGUI
 {
@@ -42,21 +44,19 @@ namespace ModMyFactoryGUI
             : this(filePath, new Dictionary<string, object>())
         { }
 
-        private static bool TryLoad(string filePath, out SettingManager manager)
+        private static async Task<(bool, SettingManager)> TryLoad(string filePath)
         {
-            manager = default;
-            if (!File.Exists(filePath)) return false;
+            if (!File.Exists(filePath)) return (false, null);
 
-            var json = File.ReadAllText(filePath, Encoding.UTF8);
+            var json = await FileHelper.ReadAllTextAsync(filePath, Encoding.UTF8);
             try
             {
                 var table = JsonConvert.DeserializeObject<IDictionary<string, object>>(json, _settings);
-                manager = new SettingManager(filePath, table);
-                return true;
+                return (true, new SettingManager(filePath, table));
             }
             catch
             {
-                return false;
+                return (false, null);
             }
         }
 
@@ -93,12 +93,13 @@ namespace ModMyFactoryGUI
             return token.ToObject<T>();
         }
 
-        public static SettingManager LoadSafe(string filePath)
+        public static async Task<SettingManager> LoadSafeAsync(string filePath)
         {
-            if (!TryLoad(filePath, out var manager))
+            var (success, manager) = await TryLoad(filePath);
+            if (!success)
             {
                 manager = new SettingManager(filePath);
-                Log.Warning("Unable to load settings from '{0}', using defaults.", filePath);
+                Log.Warning("Unable to load settings from '{0}', using defaults", filePath);
             }
             else
             {
@@ -151,6 +152,13 @@ namespace ModMyFactoryGUI
         {
             var json = JsonConvert.SerializeObject(_table, Formatting.Indented, _settings);
             File.WriteAllText(_filePath, json, Encoding.UTF8);
+            Log.Debug("Settings saved to '{0}'.", _filePath);
+        }
+
+        public async Task SaveAsync()
+        {
+            var json = JsonConvert.SerializeObject(_table, Formatting.Indented, _settings);
+            await FileHelper.WriteAllTextAsync(_filePath, json, Encoding.UTF8);
             Log.Debug("Settings saved to '{0}'.", _filePath);
         }
     }

@@ -15,7 +15,7 @@ namespace ModMyFactoryGUI.Localization
         protected override string Convert(string value, object parameter, CultureInfo culture)
             => string.IsNullOrEmpty(value)
             ? string.Empty
-            : (string)App.Current.LocaleManager.GetResource(value);
+            : (string)App.Current.Locales.GetResource(value);
 
         protected override string ConvertBack(string value, object parameter, CultureInfo culture)
             => throw new NotSupportedException();

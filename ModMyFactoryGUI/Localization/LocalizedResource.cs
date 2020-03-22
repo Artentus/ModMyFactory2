@@ -20,13 +20,13 @@ namespace ModMyFactoryGUI.Localization
         public LocalizedResource(string key)
         {
             Key = key;
-            Value = App.Current.LocaleManager.GetResource(Key);
-            WeakSubscriptionManager.Subscribe(App.Current.LocaleManager, nameof(LocaleManager.UICultureChanged), this);
+            Value = App.Current.Locales.GetResource(Key);
+            WeakSubscriptionManager.Subscribe(App.Current.Locales, nameof(LocaleManager.UICultureChanged), this);
         }
 
         private void UICultureChangedHandler(object sender, EventArgs e)
         {
-            Value = App.Current.LocaleManager.GetResource(Key);
+            Value = App.Current.Locales.GetResource(Key);
             OnPropertyChanged(new PropertyChangedEventArgs(nameof(Value)));
         }
 
