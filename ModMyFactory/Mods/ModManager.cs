@@ -9,11 +9,12 @@ using ModMyFactory.BaseTypes;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Linq;
 
 namespace ModMyFactory.Mods
 {
-    public sealed class ModManager : ICollection<Mod>
+    public sealed class ModManager : ICollection<Mod>, INotifyCollectionChanged
     {
         private readonly Dictionary<string, ModFamily> _families;
         internal static readonly AccurateVersion FormatSwitch = new AccurateVersion(0, 17); // Native support for multiple mods in Factorio 0.17 and onwards
@@ -22,6 +23,11 @@ namespace ModMyFactory.Mods
         /// Is raised if mods in a family change their enabled state
         /// </summary>
         public event EventHandler<ModFamilyEnabledChangedEventArgs> FamilyEnabledChanged;
+
+        /// <summary>
+        /// Occurs when the mod collection changes
+        /// </summary>
+        public event NotifyCollectionChangedEventHandler CollectionChanged;
 
         /// <summary>
         /// The version of Factorio being managed
@@ -68,6 +74,9 @@ namespace ModMyFactory.Mods
 
         private bool TryGetFamily(string name, out ModFamily result) => _families.TryGetValue(name, out result);
 
+        private void OnCollectionChanged(NotifyCollectionChangedEventArgs e)
+                    => CollectionChanged?.Invoke(this, e);
+
         /// <summary>
         /// Adds a mod to be managed
         /// </summary>
@@ -80,7 +89,9 @@ namespace ModMyFactory.Mods
 
             var family = GetFamily(mod.Name);
             if (family.Contains(mod)) return; // If mod already managed do nothing
+
             family.Add(mod);
+            OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add, mod));
         }
 
         /// <summary>
@@ -92,10 +103,15 @@ namespace ModMyFactory.Mods
             if (!TryGetFamily(mod.Name, out var family)) return false;
 
             var result = family.Remove(mod);
-            if (result && (family.Count == 0))
+            if (result)
             {
-                family.ModsEnabledChanged -= OnFamilyModsEnabledChanged;
-                _families.Remove(family.FamilyName);
+                if (family.Count == 0)
+                {
+                    family.ModsEnabledChanged -= OnFamilyModsEnabledChanged;
+                    _families.Remove(family.FamilyName);
+                }
+
+                OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Remove, mod));
             }
             return result;
         }
@@ -108,6 +124,8 @@ namespace ModMyFactory.Mods
             foreach (var family in Families)
                 family.ModsEnabledChanged -= OnFamilyModsEnabledChanged;
             _families.Clear();
+
+            OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
         }
 
         /// <summary>

@@ -73,9 +73,9 @@ namespace ModMyFactory.Mods
         }
 
         /// <summary>
-        /// Tries to load a mod file.
+        /// Tries to load a mod file
         /// </summary>
-        /// <param name="directory">The directory to load.</param>
+        /// <param name="directory">The directory to load</param>
         public static async Task<(bool, ExtractedModFile)> TryLoadAsync(DirectoryInfo directory)
         {
             var infoFile = new FileInfo(Path.Combine(directory.FullName, "info.json"));
@@ -103,9 +103,9 @@ namespace ModMyFactory.Mods
         }
 
         /// <summary>
-        /// Tries to load a mod file.
+        /// Tries to load a mod file
         /// </summary>
-        /// <param name="path">The path to a directory to load.</param>
+        /// <param name="path">The path to a directory to load</param>
         public static async Task<(bool, ExtractedModFile)> TryLoadAsync(string path)
         {
             var dir = new DirectoryInfo(path);
@@ -124,9 +124,9 @@ namespace ModMyFactory.Mods
         }
 
         /// <summary>
-        /// Loads a mod file.
+        /// Loads a mod file
         /// </summary>
-        /// <param name="path">The path to a directory to load.</param>
+        /// <param name="path">The path to a directory to load</param>
         public static async Task<ExtractedModFile> LoadAsync(string path)
         {
             var dir = new DirectoryInfo(path);
@@ -154,9 +154,9 @@ namespace ModMyFactory.Mods
         }
 
         /// <summary>
-        /// Packs this mod file.
+        /// Packs this mod file
         /// </summary>
-        /// <param name="destination">The path to pack this mod file at, excluding the mod files name itself.</param>
+        /// <param name="destination">The path to pack this mod file at, excluding the mod files name itself</param>
         public async Task<ZippedModFile> PackAsync(string destination)
         {
             bool wasEnabled = Enabled;
@@ -184,7 +184,7 @@ namespace ModMyFactory.Mods
         }
 
         /// <summary>
-        /// Packs this mod file in the same location.
+        /// Packs this mod file in the same location
         /// </summary>
         public async Task<ZippedModFile> PackAsync() => await PackAsync(_directory.Parent.FullName);
 

@@ -8,7 +8,6 @@
 using ModMyFactory.BaseTypes;
 using ModMyFactory.Game;
 using ModMyFactory.Mods;
-using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
@@ -17,20 +16,20 @@ namespace ModMyFactory
     /// <summary>
     /// Manages Factorio instances and their mods
     /// </summary>
-    public sealed class Manager : IEnumerable<ManagedFactorioInstance>
+    public sealed class Manager
     {
-        private readonly List<ManagedFactorioInstance> _managedInstances;
+        private readonly ObservableCollection<ManagedFactorioInstance> _managedInstances;
         private readonly Dictionary<AccurateVersion, ModManager> _modManagers;
 
         /// <summary>
         /// The list of instances being managed
         /// </summary>
-        public IReadOnlyList<ManagedFactorioInstance> ManagedInstances { get; }
+        public FactorioInstanceCollection ManagedInstances { get; }
 
         public Manager()
         {
-            _managedInstances = new List<ManagedFactorioInstance>();
-            ManagedInstances = new ReadOnlyCollection<ManagedFactorioInstance>(_managedInstances);
+            _managedInstances = new ObservableCollection<ManagedFactorioInstance>();
+            ManagedInstances = new FactorioInstanceCollection(_managedInstances);
             _modManagers = new Dictionary<AccurateVersion, ModManager>();
         }
 
@@ -61,6 +60,7 @@ namespace ModMyFactory
 
         /// <summary>
         /// Adds a Factorio instance to the manager
+        /// Instances that are already managed are not valid
         /// </summary>
         /// <param name="instance">The instance to add</param>
         public ManagedFactorioInstance AddInstance(in IFactorioInstance instance)
@@ -68,7 +68,7 @@ namespace ModMyFactory
             var modManager = GetModManager(instance.Version);
             var managedInstance = ManagedFactorioInstance.CreateInternal(instance, modManager);
 
-            AddInstance(managedInstance);
+            _managedInstances.Add(managedInstance);
             return managedInstance;
         }
 
@@ -78,6 +78,12 @@ namespace ModMyFactory
         /// <param name="instance">The instance to remove</param>
         public bool RemoveInstance(in ManagedFactorioInstance instance)
             => _managedInstances.Remove(instance);
+
+        /// <summary>
+        /// Removes all Factorio instances from the manager
+        /// </summary>
+        public void ClearInstances()
+            => _managedInstances.Clear();
 
         /// <summary>
         /// Adds a mod to the corresponding mod manager
@@ -103,8 +109,13 @@ namespace ModMyFactory
             }
         }
 
-        public IEnumerator<ManagedFactorioInstance> GetEnumerator() => _managedInstances.GetEnumerator();
-
-        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+        /// <summary>
+        /// Removes all mods from their corresponding managers
+        /// </summary>
+        public void ClearMods()
+        {
+            foreach (var modManager in _modManagers.Values)
+                modManager.Clear();
+        }
     }
 }

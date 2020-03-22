@@ -15,46 +15,46 @@ namespace ModMyFactory.Mods
     public interface IModFile : IDisposable
     {
         /// <summary>
-        /// The path of the mod file.
+        /// The path of the mod file
         /// </summary>
         string FilePath { get; }
 
         /// <summary>
-        /// Information about the mod file.
+        /// Information about the mod file
         /// </summary>
         ModInfo Info { get; }
 
         /// <summary>
-        /// A stream containing bitmap data of the mods thumbnail. Optional.
+        /// Optional. A stream containing bitmap data of the mods thumbnail
         /// </summary>
         Stream Thumbnail { get; }
 
         /// <summary>
-        /// Determines whether this mod file is extracted.
+        /// Determines whether this mod file is extracted
         /// </summary>
         bool IsExtracted { get; }
 
         /// <summary>
-        /// Gets or sets if this mod file is enabled on file level.
-        /// A disabled mod file will not be recognized by Factorio.
+        /// Gets or sets if this mod file is enabled on file level
+        /// A disabled mod file will not be recognized by Factorio
         /// </summary>
         bool Enabled { get; set; }
 
         /// <summary>
-        /// Deletes this mod file.
+        /// Deletes this mod file
         /// </summary>
         void Delete();
 
         /// <summary>
-        /// Copies this mod file to a new location.
+        /// Copies this mod file to a new location
         /// </summary>
-        /// <param name="destination">The path to copy this mod file to, excluding the mod files name itself.</param>
+        /// <param name="destination">The path to copy this mod file to, excluding the mod files name itself</param>
         Task<IModFile> CopyToAsync(string destination);
 
         /// <summary>
-        /// Moves this mod file to a new location.
+        /// Moves this mod file to a new location
         /// </summary>
-        /// <param name="destination">The path to move this mod file to, excluding the mod files name itself.</param>
+        /// <param name="destination">The path to move this mod file to, excluding the mod files name itself</param>
         Task MoveToAsync(string destination);
     }
 }

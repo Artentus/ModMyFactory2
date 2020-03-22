@@ -59,9 +59,9 @@ namespace ModMyFactory.Mods
         }
 
         /// <summary>
-        /// Tries to load a mod file.
+        /// Tries to load a mod file
         /// </summary>
-        /// <param name="file">The archive file to load.</param>
+        /// <param name="file">The archive file to load</param>
         public static async Task<(bool, ZippedModFile)> TryLoadAsync(FileInfo file)
         {
             if (!file.Exists) return (false, null);
@@ -71,36 +71,32 @@ namespace ModMyFactory.Mods
             Stream thumbnail = null;
             try
             {
-                using (var fs = file.OpenRead())
+                using var fs = file.OpenRead();
+                using var reader = ZipReader.Open(fs);
+                while (reader.MoveToNextEntry())
                 {
-                    using (var reader = ZipReader.Open(fs))
+                    var entry = reader.Entry;
+                    if (!entry.IsDirectory)
                     {
-                        while (reader.MoveToNextEntry())
+                        if (entry.Key.StartsWith(file.NameWithoutExtension() + "/", StringComparison.InvariantCultureIgnoreCase)
+                            && (entry.Key.IndexOf('/') == entry.Key.LastIndexOf('/'))) // All top level files
                         {
-                            var entry = reader.Entry;
-                            if (!entry.IsDirectory)
+                            if (entry.Key.EndsWith("info.json"))
                             {
-                                if (entry.Key.StartsWith(file.NameWithoutExtension() + "/", StringComparison.InvariantCultureIgnoreCase)
-                                    && (entry.Key.IndexOf('/') == entry.Key.LastIndexOf('/'))) // All top level files
-                                {
-                                    if (entry.Key.EndsWith("info.json"))
-                                    {
-                                        var stream = new MemoryStream();
-                                        await Task.Run(() => reader.WriteEntryTo(stream));
+                                var stream = new MemoryStream();
+                                await Task.Run(() => reader.WriteEntryTo(stream));
 
-                                        string json = null;
-                                        using (var sr = new StreamReader(stream, Encoding.UTF8))
-                                            json = await sr.ReadToEndAsync();
+                                string json = null;
+                                using (var sr = new StreamReader(stream, Encoding.UTF8))
+                                    json = await sr.ReadToEndAsync();
 
-                                        info = ModInfo.FromJson(json);
-                                        hasInfo = true;
-                                    }
-                                    else if (entry.Key.EndsWith("thumbnail.png"))
-                                    {
-                                        thumbnail = new MemoryStream();
-                                        await Task.Run(() => reader.WriteEntryTo(thumbnail));
-                                    }
-                                }
+                                info = ModInfo.FromJson(json);
+                                hasInfo = true;
+                            }
+                            else if (entry.Key.EndsWith("thumbnail.png"))
+                            {
+                                thumbnail = new MemoryStream();
+                                await Task.Run(() => reader.WriteEntryTo(thumbnail));
                             }
                         }
                     }
@@ -124,9 +120,9 @@ namespace ModMyFactory.Mods
         }
 
         /// <summary>
-        /// Tries to load a mod file.
+        /// Tries to load a mod file
         /// </summary>
-        /// <param name="path">The path to an archive file to load.</param>
+        /// <param name="path">The path to an archive file to load</param>
         public static async Task<(bool, ZippedModFile)> TryLoadAsync(string path)
         {
             var file = new FileInfo(path);
@@ -134,9 +130,9 @@ namespace ModMyFactory.Mods
         }
 
         /// <summary>
-        /// Loads a mod file.
+        /// Loads a mod file
         /// </summary>
-        /// <param name="file">The archive file to load.</param>
+        /// <param name="file">The archive file to load</param>
         public static async Task<ZippedModFile> LoadAsync(FileInfo file)
         {
             (bool success, var result) = await TryLoadAsync(file);
@@ -145,9 +141,9 @@ namespace ModMyFactory.Mods
         }
 
         /// <summary>
-        /// Loads a mod file.
+        /// Loads a mod file
         /// </summary>
-        /// <param name="path">The path to an archive file to load.</param>
+        /// <param name="path">The path to an archive file to load</param>
         public static async Task<ZippedModFile> LoadAsync(string path)
         {
             var file = new FileInfo(path);
@@ -175,23 +171,19 @@ namespace ModMyFactory.Mods
         }
 
         /// <summary>
-        /// Extracts this mod file.
+        /// Extracts this mod file
         /// </summary>
-        /// <param name="destination">The path to extract this mod file to, excluding the mod files name itself.</param>
+        /// <param name="destination">The path to extract this mod file to, excluding the mod files name itself</param>
         public async Task<ExtractedModFile> ExtractToAsync(string destination)
         {
             await Task.Run(() =>
             {
-                using (var fs = _file.OpenRead())
+                using var fs = _file.OpenRead();
+                using var reader = ZipReader.Open(fs);
+                while (reader.MoveToNextEntry())
                 {
-                    using (var reader = ZipReader.Open(fs))
-                    {
-                        while (reader.MoveToNextEntry())
-                        {
-                            if (!reader.Entry.IsDirectory)
-                                reader.WriteEntryToDirectory(destination, new ExtractionOptions() { ExtractFullPath = true });
-                        }
-                    }
+                    if (!reader.Entry.IsDirectory)
+                        reader.WriteEntryToDirectory(destination, new ExtractionOptions() { ExtractFullPath = true });
                 }
             });
 
@@ -204,7 +196,7 @@ namespace ModMyFactory.Mods
         }
 
         /// <summary>
-        /// Extracts this mod file to the same location.
+        /// Extracts this mod file to the same location
         /// </summary>
         public async Task<ExtractedModFile> ExtractAsync() => await ExtractToAsync(_file.Directory.FullName);
 

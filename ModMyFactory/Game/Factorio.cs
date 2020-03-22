@@ -6,14 +6,12 @@
 //  (at your option) any later version.
 
 using ModMyFactory.Mods;
-using System.IO;
-using System.Threading.Tasks;
-
-#if NETCORE
-
+using SharpCompress.Common;
+using SharpCompress.Readers;
 using System;
-
-#endif
+using System.IO;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace ModMyFactory.Game
 {
@@ -51,9 +49,9 @@ namespace ModMyFactory.Game
         }
 
         /// <summary>
-        /// Tries to load a Factorio instance.
+        /// Tries to load a Factorio instance
         /// </summary>
-        /// <param name="directory">The directory the instance is stored in.</param>
+        /// <param name="directory">The directory the instance is stored in</param>
         public static async Task<(bool, IFactorioInstance)> TryLoadAsync(DirectoryInfo directory)
         {
             if (!directory.Exists) return (false, null);
@@ -69,9 +67,9 @@ namespace ModMyFactory.Game
         }
 
         /// <summary>
-        /// Tries to load a Factorio instance.
+        /// Tries to load a Factorio instance
         /// </summary>
-        /// <param name="directory">The path the instance is stored at.</param>
+        /// <param name="directory">The path the instance is stored at</param>
         public static async Task<(bool, IFactorioInstance)> TryLoadAsync(string path)
         {
             var dir = new DirectoryInfo(path);
@@ -79,9 +77,9 @@ namespace ModMyFactory.Game
         }
 
         /// <summary>
-        /// Loads a Factorio instance.
+        /// Loads a Factorio instance
         /// </summary>
-        /// <param name="directory">The directory the instance is stored in.</param>
+        /// <param name="directory">The directory the instance is stored in</param>
         public static async Task<IFactorioInstance> LoadAsync(DirectoryInfo directory)
         {
             (bool success, var result) = await TryLoadAsync(directory);
@@ -90,9 +88,9 @@ namespace ModMyFactory.Game
         }
 
         /// <summary>
-        /// Loads a Factorio instance.
+        /// Loads a Factorio instance
         /// </summary>
-        /// <param name="directory">The path the instance is stored at.</param>
+        /// <param name="directory">The path the instance is stored at</param>
         public static async Task<IFactorioInstance> LoadAsync(string path)
         {
             var dir = new DirectoryInfo(path);
@@ -111,7 +109,7 @@ namespace ModMyFactory.Game
         }
 
         /// <summary>
-        /// Tries to load the Factorio Steam instance.
+        /// Tries to load the Factorio Steam instance
         /// </summary>
         public static async Task<(bool, IFactorioInstance)> TryLoadSteamAsync()
         {
@@ -129,13 +127,87 @@ namespace ModMyFactory.Game
         }
 
         /// <summary>
-        /// Loads the Factorio Steam instance.
+        /// Loads the Factorio Steam instance
         /// </summary>
         public static async Task<IFactorioInstance> LoadSteamAsync()
         {
             (bool success, var result) = await TryLoadSteamAsync();
             if (!success) throw new ManagerException("Factorio Steam version not found.");
             return result;
+        }
+
+        /// <summary>
+        /// Tries to extract an archive containing Factorio
+        /// </summary>
+        /// <param name="archiveFile">The file to extract</param>
+        /// <param name="destination">Where to extract to</param>
+        /// <param name="dirName">Optional. The name of the top level directory of the resulting instance, if successfull</param>
+        public static async Task<(bool, IFactorioInstance)> TryExtract(FileInfo archiveFile, string destination, string dirName = default)
+        {
+            var destinationDir = new DirectoryInfo(destination);
+            if (!destinationDir.Exists) destinationDir.Create();
+
+            var (valid, extractName) = await Task.Run(() =>
+            {
+                using var stream = archiveFile.OpenRead();
+                using var reader = ReaderFactory.Open(stream);
+
+                string topLevelDir = null;
+
+                while (reader.MoveToNextEntry())
+                {
+                    // All files in a valid Factorio archive must reside
+                    // in a top-level folder called 'Factorio_*'. If we
+                    // we find a file that doesn't we can stop immediately.
+                    if (topLevelDir is null)
+                    {
+                        topLevelDir = Path.GetPathRoot(reader.Entry.Key.TrimStart('/', '\\'));
+                        topLevelDir = topLevelDir.TrimEnd('/', '\\');
+
+                        if (!topLevelDir.StartsWith("factorio", StringComparison.OrdinalIgnoreCase))
+                            return (false, topLevelDir);
+                    }
+                    else
+                    {
+                        string dir = Path.GetPathRoot(reader.Entry.Key.TrimStart('/', '\\'));
+                        dir = dir.TrimEnd('/', '\\');
+                        if (!string.Equals(dir, topLevelDir, StringComparison.OrdinalIgnoreCase))
+                            return (false, topLevelDir);
+
+                        if (!reader.Entry.IsDirectory)
+                            reader.WriteEntryToDirectory(destination, new ExtractionOptions() { ExtractFullPath = true });
+                    }
+                }
+                return (true, topLevelDir);
+            });
+
+            if (!valid)
+            {
+                // We may have extracted some files already, but they must
+                // all reside in a directory called 'Factorio_*' so we can
+                // clean up easily.
+                var dir = destinationDir.EnumerateDirectories(extractName).FirstOrDefault();
+                if (!(dir is null)) dir.Delete(true);
+
+                return (false, null);
+            }
+            else
+            {
+                var dir = destinationDir.EnumerateDirectories(extractName).First(); // Must exist
+                if (!string.IsNullOrEmpty(dirName))
+                    dir.MoveTo(Path.Combine(dir.Parent.FullName, dirName));
+
+                var (success, instance) = await TryLoadAsync(dir);
+                if (success)
+                {
+                    return (true, instance);
+                }
+                else
+                {
+                    dir.Delete(true);
+                    return (false, null);
+                }
+            }
         }
     }
 }
