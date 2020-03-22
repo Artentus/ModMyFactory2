@@ -33,13 +33,17 @@ namespace ModMyFactoryGUI.ViewModels
 
         public ICommand OpenAboutWindowCommand { get; }
 
-        public DownloadManager DownloadManager { get; }
+        public DownloadQueue DownloadQueue { get; }
 
         public bool IsDownloading { get; private set; }
 
         public string DownloadDescription { get; private set; }
 
         public double DownloadProgress { get; private set; }
+
+        public int DownloadQueueLength => DownloadQueue.Length;
+
+        public bool ShowDownloadQueueLength => DownloadQueueLength > 0;
 
         public IEnumerable<ThemeViewModel> AvailableThemes
             => App.Current.Themes.Select(t => new ThemeViewModel(t));
@@ -99,20 +103,30 @@ namespace ModMyFactoryGUI.ViewModels
             OpenAboutWindowCommand = ReactiveCommand.CreateFromTask(OpenAboutWindow);
 
             _downloadProgress = new Progress<(DownloadJob, double)>(OnDownloadProgressChanged);
-            DownloadManager = new DownloadManager(_downloadProgress);
-            DownloadManager.JobCompleted += OnDownloadJobCompleted;
-            DownloadManager.StartQueue();
-            App.ShuttingDown += (sender, e) => DownloadManager.StopQueue();
+            DownloadQueue = new DownloadQueue(_downloadProgress);
+            DownloadQueue.JobCompleted += OnDownloadJobCompleted;
+            DownloadQueue.LengthChanged += OnDownloadQueueLengthChanged;
+            DownloadQueue.StartQueue();
+            App.ShuttingDown += (sender, e) => DownloadQueue.StopQueue();
 
             ManagerViewModel = new ManagerViewModel();
-            OnlineModsViewModel = new OnlineModsViewModel(DownloadManager);
-            FactorioViewModel = new FactorioViewModel(DownloadManager);
+            OnlineModsViewModel = new OnlineModsViewModel(DownloadQueue);
+            FactorioViewModel = new FactorioViewModel(DownloadQueue);
             SettingsViewModel = new SettingsViewModel();
             SelectedViewModel = ManagerViewModel;
 
-            // Property doesn't actually change but we need to refresh the formatter
-            App.Current.Locales.UICultureChanged += (sender, e)
-                => this.RaisePropertyChanged(nameof(DownloadDescription));
+            // Properties don't actually change but we need to refresh the formatters
+            App.Current.Locales.UICultureChanged += (sender, e) =>
+            {
+                this.RaisePropertyChanged(nameof(DownloadDescription));
+                this.RaisePropertyChanged(nameof(DownloadQueueLength));
+            };
+        }
+
+        private void OnDownloadQueueLengthChanged(object sender, EventArgs e)
+        {
+            this.RaisePropertyChanged(nameof(DownloadQueueLength));
+            this.RaisePropertyChanged(nameof(ShowDownloadQueueLength));
         }
 
         private void NavigateToUrl(string url)

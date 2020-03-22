@@ -19,7 +19,7 @@ namespace ModMyFactoryGUI.ViewModels
 {
     internal sealed class OnlineModsViewModel : MainViewModelBase<OnlineModsView>
     {
-        private readonly DownloadManager _downloadManager;
+        private readonly DownloadQueue _downloadQueue;
         private OnlineModViewModel _selectedMod;
 
         public bool ModsLoaded { get; private set; }
@@ -45,9 +45,9 @@ namespace ModMyFactoryGUI.ViewModels
             }
         }
 
-        public OnlineModsViewModel(DownloadManager downloadManager)
+        public OnlineModsViewModel(DownloadQueue downloadQueue)
         {
-            _downloadManager = downloadManager;
+            _downloadQueue = downloadQueue;
             RefreshCommand = ReactiveCommand.CreateFromTask(RefreshOnlineModsAsync);
 
             // This is fire-and-forget intentionally
@@ -69,7 +69,7 @@ namespace ModMyFactoryGUI.ViewModels
             var result = new List<OnlineModViewModel>(page.Mods.Length);
 
             foreach (var info in page.Mods)
-                result.Add(new OnlineModViewModel(info, _downloadManager));
+                result.Add(new OnlineModViewModel(info, _downloadQueue));
             return result;
         }
 

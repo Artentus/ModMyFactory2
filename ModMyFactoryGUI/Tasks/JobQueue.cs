@@ -21,7 +21,7 @@ namespace ModMyFactoryGUI.Tasks
             => Job = job;
     }
 
-    internal abstract class JobManager<T>
+    internal abstract class JobQueue<T>
         where T : IJob
     {
         private readonly AsyncQueue<T> _jobQueue = new AsyncQueue<T>();
@@ -29,13 +29,18 @@ namespace ModMyFactoryGUI.Tasks
         private CancellationTokenSource _cancellationSource;
         private volatile bool _queueRunning = false;
         private T _currentJob;
+        private volatile int _length;
 
         public event EventHandler<JobCompletedEventArgs<T>> JobCompleted;
 
-        protected JobManager(IProgress<(T, double)> progress)
+        public event EventHandler LengthChanged;
+
+        public int Length => _length;
+
+        protected JobQueue(IProgress<(T, double)> progress)
             => _progress = progress;
 
-        protected JobManager()
+        protected JobQueue()
             : this(new Progress<(T, double)>())
         { }
 
@@ -47,6 +52,8 @@ namespace ModMyFactoryGUI.Tasks
             while (!cancellationToken.IsCancellationRequested)
             {
                 _currentJob = await _jobQueue.Dequeue(cancellationToken).ConfigureAwait(false);
+                Interlocked.Decrement(ref _length);
+                await OnLengthChanged(EventArgs.Empty);
 
                 if (!cancellationToken.IsCancellationRequested)
                 {
@@ -59,6 +66,9 @@ namespace ModMyFactoryGUI.Tasks
 
         protected virtual async Task OnJobCompleted(JobCompletedEventArgs<T> e)
             => await Dispatcher.UIThread.InvokeAsync(() => JobCompleted?.Invoke(this, e));
+
+        protected virtual async Task OnLengthChanged(EventArgs e)
+            => await Dispatcher.UIThread.InvokeAsync(() => LengthChanged?.Invoke(this, e));
 
         public async void StartQueue()
         {
@@ -87,6 +97,8 @@ namespace ModMyFactoryGUI.Tasks
         public void AddJob(in T job)
         {
             _jobQueue.Enqueue(job);
+            Interlocked.Increment(ref _length);
+            LengthChanged?.Invoke(this, EventArgs.Empty);
         }
     }
 }

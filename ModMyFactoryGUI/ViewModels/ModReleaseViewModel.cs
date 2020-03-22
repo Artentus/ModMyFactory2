@@ -18,7 +18,7 @@ namespace ModMyFactoryGUI.ViewModels
     internal sealed class ModReleaseViewModel : ReactiveObject
     {
         private readonly string _modDisplayName;
-        private readonly DownloadManager _downloadManager;
+        private readonly DownloadQueue _downloadQueue;
 
         public ModReleaseInfo Info { get; }
 
@@ -32,11 +32,11 @@ namespace ModMyFactoryGUI.ViewModels
 
         public AccurateVersion FactorioVersion => Info.Info.FactorioVersion;
 
-        public ModReleaseViewModel(ModReleaseInfo info, string modDisplayName, DownloadManager downloadManager)
+        public ModReleaseViewModel(ModReleaseInfo info, string modDisplayName, DownloadQueue downloadQueue)
         {
             Info = info;
             _modDisplayName = modDisplayName;
-            _downloadManager = downloadManager;
+            _downloadQueue = downloadQueue;
 
             DownloadCommand = ReactiveCommand.CreateFromTask(Download);
             DeleteCommand = ReactiveCommand.Create(Delete);
@@ -50,7 +50,7 @@ namespace ModMyFactoryGUI.ViewModels
                 if (success.IsTrue())
                 {
                     var job = new DownloadModReleaseJob(Info, _modDisplayName, username, token);
-                    _downloadManager.AddJob(job);
+                    _downloadQueue.AddJob(job);
                 }
             }
         }

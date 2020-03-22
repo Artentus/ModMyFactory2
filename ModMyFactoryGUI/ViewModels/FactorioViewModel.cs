@@ -13,10 +13,10 @@ namespace ModMyFactoryGUI.ViewModels
 {
     internal sealed class FactorioViewModel : MainViewModelBase<FactorioView>
     {
-        private readonly DownloadManager _downloadManager;
+        private readonly DownloadQueue _downloadQueue;
 
-        public FactorioViewModel(DownloadManager downloadManager)
-            => _downloadManager = downloadManager;
+        public FactorioViewModel(DownloadQueue downloadQueue)
+            => _downloadQueue = downloadQueue;
 
         protected override List<IMenuItemViewModel> GetEditMenuViewModels()
         {

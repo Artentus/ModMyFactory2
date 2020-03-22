@@ -289,6 +289,10 @@
     "type": "string",
     "value": "Downloading {0}"
   },
+  "QueueFormat": {
+    "type": "string",
+    "value": "In queue: {0}"
+  },
 
   // --------- Online mods view ---------
   "LoadingMessage": {

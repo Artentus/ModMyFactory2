@@ -281,6 +281,10 @@
     "type": "string",
     "value": "{0} wird heruntergeladen"
   },
+  "QueueFormat": {
+    "type": "string",
+    "value": "In der Warteschlange: {0}"
+  },
 
   // --------- Online mods view ---------
   "LoadingMessage": {

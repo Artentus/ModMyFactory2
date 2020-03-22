@@ -220,6 +220,8 @@ the Free Software Foundation, either version 3 of the License, or
         <ProgressBar Minimum="0" Maximum="1" IsVisible="{Binding IsDownloading}" Value="{Binding DownloadProgress}" />
         <TextBlock Margin="8,0" IsVisible="{Binding IsDownloading}"
                    Text="{Binding DownloadDescription, Converter={StaticResource LocalizedFormatter}, ConverterParameter=DownloadingFormat}" />
+        <TextBlock IsVisible="{Binding ShowDownloadQueueLength}" Classes="muted"
+                   Text="{Binding DownloadQueueLength, Converter={StaticResource LocalizedFormatter}, ConverterParameter=ueueFormat}" />
       </StackPanel>
     </Border>
 

@@ -9,13 +9,13 @@ using System;
 
 namespace ModMyFactoryGUI.Tasks.Web
 {
-    internal class DownloadManager : JobManager<DownloadJob>
+    internal class DownloadQueue : JobQueue<DownloadJob>
     {
-        public DownloadManager(IProgress<(DownloadJob, double)> progress)
+        public DownloadQueue(IProgress<(DownloadJob, double)> progress)
             : base(progress)
         { }
 
-        public DownloadManager()
+        public DownloadQueue()
             : base()
         { }
     }

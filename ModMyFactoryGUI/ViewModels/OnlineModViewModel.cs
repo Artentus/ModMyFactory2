@@ -23,7 +23,7 @@ namespace ModMyFactoryGUI.ViewModels
     {
         private static readonly ModReleaseViewModel[] _emptyReleases = new ModReleaseViewModel[0];
 
-        private readonly DownloadManager _downloadManager;
+        private readonly DownloadQueue _downloadQueue;
         private ApiModInfo _info;
         private volatile bool _isExtended;
         private ModReleaseViewModel[] _releases;
@@ -88,8 +88,8 @@ namespace ModMyFactoryGUI.ViewModels
 
         public string Description => Info.Description;
 
-        public OnlineModViewModel(ApiModInfo info, DownloadManager downloadManager)
-            => (_info, _downloadManager) = (info, downloadManager);
+        public OnlineModViewModel(ApiModInfo info, DownloadQueue downloadQueue)
+            => (_info, _downloadQueue) = (info, downloadQueue);
 
         ~OnlineModViewModel()
         {
@@ -146,7 +146,7 @@ namespace ModMyFactoryGUI.ViewModels
             {
                 _releases = new ModReleaseViewModel[Info.Releases.Length];
                 for (int i = 0; i < _releases.Length; i++)
-                    _releases[i] = new ModReleaseViewModel(Info.Releases[i], Info.DisplayName, _downloadManager);
+                    _releases[i] = new ModReleaseViewModel(Info.Releases[i], Info.DisplayName, _downloadQueue);
             }
 
             this.RaisePropertyChanged(nameof(Releases));
