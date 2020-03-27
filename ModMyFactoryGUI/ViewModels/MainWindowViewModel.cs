@@ -112,7 +112,7 @@ namespace ModMyFactoryGUI.ViewModels
             ManagerViewModel = new ManagerViewModel();
             OnlineModsViewModel = new OnlineModsViewModel(DownloadQueue);
             FactorioViewModel = new FactorioViewModel(DownloadQueue);
-            SettingsViewModel = new SettingsViewModel();
+            SettingsViewModel = new SettingsViewModel(DownloadQueue);
             SelectedViewModel = ManagerViewModel;
 
             // Properties don't actually change but we need to refresh the formatters

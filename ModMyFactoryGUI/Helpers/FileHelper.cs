@@ -5,6 +5,7 @@
 //  the Free Software Foundation, either version 3 of the License, or
 //  (at your option) any later version.
 
+using System;
 using System.IO;
 using System.Text;
 using System.Threading.Tasks;
@@ -41,6 +42,31 @@ namespace ModMyFactoryGUI.Helpers
 #elif NETCORE
             return File.WriteAllTextAsync(path, contents, encoding);
 #endif
+        }
+
+        public static bool IsOnSameVolume(string path1, string path2)
+        {
+            string root1 = Path.GetPathRoot(path1);
+            string root2 = Path.GetPathRoot(path2);
+
+            var info1 = new DriveInfo(root1);
+            var info2 = new DriveInfo(root2);
+
+            return string.Equals(info1.Name, info2.Name, StringComparison.OrdinalIgnoreCase);
+        }
+
+        public static async ValueTask<DirectoryInfo> MoveDirectoryWithStatusAsync(DirectoryInfo directory, string destination, bool overwrite = false)
+        {
+            var mainWindow = App.Current?.MainWindow;
+            if (!(mainWindow is null))
+            {
+                // UI is loaded, display status window
+            }
+            else
+            {
+                // No UI, proceed silently
+                return await directory.MoveToAsync(destination, overwrite);
+            }
         }
     }
 }

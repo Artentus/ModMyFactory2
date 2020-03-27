@@ -13,17 +13,15 @@ namespace ModMyFactoryGUI.Tasks
 {
     internal interface IJob
     {
-        Task Run(CancellationToken cancellationToken, IProgress<double> progress);
+        Progress<double> Progress { get; }
+
+        bool Success { get; }
+
+        Task Run(CancellationToken cancellationToken);
     }
 
     internal static class Job
     {
-        public static Task Run(this IJob job, CancellationToken cancellationToken)
-        {
-            var progress = new Progress<double>();
-            return job.Run(cancellationToken, progress);
-        }
-
         public static Task Run(this IJob job)
             => job.Run(CancellationToken.None);
     }

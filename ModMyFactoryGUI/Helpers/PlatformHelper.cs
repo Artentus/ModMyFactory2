@@ -5,6 +5,7 @@
 //  the Free Software Foundation, either version 3 of the License, or
 //  (at your option) any later version.
 
+using ModMyFactory.WebApi.Factorio;
 using System;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
@@ -30,6 +31,32 @@ namespace ModMyFactoryGUI.Helpers
             else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
             {
                 Process.Start("open", url);
+            }
+            else
+            {
+                throw new PlatformNotSupportedException();
+            }
+#else
+            throw new PlatformNotSupportedException();
+#endif
+        }
+
+        public static Platform GetCurrentPlatform()
+        {
+#if NETFULL
+            return Platform.Win64Manual;
+#elif NETCORE
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            {
+                return Platform.Win64Manual;
+            }
+            else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+            {
+                return Platform.Linux64;
+            }
+            else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+            {
+                return Platform.OSX;
             }
             else
             {

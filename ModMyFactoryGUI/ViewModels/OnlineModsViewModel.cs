@@ -10,6 +10,7 @@ using ModMyFactory.WebApi.Mods;
 using ModMyFactoryGUI.Tasks.Web;
 using ModMyFactoryGUI.Views;
 using ReactiveUI;
+using Serilog;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Threading.Tasks;
@@ -106,6 +107,7 @@ namespace ModMyFactoryGUI.ViewModels
                     this.RaisePropertyChanged(nameof(LoadingErrorOccurred));
                     ErrorMessageKey = "ConnectionError_Message";
                     this.RaisePropertyChanged(nameof(ErrorMessageKey));
+                    Log.Error(ex, "Failed to connect to server");
                 }
                 else if (ex is TimeoutException)
                 {
@@ -114,6 +116,7 @@ namespace ModMyFactoryGUI.ViewModels
                     this.RaisePropertyChanged(nameof(LoadingErrorOccurred));
                     ErrorMessageKey = "TimeoutError_Message";
                     this.RaisePropertyChanged(nameof(ErrorMessageKey));
+                    Log.Error(ex, "Timeout while trying to connect to server");
                 }
                 else
                 {
@@ -122,6 +125,7 @@ namespace ModMyFactoryGUI.ViewModels
                     this.RaisePropertyChanged(nameof(LoadingErrorOccurred));
                     ErrorMessageKey = "ServerError_Message";
                     this.RaisePropertyChanged(nameof(ErrorMessageKey));
+                    Log.Error(ex, "An unknown server error occurred");
                 }
             }
 

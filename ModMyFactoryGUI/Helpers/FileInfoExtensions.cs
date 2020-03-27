@@ -45,5 +45,58 @@ namespace ModMyFactoryGUI.Helpers
             byte[] bytes = await ComputeSHA1Async(stream);
             return new SHA1Hash(bytes);
         }
+
+        public static Task<FileInfo> CopyToAsync(this FileInfo file, string destination, bool overwrite = false)
+            => Task.Run(() => file.CopyTo(destination, overwrite));
+
+        public static async ValueTask MoveToAsync(this FileInfo file, string destination, bool overwrite = false)
+        {
+            if (FileHelper.IsOnSameVolume(file.FullName, destination))
+            {
+                // Moving to the same volume is fast, so we don't need to await it
+                file.MoveTo(destination);
+            }
+            else
+            {
+                await Task.Run(() => file.MoveTo(destination, overwrite));
+            }
+        }
+    }
+
+    internal static class DirectoryInfoExtensions
+    {
+        public static async Task<DirectoryInfo> CopyToAsync(this DirectoryInfo directory, string destination, bool overwrite = false)
+        {
+            var destDir = new DirectoryInfo(destination);
+            if (!destDir.Exists) destDir.Create();
+
+            await Task.Run(() =>
+            {
+                foreach (var file in directory.EnumerateFiles())
+                    file.CopyTo(Path.Combine(destDir.FullName, file.Name), overwrite);
+            });
+
+            foreach (var subDir in directory.EnumerateDirectories())
+                await subDir.CopyToAsync(Path.Combine(destination, subDir.Name), overwrite);
+
+            return destDir;
+        }
+
+        public static async ValueTask<DirectoryInfo> MoveToAsync(this DirectoryInfo directory, string destination, bool overwrite = false)
+        {
+            if (FileHelper.IsOnSameVolume(directory.FullName, destination))
+            {
+                // Moving directories across the same volume is natively supported
+                directory.MoveTo(destination);
+                return directory;
+            }
+            else
+            {
+                // Moving between volumes requires a copy
+                var destDir = await directory.CopyToAsync(destination, overwrite);
+                directory.Delete(true);
+                return destDir;
+            }
+        }
     }
 }

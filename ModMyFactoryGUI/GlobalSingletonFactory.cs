@@ -29,8 +29,7 @@ namespace ModMyFactoryGUI
             var manager = new Manager();
             var locations = new LocationManager(manager, settings, _binDir, _dataDir);
 
-            await manager.LoadFactorioInstancesAsync(locations);
-            await manager.LoadModsAsync(locations);
+            await locations.InitializeAsync();
 
             return (manager, locations);
         }

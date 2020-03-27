@@ -6,8 +6,10 @@
 //  (at your option) any later version.
 
 using ModMyFactory.BaseTypes;
+using ModMyFactory.WebApi;
 using ModMyFactory.WebApi.Factorio;
 using ModMyFactory.WebApi.Mods;
+using ModMyFactoryGUI.Helpers;
 using System;
 using System.IO;
 using System.Threading;
@@ -21,11 +23,24 @@ namespace ModMyFactoryGUI.Tasks.Web
 
         public abstract string Description { get; }
 
+        public Progress<double> Progress { get; } = new Progress<double>();
+
+        public bool Success { get; private set; }
+
         protected abstract Task<FileInfo> DownloadFile(CancellationToken cancellationToken, IProgress<double> progress);
 
-        public async Task Run(CancellationToken cancellationToken, IProgress<double> progress)
+        public async Task Run(CancellationToken cancellationToken)
         {
-            File = await DownloadFile(cancellationToken, progress);
+            try
+            {
+                File = await DownloadFile(cancellationToken, Progress);
+                Success = true;
+            }
+            catch (ApiException ex)
+            {
+                Success = false;
+                await MessageHelper.ShowMessageForApiException(ex);
+            }
         }
     }
 

@@ -5,6 +5,7 @@
 //  the Free Software Foundation, either version 3 of the License, or
 //  (at your option) any later version.
 
+using ModMyFactoryGUI.Tasks.Web;
 using ModMyFactoryGUI.Views;
 using ReactiveUI;
 using System.Collections.Generic;
@@ -15,6 +16,8 @@ namespace ModMyFactoryGUI.ViewModels
 {
     internal sealed class SettingsViewModel : MainViewModelBase<SettingsView>
     {
+        private readonly DownloadQueue _downloadQueue;
+
         private bool _settingsChanged;
 
         private string _username;
@@ -154,9 +157,12 @@ namespace ModMyFactoryGUI.ViewModels
 
         public ICommand ResetCommand { get; }
 
-        public SettingsViewModel()
+        public SettingsViewModel(DownloadQueue downloadQueue)
         {
+            _downloadQueue = downloadQueue;
+
             Reset();
+
             ApplyCommand = ReactiveCommand.CreateFromTask(ApplyChangesAsync);
             ResetCommand = ReactiveCommand.Create(Reset);
         }
@@ -202,24 +208,35 @@ namespace ModMyFactoryGUI.ViewModels
 
         private async ValueTask ApplyLocationChangesAsync()
         {
-            Location factorioLocation = FactorioLocationIsAppData
-                ? Location.AppData
-                : FactorioLocationIsBinDir
-                    ? Location.BinDir
-                    : Location.Custom;
+            if (_downloadQueue.IsJobInProgress)
+            {
+                // We don't allow changing locations while downloads are in progress
+                // or the app will most definitely crash or corrupt the manager state
+                // For simplicity we don't differentiate between Factorio instances and mods
 
-            if (factorioLocation != Program.Locations.FactorioLocation)
-                await Program.Locations.MoveFactorioLocationAsync(factorioLocation, _customFactorioLocation);
+                // ToDo: Show error message
+            }
+            else
+            {
+                Location factorioLocation = FactorioLocationIsAppData
+                    ? Location.AppData
+                    : FactorioLocationIsBinDir
+                        ? Location.BinDir
+                        : Location.Custom;
+
+                if (factorioLocation != Program.Locations.FactorioLocation)
+                    await Program.Locations.MoveFactorioLocationAsync(factorioLocation, _customFactorioLocation);
 
 
-            Location modLocation = ModLocationIsAppData
-                ? Location.AppData
-                : ModLocationIsBinDir
-                    ? Location.BinDir
-                    : Location.Custom;
+                Location modLocation = ModLocationIsAppData
+                    ? Location.AppData
+                    : ModLocationIsBinDir
+                        ? Location.BinDir
+                        : Location.Custom;
 
-            if (modLocation != Program.Locations.ModLocation)
-                await Program.Locations.MoveModLocationAsync(modLocation, _customModLocation);
+                if (modLocation != Program.Locations.ModLocation)
+                    await Program.Locations.MoveModLocationAsync(modLocation, _customModLocation);
+            }
         }
 
         private async Task ApplyChangesAsync()
@@ -229,6 +246,7 @@ namespace ModMyFactoryGUI.ViewModels
 
             SettingsChanged = false;
             Program.Settings.Save();
+            Reset(); // Reset because some of the changes may not have taken effect
         }
 
         private void Reset()
