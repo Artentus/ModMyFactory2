@@ -80,6 +80,15 @@
     "value": "The target directory already exists, moving the location will cause all existing files in the target directory to be deleted.\nAre you sure you want to continue?"
   },
 
+  "MovingLocation_Title": {
+    "type": "string",
+    "value": "Moving location"
+  },
+  "MovingFiles_Message": {
+    "type": "string",
+    "value": "Moving files..."
+  },
+
   // --------- Dialog options ---------
   "OkButton": {
     "type": "string",

@@ -1,9 +1,35 @@
+<!--
+Copyright (C) 2020 Mathis Rech
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+-->
+
 <Window xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:l="clr-namespace:ModMyFactoryGUI.Localization"
+        xmlns:controls="clr-namespace:ModMyFactoryGUI.Controls"
         x:Class="ModMyFactoryGUI.Controls.ProgressDialog">
 
+  <Grid RowDefinitions="Auto,Auto,*,Auto">
+    <ProgressBar Grid.Row="0" Margin="8,4" Height="20"
+                 Minimum="{Binding Minimum, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type controls:ProgressDialog}}}"
+                 Maximum="{Binding Maximum, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type controls:ProgressDialog}}}"
+                 Value="{Binding Value, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type controls:ProgressDialog}}}"
+                 IsIndeterminate="{Binding IsIndeterminate, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type controls:ProgressDialog}}}" />
 
+    <TextBlock Grid.Row="1" Margin="8,0"
+               Text="{Binding Description, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type controls:ProgressDialog}}}" />
+
+    <Border Grid.Row="3" Background="{DynamicResource ThemeBackgroundHighBrush}"
+            BorderThickness="0,1,0,0" BorderBrush="{DynamicResource ThemeBorderMidBrush}">
+      <Button Margin="8" HorizontalAlignment="Right" x:Name="CancelButton" Content="{l:LocalizedResource CancelButton}"
+              Command="{Binding CancelCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type controls:ProgressDialog}}}" />
+    </Border>
+  </Grid>
 
 </Window>

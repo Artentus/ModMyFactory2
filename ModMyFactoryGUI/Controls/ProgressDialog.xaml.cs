@@ -1,3 +1,10 @@
+//  Copyright (C) 2020 Mathis Rech
+//
+//  This program is free software: you can redistribute it and/or modify
+//  it under the terms of the GNU General Public License as published by
+//  the Free Software Foundation, either version 3 of the License, or
+//  (at your option) any later version.
+
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
@@ -14,6 +21,7 @@ namespace ModMyFactoryGUI.Controls
     {
         private double _minimum, _maximum, _value;
         private ICommand _cancelCommand;
+        private string _description;
 
         public static readonly DirectProperty<ProgressDialog, double> MinimumProperty
             = RangeBase.MinimumProperty.AddOwner<ProgressDialog>(d => d.Minimum, (d, v) => d.Minimum = v);
@@ -29,6 +37,9 @@ namespace ModMyFactoryGUI.Controls
 
         public static readonly DirectProperty<ProgressDialog, ICommand> CancelCommandProperty
             = AvaloniaProperty.RegisterDirect<ProgressDialog, ICommand>(nameof(CancelCommand), d => d.CancelCommand, (d, v) => d.CancelCommand = v);
+
+        public static readonly DirectProperty<ProgressDialog, string> DescriptionProperty
+            = AvaloniaProperty.RegisterDirect<ProgressDialog, string>(nameof(Description), d => d.Description, (d, v) => d.Description = v);
 
         public double Minimum
         {
@@ -60,6 +71,12 @@ namespace ModMyFactoryGUI.Controls
             set => SetAndRaise(CancelCommandProperty, ref _cancelCommand, value);
         }
 
+        public string Description
+        {
+            get => _description;
+            set => SetAndRaise(DescriptionProperty, ref _description, value);
+        }
+
         public ProgressDialog()
         {
             InitializeComponent();
@@ -74,12 +91,13 @@ namespace ModMyFactoryGUI.Controls
         }
 
         // Helper functions to make displaying the dialog for some operation a little easier
-        public static async Task<DialogResult> Show(
+        // Only for static descriptions, if we want to update the description we need to show the dialog manually
+        public static async Task<DialogResult> Show(string title, string description,
             Task operation, Progress<double> progress, double min, double max,
             CancellationTokenSource cancellationSource, Window owner)
         {
             // Set up the dialog
-            var dialog = new ProgressDialog { Minimum = min, Maximum = max };
+            var dialog = new ProgressDialog { Title = title, Description = description, Minimum = min, Maximum = max };
             dialog.CancelCommand = ReactiveCommand.Create(cancellationSource.Cancel);
 
             // Use inner function instead of lambda so we can unsubscribe
@@ -104,11 +122,11 @@ namespace ModMyFactoryGUI.Controls
             else return DialogResult.None;
         }
 
-        public static async Task<DialogResult> Show(
+        public static async Task<DialogResult> Show(string title, string description,
             Task operation, Progress<double> progress, double min, double max, Window owner)
         {
             // Set up the dialog
-            var dialog = new ProgressDialog { Minimum = min, Maximum = max };
+            var dialog = new ProgressDialog { Title = title, Description = description, Minimum = min, Maximum = max };
 
             // Use inner function instead of lambda so we can unsubscribe
             void OnProgressChanged(object _, double p)
@@ -131,11 +149,11 @@ namespace ModMyFactoryGUI.Controls
             return DialogResult.None;
         }
 
-        public static async Task<DialogResult> Show(
+        public static async Task<DialogResult> Show(string title, string description,
             Task operation, CancellationTokenSource cancellationSource, Window owner)
         {
             // Set up the dialog
-            var dialog = new ProgressDialog { IsIndeterminate = true };
+            var dialog = new ProgressDialog { Title = title, Description = description, IsIndeterminate = true };
             dialog.CancelCommand = ReactiveCommand.Create(cancellationSource.Cancel);
 
             // Show dialog but don't wait yet
@@ -152,11 +170,11 @@ namespace ModMyFactoryGUI.Controls
             else return DialogResult.None;
         }
 
-        public static async Task<DialogResult> Show(
+        public static async Task<DialogResult> Show(string title, string description,
             Task operation, Window owner)
         {
             // Set up the dialog
-            var dialog = new ProgressDialog { IsIndeterminate = true };
+            var dialog = new ProgressDialog { Title = title, Description = description, IsIndeterminate = true };
 
             // Show dialog but don't wait yet
             var dialogTask = dialog.ShowDialog(owner);

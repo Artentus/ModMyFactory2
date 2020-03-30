@@ -80,6 +80,15 @@
     "value": "Das Zielverzeichnis existiert bereits, den Speicherort zu verschieben wird alle vorhandenen Dateien im Zielverzeichnis löschen.\nSind Sie sicher, dass Sie fortfahren möchten?"
   },
 
+  "MovingLocation_Title": {
+    "type": "string",
+    "value": "Speicherort verschieben"
+  },
+  "MovingFiles_Message": {
+    "type": "string",
+    "value": "Dateien werden verschoben..."
+  },
+
   // --------- Dialog options ---------
   "OkButton": {
     "type": "string",

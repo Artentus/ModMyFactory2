@@ -72,8 +72,12 @@ namespace ModMyFactoryGUI.Helpers
                 {
                     var op = directory.MoveToByCopyAsync(destination);
 
+                    // Get localized strings
+                    string title = (string)App.Current.Locales.GetResource("MovingLocation_Title");
+                    string description = (string)App.Current.Locales.GetResource("MovingFiles_Message");
+
                     // We don't need to evaluate this since we don't allow cancellation
-                    await ProgressDialog.Show(op, mainWindow);
+                    await ProgressDialog.Show(title, description, op, mainWindow);
                     return op.Result;
                 }
             }
