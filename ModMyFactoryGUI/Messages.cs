@@ -82,8 +82,14 @@ namespace ModMyFactoryGUI
         public static readonly IErrorMessage ServerError
             = new ErrorMessage("ServerError", "An unknown server error occurred");
 
+        public static readonly IMessage MovingLocationsWhileDownloading
+            = new Message("LocationMoveWhileDownload", MessageKind.Information, DialogOptions.Ok);
+
+        public static readonly IMessage ConfirmLocationMove
+            = new Message("ConfirmLocationMoveOverwrite", MessageKind.Question, DialogOptions.YesNo);
+
         public static IErrorMessage FileIntegrityError(FileInfo file, SHA1Hash expected, SHA1Hash actual)
-            => new ErrorMessage("FileIntegrityError", $"Checksum mismatch for file {file.Name}, expected {expected} but got {actual}");
+                    => new ErrorMessage("FileIntegrityError", $"Checksum mismatch for file {file.Name}, expected {expected} but got {actual}");
 
         public static IMessage InvalidModFile(FileInfo file)
             => new WarningMessage("InvalidModFile", $"File {file.Name} is not a valid mod");

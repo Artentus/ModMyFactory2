@@ -5,6 +5,7 @@
 //  the Free Software Foundation, either version 3 of the License, or
 //  (at your option) any later version.
 
+using ModMyFactoryGUI.Controls;
 using System;
 using System.IO;
 using System.Text;
@@ -55,17 +56,50 @@ namespace ModMyFactoryGUI.Helpers
             return string.Equals(info1.Name, info2.Name, StringComparison.OrdinalIgnoreCase);
         }
 
-        public static async ValueTask<DirectoryInfo> MoveDirectoryWithStatusAsync(DirectoryInfo directory, string destination, bool overwrite = false)
+        public static async ValueTask<DirectoryInfo> MoveDirectoryWithStatusAsync(DirectoryInfo directory, string destination)
         {
             var mainWindow = App.Current?.MainWindow;
             if (!(mainWindow is null))
             {
                 // UI is loaded, display status window
+                if (IsOnSameVolume(directory.FullName, destination))
+                {
+                    // On same volume, showing a dialog is not necessary
+                    directory.MoveTo(destination);
+                    return directory;
+                }
+                else
+                {
+                    var op = directory.MoveToByCopyAsync(destination);
+
+                    // We don't need to evaluate this since we don't allow cancellation
+                    await ProgressDialog.Show(op, mainWindow);
+                    return op.Result;
+                }
             }
             else
             {
                 // No UI, proceed silently
-                return await directory.MoveToAsync(destination, overwrite);
+                return await directory.MoveToAsync(destination);
+            }
+        }
+
+        // Helper function to prompt the user about deletion if the directory is not empty
+        // If the directory does not exist or is empty we silently return true
+        public static async ValueTask<bool> AssureDirectorySafeForMoveAsync(DirectoryInfo directory)
+        {
+            if (!directory.Exists) return true;
+            if (directory.IsEmpty()) return true;
+
+            var result = await Messages.ConfirmLocationMove.Show();
+            if (result == DialogResult.Yes)
+            {
+                directory.Delete(true);
+                return true;
+            }
+            else
+            {
+                return false;
             }
         }
     }

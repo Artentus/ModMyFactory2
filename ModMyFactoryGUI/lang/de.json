@@ -63,6 +63,22 @@
     "type": "string",
     "value": "Falscher Benutzernahme oder falsches Passwort"
   },
+  "LocationMoveWhileDownload_Title": {
+    "type": "string",
+    "value": "Verschieben von Speicherort nicht möglich"
+  },
+  "LocationMoveWhileDownload_Message": {
+    "type": "string",
+    "value": "Speicherorte können nicht verschoben werden, während Daten heruntergeladen werden.\nBitte warten Sie bis alle Downloads beendet wurden und wenden Sie die Änderungen dann erneut an."
+  },
+  "ConfirmLocationMoveOverwrite_Title": {
+    "type": "string",
+    "value": "Verschieben bestätigen"
+  },
+  "ConfirmLocationMoveOverwrite_Message": {
+    "type": "string",
+    "value": "Das Zielverzeichnis existiert bereits, den Speicherort zu verschieben wird alle vorhandenen Dateien im Zielverzeichnis löschen.\nSind Sie sicher, dass Sie fortfahren möchten?"
+  },
 
   // --------- Dialog options ---------
   "OkButton": {

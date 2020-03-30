@@ -126,6 +126,12 @@ namespace ModMyFactoryGUI
             };
         }
 
+        private DirectoryInfo GetFactorioDir(Location location, string customPath)
+            => GetLocationDir(location, "Factorio", customPath);
+
+        private DirectoryInfo GetModDir(Location location, string customPath)
+            => GetLocationDir(location, "mods", customPath);
+
         private string GetLocationString(Location location, string customPath)
         {
             return location switch
@@ -137,26 +143,40 @@ namespace ModMyFactoryGUI
             };
         }
 
-        private async Task MoveFactorioLocationInternalAsync(DirectoryInfo source, DirectoryInfo dest)
+        private async Task<bool> TryMoveFactorioLocationInternalAsync(DirectoryInfo source, DirectoryInfo dest)
         {
-            // We overwrite to avoid any nasty errors that could corrupt the entire manager state
-            // However since we do this we need to warn the user if they try to move to a location that already exists
-            await FileHelper.MoveDirectoryWithStatusAsync(source, dest.FullName, true);
+            // We overwrite to avoid any nasty errors that could corrupt the entire manager state.
+            // However since we do this we need to warn the user if they try to move to a location that already exists.
+            if (await FileHelper.AssureDirectorySafeForMoveAsync(dest))
+            {
+                await FileHelper.MoveDirectoryWithStatusAsync(source, dest.FullName);
 
-            // Clear and reload
-            _manager.ClearInstances();
-            await _manager.LoadFactorioInstancesAsync(this);
+                // Clear and reload
+                _manager.ClearInstances();
+                await _manager.LoadFactorioInstancesAsync(this);
+
+                return true;
+            }
+
+            return false;
         }
 
-        private async Task MoveModLocationInternalAsync(DirectoryInfo source, DirectoryInfo dest)
+        private async Task<bool> TryMoveModLocationInternalAsync(DirectoryInfo source, DirectoryInfo dest)
         {
-            // We overwrite to avoid any nasty errors that could corrupt the entire manager state
-            // However since we do this we need to warn the user if they try to move to a location that already exists
-            await FileHelper.MoveDirectoryWithStatusAsync(source, dest.FullName, true);
+            // We overwrite to avoid any nasty errors that could corrupt the entire manager state.
+            // However since we do this we need to warn the user if they try to move to a location that already exists.
+            if (await FileHelper.AssureDirectorySafeForMoveAsync(dest))
+            {
+                await FileHelper.MoveDirectoryWithStatusAsync(source, dest.FullName);
 
-            // Clear and reload
-            _manager.ClearMods();
-            await _manager.LoadModsAsync(this);
+                // Clear and reload
+                _manager.ClearMods();
+                await _manager.LoadModsAsync(this);
+
+                return true;
+            }
+
+            return false;
         }
 
         private Task SaveFactorioLocationAsync()
@@ -192,38 +212,48 @@ namespace ModMyFactoryGUI
         }
 
         public DirectoryInfo GetFactorioDir()
-                    => GetLocationDir(_factorioLocation, "Factorio", _customFactorioPath);
+            => GetFactorioDir(_factorioLocation, _customFactorioPath);
 
         public DirectoryInfo GetModDir()
-            => GetLocationDir(_modLocation, "mods", _customModPath);
+            => GetModDir(_modLocation, _customModPath);
 
         public DirectoryInfo GetModDir(AccurateVersion factorioVersion)
             => GetModDir().CreateSubdirectory(factorioVersion.ToMajor().ToString(2));
 
         public async Task MoveFactorioLocationAsync(Location location, string customPath)
         {
-            var prev = GetFactorioDir();
+            // The current Factorio directory
+            var current = GetFactorioDir();
 
-            FactorioLocation = location;
-            CustomFactorioPath = customPath;
+            // The desired new Factorio directory
+            var newDir = GetFactorioDir(location, customPath);
 
-            var newDir = GetFactorioDir();
-            await MoveFactorioLocationInternalAsync(prev, newDir);
+            if (await TryMoveFactorioLocationInternalAsync(current, newDir))
+            {
+                // If successfull (either no action required or accepted by the user) we update the location
+                FactorioLocation = location;
+                CustomFactorioPath = customPath;
 
-            await SaveFactorioLocationAsync();
+                await SaveFactorioLocationAsync();
+            }
         }
 
         public async Task MoveModLocationAsync(Location location, string customPath)
         {
-            var prev = GetModDir();
+            // The current mod directory
+            var current = GetModDir();
 
-            ModLocation = location;
-            CustomModPath = customPath;
+            // The desired new mod directory
+            var newDir = GetModDir(location, customPath);
 
-            var newDir = GetModDir();
-            await MoveModLocationInternalAsync(prev, newDir);
+            if (await TryMoveModLocationInternalAsync(current, newDir))
+            {
+                // If successfull (either no action required or accepted by the user) we update the location
+                ModLocation = location;
+                CustomModPath = customPath;
 
-            await SaveModLocationAsync();
+                await SaveModLocationAsync();
+            }
         }
 
         public string GenerateNewFactorioDirectoryName()

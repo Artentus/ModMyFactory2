@@ -63,6 +63,22 @@
     "type": "string",
     "value": "Invalid username or password"
   },
+  "LocationMoveWhileDownload_Title": {
+    "type": "string",
+    "value": "Moving locations not possible"
+  },
+  "LocationMoveWhileDownload_Message": {
+    "type": "string",
+    "value": "Locations cannot be moved while downloads are in progress.\nPlease wait until all downloads have completed, then apply the changes again."
+  },
+  "ConfirmLocationMoveOverwrite_Title": {
+    "type": "string",
+    "value": "Confirm move"
+  },
+  "ConfirmLocationMoveOverwrite_Message": {
+    "type": "string",
+    "value": "The target directory already exists, moving the location will cause all existing files in the target directory to be deleted.\nAre you sure you want to continue?"
+  },
 
   // --------- Dialog options ---------
   "OkButton": {

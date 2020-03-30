@@ -7,6 +7,7 @@
 
 using ModMyFactory.BaseTypes;
 using System.IO;
+using System.Linq;
 using System.Security.Cryptography;
 using System.Threading.Tasks;
 
@@ -82,7 +83,14 @@ namespace ModMyFactoryGUI.Helpers
             return destDir;
         }
 
-        public static async ValueTask<DirectoryInfo> MoveToAsync(this DirectoryInfo directory, string destination, bool overwrite = false)
+        public static async Task<DirectoryInfo> MoveToByCopyAsync(this DirectoryInfo directory, string destination, bool overwrite = false)
+        {
+            var destDir = await directory.CopyToAsync(destination, overwrite);
+            directory.Delete(true);
+            return destDir;
+        }
+
+        public static async ValueTask<DirectoryInfo> MoveToAsync(this DirectoryInfo directory, string destination)
         {
             if (FileHelper.IsOnSameVolume(directory.FullName, destination))
             {
@@ -93,10 +101,11 @@ namespace ModMyFactoryGUI.Helpers
             else
             {
                 // Moving between volumes requires a copy
-                var destDir = await directory.CopyToAsync(destination, overwrite);
-                directory.Delete(true);
-                return destDir;
+                return await MoveToByCopyAsync(directory, destination);
             }
         }
+
+        public static bool IsEmpty(this DirectoryInfo directory)
+            => !directory.EnumerateFileSystemInfos().Any();
     }
 }

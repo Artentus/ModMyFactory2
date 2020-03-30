@@ -211,10 +211,10 @@ namespace ModMyFactoryGUI.ViewModels
             if (_downloadQueue.IsJobInProgress)
             {
                 // We don't allow changing locations while downloads are in progress
-                // or the app will most definitely crash or corrupt the manager state
-                // For simplicity we don't differentiate between Factorio instances and mods
+                // or the app will most definitely crash or corrupt the manager state.
+                // For simplicity we don't differentiate between Factorio instances and mods.
 
-                // ToDo: Show error message
+                await Messages.MovingLocationsWhileDownloading.Show();
             }
             else
             {
