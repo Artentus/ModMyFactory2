@@ -95,8 +95,13 @@ namespace ModMyFactory.Mods
                 return (false, null);
             }
 
-            if (!ModFile.TryParseFileName(directory.Name, out var fileName, out var fileVersion)) return (false, null);
-            if ((fileName != info.Name) || (fileVersion != info.Version)) return (false, null);
+
+            // Hardcoded exceptions for core and base mods
+            if ((directory.Name != "core") && (directory.Name != "base"))
+            {
+                if (!ModFile.TryParseFileName(directory.Name, out var fileName, out var fileVersion)) return (false, null);
+                if ((fileName != info.Name) || (fileVersion != info.Version)) return (false, null);
+            }
 
             var thumbnail = ModFile.LoadThumbnail(directory);
             return (true, new ExtractedModFile(directory, info, thumbnail));
