@@ -59,7 +59,7 @@
     <PackageReference Include="CommandLineParser" Version="2.7.82" />
     <PackageReference Include="Markdig" Version="0.18.3" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
-    <PackageReference Include="ReactiveUI" Version="11.2.3" />
+    <PackageReference Include="ReactiveUI" Version="11.3.1" />
     <PackageReference Include="Serilog" Version="2.9.0" />
     <PackageReference Include="Serilog.Sinks.Console" Version="3.1.1" />
     <PackageReference Include="Serilog.Sinks.Debug" Version="1.0.1" />
@@ -68,7 +68,7 @@
     <PackageReference Include="ModMyFactory.Export" Version="1.0.0.5-alpha" />
     <PackageReference Include="ModMyFactory.Localization" Version="1.0.0.4-alpha" />
     <PackageReference Include="ModMyFactory.ModSettings" Version="1.0.0.6-alpha" />
-    <PackageReference Include="ModMyFactory.WebApi" Version="1.0.0.10-alpha" />
+    <PackageReference Include="ModMyFactory.WebApi" Version="1.0.0.11-alpha" />
     <PackageReference Include="ModMyFactory.Win32" Version="1.0.0.5-alpha" />
     <PackageReference Include="ModMyFactory" Version="1.0.0.12-alpha" />
     <PackageReference Include="System.Threading.Tasks.Dataflow" Version="4.11.0" />
@@ -82,11 +82,11 @@
   </ItemGroup>
 
   <ItemGroup Condition="'$(TargetFramework)' == 'netcoreapp3.0'">
-    <PackageReference Include="System.Reactive" Version="4.3.2" />
+    <PackageReference Include="System.Reactive" Version="4.4.1" />
   </ItemGroup>
 
   <ItemGroup Condition="'$(TargetFramework)' == 'net472'">
-    <PackageReference Include="System.Interactive.Async" Version="4.0.0" />
+    <PackageReference Include="System.Interactive.Async" Version="4.1.1" />
   </ItemGroup>
 
 </Project>
