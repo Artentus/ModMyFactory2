@@ -59,7 +59,12 @@ namespace ModMyFactoryGUI.Helpers
             }
             else
             {
+#if NETCORE
                 await Task.Run(() => file.MoveTo(destination, overwrite));
+#else
+                if (overwrite && File.Exists(destination)) File.Delete(destination);
+                await Task.Run(() => file.MoveTo(destination));
+#endif
             }
         }
     }
