@@ -6,6 +6,7 @@ using ModMyFactoryGUI.Helpers;
 using ModMyFactoryGUI.Tasks.Web;
 using ReactiveUI;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 
@@ -13,6 +14,8 @@ namespace ModMyFactoryGUI.ViewModels
 {
     internal sealed class FactorioInstanceViewModel : ReactiveObject
     {
+        private static readonly Dictionary<string, string> NameTable;
+
         private readonly Manager _manager;
         private readonly LocationManager _locations;
         private bool _isInDownloadQueue, _isDownloading, _isExtracting, _isInstalled;
@@ -58,9 +61,19 @@ namespace ModMyFactoryGUI.ViewModels
             }
         }
 
-        public string Name => "";
+        public string Name
+        {
+            get => GetName(this);
+            set => SetName(this, value);
+        }
 
         public AccurateVersion? Version => Instance?.Version;
+
+        static FactorioInstanceViewModel()
+        {
+            if (!Program.Settings.TryGet(SettingName.FactorioNameTable, out NameTable))
+                NameTable = new Dictionary<string, string>();
+        }
 
         /// <summary>
         /// Use this constructor for already existing instances
@@ -89,6 +102,49 @@ namespace ModMyFactoryGUI.ViewModels
 
             _isInDownloadQueue = download;
             _isExtracting = !download;
+        }
+
+        private static string GetNameKey(ManagedFactorioInstance instance)
+        {
+            // We use the full path of the instance as unique key
+            string result = instance.Directory.FullName.Trim().ToLower();
+
+            // We have to sanitize the path to make sure it's a proper unique key
+            result = result.Replace('/', '_');
+            result = result.Replace('\\', '_');
+            if (result.EndsWith("_")) result = result.Substring(0, result.Length - 1);
+
+            return result;
+        }
+
+        private static string GetName(FactorioInstanceViewModel vm)
+        {
+            var instance = vm.Instance;
+            if (instance is null)
+            {
+                // Doesn't have a name yet (either downloading or extracting)
+                return string.Empty;
+            }
+            else
+            {
+                string key = GetNameKey(instance);
+                return NameTable.GetValue(key, "Factorio");
+            }
+        }
+
+        private static void SetName(FactorioInstanceViewModel vm, string name)
+        {
+            var instance = vm.Instance;
+            if (instance is null)
+            {
+                // Can't have a name yet (either downloading or extracting)
+                return;
+            }
+            else
+            {
+                string key = GetNameKey(instance);
+                NameTable[key] = name;
+            }
         }
 
         public async Task<bool> TryCreateDownloadAsync(DownloadQueue downloadQueue, bool experimental)

@@ -11,12 +11,17 @@ the Free Software Foundation, either version 3 of the License, or
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:models="clr-namespace:ModMyFactoryGUI.ViewModels"
              x:Class="ModMyFactoryGUI.Views.FactorioView">
 
   <Border BorderThickness="1" BorderBrush="{DynamicResource ThemeBorderMidBrush}">
     <Grid Margin="4">
       <ListBox Margin="4">
+        <ListBox.ItemTemplate>
+          <DataTemplate DataType="{x:Type models:FactorioInstanceViewModel}">
 
+          </DataTemplate>
+        </ListBox.ItemTemplate>
       </ListBox>
     </Grid>
   </Border>
