@@ -23,7 +23,7 @@ namespace ModMyFactory.Game
         public DirectoryInfo SavegameDirectory { get; }
         public DirectoryInfo ScenarioDirectory { get; }
         public DirectoryInfo ModDirectory { get; }
-        public AccurateVersion Version => CoreMod.Info.Version;
+        public AccurateVersion Version => BaseMod.Info.Version;
 
         protected FactorioInstanceBase(DirectoryInfo directory, IModFile coreMod, IModFile baseMod,
             DirectoryInfo savegameDirectory, DirectoryInfo scenarioDirectory, DirectoryInfo modDirectory)
