@@ -17,6 +17,7 @@ namespace ModMyFactoryGUI
         public const string FactorioLocation = "factorio_location";
         public const string ModLocation = "mod_location";
         public const string FactorioNameTable = "instance_names";
+        public const string ExternalInstances = "instances";
 
         public const string MainWindowRestoreState = "window_restore_state";
         public const string MainWindowMaximized = "window_maximized";

@@ -153,7 +153,7 @@ namespace ModMyFactoryGUI
 
                 // Clear and reload
                 _manager.ClearInstances();
-                await _manager.LoadFactorioInstancesAsync(this);
+                await _manager.LoadFactorioInstancesAsync(this, _settingManager);
 
                 return true;
             }
@@ -274,7 +274,7 @@ namespace ModMyFactoryGUI
 
         public async Task InitializeAsync()
         {
-            await _manager.LoadFactorioInstancesAsync(this);
+            await _manager.LoadFactorioInstancesAsync(this, _settingManager);
             await _manager.LoadModsAsync(this);
         }
     }

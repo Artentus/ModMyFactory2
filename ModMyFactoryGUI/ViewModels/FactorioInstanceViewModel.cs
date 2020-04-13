@@ -1,3 +1,10 @@
+//  Copyright (C) 2020 Mathis Rech
+//
+//  This program is free software: you can redistribute it and/or modify
+//  it under the terms of the GNU General Public License as published by
+//  the Free Software Foundation, either version 3 of the License, or
+//  (at your option) any later version.
+
 using ModMyFactory;
 using ModMyFactory.BaseTypes;
 using ModMyFactory.Game;
@@ -45,6 +52,9 @@ namespace ModMyFactoryGUI.ViewModels
             private set => this.RaiseAndSetIfChanged(ref _isInstalled, value, nameof(IsInstalled));
         }
 
+        // True if the instance does not reside inside the managed directory
+        public bool IsExternal { get; }
+
         public ManagedFactorioInstance Instance
         {
             get => _instance;
@@ -87,6 +97,8 @@ namespace ModMyFactoryGUI.ViewModels
             _instance = instance;
 
             _isInstalled = true;
+
+            IsExternal = IsInstanceExternal(instance);
         }
 
         /// <summary>
@@ -102,19 +114,37 @@ namespace ModMyFactoryGUI.ViewModels
 
             _isInDownloadQueue = download;
             _isExtracting = !download;
+
+            IsExternal = false; // Instance cannot be external if we are downloading or extracting it
         }
 
-        private static string GetNameKey(ManagedFactorioInstance instance)
+        private static bool IsInstanceExternal(ManagedFactorioInstance instance)
         {
-            // We use the full path of the instance as unique key
-            string result = instance.Directory.FullName.Trim().ToLower();
+            var instDir = instance.Directory.Parent;
+            var managedDir = Program.Locations.GetFactorioDir();
+            return !FileHelper.DirectoriesEqual(instDir, managedDir);
+        }
 
-            // We have to sanitize the path to make sure it's a proper unique key
-            result = result.Replace('/', '_');
-            result = result.Replace('\\', '_');
-            if (result.EndsWith("_")) result = result.Substring(0, result.Length - 1);
+        private static string GetNameKey(FactorioInstanceViewModel vm)
+        {
+            var instance = vm.Instance;
+            if (vm.IsExternal)
+            {
+                // We use the full path of the instance as unique key
+                string result = instance.Directory.FullName.Trim().ToLower();
 
-            return result;
+                // We have to sanitize the path to make sure it's a proper unique key
+                result = result.Replace('/', '_');
+                result = result.Replace('\\', '_');
+                if (result.EndsWith("_")) result = result.Substring(0, result.Length - 1);
+
+                return result;
+            }
+            else
+            {
+                // The directory name is already a unique key, no need to use the full path
+                return instance.Directory.Name;
+            }
         }
 
         private static string GetName(FactorioInstanceViewModel vm)
@@ -127,8 +157,16 @@ namespace ModMyFactoryGUI.ViewModels
             }
             else
             {
-                string key = GetNameKey(instance);
-                return NameTable.GetValue(key, "Factorio");
+                if (instance.IsSteamInstance())
+                {
+                    // Steam instance has fixed name
+                    return "Steam";
+                }
+                else
+                {
+                    string key = GetNameKey(vm);
+                    return NameTable.GetValue(key, "Factorio");
+                }
             }
         }
 
@@ -142,8 +180,16 @@ namespace ModMyFactoryGUI.ViewModels
             }
             else
             {
-                string key = GetNameKey(instance);
-                NameTable[key] = name;
+                if (instance.IsSteamInstance())
+                {
+                    // Steam instance has fixed name
+                    return;
+                }
+                else
+                {
+                    string key = GetNameKey(vm);
+                    NameTable[key] = name;
+                }
             }
         }
 

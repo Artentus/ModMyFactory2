@@ -106,5 +106,26 @@ namespace ModMyFactoryGUI.Helpers
                 return false;
             }
         }
+
+        private static string SanitizePath(string path)
+        {
+            path = path.Trim().ToLower();
+            path = path.Replace('\\', '/');
+            if (path.EndsWith("/")) path = path.Substring(0, path.Length - 1);
+            return path;
+        }
+
+        public static bool PathsEqual(string first, string second)
+        {
+            first = SanitizePath(first);
+            second = SanitizePath(second);
+            return first == second;
+        }
+
+        public static bool DirectoriesEqual(DirectoryInfo first, DirectoryInfo second)
+            => PathsEqual(first.FullName, second.FullName);
+
+        public static bool FilesEqual(FileInfo first, FileInfo second)
+            => PathsEqual(first.FullName, second.FullName);
     }
 }
