@@ -10,15 +10,16 @@ using Newtonsoft.Json;
 namespace ModMyFactory.WebApi.Mods
 {
     /// <summary>
-    /// AN API page containing a list of mods
+    /// An API page containing a list of mods
     /// </summary>
     public struct ModPage
     {
         /// <summary>
         /// Information about the page
         /// </summary>
+        /// <remarks>Null if this is the only page</remarks>
         [JsonProperty("pagination")]
-        readonly public Pagination Pagination;
+        readonly public Pagination? Pagination;
 
         /// <summary>
         /// A list of mods
@@ -27,7 +28,7 @@ namespace ModMyFactory.WebApi.Mods
         readonly public ApiModInfo[] Mods;
 
         [JsonConstructor]
-        internal ModPage(Pagination pagination, ApiModInfo[] mods)
+        internal ModPage(Pagination? pagination, ApiModInfo[] mods)
             => (Pagination, Mods) = (pagination, mods);
     }
 }
