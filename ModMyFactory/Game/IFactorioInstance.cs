@@ -77,5 +77,16 @@ namespace ModMyFactory.Game
 
             instance.Start(actualArgs);
         }
+
+        /// <summary>
+        /// Checkes if this instance is the Steam instance
+        /// </summary>
+        public static bool IsSteamInstance(this IFactorioInstance instance)
+        {
+            var actualInstance = instance;
+            if (instance is ManagedFactorioInstance managedInstance)
+                actualInstance = managedInstance._baseInstance;
+            return actualInstance is FactorioSteamInstance;
+        }
     }
 }

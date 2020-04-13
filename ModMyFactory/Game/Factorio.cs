@@ -83,7 +83,7 @@ namespace ModMyFactory.Game
         public static async Task<IFactorioInstance> LoadAsync(DirectoryInfo directory)
         {
             (bool success, var result) = await TryLoadAsync(directory);
-            if (!success) throw new InvalidPathException("The directory does not contain a valid Factorio instance.");
+            if (!success) throw new InvalidPathException("The directory does not contain a valid Factorio instance");
             return result;
         }
 
@@ -132,7 +132,7 @@ namespace ModMyFactory.Game
         public static async Task<IFactorioInstance> LoadSteamAsync()
         {
             (bool success, var result) = await TryLoadSteamAsync();
-            if (!success) throw new ManagerException("Factorio Steam version not found.");
+            if (!success) throw new ManagerException("Factorio Steam version not found");
             return result;
         }
 

@@ -18,7 +18,7 @@ namespace ModMyFactory.Game
     /// </summary>
     public sealed class ManagedFactorioInstance : IFactorioInstance
     {
-        private readonly IFactorioInstance _baseInstance;
+        internal readonly IFactorioInstance _baseInstance;
 
         /// <summary>
         /// Indicates whether this instance was created by an instance manager
