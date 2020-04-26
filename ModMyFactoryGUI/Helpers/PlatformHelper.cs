@@ -6,14 +6,25 @@
 //  (at your option) any later version.
 
 using ModMyFactory.WebApi.Factorio;
-using System;
 using System.Diagnostics;
+
+#if NETCORE
+
+using System;
 using System.Runtime.InteropServices;
+
+#endif
 
 namespace ModMyFactoryGUI.Helpers
 {
     internal static class PlatformHelper
     {
+        private static readonly string[] WindowsArchiveExtensions = { "zip" };
+#if NETCORE
+        private static readonly string[] LinuxArchiveExtensions = { "tar.gz", "tar.xz" };
+        private static readonly string[] MacArchiveExtensions = { "dmg" };
+#endif
+
         public static void OpenWebUrl(string url)
         {
 #if NETFULL
@@ -57,6 +68,32 @@ namespace ModMyFactoryGUI.Helpers
             else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
             {
                 return Platform.OSX;
+            }
+            else
+            {
+                throw new PlatformNotSupportedException();
+            }
+#else
+            throw new PlatformNotSupportedException();
+#endif
+        }
+
+        public static string[] GetFactorioArchiveExtensions()
+        {
+#if NETFULL
+            return WindowsArchiveExtensions;
+#elif NETCORE
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            {
+                return WindowsArchiveExtensions;
+            }
+            else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+            {
+                return LinuxArchiveExtensions;
+            }
+            else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+            {
+                return MacArchiveExtensions;
             }
             else
             {

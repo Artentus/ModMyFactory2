@@ -47,8 +47,18 @@ namespace ModMyFactoryGUI.ViewModels
             }
         }
 
-        private async Task ImportAsync(bool archive)
+        private async Task ImportArchiveAsync()
         {
+        }
+
+        private async Task ImportInstanceAsync()
+        {
+        }
+
+        private Task ImportAsync(bool archive)
+        {
+            if (archive) return ImportArchiveAsync();
+            else return ImportInstanceAsync();
         }
 
         private async Task DownloadAsync(bool experimental)

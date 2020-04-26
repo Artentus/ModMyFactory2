@@ -9,8 +9,8 @@ using ModMyFactory.IO.Win32;
 
 #if NETCORE
 
+using System.Runtime.InteropServices;
 using ModMyFactory.IO.Unix;
-using System;
 
 #endif
 
@@ -23,13 +23,21 @@ namespace ModMyFactory.IO
 #if NETFULL
             return new JunctionInfo(path);
 #elif NETCORE
-            var os = Environment.OSVersion;
-            if (os.Platform == PlatformID.Win32NT)
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            {
                 return new JunctionInfo(path);
-            else if (os.Platform == PlatformID.Unix)
+            }
+            else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux)
+                || RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+            {
                 return new SymlinkInfo(path);
+            }
             else
+            {
                 throw new PlatformException();
+            }
+#else
+            throw new PlatformException();
 #endif
         }
     }

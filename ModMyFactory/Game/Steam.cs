@@ -13,6 +13,12 @@ using System.IO;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
+#if NETCORE
+
+using System.Runtime.InteropServices;
+
+#endif
+
 namespace ModMyFactory.Game
 {
     internal class Steam
@@ -41,7 +47,7 @@ namespace ModMyFactory.Game
             }
         }
 
-        private static bool TryGetSteamPathUnix(out string path)
+        private static bool TryGetSteamPathLinux(out string path)
         {
             // Default path when installing through packet manager. Custom paths not supported.
             path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), ".steam", "steam");
@@ -53,13 +59,26 @@ namespace ModMyFactory.Game
 #if NETFULL
             return TryGetSteamPathWin32(out path);
 #elif NETCORE
-            var os = Environment.OSVersion;
-            if (os.Platform == PlatformID.Win32NT)
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            {
                 return TryGetSteamPathWin32(out path);
-            else if (os.Platform == PlatformID.Unix)
-                return TryGetSteamPathUnix(out path);
+            }
+            else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+            {
+                return TryGetSteamPathLinux(out path);
+            }
+            else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+            {
+                // Mac not (yet) supported, but we exit gracefully since it is supported in other places
+                path = null;
+                return false;
+            }
             else
+            {
                 throw new PlatformException();
+            }
+#else
+            throw new PlatformException();
 #endif
         }
 
@@ -139,15 +158,22 @@ namespace ModMyFactory.Game
             var startInfo = new ProcessStartInfo(Path.Combine(_path, "Steam.exe"));
 #elif NETCORE
             ProcessStartInfo startInfo;
-            var os = Environment.OSVersion;
-            if (os.Platform == PlatformID.Win32NT)
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            {
                 startInfo = new ProcessStartInfo(Path.Combine(_path, "Steam.exe"));
-            else if (os.Platform == PlatformID.Unix)
+            }
+            else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+            {
                 startInfo = new ProcessStartInfo("steam");
+            }
             else
+            {
                 throw new PlatformException();
+            }
+#else
+            throw new PlatformException();
 #endif
-            string argString = $"-applaunch {((long)app).ToString()}";
+            string argString = $"-applaunch {(long)app}";
             if (!(args is null) && (args.Length != 0))
                 argString += " " + string.Join(" ", args);
             startInfo.Arguments = argString;
