@@ -311,6 +311,36 @@
     "value": "In der Warteschlange: {0}"
   },
 
+  // --------- Factorio instance view ---------
+  "InDownloadQueueText": {
+    "type": "string",
+    "value": "In der Warteschlange"
+  },
+  "DownloadingText": {
+    "type": "string",
+    "value": "Herunterladen..."
+  },
+  "ExtractingText": {
+    "type": "string",
+    "value": "Entpacken..."
+  },
+  "ImportInstallationButton": {
+    "type": "string",
+    "value": "Importieren"
+  },
+  "ImportArchiveButton": {
+    "type": "string",
+    "value": "Archiv"
+  },
+  "DownloadStableButton": {
+    "type": "string",
+    "value": "Herunterladen"
+  },
+  "DownloadExperimentalButton": {
+    "type": "string",
+    "value": "Experimentell"
+  },
+
   // --------- Online mods view ---------
   "LoadingMessage": {
     "type": "string",

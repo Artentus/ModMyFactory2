@@ -70,7 +70,7 @@
     <PackageReference Include="ModMyFactory.ModSettings" Version="1.0.0.6-alpha" />
     <PackageReference Include="ModMyFactory.WebApi" Version="1.0.0.11-alpha" />
     <PackageReference Include="ModMyFactory.Win32" Version="1.0.0.5-alpha" />
-    <PackageReference Include="ModMyFactory" Version="1.0.0.15-alpha" />
+    <PackageReference Include="ModMyFactory" Version="1.0.0.16-alpha" />
     <PackageReference Include="System.Threading.Tasks.Dataflow" Version="4.11.0" />
     <ProjectReference Include="..\Avalonia.ThemeManager\Avalonia.ThemeManager.csproj" />
   </ItemGroup>

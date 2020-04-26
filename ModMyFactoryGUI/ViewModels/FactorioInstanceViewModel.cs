@@ -5,6 +5,9 @@
 //  the Free Software Foundation, either version 3 of the License, or
 //  (at your option) any later version.
 
+using Avalonia;
+using Avalonia.Media.Imaging;
+using Avalonia.Platform;
 using ModMyFactory;
 using ModMyFactory.BaseTypes;
 using ModMyFactory.Game;
@@ -52,6 +55,8 @@ namespace ModMyFactoryGUI.ViewModels
             private set => this.RaiseAndSetIfChanged(ref _isInstalled, value, nameof(IsInstalled));
         }
 
+        public double DownloadProgress { get; private set; }
+
         // True if the instance does not reside inside the managed directory
         public bool IsExternal { get; }
 
@@ -77,6 +82,8 @@ namespace ModMyFactoryGUI.ViewModels
             set => SetName(this, value);
         }
 
+        public IBitmap Icon { get; private set; }
+
         public AccurateVersion? Version => Instance?.Version;
 
         static FactorioInstanceViewModel()
@@ -99,6 +106,8 @@ namespace ModMyFactoryGUI.ViewModels
             _isInstalled = true;
 
             IsExternal = IsInstanceExternal(instance);
+            if (instance.IsSteamInstance()) Icon = LoadIcon("Steam_Icon.png");
+            else Icon = LoadIcon("Factorio_Icon.png");
         }
 
         /// <summary>
@@ -116,6 +125,15 @@ namespace ModMyFactoryGUI.ViewModels
             _isExtracting = !download;
 
             IsExternal = false; // Instance cannot be external if we are downloading or extracting it
+            if (download) Icon = LoadIcon("Download_Icon.png");
+            else Icon = LoadIcon("Package_Icon.png");
+        }
+
+        private static IBitmap LoadIcon(string name)
+        {
+            var assets = AvaloniaLocator.Current.GetService<IAssetLoader>();
+            using var stream = assets.Open(new Uri($"avares://ModMyFactoryGUI/Assets/{name}"));
+            return new Bitmap(stream);
         }
 
         private static bool IsInstanceExternal(ManagedFactorioInstance instance)
@@ -220,26 +238,41 @@ namespace ModMyFactoryGUI.ViewModels
                     {
                         IsInDownloadQueue = false;
                         IsDownloading = true;
-                        job.Progress.ProgressChanged -= OnProgressChanged;
+
+                        DownloadProgress = progress;
+                        this.RaisePropertyChanged(nameof(DownloadProgress));
                     }
 
                     // Start download and wait for it to complete
                     job.Progress.ProgressChanged += OnProgressChanged;
                     await downloadQueue.AddJobAsync(job);
+                    job.Progress.ProgressChanged -= OnProgressChanged;
 
                     IsInDownloadQueue = false;
                     IsDownloading = false;
 
                     // After download we extract
-                    if (job.Success) return await TryCreateExtractAsync(job.File);
-                    else return false;
+                    if (job.Success)
+                    {
+                        // Update icon here because if we start directly with extract we already set it
+                        var prevIcon = Icon;
+                        Icon = LoadIcon("Package_Icon.png");
+                        this.RaisePropertyChanged(nameof(Icon));
+                        prevIcon.Dispose();
+
+                        return await TryCreateExtractAsync(job.File, true);
+                    }
+                    else
+                    {
+                        return false;
+                    }
                 }
             }
 
             return false;
         }
 
-        public async Task<bool> TryCreateExtractAsync(FileInfo file)
+        public async Task<bool> TryCreateExtractAsync(FileInfo file, bool deleteOnError = false)
         {
             IsExtracting = true;
             string dirName = _locations.GenerateNewFactorioDirectoryName();
@@ -250,10 +283,19 @@ namespace ModMyFactoryGUI.ViewModels
             {
                 IsInstalled = true;
                 Instance = _manager.AddInstance(instance);
+
+                // Update to final icon
+                var prevIcon = Icon;
+                Icon = LoadIcon("Factorio_Icon.png");
+                this.RaisePropertyChanged(nameof(Icon));
+                prevIcon.Dispose();
+
                 return true;
             }
             else
             {
+                if (deleteOnError && file.Exists) file.Delete();
+
                 // ToDo: show error message
                 return false;
             }

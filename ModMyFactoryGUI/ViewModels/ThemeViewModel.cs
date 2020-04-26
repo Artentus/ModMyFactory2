@@ -58,7 +58,7 @@ namespace ModMyFactoryGUI.ViewModels
         private void UICultureChangedHandler() => this.RaisePropertyChanged(nameof(DisplayName));
 
         public static void SubscribeWeak(IWeakSubscriber<EventArgs> subscriber)
-                                                                            => WeakSubscriptionManager.Subscribe(InternalEventManager, nameof(EventManager.SelectedThemeChanged), subscriber);
+            => WeakSubscriptionManager.Subscribe(InternalEventManager, nameof(EventManager.SelectedThemeChanged), subscriber);
 
         public void Select()
         {

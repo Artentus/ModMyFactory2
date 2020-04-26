@@ -22,15 +22,33 @@ namespace ModMyFactoryGUI.ViewModels
 
         public ReadOnlyObservableCollection<FactorioInstanceViewModel> Instances { get; }
 
+        public ICommand ImportCommand { get; }
+
         public ICommand DownloadCommand { get; }
 
         public FactorioViewModel(DownloadQueue downloadQueue)
         {
             _downloadQueue = downloadQueue;
+            ImportCommand = ReactiveCommand.CreateFromTask<bool>(ImportAsync);
             DownloadCommand = ReactiveCommand.CreateFromTask<bool>(DownloadAsync);
 
             _instances = new ObservableCollection<FactorioInstanceViewModel>();
             Instances = new ReadOnlyObservableCollection<FactorioInstanceViewModel>(_instances);
+            ReloadInstances();
+        }
+
+        private void ReloadInstances()
+        {
+            _instances.Clear();
+            foreach (var instance in Program.Manager.ManagedInstances)
+            {
+                var vm = new FactorioInstanceViewModel(Program.Manager, instance);
+                _instances.Add(vm);
+            }
+        }
+
+        private async Task ImportAsync(bool archive)
+        {
         }
 
         private async Task DownloadAsync(bool experimental)
