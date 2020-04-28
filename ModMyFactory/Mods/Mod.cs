@@ -13,66 +13,66 @@ using System.Threading.Tasks;
 namespace ModMyFactory.Mods
 {
     /// <summary>
-    /// A mod.
+    /// A mod
     /// </summary>
-    public class Mod : IDisposable
+    public class Mod : ICanEnable, IDisposable
     {
         private readonly IModFile _file;
         private bool _enabled;
 
         /// <summary>
-        /// Is raised if the enabled state of this mod changes.
+        /// Is raised if the enabled state of this mod changes
         /// </summary>
         public event EventHandler EnabledChanged;
 
         /// <summary>
-        /// The unique name of the mod.
+        /// The unique name of the mod
         /// </summary>
         public string Name { get; }
 
         /// <summary>
-        /// The mods display name.
+        /// The mods display name
         /// </summary>
         public string DisplayName { get; }
 
         /// <summary>
-        /// The mods version.
+        /// The mods version
         /// </summary>
         public AccurateVersion Version { get; }
 
         /// <summary>
-        /// The version of Factorio this mod works on.
-        /// Only considers the major version.
+        /// The version of Factorio this mod works on
+        /// Only considers the major version
         /// </summary>
         public AccurateVersion FactorioVersion { get; }
 
         /// <summary>
-        /// The author of the mod.
+        /// The author of the mod
         /// </summary>
         public string Author { get; }
 
         /// <summary>
-        /// A description of the mod.
+        /// A description of the mod
         /// </summary>
         public string Description { get; }
 
         /// <summary>
-        /// The dependencies of this mod.
+        /// The dependencies of this mod
         /// </summary>
         public Dependency[] Dependencies { get; }
 
         /// <summary>
-        /// A stream containing bitmap data of the mods thumbnail. Optional.
+        /// A stream containing bitmap data of the mods thumbnail. Optional
         /// </summary>
         public Stream Thumbnail { get; }
 
         /// <summary>
-        /// Specifies whether this mod can be disabled.
+        /// Specifies whether this mod can be disabled
         /// </summary>
         public virtual bool CanDisable => true;
 
         /// <summary>
-        /// Gets or sets if this mod is enabled.
+        /// Gets or sets if this mod is enabled
         /// If a mod is enabled all other mods in the same family will be disabled.
         /// </summary>
         public bool Enabled
@@ -97,10 +97,20 @@ namespace ModMyFactory.Mods
         }
 
         /// <summary>
-        /// The family this mod is part of.
-        /// Is null if the mod has not been added to a family.
+        /// The family this mod is part of
+        /// Is null if the mod has not been added to a family
         /// </summary>
         public ModFamily Family { get; internal set; }
+
+        bool? ICanEnable.Enabled
+        {
+            get => Enabled;
+            set
+            {
+                if (value is null) throw new InvalidOperationException("Cannot set enabled state to null");
+                else Enabled = value.Value;
+            }
+        }
 
         protected Mod(string name, string displayName, AccurateVersion version, AccurateVersion factorioVersion,
             string author, string description, Dependency[] dependencies, Stream thumbnail = null)
@@ -138,9 +148,9 @@ namespace ModMyFactory.Mods
         }
 
         /// <summary>
-        /// Tries to load a mod.
+        /// Tries to load a mod
         /// </summary>
-        /// <param name="path">The path to load the mod from.</param>
+        /// <param name="path">The path to load the mod from</param>
         public static async Task<(bool, Mod)> TryLoadAsync(string path)
         {
             (bool success, var file) = await ModFile.TryLoadAsync(path);
@@ -148,9 +158,9 @@ namespace ModMyFactory.Mods
         }
 
         /// <summary>
-        /// Tries to load a mod.
+        /// Tries to load a mod
         /// </summary>
-        /// <param name="fileSystemInfo">The path to load the mod from.</param>
+        /// <param name="fileSystemInfo">The path to load the mod from</param>
         public static async Task<(bool, Mod)> TryLoadAsync(FileSystemInfo fileSystemInfo)
         {
             (bool success, var file) = await ModFile.TryLoadAsync(fileSystemInfo);
@@ -158,9 +168,9 @@ namespace ModMyFactory.Mods
         }
 
         /// <summary>
-        /// Loads a mod.
+        /// Loads a mod
         /// </summary>
-        /// <param name="path">The path to load the mod from.</param>
+        /// <param name="path">The path to load the mod from</param>
         public static async Task<Mod> LoadAsync(string path)
         {
             var file = await ModFile.LoadAsync(path);
@@ -168,9 +178,9 @@ namespace ModMyFactory.Mods
         }
 
         /// <summary>
-        /// Loads a mod.
+        /// Loads a mod
         /// </summary>
-        /// <param name="fileSystemInfo">The path to load the mod from.</param>
+        /// <param name="fileSystemInfo">The path to load the mod from</param>
         public static async Task<Mod> LoadAsync(FileSystemInfo fileSystemInfo)
         {
             var file = await ModFile.LoadAsync(fileSystemInfo);
