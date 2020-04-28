@@ -12,6 +12,10 @@
     "type": "string",
     "value": "Löschen"
   },
+  "ArchiveFileType": {
+    "type": "string",
+    "value": "Archive"
+  },
 
   // --------- Messages ---------
   "ServerError_Title": {

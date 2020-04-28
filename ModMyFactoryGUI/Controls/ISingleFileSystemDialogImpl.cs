@@ -6,20 +6,12 @@
 //  (at your option) any later version.
 
 using Avalonia.Controls;
-using Avalonia.Markup.Xaml;
+using System.Threading.Tasks;
 
-namespace ModMyFactoryGUI.Controls.Icons
+namespace ModMyFactoryGUI.Controls
 {
-    internal class FolderIcon : UserControl
+    internal interface ISingleFileSystemDialogImpl
     {
-        public FolderIcon()
-        {
-            InitializeComponent();
-        }
-
-        private void InitializeComponent()
-        {
-            AvaloniaXamlLoader.Load(this);
-        }
+        Task<string> ShowDialogAsync(OpenSingleFileDialog dialog, Window parent);
     }
 }

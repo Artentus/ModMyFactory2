@@ -16,6 +16,7 @@
     <Version Condition="'$(VersionSuffix)' == ''">0.0.0.0</Version>
     <AssemblyVersion>1.0</AssemblyVersion>
     <FileVersion>$(Version)</FileVersion>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
 
   <ItemGroup>

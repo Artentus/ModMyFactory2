@@ -14,6 +14,7 @@ the Free Software Foundation, either version 3 of the License, or
              xmlns:sys="clr-namespace:System;assembly=mscorlib"
              xmlns:l="clr-namespace:ModMyFactoryGUI.Localization"
              xmlns:models="clr-namespace:ModMyFactoryGUI.ViewModels"
+             xmlns:icons="clr-namespace:ModMyFactoryGUI.Controls.Icons"
              x:Class="ModMyFactoryGUI.Views.FactorioView">
 
   <UserControl.Resources>
@@ -24,27 +25,46 @@ the Free Software Foundation, either version 3 of the License, or
   <Border BorderThickness="1" BorderBrush="{DynamicResource ThemeBorderMidBrush}">
     <Grid Margin="4" ColumnDefinitions="*,Auto,Auto" RowDefinitions="*,Auto">
 
-      <ListBox Margin="4" Items="{Binding Instances}" Grid.Column="0" Grid.ColumnSpan="3" Grid.Row="0">
-        <ListBox.ItemTemplate>
-          <DataTemplate DataType="{x:Type models:FactorioInstanceViewModel}">
-            <Grid ColumnDefinitions="Auto,*" RowDefinitions="Auto,Auto">
-              <Image Grid.Column="0" Grid.Row="0" Grid.RowSpan="2" Margin="2" Source="{Binding Icon}" Width="40" Height="40" Stretch="UniformToFill" />
+      <Border Margin="4" Grid.Column="0" Grid.ColumnSpan="3" Grid.Row="0" BorderThickness="1"
+              BorderBrush="{DynamicResource ThemeBorderMidBrush}" Background="{DynamicResource ThemeBackgroundLowBrush}">
+        <ItemsControl Margin="4" Items="{Binding Instances}">
+          <ItemsControl.ItemTemplate>
+            <DataTemplate DataType="{x:Type models:FactorioInstanceViewModel}">
 
-              <TextBlock Grid.Column="1" Grid.Row="0" Margin="6,2" Classes="h2" Text="{Binding Name}" IsVisible="{Binding IsInstalled}" />
-              <TextBlock Grid.Column="1" Grid.Row="1" Margin="6,0,6,4" Classes="muted" Text="{Binding Version, StringFormat=Factorio {0}}" IsVisible="{Binding IsInstalled}" />
+              <Grid Margin="2,1" MaxWidth="600" HorizontalAlignment="Stretch" ColumnDefinitions="Auto,Auto,Auto,*,Auto,Auto" RowDefinitions="Auto,Auto">
+                <Image Grid.Column="0" Grid.Row="0" Grid.RowSpan="2" Margin="2" Source="{Binding Icon}" Width="40" Height="40" Stretch="UniformToFill" />
 
-              <ProgressBar Grid.Column="1" Grid.Row="0" Margin="6,2"
-                           IsIndeterminate="{Binding IsExtracting}" IsVisible="{Binding !IsInstalled}"
-                           Minimum="0" Maximum="1" Value="{Binding DownloadProgress}" />
+                <TextBlock Grid.Column="1" Grid.Row="0" Margin="6,2" Classes="h2" Text="{Binding Name}" IsVisible="{Binding IsInstalled}" />
+                <TextBlock Grid.Column="1" Grid.Row="1" Margin="6,0,6,4" Classes="muted" Text="{Binding Version, StringFormat=Factorio {0}}" IsVisible="{Binding IsInstalled}" />
 
-              <TextBlock Grid.Column="1" Grid.Row="1" Margin="6,0,6,4" Classes="muted" IsVisible="{Binding IsInDownloadQueue}" Text="{l:LocalizedResource InDownloadQueueText}" />
-              <TextBlock Grid.Column="1" Grid.Row="1" Margin="6,0,6,4" Classes="muted" IsVisible="{Binding IsDownloading}" Text="{l:LocalizedResource DownloadingText}" />
-              <TextBlock Grid.Column="1" Grid.Row="1" Margin="6,0,6,4" Classes="muted" IsVisible="{Binding IsExtracting}" Text="{l:LocalizedResource ExtractingText}" />
+                <ProgressBar Grid.Column="1" Grid.Row="0" Margin="6,2"
+                             IsIndeterminate="{Binding IsExtracting}" IsVisible="{Binding !IsInstalled}"
+                             Minimum="0" Maximum="1" Value="{Binding DownloadProgress}" />
 
-            </Grid>
-          </DataTemplate>
-        </ListBox.ItemTemplate>
-      </ListBox>
+                <TextBlock Grid.Column="1" Grid.Row="1" Margin="6,0,6,4" Classes="muted" IsVisible="{Binding IsInDownloadQueue}" Text="{l:LocalizedResource InDownloadQueueText}" />
+                <TextBlock Grid.Column="1" Grid.Row="1" Margin="6,0,6,4" Classes="muted" IsVisible="{Binding IsDownloading}" Text="{l:LocalizedResource DownloadingText}" />
+                <TextBlock Grid.Column="1" Grid.Row="1" Margin="6,0,6,4" Classes="muted" IsVisible="{Binding IsExtracting}" Text="{l:LocalizedResource ExtractingText}" />
+
+                <Button Grid.Column="2" Grid.Row="0" Grid.RowSpan="2" Margin="4" Padding="0" MinWidth="1"
+                        HorizontalAlignment="Center" VerticalAlignment="Center" Width="26" Height="26">
+                  <icons:EditIcon />
+                </Button>
+
+                <Button Grid.Column="4" Grid.Row="0" Grid.RowSpan="2" Margin="4" Padding="0" MinWidth="1"
+                        HorizontalAlignment="Center" VerticalAlignment="Center" Width="26" Height="26">
+                  <icons:UnlinkIcon />
+                </Button>
+                <Button Grid.Column="5" Grid.Row="0" Grid.RowSpan="2" Margin="4" Padding="0" MinWidth="1"
+                        HorizontalAlignment="Center" VerticalAlignment="Center" Width="26" Height="26">
+                  <icons:RemoveIcon />
+                </Button>
+
+              </Grid>
+
+            </DataTemplate>
+          </ItemsControl.ItemTemplate>
+        </ItemsControl>
+      </Border>
 
       <StackPanel Grid.Column="1" Grid.Row="1" Margin="4" Orientation="Horizontal">
         <Button Content="{l:LocalizedResource DownloadStableButton}" Command="{Binding DownloadCommand}" CommandParameter="{StaticResource FalseValue}" />
@@ -52,7 +72,7 @@ the Free Software Foundation, either version 3 of the License, or
         <ToggleButton>
           <Grid>
             <Path Stroke="{DynamicResource ThemeForegroundBrush}" StrokeThickness="1.5" Data="M0,0 4.5,5 9,0" />
-            <Popup StaysOpen="True" ObeyScreenEdges="True" PlacementMode="Bottom"
+            <Popup StaysOpen="False" ObeyScreenEdges="True" PlacementMode="Bottom"
                    PlacementTarget="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ToggleButton}}}"
                    IsOpen="{Binding IsChecked, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ToggleButton}}, Mode=TwoWay}">
               <Button Content="{l:LocalizedResource DownloadExperimentalButton}" Command="{Binding DownloadCommand}" CommandParameter="{StaticResource TrueValue}" />
@@ -67,7 +87,7 @@ the Free Software Foundation, either version 3 of the License, or
         <ToggleButton>
           <Grid>
             <Path Stroke="{DynamicResource ThemeForegroundBrush}" StrokeThickness="1.5" Data="M0,0 4.5,5 9,0" />
-            <Popup StaysOpen="True" ObeyScreenEdges="True" PlacementMode="Bottom"
+            <Popup StaysOpen="False" ObeyScreenEdges="True" PlacementMode="Bottom"
                    PlacementTarget="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ToggleButton}}}"
                    IsOpen="{Binding IsChecked, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ToggleButton}}, Mode=TwoWay}">
               <Button Content="{l:LocalizedResource ImportArchiveButton}" Command="{Binding ImportCommand}" CommandParameter="{StaticResource TrueValue}" />

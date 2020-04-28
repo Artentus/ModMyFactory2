@@ -10,9 +10,9 @@ using Avalonia.Markup.Xaml;
 
 namespace ModMyFactoryGUI.Controls.Icons
 {
-    internal class FolderIcon : UserControl
+    internal class UnlinkIcon : UserControl
     {
-        public FolderIcon()
+        public UnlinkIcon()
         {
             InitializeComponent();
         }
