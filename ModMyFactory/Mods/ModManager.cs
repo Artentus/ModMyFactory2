@@ -14,6 +14,9 @@ using System.Linq;
 
 namespace ModMyFactory.Mods
 {
+    /// <summary>
+    /// Manages mods for one Factorio version
+    /// </summary>
     public sealed class ModManager : ICollection<Mod>, INotifyCollectionChanged
     {
         private readonly Dictionary<string, ModFamily> _families;
@@ -74,8 +77,6 @@ namespace ModMyFactory.Mods
             return result;
         }
 
-        private bool TryGetFamily(string name, out ModFamily result) => _families.TryGetValue(name, out result);
-
         private void OnCollectionChanged(NotifyCollectionChangedEventArgs e)
             => CollectionChanged?.Invoke(this, e);
 
@@ -95,6 +96,11 @@ namespace ModMyFactory.Mods
                 OnCollectionChanged(e);
             }
         }
+
+        /// <summary>
+        /// Tries to get the mod family with the specified name
+        /// </summary>
+        public bool TryGetFamily(string name, out ModFamily result) => _families.TryGetValue(name, out result);
 
         /// <summary>
         /// Adds a mod to be managed
