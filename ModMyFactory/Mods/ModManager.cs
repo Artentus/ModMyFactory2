@@ -17,6 +17,7 @@ namespace ModMyFactory.Mods
     public sealed class ModManager : ICollection<Mod>, INotifyCollectionChanged
     {
         private readonly Dictionary<string, ModFamily> _families;
+        private volatile bool _clearing = false;
         internal static readonly AccurateVersion FormatSwitch = new AccurateVersion(0, 17); // Native support for multiple mods in Factorio 0.17 and onwards
 
         /// <summary>
@@ -67,6 +68,7 @@ namespace ModMyFactory.Mods
             {
                 result = new ModFamily(name);
                 _families.Add(name, result);
+                result.CollectionChanged += OnFamilyCollectionChanged;
                 result.ModsEnabledChanged += OnFamilyModsEnabledChanged;
             }
             return result;
@@ -75,15 +77,30 @@ namespace ModMyFactory.Mods
         private bool TryGetFamily(string name, out ModFamily result) => _families.TryGetValue(name, out result);
 
         private void OnCollectionChanged(NotifyCollectionChangedEventArgs e)
-                    => CollectionChanged?.Invoke(this, e);
+            => CollectionChanged?.Invoke(this, e);
+
+        private void OnFamilyCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            if (e.Action == NotifyCollectionChangedAction.Reset)
+            {
+                if (!_clearing) // Ignore if we are clearing globally
+                {
+                    // We need to propagate a reset event as multiple remove events since clearing a single family does not clear the entire manager
+                    foreach (Mod mod in e.OldItems)
+                        OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Remove, mod));
+                }
+            }
+            else
+            {
+                OnCollectionChanged(e);
+            }
+        }
 
         /// <summary>
         /// Adds a mod to be managed
         /// </summary>
         public void Add(Mod mod)
         {
-            // ToDo: check directory
-
             if (mod is null) throw new ArgumentNullException();
             if (mod.FactorioVersion.ToMajor() != FactorioVersion) throw new ArgumentException("Mod has incorrect Factorio version.");
 
@@ -91,7 +108,6 @@ namespace ModMyFactory.Mods
             if (family.Contains(mod)) return; // If mod already managed do nothing
 
             family.Add(mod);
-            OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add, mod));
         }
 
         /// <summary>
@@ -107,11 +123,10 @@ namespace ModMyFactory.Mods
             {
                 if (family.Count == 0)
                 {
+                    family.CollectionChanged -= OnFamilyCollectionChanged;
                     family.ModsEnabledChanged -= OnFamilyModsEnabledChanged;
                     _families.Remove(family.FamilyName);
                 }
-
-                OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Remove, mod));
             }
             return result;
         }
@@ -121,11 +136,18 @@ namespace ModMyFactory.Mods
         /// </summary>
         public void Clear()
         {
+            _clearing = true;
+
             foreach (var family in Families)
+            {
+                family.CollectionChanged -= OnFamilyCollectionChanged;
                 family.ModsEnabledChanged -= OnFamilyModsEnabledChanged;
+            }
             _families.Clear();
 
+            // Needs to be called manually since the event hook can't handle it
             OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
+            _clearing = false;
         }
 
         /// <summary>

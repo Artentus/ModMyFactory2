@@ -8,6 +8,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 
 namespace ModMyFactory.Mods
 {
@@ -15,29 +16,34 @@ namespace ModMyFactory.Mods
     /// Groups mods with the same name but different version.
     /// Only one mod in a family can be enabled at a time.
     /// </summary>
-    public sealed class ModFamily : ICollection<Mod>
+    public sealed class ModFamily : ICollection<Mod>, INotifyCollectionChanged
     {
         private readonly List<Mod> _mods;
         private Mod _enabledMod;
         private volatile bool _raiseEvent = true;
 
         /// <summary>
-        /// Is raised if the enabled states of the mods in the family change.
+        /// Is raised if the enabled states of the mods in the family change
         /// </summary>
         public event EventHandler ModsEnabledChanged;
 
         /// <summary>
-        /// The shared name of this mod family.
+        /// Occurs when the mods in the family change
+        /// </summary>
+        public event NotifyCollectionChangedEventHandler CollectionChanged;
+
+        /// <summary>
+        /// The shared name of this mod family
         /// </summary>
         public string FamilyName { get; }
 
         /// <summary>
-        /// The currently enabled mod of this family, or null if no mod is enabled.
+        /// The currently enabled mod of this family, or null if no mod is enabled
         /// </summary>
         public Mod EnabledMod => _enabledMod;
 
         /// <summary>
-        /// The number of mods in this family.
+        /// The number of mods in this family
         /// </summary>
         public int Count => _mods.Count;
 
@@ -77,8 +83,11 @@ namespace ModMyFactory.Mods
             if (_raiseEvent) ModsEnabledChanged?.Invoke(this, EventArgs.Empty);
         }
 
+        private void OnCollectionChanged(NotifyCollectionChangedEventArgs e)
+            => CollectionChanged?.Invoke(this, e);
+
         /// <summary>
-        /// Adds a mod to the family.
+        /// Adds a mod to the family
         /// </summary>
         public void Add(Mod mod)
         {
@@ -97,10 +106,12 @@ namespace ModMyFactory.Mods
                     mod.Enabled = false;
             }
             mod.EnabledChanged += OnModEnabledChanged;
+
+            OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add, mod));
         }
 
         /// <summary>
-        /// Removes a mod from the family.
+        /// Removes a mod from the family
         /// </summary>
         public bool Remove(Mod mod)
         {
@@ -112,12 +123,14 @@ namespace ModMyFactory.Mods
                 mod.Family = null;
                 mod.EnabledChanged -= OnModEnabledChanged;
                 if (mod == _enabledMod) _enabledMod = null;
+
+                OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Remove, mod));
             }
             return result;
         }
 
         /// <summary>
-        /// Removes all mods from the family.
+        /// Removes all mods from the family
         /// </summary>
         public void Clear()
         {
@@ -127,12 +140,17 @@ namespace ModMyFactory.Mods
                 mod.EnabledChanged -= OnModEnabledChanged;
             }
 
+            var listCopy = new Mod[_mods.Count];
+            _mods.CopyTo(listCopy);
+
             _enabledMod = null;
             _mods.Clear();
+
+            OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset, listCopy));
         }
 
         /// <summary>
-        /// Checks if a mod is contained in this family.
+        /// Checks if a mod is contained in this family
         /// </summary>
         public bool Contains(Mod item) => !(item is null) && string.Equals(item.Name, FamilyName, StringComparison.InvariantCulture) && _mods.Contains(item);
 
