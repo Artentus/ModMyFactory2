@@ -14,5 +14,15 @@ namespace ModMyFactoryGUI.Helpers
             return result;
 #endif
         }
+
+        public static bool RemoveEx<TKey, TValue>(this IDictionary<TKey, TValue> dict, TKey key, out TValue value)
+        {
+#if NETCORE
+            return dict.Remove(key, out value);
+#else
+            value = dict.ContainsKey(key) ? dict[key] : default;
+            return dict.Remove(key);
+#endif
+        }
     }
 }

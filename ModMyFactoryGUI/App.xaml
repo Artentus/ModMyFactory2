@@ -84,10 +84,6 @@ the Free Software Foundation, either version 3 of the License, or
       <Setter Property="Background" Value="{DynamicResource ThemeAccentBrush3}" />
     </Style>
 
-    <Style Selector="TabControl[TabStripPlacement=Right]">
-      <Setter Property="Padding" Value="0" />
-    </Style>
-
     <Style Selector="ListBox">
       <Setter Property="BorderBrush" Value="{DynamicResource ThemeBorderMidBrush}" />
       <Setter Property="Background" Value="{DynamicResource ThemeBackgroundLowBrush}" />

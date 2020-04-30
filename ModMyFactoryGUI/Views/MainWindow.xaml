@@ -27,6 +27,9 @@ the Free Software Foundation, either version 3 of the License, or
   </Window.Resources>
 
   <Window.Styles>
+    <Style Selector="TabControl[TabStripPlacement=Right]">
+      <Setter Property="Padding" Value="0" />
+    </Style>
     <Style Selector="TabControl WrapPanel">
       <Setter Property="Background" Value="{DynamicResource ThemeBackgroundHighBrush}" />
     </Style>

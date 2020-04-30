@@ -323,6 +323,16 @@
     "value": "In queue: {0}"
   },
 
+  // --------- Manager view ---------
+  "ModsHeader": {
+    "type": "string",
+    "value": "Mods"
+  },
+  "ModpacksHeader": {
+    "type": "string",
+    "value": "Modpacks"
+  },
+
   // --------- Factorio instance view ---------
   "InDownloadQueueText": {
     "type": "string",
