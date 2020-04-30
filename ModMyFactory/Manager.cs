@@ -8,11 +8,20 @@
 using ModMyFactory.BaseTypes;
 using ModMyFactory.Game;
 using ModMyFactory.Mods;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
 namespace ModMyFactory
 {
+    public sealed class ModManagerCreatedEventArgs : EventArgs
+    {
+        public ModManager ModManager { get; }
+
+        internal ModManagerCreatedEventArgs(ModManager modManager)
+            => ModManager = modManager;
+    }
+
     /// <summary>
     /// Manages Factorio instances and their mods
     /// </summary>
@@ -22,9 +31,19 @@ namespace ModMyFactory
         private readonly Dictionary<AccurateVersion, ModManager> _modManagers;
 
         /// <summary>
+        /// Raised when a new mod manager is created
+        /// </summary>
+        public event EventHandler<ModManagerCreatedEventArgs> ModManagerCreated;
+
+        /// <summary>
         /// The list of instances being managed
         /// </summary>
         public FactorioInstanceCollection ManagedInstances { get; }
+
+        /// <summary>
+        /// The list of mod managers
+        /// </summary>
+        public IReadOnlyCollection<ModManager> ModManagers => _modManagers.Values;
 
         public Manager()
         {
@@ -32,6 +51,9 @@ namespace ModMyFactory
             ManagedInstances = new FactorioInstanceCollection(_managedInstances);
             _modManagers = new Dictionary<AccurateVersion, ModManager>();
         }
+
+        private void OnModManagerCreated(ModManager modManager)
+            => ModManagerCreated?.Invoke(this, new ModManagerCreatedEventArgs(modManager));
 
         /// <summary>
         /// Tries to gets the mod manager associated with a specific version of Factorio
@@ -45,6 +67,7 @@ namespace ModMyFactory
 
         /// <summary>
         /// Gets the mod manager associated with a specific version of Factorio
+        /// Creates a new mod manager if none has been created for the specified version yet
         /// </summary>
         public ModManager GetModManager(AccurateVersion factorioVersion)
         {
@@ -54,6 +77,8 @@ namespace ModMyFactory
             {
                 result = new ModManager(factorioVersion);
                 _modManagers.Add(factorioVersion, result);
+
+                OnModManagerCreated(result);
             }
             return result;
         }
