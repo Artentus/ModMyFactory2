@@ -82,7 +82,12 @@ namespace ModMyFactoryGUI.ViewModels
             set => SetName(this, value);
         }
 
+        public bool CanEditName { get; }
+
         public IBitmap Icon { get; private set; }
+
+        public bool CanRemove { get; }
+        public bool CanDelete { get; }
 
         public AccurateVersion? Version => Instance?.Version;
 
@@ -106,8 +111,14 @@ namespace ModMyFactoryGUI.ViewModels
             _isInstalled = true;
 
             IsExternal = IsInstanceExternal(instance);
-            if (instance.IsSteamInstance()) Icon = LoadIcon("Steam_Icon.png");
+
+            bool isSteam = instance.IsSteamInstance();
+            if (isSteam) Icon = LoadIcon("Steam_Icon.png");
             else Icon = LoadIcon("Factorio_Icon.png");
+
+            CanEditName = !isSteam;
+            CanRemove = IsExternal && !isSteam;
+            CanDelete = !IsExternal && !isSteam;
         }
 
         /// <summary>
@@ -125,8 +136,13 @@ namespace ModMyFactoryGUI.ViewModels
             _isExtracting = !download;
 
             IsExternal = false; // Instance cannot be external if we are downloading or extracting it
+
             if (download) Icon = LoadIcon("Download_Icon.png");
             else Icon = LoadIcon("Package_Icon.png");
+
+            CanEditName = true;
+            CanRemove = false;
+            CanDelete = true;
         }
 
         private static IBitmap LoadIcon(string name)
