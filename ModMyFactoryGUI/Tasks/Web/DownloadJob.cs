@@ -46,6 +46,8 @@ namespace ModMyFactoryGUI.Tasks.Web
                 Success = false;
                 await MessageHelper.ShowMessageForApiException(ex);
             }
+
+            OnCompleted(EventArgs.Empty);
         }
     }
 
@@ -60,14 +62,11 @@ namespace ModMyFactoryGUI.Tasks.Web
         public DownloadModReleaseJob(ModReleaseInfo release, string modDisplayName, string username, string token)
             => (Release, Description, _username, _token) = (release, modDisplayName, username, token);
 
-        protected override async Task<FileInfo> DownloadFile(CancellationToken cancellationToken, IProgress<double> progress)
+        protected override Task<FileInfo> DownloadFile(CancellationToken cancellationToken, IProgress<double> progress)
         {
             var dir = Program.Locations.GetModDir(Release.Info.FactorioVersion);
             string fileName = Path.Combine(dir.FullName, Release.FileName);
-            var file = await ModApi.DownloadModReleaseAsync(Release, _username, _token, fileName, cancellationToken, progress);
-
-            OnCompleted(EventArgs.Empty);
-            return file;
+            return ModApi.DownloadModReleaseAsync(Release, _username, _token, fileName, cancellationToken, progress);
         }
     }
 
@@ -86,14 +85,11 @@ namespace ModMyFactoryGUI.Tasks.Web
             (_version, _build, _platform) = (version, build, platform);
         }
 
-        protected override async Task<FileInfo> DownloadFile(CancellationToken cancellationToken, IProgress<double> progress)
+        protected override Task<FileInfo> DownloadFile(CancellationToken cancellationToken, IProgress<double> progress)
         {
             var dir = Program.TemporaryDirectory;
             string fileName = Path.Combine(dir.FullName, $"Factorio_{_version}.tmp"); // Dummy extension because it could be either ZIP or TAR.GZ
-            var file = await DownloadApi.DownloadReleaseAsync(_version, _build, _platform, _username, _token, fileName, cancellationToken, progress);
-
-            OnCompleted(EventArgs.Empty);
-            return file;
+            return DownloadApi.DownloadReleaseAsync(_version, _build, _platform, _username, _token, fileName, cancellationToken, progress);
         }
     }
 }

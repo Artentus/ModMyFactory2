@@ -39,7 +39,7 @@ the Free Software Foundation, either version 3 of the License, or
                 <TextBlock Grid.Column="1" Grid.Row="0" Margin="6,2" Classes="h2" Text="{Binding Name}" IsVisible="{Binding IsInstalled}" />
                 <TextBlock Grid.Column="1" Grid.Row="1" Margin="6,0,6,4" Classes="muted" Text="{Binding Version, StringFormat=Factorio {0}}" IsVisible="{Binding IsInstalled}" />
 
-                <ProgressBar Grid.Column="1" Grid.Row="0" Margin="6,2"
+                <ProgressBar Grid.Column="1" Grid.Row="0" Margin="6,4"
                              IsIndeterminate="{Binding IsExtracting}" IsVisible="{Binding !IsInstalled}"
                              Minimum="0" Maximum="1" Value="{Binding DownloadProgress}" />
 
@@ -52,20 +52,35 @@ the Free Software Foundation, either version 3 of the License, or
                     <KeyBinding Gesture="Return" Command="{Binding EndRenameCommand}" />
                   </TextBox.KeyBindings>
                 </TextBox>
-                <ToggleButton Grid.Column="2" Grid.Row="0" Grid.RowSpan="2" Margin="4" Padding="0" MinWidth="1"
-                        HorizontalAlignment="Center" VerticalAlignment="Center" Width="26" Height="26"
-                        IsVisible="{Binding CanEditName}" IsChecked="{Binding IsRenaming, Mode=TwoWay}">
+                <ToggleButton Grid.Column="2" Grid.Row="0" Grid.RowSpan="2" Margin="4" Padding="0" MinWidth="1" Width="26" Height="26"
+                        HorizontalAlignment="Center" VerticalAlignment="Center" IsChecked="{Binding IsRenaming, Mode=TwoWay}">
+                  <ToggleButton.IsVisible>
+                    <MultiBinding Converter="{x:Static BoolConverters.And}">
+                      <Binding Path="CanEditName" />
+                      <Binding Path="IsInstalled" />
+                    </MultiBinding>
+                  </ToggleButton.IsVisible>
                   <icons:EditIcon />
                 </ToggleButton>
 
-                <Button Grid.Column="4" Grid.Row="0" Grid.RowSpan="2" Margin="4" Padding="0" MinWidth="1"
-                        HorizontalAlignment="Center" VerticalAlignment="Center" Width="26" Height="26"
-                        IsVisible="{Binding CanRemove}" Command="{Binding RemoveCommand}">
+                <Button Grid.Column="4" Grid.Row="0" Grid.RowSpan="2" Margin="4" Padding="0" MinWidth="1" Width="26" Height="26"
+                        HorizontalAlignment="Center" VerticalAlignment="Center" Command="{Binding RemoveCommand}">
+                  <Button.IsVisible>
+                    <MultiBinding Converter="{x:Static BoolConverters.And}">
+                      <Binding Path="CanRemove" />
+                      <Binding Path="IsInstalled" />
+                    </MultiBinding>
+                  </Button.IsVisible>
                   <icons:UnlinkIcon />
                 </Button>
-                <Button Grid.Column="5" Grid.Row="0" Grid.RowSpan="2" Margin="4" Padding="0" MinWidth="1"
-                        HorizontalAlignment="Center" VerticalAlignment="Center" Width="26" Height="26"
-                        IsVisible="{Binding CanDelete}" Command="{Binding DeleteCommand}">
+                <Button Grid.Column="5" Grid.Row="0" Grid.RowSpan="2" Margin="4" Padding="0" MinWidth="1" Width="26" Height="26"
+                        HorizontalAlignment="Center" VerticalAlignment="Center" Command="{Binding DeleteCommand}">
+                  <Button.IsVisible>
+                    <MultiBinding Converter="{x:Static BoolConverters.And}">
+                      <Binding Path="CanDelete" />
+                      <Binding Path="IsInstalled" />
+                    </MultiBinding>
+                  </Button.IsVisible>
                   <icons:RemoveIcon />
                 </Button>
 

@@ -89,5 +89,10 @@ the Free Software Foundation, either version 3 of the License, or
       <Setter Property="Background" Value="{DynamicResource ThemeBackgroundLowBrush}" />
     </Style>
 
+    <Style Selector="ProgressBar">
+      <Setter Property="Background" Value="{DynamicResource ThemeBorderLowBrush}" />
+      <Setter Property="Foreground" Value="{DynamicResource ThemeAccentBrush4}" />
+    </Style>
+
   </Application.Styles>
 </Application>
