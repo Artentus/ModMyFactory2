@@ -19,6 +19,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
+using System.Windows.Input;
 
 namespace ModMyFactoryGUI.ViewModels
 {
@@ -28,8 +29,10 @@ namespace ModMyFactoryGUI.ViewModels
 
         private readonly Manager _manager;
         private readonly LocationManager _locations;
-        private bool _isInDownloadQueue, _isDownloading, _isExtracting, _isInstalled;
+        private bool _isInDownloadQueue, _isDownloading, _isExtracting, _isInstalled, _isRenaming;
         private ManagedFactorioInstance _instance;
+
+        public event EventHandler InstanceRemoved;
 
         public bool IsInDownloadQueue
         {
@@ -53,6 +56,19 @@ namespace ModMyFactoryGUI.ViewModels
         {
             get => _isInstalled;
             private set => this.RaiseAndSetIfChanged(ref _isInstalled, value, nameof(IsInstalled));
+        }
+
+        public bool IsRenaming
+        {
+            get => _isRenaming;
+            set
+            {
+                if (this.RaiseAndSetIfChanged(ref _isRenaming, value, nameof(IsRenaming)) && !value)
+                {
+                    Program.Settings.Set(SettingName.FactorioNameTable, NameTable);
+                    Program.Settings.Save();
+                }
+            }
         }
 
         public double DownloadProgress { get; private set; }
@@ -82,14 +98,29 @@ namespace ModMyFactoryGUI.ViewModels
             set => SetName(this, value);
         }
 
-        public bool CanEditName { get; }
-
         public IBitmap Icon { get; private set; }
 
+        public bool CanEditName { get; }
         public bool CanRemove { get; }
         public bool CanDelete { get; }
 
+        public ICommand BeginRenameCommand { get; }
+        public ICommand EndRenameCommand { get; }
+        public ICommand RemoveCommand { get; }
+        public ICommand DeleteCommand { get; }
+
         public AccurateVersion? Version => Instance?.Version;
+
+        private FactorioInstanceViewModel(Manager manager)
+        {
+            if (manager is null) throw new ArgumentNullException(nameof(manager));
+            _manager = manager;
+
+            BeginRenameCommand = ReactiveCommand.Create(() => IsRenaming = true);
+            EndRenameCommand = ReactiveCommand.Create(() => IsRenaming = false);
+            RemoveCommand = ReactiveCommand.Create(Remove);
+            DeleteCommand = ReactiveCommand.Create(Delete);
+        }
 
         static FactorioInstanceViewModel()
         {
@@ -101,10 +132,8 @@ namespace ModMyFactoryGUI.ViewModels
         /// Use this constructor for already existing instances
         /// </summary>
         public FactorioInstanceViewModel(Manager manager, ManagedFactorioInstance instance)
+            : this(manager)
         {
-            if (manager is null) throw new ArgumentNullException(nameof(manager));
-            _manager = manager;
-
             if (instance is null) throw new ArgumentNullException(nameof(instance));
             _instance = instance;
 
@@ -125,10 +154,8 @@ namespace ModMyFactoryGUI.ViewModels
         /// If this constructor is used the instance has to be created asyncroneously later
         /// </summary>
         public FactorioInstanceViewModel(Manager manager, LocationManager locations, bool download)
+            : this(manager)
         {
-            if (manager is null) throw new ArgumentNullException(nameof(manager));
-            _manager = manager;
-
             if (locations is null) throw new ArgumentNullException(nameof(locations));
             _locations = locations;
 
@@ -225,6 +252,42 @@ namespace ModMyFactoryGUI.ViewModels
                     NameTable[key] = name;
                 }
             }
+        }
+
+        private void OnInstanceRemoved(EventArgs e)
+            => InstanceRemoved?.Invoke(this, e);
+
+        public void Remove()
+        {
+            if (_instance.IsSteamInstance()) throw new InvalidOperationException("Cannot remove the Steam instance");
+            if (!IsExternal) throw new InvalidOperationException("Cannot remove an internal instance");
+
+            // ToDo: ask user
+            OnInstanceRemoved(EventArgs.Empty);
+            if (Program.Settings.TryGet(SettingName.ExternalInstances, out List<string> paths))
+            {
+                for (int i = paths.Count - 1; i >= 0; i--)
+                {
+                    if (FileHelper.PathsEqual(paths[i], _instance.Directory.FullName))
+                    {
+                        paths.RemoveAt(i);
+                        Program.Settings.Set(SettingName.ExternalInstances, paths);
+                        break;
+                    }
+                }
+            }
+            _manager.RemoveInstance(_instance);
+        }
+
+        public void Delete()
+        {
+            if (_instance.IsSteamInstance()) throw new InvalidOperationException("Cannot delete the Steam instance");
+            if (IsExternal) throw new InvalidOperationException("Cannot delete an external instance");
+
+            // ToDo: ask user
+            OnInstanceRemoved(EventArgs.Empty);
+            _manager.RemoveInstance(_instance);
+            _instance.Directory.Delete(true);
         }
 
         public async Task<bool> TryCreateDownloadAsync(DownloadQueue downloadQueue, bool experimental)

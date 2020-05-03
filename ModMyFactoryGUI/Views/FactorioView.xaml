@@ -47,20 +47,25 @@ the Free Software Foundation, either version 3 of the License, or
                 <TextBlock Grid.Column="1" Grid.Row="1" Margin="6,0,6,4" Classes="muted" IsVisible="{Binding IsDownloading}" Text="{l:LocalizedResource DownloadingText}" />
                 <TextBlock Grid.Column="1" Grid.Row="1" Margin="6,0,6,4" Classes="muted" IsVisible="{Binding IsExtracting}" Text="{l:LocalizedResource ExtractingText}" />
 
-                <Button Grid.Column="2" Grid.Row="0" Grid.RowSpan="2" Margin="4" Padding="0" MinWidth="1"
+                <TextBox Grid.Column="1" Grid.Row="0" Margin="6,2" Text="{Binding Name, Mode=TwoWay}" IsVisible="{Binding IsRenaming}">
+                  <TextBox.KeyBindings>
+                    <KeyBinding Gesture="Return" Command="{Binding EndRenameCommand}" />
+                  </TextBox.KeyBindings>
+                </TextBox>
+                <ToggleButton Grid.Column="2" Grid.Row="0" Grid.RowSpan="2" Margin="4" Padding="0" MinWidth="1"
                         HorizontalAlignment="Center" VerticalAlignment="Center" Width="26" Height="26"
-                        IsVisible="{Binding CanEditName}">
+                        IsVisible="{Binding CanEditName}" IsChecked="{Binding IsRenaming, Mode=TwoWay}">
                   <icons:EditIcon />
-                </Button>
+                </ToggleButton>
 
                 <Button Grid.Column="4" Grid.Row="0" Grid.RowSpan="2" Margin="4" Padding="0" MinWidth="1"
                         HorizontalAlignment="Center" VerticalAlignment="Center" Width="26" Height="26"
-                        IsVisible="{Binding CanRemove}">
+                        IsVisible="{Binding CanRemove}" Command="{Binding RemoveCommand}">
                   <icons:UnlinkIcon />
                 </Button>
                 <Button Grid.Column="5" Grid.Row="0" Grid.RowSpan="2" Margin="4" Padding="0" MinWidth="1"
                         HorizontalAlignment="Center" VerticalAlignment="Center" Width="26" Height="26"
-                        IsVisible="{Binding CanDelete}">
+                        IsVisible="{Binding CanDelete}" Command="{Binding DeleteCommand}">
                   <icons:RemoveIcon />
                 </Button>
 

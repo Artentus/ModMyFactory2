@@ -38,8 +38,11 @@ namespace ModMyFactoryGUI
                 observable2.PropertyChanged -= OnBasePropertyChanged;
             }
 
-            private void OnBaseCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+            private void OnCollectionChanged(NotifyCollectionChangedEventArgs e)
                 => CollectionChanged?.Invoke(this, e);
+
+            private void OnBaseCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+                => OnCollectionChanged(e);
 
             private void OnBasePropertyChanged(object sender, PropertyChangedEventArgs e)
                 => OnPropertyChanged(e);
@@ -61,6 +64,9 @@ namespace ModMyFactoryGUI
                     arrayIndex++;
                 }
             }
+
+            public void Refresh()
+                => OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Move, this.ToList()));
 
             public IEnumerator<T> GetEnumerator()
                 => _baseCollection.OrderBy(item => item, _comparer).GetEnumerator();

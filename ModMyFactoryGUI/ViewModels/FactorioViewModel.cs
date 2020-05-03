@@ -12,6 +12,7 @@ using ModMyFactoryGUI.Helpers;
 using ModMyFactoryGUI.Tasks.Web;
 using ModMyFactoryGUI.Views;
 using ReactiveUI;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
@@ -49,8 +50,16 @@ namespace ModMyFactoryGUI.ViewModels
             foreach (var instance in Program.Manager.ManagedInstances)
             {
                 var vm = new FactorioInstanceViewModel(Program.Manager, instance);
+                vm.InstanceRemoved += OnInstanceRemoved;
                 _instances.Add(vm);
             }
+        }
+
+        private void OnInstanceRemoved(object sender, EventArgs e)
+        {
+            var vm = (FactorioInstanceViewModel)sender;
+            vm.InstanceRemoved -= OnInstanceRemoved;
+            _instances.Remove(vm);
         }
 
         private async Task ImportArchiveAsync()
