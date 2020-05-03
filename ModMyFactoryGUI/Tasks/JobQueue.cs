@@ -50,26 +50,28 @@ namespace ModMyFactoryGUI.Tasks
         private void OnJobProgress(object sender, double progress)
             => _progress.Report((_currentJob, progress));
 
-        private async Task RunQueueAsync(CancellationToken cancellationToken)
+        private async Task RunQueueAsync()
         {
-            while (!cancellationToken.IsCancellationRequested)
+            var token = _cancellationSource.Token;
+
+            while (!token.IsCancellationRequested)
             {
-                _currentJob = await _jobQueue.Dequeue(cancellationToken).ConfigureAwait(false);
+                _currentJob = await _jobQueue.Dequeue(token).ConfigureAwait(false);
 
                 // Job taken from queue, decrement queue length
                 Interlocked.Decrement(ref _length);
-                await OnLengthChanged(EventArgs.Empty);
+                await OnLengthChanged(EventArgs.Empty).ConfigureAwait(false);
 
-                if (!cancellationToken.IsCancellationRequested)
+                if (!token.IsCancellationRequested)
                 {
                     var jobProgress = _currentJob.Progress;
                     jobProgress.ProgressChanged += OnJobProgress;
-                    await _currentJob.Run(cancellationToken).ConfigureAwait(false);
+                    await _currentJob.Run(token).ConfigureAwait(false);
                     jobProgress.ProgressChanged -= OnJobProgress;
 
                     // Job completed, decrement inclusive queue length
                     Interlocked.Decrement(ref _lengthInclusive);
-                    await OnJobCompleted(new JobCompletedEventArgs<T>(_currentJob));
+                    await OnJobCompleted(new JobCompletedEventArgs<T>(_currentJob)).ConfigureAwait(false);
                 }
             }
         }
@@ -86,7 +88,7 @@ namespace ModMyFactoryGUI.Tasks
             {
                 _queueRunning = true;
                 _cancellationSource = new CancellationTokenSource();
-                await RunQueueAsync(_cancellationSource.Token).ConfigureAwait(true);
+                await Task.Run(RunQueueAsync);
             }
 
             throw new InvalidOperationException("Queue is already running");
@@ -112,22 +114,23 @@ namespace ModMyFactoryGUI.Tasks
             LengthChanged?.Invoke(this, EventArgs.Empty);
         }
 
-        public async Task AddJobAsync(T job)
+        public Task AddJobAsync(T job)
         {
             var source = new TaskCompletionSource<object>();
 
-            void OnCompleted(object sender, JobCompletedEventArgs<T> e)
+            void OnCompleted(object sender, EventArgs e)
             {
-                if (ReferenceEquals(e.Job, job))
+                if (ReferenceEquals(sender, job))
                 {
-                    source.SetResult(null);
-                    JobCompleted -= OnCompleted;
+                    source.SetResult(new object());
+                    job.Completed -= OnCompleted;
                 }
             }
 
-            JobCompleted += OnCompleted;
+            job.Completed += OnCompleted;
+            AddJob(job);
 
-            await source.Task;
+            return source.Task;
         }
     }
 }

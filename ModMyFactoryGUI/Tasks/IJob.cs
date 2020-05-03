@@ -13,6 +13,8 @@ namespace ModMyFactoryGUI.Tasks
 {
     internal interface IJob
     {
+        public event EventHandler Completed;
+
         Progress<double> Progress { get; }
 
         bool Success { get; }
