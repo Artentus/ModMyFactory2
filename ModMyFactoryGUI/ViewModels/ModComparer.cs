@@ -22,14 +22,22 @@ namespace ModMyFactoryGUI.ViewModels
                 => OnPropertyChanged(new PropertyChangedEventArgs(nameof(DisplayNameKey)));
         }
 
-        public abstract int Compare(OnlineModViewModel first, OnlineModViewModel second);
+        protected abstract int SubCompare(OnlineModViewModel first, OnlineModViewModel second);
+
+        public int Compare(OnlineModViewModel first, OnlineModViewModel second)
+        {
+            // Search score always takes precendence over any other sorting
+            int result = second.SearchScore.CompareTo(first.SearchScore);
+            if (result == 0) result = SubCompare(first, second);
+            return result;
+        }
     }
 
     internal sealed class AlphabeticalComparer : ModComparer
     {
         public override string DisplayNameKey => "Compare_Alphabetical";
 
-        public override int Compare(OnlineModViewModel first, OnlineModViewModel second)
+        protected override int SubCompare(OnlineModViewModel first, OnlineModViewModel second)
             => first.DisplayName.CompareTo(second.DisplayName);
     }
 
@@ -37,7 +45,7 @@ namespace ModMyFactoryGUI.ViewModels
     {
         public override string DisplayNameKey => "Compare_DownloadCount";
 
-        public override int Compare(OnlineModViewModel first, OnlineModViewModel second)
+        protected override int SubCompare(OnlineModViewModel first, OnlineModViewModel second)
             => second.DownloadCount.CompareTo(first.DownloadCount);
     }
 }

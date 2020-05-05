@@ -76,6 +76,13 @@ namespace ModMyFactoryGUI.ViewModels
             set => this.RaiseAndSetIfChanged(ref _selectedRelease, value, nameof(SelectedRelease));
         }
 
+
+        // Store information for fuzzy search
+        public bool MatchesSearch { get; private set; } = true;
+
+        public int SearchScore { get; private set; } = 0;
+
+
         public string Changelog => Info.Changelog;
         public string Faq => Info.Faq;
 
@@ -210,6 +217,29 @@ namespace ModMyFactoryGUI.ViewModels
                     await MessageHelper.ShowMessageForApiException(ex);
                 }
             }
+        }
+
+        public void ApplyFuzzyFilter(in string filter)
+        {
+            if (string.IsNullOrWhiteSpace(filter))
+            {
+                MatchesSearch = true;
+                SearchScore = 0;
+                return;
+            }
+
+            // We allow searching for title, name and author
+            bool titleMatches = DisplayName.FuzzyMatch(filter, out int titleScore);
+            bool nameMatches = Info.Name.FuzzyMatch(filter, out int nameScore);
+            bool authorMatches = Author.FuzzyMatch(filter, out int authorScore);
+
+            int score = 0;
+            if (titleMatches) score += titleScore;
+            if (nameMatches) score += nameScore;
+            if (authorMatches) score += authorScore;
+
+            MatchesSearch = titleMatches || nameMatches || authorMatches;
+            SearchScore = score;
         }
 
         public void Dispose()

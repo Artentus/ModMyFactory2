@@ -104,6 +104,7 @@ namespace ModMyFactoryGUI
         {
             _evaluated = Evaluate(_baseCollection);
             OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
+            OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add, _evaluated));
             OnPropertyChanged(new PropertyChangedEventArgs(nameof(Count)));
         }
 

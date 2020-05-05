@@ -104,6 +104,9 @@ namespace ModMyFactoryGUI.ViewModels
                     _filter = value;
                     this.RaisePropertyChanged(nameof(Filter));
 
+                    foreach (var mod in _onlineMods)
+                        mod.ApplyFuzzyFilter(_filter);
+
                     OnlineMods.Refresh();
                     this.RaisePropertyChanged(nameof(OnlineMods));
                 }
@@ -160,10 +163,11 @@ namespace ModMyFactoryGUI.ViewModels
             if (string.IsNullOrWhiteSpace(mod.DisplayName)) return false;
             if (mod.DisplayName.Length == 1) return false;
 
-            return (SelectedFactorioVersion == default)
-                || (mod.FactorioVersion == SelectedFactorioVersion);
+            // Filter for selected Factorio version
+            if ((SelectedFactorioVersion != default) && (mod.FactorioVersion != SelectedFactorioVersion)) return false;
 
-            // ToDo: match filter string
+            // Filter based on fuzzy search
+            return mod.MatchesSearch;
         }
 
         private void RefreshFactorioVersions()
