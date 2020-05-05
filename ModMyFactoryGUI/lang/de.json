@@ -374,6 +374,15 @@
     "type": "string",
     "value": "Veröffentlichte Versionen"
   },
+  "Compare_Alphabetical": {
+    "type": "string",
+    "value": "Alphabetisch"
+  },
+  "Compare_DownloadCount": {
+    "type": "string",
+    "value": "Nach Downloadzahl"
+  },
+
 
   // --------- Settings view ---------
   "CredentialsHeader": {

@@ -6,13 +6,13 @@
 //  (at your option) any later version.
 
 using Avalonia.Media.Imaging;
+using ModMyFactory.BaseTypes;
 using ModMyFactory.WebApi;
 using ModMyFactory.WebApi.Mods;
 using ModMyFactoryGUI.Helpers;
 using ModMyFactoryGUI.Tasks.Web;
 using ReactiveUI;
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Net;
 using System.Threading.Tasks;
@@ -21,7 +21,7 @@ namespace ModMyFactoryGUI.ViewModels
 {
     internal sealed class OnlineModViewModel : ReactiveObject, IDisposable
     {
-        private static readonly ModReleaseViewModel[] _emptyReleases = new ModReleaseViewModel[0];
+        private static readonly CollectionView<ModReleaseViewModel> _emptyReleases = new CollectionView<ModReleaseViewModel>(new ModReleaseViewModel[0]);
 
         private readonly DownloadQueue _downloadQueue;
         private ApiModInfo _info;
@@ -43,6 +43,7 @@ namespace ModMyFactoryGUI.ViewModels
                 this.RaisePropertyChanged(nameof(DownloadCount));
                 this.RaisePropertyChanged(nameof(Summary));
                 this.RaisePropertyChanged(nameof(Description));
+                this.RaisePropertyChanged(nameof(FactorioVersion));
                 this.RaisePropertyChanged(nameof(HasChangelog));
                 this.RaisePropertyChanged(nameof(Changelog));
                 this.RaisePropertyChanged(nameof(HasFaq));
@@ -67,7 +68,7 @@ namespace ModMyFactoryGUI.ViewModels
         public bool HasChangelog => !string.IsNullOrWhiteSpace(Changelog);
         public bool HasFaq => !string.IsNullOrWhiteSpace(Faq);
 
-        public IReadOnlyCollection<ModReleaseViewModel> Releases => _isExtended ? _releases : _emptyReleases;
+        public CollectionView<ModReleaseViewModel> Releases { get; private set; }
 
         public ModReleaseViewModel SelectedRelease
         {
@@ -88,8 +89,10 @@ namespace ModMyFactoryGUI.ViewModels
 
         public string Description => Info.Description;
 
+        public AccurateVersion FactorioVersion => Info.LatestRelease.Info.FactorioVersion.ToMajor();
+
         public OnlineModViewModel(ApiModInfo info, DownloadQueue downloadQueue)
-            => (_info, _downloadQueue) = (info, downloadQueue);
+            => (_info, _downloadQueue, Releases) = (info, downloadQueue, _emptyReleases);
 
         ~OnlineModViewModel()
         {
@@ -149,6 +152,7 @@ namespace ModMyFactoryGUI.ViewModels
                     _releases[i] = new ModReleaseViewModel(Info.Releases[i], Info.DisplayName, _downloadQueue);
             }
 
+            Releases = new CollectionView<ModReleaseViewModel>(_releases, (a, b) => b.Version.CompareTo(a.Version));
             this.RaisePropertyChanged(nameof(Releases));
         }
 

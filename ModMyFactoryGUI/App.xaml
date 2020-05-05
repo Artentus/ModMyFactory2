@@ -26,6 +26,7 @@ the Free Software Foundation, either version 3 of the License, or
     <StyleInclude Source="/Assets/Styles/ScrollBar.xaml" />
     <StyleInclude Source="/Assets/Styles/RadioButton.xaml" />
     <StyleInclude Source="/Assets/Styles/TextBox.xaml" />
+    <StyleInclude Source="/Assets/Styles/ComboBoxItem.xaml" />
 
     <Style Selector="TextBlock.muted">
       <Setter Property="Foreground" Value="{DynamicResource ThemeForegroundLowBrush}" />

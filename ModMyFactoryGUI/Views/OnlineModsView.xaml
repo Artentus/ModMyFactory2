@@ -25,15 +25,37 @@ the Free Software Foundation, either version 3 of the License, or
 
   <Border BorderThickness="1" BorderBrush="{DynamicResource ThemeBorderMidBrush}">
 
-    <Grid Margin="4" RowDefinitions="*,Auto">
+    <Grid Margin="4" RowDefinitions="Auto,Auto,*,Auto">
       <Grid.ColumnDefinitions>
         <ColumnDefinition Width="{local:SettingBinding OnlineGridLength1, Mode=TwoWay}" />
         <ColumnDefinition Width="Auto" />
         <ColumnDefinition Width="{local:SettingBinding OnlineGridLength2, Mode=TwoWay}" />
       </Grid.ColumnDefinitions>
 
+      <!-- Filter and ordering -->
+      <controls:SearchBox Grid.Column="0" Grid.Row="0" Margin="4,4,0,4" Text="{Binding Filter, Mode=TwoWay}" />
+      <Grid Grid.Column="0" Grid.Row="1" ColumnDefinitions="*,*">
+
+        <ComboBox Grid.Column="0" Margin="4" Items="{Binding Comparers}" SelectedItem="{Binding SelectedComparer, Mode=TwoWay}">
+          <ComboBox.ItemTemplate>
+            <DataTemplate DataType="{x:Type models:ModComparer}">
+              <TextBlock Margin="2" Text="{Binding DisplayNameKey, Converter={StaticResource LocalizeConverter}}" />
+            </DataTemplate>
+          </ComboBox.ItemTemplate>
+        </ComboBox>
+
+        <ComboBox Grid.Column="2" Margin="4,4,0,4" Items="{Binding FactorioVersions}" SelectedItem="{Binding SelectedFactorioVersion, Mode=TwoWay}">
+          <ComboBox.ItemTemplate>
+            <DataTemplate>
+              <TextBlock Margin="2" Text="{Binding, StringFormat=Factorio {0}}" />
+            </DataTemplate>
+          </ComboBox.ItemTemplate>
+        </ComboBox>
+
+      </Grid>
+
       <!-- Mod list -->
-      <ListBox Grid.Column="0" Grid.Row="0" Margin="4,4,0,4" Grid.IsSharedSizeScope="True"
+      <ListBox Grid.Column="0" Grid.Row="2" Margin="4,4,0,4" Grid.IsSharedSizeScope="True"
                Items="{Binding OnlineMods}" SelectedItem="{Binding SelectedMod}">
         <ListBox.IsVisible>
           <MultiBinding Converter="{x:Static BoolConverters.And}">
@@ -62,30 +84,27 @@ the Free Software Foundation, either version 3 of the License, or
       </ListBox>
 
       <!-- Loading indicator -->
-      <Border Grid.Column="0" Grid.Row="0" Margin="4,4,0,4" IsVisible="{Binding !ModsLoaded}"
+      <Border Grid.Column="0" Grid.Row="2" Margin="4,4,0,4" IsVisible="{Binding !ModsLoaded}"
               BorderThickness="1" BorderBrush="{DynamicResource ThemeBorderMidBrush}"
               Background="{DynamicResource ThemeBackgroundLowBrush}">
         <controls:LoadingIndicator HorizontalAlignment="Center" VerticalAlignment="Center" Text="{l:LocalizedResource LoadingMessage}" />
       </Border>
 
       <!-- Error message -->
-      <Border Grid.Column="0" Grid.Row="0" Margin="4,4,0,4" IsVisible="{Binding LoadingErrorOccurred}"
+      <Border Grid.Column="0" Grid.Row="2" Margin="4,4,0,4" IsVisible="{Binding LoadingErrorOccurred}"
               BorderThickness="1" BorderBrush="{DynamicResource ErrorBrush}"
               Background="{DynamicResource ThemeBackgroundLowBrush}">
         <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center" TextAlignment="Center"
                    Foreground="{DynamicResource ErrorBrush}" Classes="h2" Text="{Binding ErrorMessageKey, Converter={StaticResource LocalizeConverter}}" />
       </Border>
 
-      <DockPanel Grid.Column="0" Grid.Row="1">
-        <Button DockPanel.Dock="Left" HorizontalAlignment="Left" Margin="4"
-                Content="{l:LocalizedResource RefreshButton}"
-                IsEnabled="{Binding ModsLoaded}" Command="{Binding RefreshCommand} " />
-      </DockPanel>
+      <Button Grid.Column="0" Grid.Row="3" Margin="4,4,0,4" HorizontalAlignment="Left"
+              Content="{l:LocalizedResource RefreshButton}" IsEnabled="{Binding ModsLoaded}" Command="{Binding RefreshCommand}" />
 
-      <GridSplitter Grid.Column="1" Grid.Row="0" Grid.RowSpan="2" Width="8"
+      <GridSplitter Grid.Column="1" Grid.Row="0" Grid.RowSpan="4" Width="8"
                     Background="{DynamicResource ThemeBackgroundBrush}" />
 
-      <views:OnlineModView Grid.Column="2" Grid.Row="0" Grid.RowSpan="2" Margin="0,4,4,4" DataContext="{Binding SelectedMod}" />
+      <views:OnlineModView Grid.Column="2" Grid.Row="0" Grid.RowSpan="4" Margin="0,4,4,4" DataContext="{Binding SelectedMod}" />
     </Grid>
 
   </Border>

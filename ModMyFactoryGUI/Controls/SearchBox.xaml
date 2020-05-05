@@ -1,0 +1,32 @@
+<!--
+Copyright (C) 2020 Mathis Rech
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+-->
+
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:icons="clr-namespace:ModMyFactoryGUI.Controls.Icons"
+             xmlns:controls="clr-namespace:ModMyFactoryGUI.Controls"
+             x:Class="ModMyFactoryGUI.Controls.SearchBox">
+
+  <UserControl.Styles>
+    <Style Selector="TextBox TextPresenter">
+      <Setter Property="VerticalAlignment" Value="Center" />
+      <Setter Property="Margin" Value="4,0" />
+      <Setter Property="FontSize" Value="{DynamicResource FontSizeLarge}" />
+    </Style>
+  </UserControl.Styles>
+
+  <DockPanel>
+    <Border DockPanel.Dock="Left" Background="{DynamicResource ThemeAccentBrush4}">
+      <icons:SearchIcon Margin="4,0" />
+    </Border>
+    <TextBox Text="{Binding Text, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type controls:SearchBox}}, Mode=TwoWay}" />
+  </DockPanel>
+</UserControl>

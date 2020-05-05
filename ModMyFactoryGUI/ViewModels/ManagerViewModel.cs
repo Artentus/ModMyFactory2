@@ -7,7 +7,6 @@
 
 using ModMyFactory;
 using ModMyFactoryGUI.Views;
-using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
@@ -17,7 +16,7 @@ namespace ModMyFactoryGUI.ViewModels
     {
         private readonly ObservableCollection<ModVersionGroupingViewModel> _modVersionGroupings;
 
-        public ICollection<ModVersionGroupingViewModel> ModVersionGroupings { get; }
+        public CollectionView<ModVersionGroupingViewModel> ModVersionGroupings { get; }
 
         public ManagerViewModel()
         {
@@ -25,7 +24,7 @@ namespace ModMyFactoryGUI.ViewModels
 
             static int CompareViewModels(ModVersionGroupingViewModel first, ModVersionGroupingViewModel second)
                 => first.FactorioVersion.CompareTo(second.FactorioVersion);
-            ModVersionGroupings = _modVersionGroupings.ToSorted((Comparison<ModVersionGroupingViewModel>)CompareViewModels);
+            ModVersionGroupings = new CollectionView<ModVersionGroupingViewModel>(_modVersionGroupings, CompareViewModels);
 
             foreach (var modManager in Program.Manager.ModManagers)
             {

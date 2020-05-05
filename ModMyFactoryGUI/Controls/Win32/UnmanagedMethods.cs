@@ -10,6 +10,8 @@ using System.Runtime.InteropServices;
 using System.Runtime.InteropServices.ComTypes;
 using System.Text;
 
+#pragma warning disable 0649
+
 namespace Avalonia.Win32.Interop
 {
     [Flags]
@@ -1958,3 +1960,5 @@ namespace Avalonia.Win32.Interop
         public static extern int DwmExtendFrameIntoClientArea(IntPtr hwnd, ref MARGINS margins);
     }
 }
+
+#pragma warning restore 0649

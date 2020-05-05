@@ -400,6 +400,15 @@
     "type": "string",
     "value": "Releases"
   },
+  "Compare_Alphabetical": {
+    "type": "string",
+    "value": "Alphabetical"
+  },
+  "Compare_DownloadCount": {
+    "type": "string",
+    "value": "By download count"
+  },
+
 
   // --------- Settings view ---------
   "CredentialsHeader": {

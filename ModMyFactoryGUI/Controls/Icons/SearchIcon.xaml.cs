@@ -5,16 +5,21 @@
 //  the Free Software Foundation, either version 3 of the License, or
 //  (at your option) any later version.
 
-using CommandLine;
+using Avalonia.Controls;
+using Avalonia.Markup.Xaml;
 
-namespace ModMyFactoryGUI.CommandLine
+namespace ModMyFactoryGUI.Controls.Icons
 {
-    [Verb("run", true, HelpText = "Starts ModMyFactory GUI")]
-    internal sealed class RunOptions : OptionsBase
+    internal class SearchIcon : UserControl
     {
-        public RunOptions(bool verbose, bool noLog, string appDataPath, bool noAutoUpdate)
-            : base(verbose, noLog, appDataPath, noAutoUpdate)
+        public SearchIcon()
         {
+            InitializeComponent();
+        }
+
+        private void InitializeComponent()
+        {
+            AvaloniaXamlLoader.Load(this);
         }
     }
 }
