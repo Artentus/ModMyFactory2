@@ -66,7 +66,10 @@ namespace ModMyFactory.WebApi
         public async static Task<string> RequestDocumentAsync(string url, byte[] content = null)
             => await RequestDocumentAsync(new Uri(url, UriKind.Absolute), content);
 
-        public async static Task DownloadFileAsync(Uri uri, FileInfo file, CancellationToken cancellationToken = default, IProgress<double> progress = null)
+        public async static Task DownloadFileAsync(
+            Uri uri, FileInfo file,
+            CancellationToken cancellationToken,
+            IProgress<double> progress = null)
         {
             var request = await CreateHttpRequestAsync(uri);
 
@@ -111,7 +114,10 @@ namespace ModMyFactory.WebApi
             }
         }
 
-        public async static Task DownloadFileAsync(string url, FileInfo file, CancellationToken cancellationToken = default, IProgress<double> progress = null)
-            => await DownloadFileAsync(new Uri(url, UriKind.Absolute), file, cancellationToken, progress);
+        public static Task DownloadFileAsync(
+            string url, FileInfo file,
+            CancellationToken cancellationToken,
+            IProgress<double> progress = null)
+            => DownloadFileAsync(new Uri(url, UriKind.Absolute), file, cancellationToken, progress);
     }
 }

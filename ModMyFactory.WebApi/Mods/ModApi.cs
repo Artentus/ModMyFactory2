@@ -20,7 +20,7 @@ namespace ModMyFactory.WebApi.Mods
         internal const string BaseUrl = "https://mods.factorio.com";
 
         /// <summary>
-        /// Requests a mod page from the server.
+        /// Requests a mod page from the server
         /// </summary>
         /// <param name="pageSize">The page size. Negative values are interpreted as maximum page size (all mods on one page).</param>
         /// <param name="pageIndex">The 1-based index of the page to request based on the specified page size. Has no functionality if maximum page size is used.</param>
@@ -45,7 +45,7 @@ namespace ModMyFactory.WebApi.Mods
         }
 
         /// <summary>
-        /// Requests extended information on a specific mod.
+        /// Requests extended information on a specific mod
         /// </summary>
         public static async Task<ApiModInfo> RequestModInfoAsync(string modName)
         {
@@ -63,14 +63,18 @@ namespace ModMyFactory.WebApi.Mods
         }
 
         /// <summary>
-        /// Downloads a mod.
+        /// Downloads a mod
         /// </summary>
-        /// <param name="release">The specific release to download.</param>
-        /// <param name="username">Username for authentication.</param>
-        /// <param name="token">Login token for authentication.</param>
-        /// <param name="file">Destination file.</param>
-        public static async Task DownloadModReleaseAsync(ModReleaseInfo release, string username, string token, FileInfo file,
-                                                         CancellationToken cancellationToken = default, IProgress<double> progress = null)
+        /// <param name="release">The specific release to download</param>
+        /// <param name="username">Username for authentication</param>
+        /// <param name="token">Login token for authentication</param>
+        /// <param name="file">Destination file</param>
+        public static async Task DownloadModReleaseAsync(
+            ModReleaseInfo release,
+            string username, string token,
+            FileInfo file,
+            CancellationToken cancellationToken,
+            IProgress<double> progress = null)
         {
             try
             {
@@ -84,14 +88,31 @@ namespace ModMyFactory.WebApi.Mods
         }
 
         /// <summary>
-        /// Downloads a mod.
+        /// Downloads a mod
         /// </summary>
-        /// <param name="release">The specific release to download.</param>
-        /// <param name="username">Username for authentication.</param>
-        /// <param name="token">Login token for authentication.</param>
-        /// <param name="fileName">Destination file name.</param>
-        public static async Task<FileInfo> DownloadModReleaseAsync(ModReleaseInfo release, string username, string token, string fileName,
-                                                         CancellationToken cancellationToken = default, IProgress<double> progress = null)
+        /// <param name="release">The specific release to download</param>
+        /// <param name="username">Username for authentication</param>
+        /// <param name="token">Login token for authentication</param>
+        /// <param name="file">Destination file</param>
+        public static Task DownloadModReleaseAsync(
+            ModReleaseInfo release,
+            string username, string token,
+            FileInfo file)
+            => DownloadModReleaseAsync(release, username, token, file, CancellationToken.None);
+
+        /// <summary>
+        /// Downloads a mod
+        /// </summary>
+        /// <param name="release">The specific release to download</param>
+        /// <param name="username">Username for authentication</param>
+        /// <param name="token">Login token for authentication</param>
+        /// <param name="fileName">Destination file name</param>
+        public static async Task<FileInfo> DownloadModReleaseAsync(
+            ModReleaseInfo release,
+            string username, string token,
+            string fileName,
+            CancellationToken cancellationToken,
+            IProgress<double> progress = null)
         {
             var file = new FileInfo(fileName);
             await DownloadModReleaseAsync(release, username, token, file, cancellationToken, progress);
@@ -99,7 +120,20 @@ namespace ModMyFactory.WebApi.Mods
         }
 
         /// <summary>
-        /// Generates a mods usable browser link.
+        /// Downloads a mod
+        /// </summary>
+        /// <param name="release">The specific release to download</param>
+        /// <param name="username">Username for authentication</param>
+        /// <param name="token">Login token for authentication</param>
+        /// <param name="fileName">Destination file name</param>
+        public static Task<FileInfo> DownloadModReleaseAsync(
+            ModReleaseInfo release,
+            string username, string token,
+            string fileName)
+            => DownloadModReleaseAsync(release, username, token, fileName, CancellationToken.None);
+
+        /// <summary>
+        /// Generates a usable browser link to the mods page
         /// </summary>
         public static string GetModBrowserUrl(string modName) => $"{BaseUrl}/mod/{modName}";
     }
