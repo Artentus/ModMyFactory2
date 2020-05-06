@@ -16,7 +16,7 @@ namespace ModMyFactory.Mods
     /// Groups mods with the same name but different version.
     /// Only one mod in a family can be enabled at a time.
     /// </summary>
-    public sealed class ModFamily : ICollection<Mod>, INotifyCollectionChanged
+    public sealed class ModFamily : ICollection<Mod>, IReadOnlyCollection<Mod>, INotifyCollectionChanged
     {
         private readonly List<Mod> _mods;
         private Mod _enabledMod;
@@ -41,6 +41,11 @@ namespace ModMyFactory.Mods
         /// The currently enabled mod of this family, or null if no mod is enabled
         /// </summary>
         public Mod EnabledMod => _enabledMod;
+
+        /// <summary>
+        /// The display name of the family
+        /// </summary>
+        public string DisplayName => _mods.Count > 0 ? _mods[0].DisplayName : FamilyName;
 
         /// <summary>
         /// The number of mods in this family
