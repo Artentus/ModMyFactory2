@@ -43,9 +43,19 @@ the Free Software Foundation, either version 3 of the License, or
 
         <TabControl.ContentTemplate>
           <DataTemplate DataType="{x:Type models:ModVersionGroupingViewModel}">
-            <ListBox>
 
+            <ListBox Items="{Binding FamilyViewModels}">
+              <ListBox.ItemTemplate>
+                <DataTemplate DataType="{x:Type models:ModFamilyViewModel}">
+
+                  <Grid>
+                    <TextBlock Text="{Binding DisplayName}" />
+                  </Grid>
+
+                </DataTemplate>
+              </ListBox.ItemTemplate>
             </ListBox>
+
           </DataTemplate>
         </TabControl.ContentTemplate>
       </TabControl>

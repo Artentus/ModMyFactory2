@@ -20,6 +20,8 @@ namespace ModMyFactoryGUI.ViewModels
 
         public ReadOnlyObservableCollection<ModViewModel> ModViewModels { get; }
 
+        public string DisplayName => _family.DisplayName;
+
         public string FamilyName => _family.FamilyName;
 
         public ModFamilyViewModel(ModFamily family)

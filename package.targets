@@ -7,6 +7,7 @@
         <PackageLicenseFile>License.md</PackageLicenseFile>
         <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
         <RepositoryUrl>https://github.com/Artentus/ModMyFactory2</RepositoryUrl>
+        <RepositoryType>git</RepositoryType>
         <PackageProjectUrl>https://github.com/Artentus/ModMyFactory2</PackageProjectUrl>
         <NeutralLanguage>en</NeutralLanguage>
 
