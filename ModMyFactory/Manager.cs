@@ -142,5 +142,43 @@ namespace ModMyFactory
             foreach (var modManager in _modManagers.Values)
                 modManager.Clear();
         }
+
+        /// <summary>
+        /// Checks if a mod is managed by this manager
+        /// </summary>
+        public bool ContainsMod(Mod mod)
+        {
+            if (TryGetModManager(mod.FactorioVersion, out var modManager))
+                return modManager.Contains(mod);
+
+            return false;
+        }
+
+        /// <summary>
+        /// Checks if a mod with the specified name and version is managed by this manager
+        /// </summary>
+        public bool ContainsMod(string modName, AccurateVersion version)
+        {
+            foreach (var modManager in ModManagers)
+            {
+                if (modManager.Contains(modName, version)) return true;
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// Checks if a mod with the specified name and version is managed by this manager
+        /// </summary>
+        public bool ContainsMod(string modName, AccurateVersion version, out Mod mod)
+        {
+            foreach (var modManager in ModManagers)
+            {
+                if (modManager.Contains(modName, version, out mod)) return true;
+            }
+
+            mod = null;
+            return false;
+        }
     }
 }

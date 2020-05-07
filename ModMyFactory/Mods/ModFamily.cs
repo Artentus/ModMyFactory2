@@ -5,10 +5,12 @@
 //  the Free Software Foundation, either version 3 of the License, or
 //  (at your option) any later version.
 
+using ModMyFactory.BaseTypes;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Specialized;
+using System.Linq;
 
 namespace ModMyFactory.Mods
 {
@@ -158,6 +160,21 @@ namespace ModMyFactory.Mods
         /// Checks if a mod is contained in this family
         /// </summary>
         public bool Contains(Mod item) => !(item is null) && string.Equals(item.Name, FamilyName, StringComparison.InvariantCulture) && _mods.Contains(item);
+
+        /// <summary>
+        /// Checks if the family contains a mod with the specified version
+        /// </summary>
+        public bool Contains(AccurateVersion version, out Mod mod)
+        {
+            mod = _mods.FirstOrDefault(m => m.Version == version);
+            return !(mod is null);
+        }
+
+        /// <summary>
+        /// Checks if the family contains a mod with the specified version
+        /// </summary>
+        public bool Contains(AccurateVersion version)
+            => _mods.Any(m => m.Version == version);
 
         public IEnumerator<Mod> GetEnumerator() => _mods.GetEnumerator();
 

@@ -166,6 +166,29 @@ namespace ModMyFactory.Mods
             return family.Contains(mod);
         }
 
+        /// <summary>
+        /// Checks if a mod with the specified name and version is managed by this manager
+        /// </summary>
+        public bool Contains(string name, AccurateVersion version)
+        {
+            if (TryGetFamily(name, out var family))
+                return family.Contains(version);
+
+            return false;
+        }
+
+        /// <summary>
+        /// Checks if a mod with the specified name and version is managed by this manager
+        /// </summary>
+        public bool Contains(string name, AccurateVersion version, out Mod mod)
+        {
+            if (TryGetFamily(name, out var family))
+                return family.Contains(version, out mod);
+
+            mod = null;
+            return false;
+        }
+
         public IEnumerator<Mod> GetEnumerator()
         {
             foreach (var family in Families)
