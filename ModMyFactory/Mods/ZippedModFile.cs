@@ -85,9 +85,7 @@ namespace ModMyFactory.Mods
                             {
                                 if (entry.Key.EndsWith("info.json"))
                                 {
-                                    var stream = new MemoryStream((int)entry.Size);
-                                    reader.WriteEntryTo(stream);
-
+                                    var stream = reader.OpenEntryStream();
                                     using var sr = new StreamReader(stream, Encoding.UTF8);
                                     string json = sr.ReadToEnd();
 
