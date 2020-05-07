@@ -104,8 +104,11 @@ namespace ModMyFactoryGUI.ViewModels
                     _filter = value;
                     this.RaisePropertyChanged(nameof(Filter));
 
-                    foreach (var mod in _onlineMods)
-                        mod.ApplyFuzzyFilter(_filter);
+                    if (!(_onlineMods is null))
+                    {
+                        foreach (var mod in _onlineMods)
+                            mod.ApplyFuzzyFilter(_filter);
+                    }
 
                     OnlineMods.Refresh();
                     this.RaisePropertyChanged(nameof(OnlineMods));
@@ -202,6 +205,9 @@ namespace ModMyFactoryGUI.ViewModels
             try
             {
                 _onlineMods = await LoadOnlineModsAsync();
+
+                foreach (var mod in _onlineMods)
+                    mod.ApplyFuzzyFilter(_filter);
             }
             catch (ApiException ex)
             {

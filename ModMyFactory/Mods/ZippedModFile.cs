@@ -62,71 +62,73 @@ namespace ModMyFactory.Mods
         /// Tries to load a mod file
         /// </summary>
         /// <param name="file">The archive file to load</param>
-        public static async Task<(bool, ZippedModFile)> TryLoadAsync(FileInfo file)
+        public static Task<(bool, ZippedModFile)> TryLoadAsync(FileInfo file)
         {
-            if (!file.Exists) return (false, null);
-
-            bool hasInfo = false;
-            ModInfo info = default;
-            Stream thumbnail = null;
-            try
+            return Task.Run(() =>
             {
-                using var fs = file.OpenRead();
-                using var reader = ZipReader.Open(fs);
-                while (reader.MoveToNextEntry())
+                if (!file.Exists) return (false, null);
+
+                bool hasInfo = false;
+                ModInfo info = default;
+                Stream thumbnail = null;
+                try
                 {
-                    var entry = reader.Entry;
-                    if (!entry.IsDirectory)
+                    using var fs = file.OpenRead();
+                    using var reader = ZipReader.Open(fs);
+                    while (reader.MoveToNextEntry())
                     {
-                        if (entry.Key.StartsWith(file.NameWithoutExtension() + "/", StringComparison.InvariantCultureIgnoreCase)
-                            && (entry.Key.IndexOf('/') == entry.Key.LastIndexOf('/'))) // All top level files
+                        var entry = reader.Entry;
+                        if (!entry.IsDirectory)
                         {
-                            if (entry.Key.EndsWith("info.json"))
+                            if (entry.Key.StartsWith(file.NameWithoutExtension() + "/", StringComparison.InvariantCultureIgnoreCase)
+                                && (entry.Key.IndexOf('/') == entry.Key.LastIndexOf('/'))) // All top level files
                             {
-                                var stream = new MemoryStream();
-                                await Task.Run(() => reader.WriteEntryTo(stream));
+                                if (entry.Key.EndsWith("info.json"))
+                                {
+                                    var stream = new MemoryStream((int)entry.Size);
+                                    reader.WriteEntryTo(stream);
 
-                                string json = null;
-                                using (var sr = new StreamReader(stream, Encoding.UTF8))
-                                    json = await sr.ReadToEndAsync();
+                                    using var sr = new StreamReader(stream, Encoding.UTF8);
+                                    string json = sr.ReadToEnd();
 
-                                info = ModInfo.FromJson(json);
-                                hasInfo = true;
-                            }
-                            else if (entry.Key.EndsWith("thumbnail.png"))
-                            {
-                                thumbnail = new MemoryStream();
-                                await Task.Run(() => reader.WriteEntryTo(thumbnail));
+                                    info = ModInfo.FromJson(json);
+                                    hasInfo = true;
+                                }
+                                else if (entry.Key.EndsWith("thumbnail.png"))
+                                {
+                                    thumbnail = new MemoryStream();
+                                    reader.WriteEntryTo(thumbnail);
+                                }
                             }
                         }
                     }
                 }
-            }
-            catch (Exception ex)
-            {
-                thumbnail?.Dispose(); // In case of exception dispose thumbnail stream
-                if (ex is IOException) throw; // Catch all but file system exceptions
-                else return (false, null); // File was not valid
-            }
+                catch (Exception ex)
+                {
+                    thumbnail?.Dispose(); // In case of exception dispose thumbnail stream
+                    if (ex is IOException) throw; // Catch all but file system exceptions
+                    else return (false, null); // File was not valid
+                }
 
-            if (!ModFile.TryParseFileName(file.NameWithoutExtension(), out var fileName, out var fileVersion)
-                || (fileName != info.Name) || (fileVersion != info.Version))
-            {
-                thumbnail?.Dispose();
-                return (false, null);
-            }
+                if (!ModFile.TryParseFileName(file.NameWithoutExtension(), out var fileName, out var fileVersion)
+                    || (fileName != info.Name) || (fileVersion != info.Version))
+                {
+                    thumbnail?.Dispose();
+                    return (false, null);
+                }
 
-            return (hasInfo, hasInfo ? new ZippedModFile(file, info, thumbnail) : null);
+                return (hasInfo, hasInfo ? new ZippedModFile(file, info, thumbnail) : null);
+            });
         }
 
         /// <summary>
         /// Tries to load a mod file
         /// </summary>
         /// <param name="path">The path to an archive file to load</param>
-        public static async Task<(bool, ZippedModFile)> TryLoadAsync(string path)
+        public static Task<(bool, ZippedModFile)> TryLoadAsync(string path)
         {
             var file = new FileInfo(path);
-            return await TryLoadAsync(file);
+            return TryLoadAsync(file);
         }
 
         /// <summary>
