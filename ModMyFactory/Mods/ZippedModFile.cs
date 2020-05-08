@@ -85,7 +85,7 @@ namespace ModMyFactory.Mods
                             {
                                 if (entry.Key.EndsWith("info.json"))
                                 {
-                                    var stream = reader.OpenEntryStream();
+                                    using var stream = reader.OpenEntryStream();
                                     using var sr = new StreamReader(stream, Encoding.UTF8);
                                     string json = sr.ReadToEnd();
 
@@ -96,6 +96,7 @@ namespace ModMyFactory.Mods
                                 {
                                     thumbnail = new MemoryStream();
                                     reader.WriteEntryTo(thumbnail);
+                                    thumbnail.Position = 0;
                                 }
                             }
                         }
