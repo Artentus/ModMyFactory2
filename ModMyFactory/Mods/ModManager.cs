@@ -189,6 +189,18 @@ namespace ModMyFactory.Mods
             return false;
         }
 
+        /// <summary>
+        /// Checks if a family with the specified name is managed by this manager
+        /// </summary>
+        public bool Contains(string name)
+            => TryGetFamily(name, out _);
+
+        /// <summary>
+        /// Checks if a family with the specified name is managed by this manager
+        /// </summary>
+        public bool Contains(string name, out ModFamily family)
+            => TryGetFamily(name, out family);
+
         public IEnumerator<Mod> GetEnumerator()
         {
             foreach (var family in Families)

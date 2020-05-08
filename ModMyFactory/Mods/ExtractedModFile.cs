@@ -172,7 +172,7 @@ namespace ModMyFactory.Mods
 
             await Task.Run(() =>
             {
-                using var fs = newFile.OpenWrite();
+                using var fs = newFile.Open(FileMode.Create, FileAccess.Write);
                 using var writer = new ZipWriter(fs, new ZipWriterOptions(CompressionType.Deflate));
                 PopulateZipArchive(writer, _directory, _directory.Name);
             });
