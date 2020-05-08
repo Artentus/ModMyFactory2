@@ -26,6 +26,11 @@ namespace ModMyFactory.Mods
         public event EventHandler EnabledChanged;
 
         /// <summary>
+        /// The mod file
+        /// </summary>
+        public IModFile File => _file;
+
+        /// <summary>
         /// The unique name of the mod
         /// </summary>
         public string Name { get; }
