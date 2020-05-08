@@ -86,7 +86,7 @@
     <PackageReference Include="ModMyFactory.ModSettings" Version="1.0.0.10-alpha" />
     <PackageReference Include="ModMyFactory.WebApi" Version="1.0.0.15-alpha" />
     <PackageReference Include="ModMyFactory.Win32" Version="1.0.0.7-alpha" />
-    <PackageReference Include="ModMyFactory" Version="1.0.0.32-alpha" />
+    <PackageReference Include="ModMyFactory" Version="1.0.0.34-alpha" />
   </ItemGroup>
 
   <ItemGroup>

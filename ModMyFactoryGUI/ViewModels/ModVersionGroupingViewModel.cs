@@ -28,6 +28,7 @@ namespace ModMyFactoryGUI.ViewModels
             }
         }
 
+
         private readonly ModManager _manager;
         private readonly ObservableDictionary<string, ModFamilyViewModel> _familyViewModels;
         private string _filter;
@@ -63,7 +64,7 @@ namespace ModMyFactoryGUI.ViewModels
             FamilyViewModels = new CollectionView<ModFamilyViewModel>(_familyViewModels.Values, new FamilyComparer(), FilterFamily);
             foreach (var family in manager.Families)
             {
-                var vm = new ModFamilyViewModel(family);
+                var vm = new ModFamilyViewModel(manager, family);
                 _familyViewModels.Add(family.FamilyName, vm);
             }
 
@@ -88,7 +89,7 @@ namespace ModMyFactoryGUI.ViewModels
                         {
                             if (_manager.TryGetFamily(mod.Name, out var family))
                             {
-                                var vm = new ModFamilyViewModel(family);
+                                var vm = new ModFamilyViewModel(_manager, family);
                                 _familyViewModels.Add(family.FamilyName, vm);
                             }
                             else

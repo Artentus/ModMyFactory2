@@ -10,7 +10,9 @@ using ModMyFactory.BaseTypes;
 using ModMyFactory.Game;
 using ModMyFactory.Mods;
 using Serilog;
+using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Threading.Tasks;
 
 namespace ModMyFactoryGUI
@@ -78,6 +80,21 @@ namespace ModMyFactoryGUI
                         {
                             modManager.Add(mod);
                             Log.Information($"Successfully loaded mod {mod.Name} version {mod.Version}");
+                        }
+                    }
+
+                    // Load state
+                    var file = new FileInfo(Path.Combine(subDir.FullName, "mod-list.json"));
+                    if (file.Exists)
+                    {
+                        try
+                        {
+                            var state = await ModFamilyStateGrouping.FromFileAsync(file);
+                            state.ApplyToManager(modManager);
+                        }
+                        catch (Exception ex)
+                        {
+                            Log.Warning(ex, $"Unable to load file '{file.FullName}'");
                         }
                     }
                 }

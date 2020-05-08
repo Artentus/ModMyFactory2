@@ -12,12 +12,14 @@ using ReactiveUI;
 using System;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
+using System.IO;
 using System.Linq;
 
 namespace ModMyFactoryGUI.ViewModels
 {
     internal sealed class ModFamilyViewModel : ReactiveObject, IDisposable
     {
+        private readonly ModManager _manager;
         private readonly ModFamily _family;
         private readonly ObservableCollection<ModViewModel> _modViewModels;
         private bool _isEnabled;
@@ -69,9 +71,9 @@ namespace ModMyFactoryGUI.ViewModels
 
         public string Authors => string.Join(", ", _family?.Authors ?? new string[0]);
 
-        public ModFamilyViewModel(ModFamily family)
+        public ModFamilyViewModel(ModManager manager, ModFamily family)
         {
-            _family = family;
+            (_manager, _family) = (manager, family);
             _modViewModels = new ObservableCollection<ModViewModel>();
             ModViewModels = new ReadOnlyObservableCollection<ModViewModel>(_modViewModels);
 
@@ -145,12 +147,26 @@ namespace ModMyFactoryGUI.ViewModels
                 _isEnabled = true;
                 SelectedModViewModel = _modViewModels.FirstOrDefault(vm => object.ReferenceEquals(vm.Mod, _family.EnabledMod));
             }
+
+            if (SelectedModViewModel is null)
+            {
+                var defaultMod = _family.GetDefaultMod();
+                SelectedModViewModel = _modViewModels.FirstOrDefault(vm => object.ReferenceEquals(vm.Mod, defaultMod));
+            }
         }
 
-        private void OnModsEnabledChanged(object sender, EventArgs e)
+        private async void OnModsEnabledChanged(object sender, EventArgs e)
         {
             RefreshEnabledState();
             this.RaisePropertyChanged(nameof(IsEnabled));
+
+            // Save the entire manager state
+            var modDir = Program.Locations.GetModDir(_manager.FactorioVersion);
+            if (!modDir.Exists) modDir.Create();
+
+            var state = ModFamilyStateGrouping.FromManager(_manager);
+            var file = new FileInfo(Path.Combine(modDir.FullName, "mod-list.json"));
+            await state.SaveToFileAsync(file);
         }
 
         public void ApplyFuzzyFilter(in string filter)
@@ -206,7 +222,7 @@ namespace ModMyFactoryGUI.ViewModels
                         vm.Dispose();
 
                     _family.CollectionChanged -= OnModCollectionChanged;
-                    _family.ModsEnabledChanged += OnModsEnabledChanged;
+                    _family.ModsEnabledChanged -= OnModsEnabledChanged;
                 }
 
                 disposed = true;
