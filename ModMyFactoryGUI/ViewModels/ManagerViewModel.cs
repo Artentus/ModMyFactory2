@@ -7,6 +7,7 @@
 
 using ModMyFactory;
 using ModMyFactoryGUI.Views;
+using ReactiveUI;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
@@ -15,8 +16,38 @@ namespace ModMyFactoryGUI.ViewModels
     internal sealed class ManagerViewModel : MainViewModelBase<ManagerView>
     {
         private readonly ObservableCollection<ModVersionGroupingViewModel> _modVersionGroupings;
+        private string _modFilter, _modpackFilter;
 
         public CollectionView<ModVersionGroupingViewModel> ModVersionGroupings { get; }
+
+        public string ModFilter
+        {
+            get => _modFilter;
+            set
+            {
+                if (value != _modFilter)
+                {
+                    _modFilter = value;
+                    this.RaisePropertyChanged(nameof(ModFilter));
+
+                    foreach (var vm in _modVersionGroupings)
+                        vm.Filter = value;
+                }
+            }
+        }
+
+        public string ModpackFilter
+        {
+            get => _modpackFilter;
+            set
+            {
+                if (value != _modpackFilter)
+                {
+                    _modpackFilter = value;
+                    this.RaisePropertyChanged(nameof(ModpackFilter));
+                }
+            }
+        }
 
         public ManagerViewModel()
         {

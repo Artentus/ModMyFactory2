@@ -58,9 +58,16 @@ namespace ModMyFactoryGUI.ViewModels
 
         public bool HasThumbnail => !(Thumbnail is null);
 
-        public string DisplayName => _family.DisplayName;
+        // Store information for fuzzy search
+        public bool MatchesSearch { get; private set; } = true;
 
-        public string FamilyName => _family.FamilyName;
+        public int SearchScore { get; private set; } = 0;
+
+        public string DisplayName => _family?.DisplayName;
+
+        public string FamilyName => _family?.FamilyName;
+
+        public string Authors => string.Join(", ", _family?.Authors ?? new string[0]);
 
         public ModFamilyViewModel(ModFamily family)
         {
@@ -91,6 +98,7 @@ namespace ModMyFactoryGUI.ViewModels
                     {
                         var vm = new ModViewModel(mod);
                         _modViewModels.Add(vm);
+                        this.RaisePropertyChanged(nameof(Authors));
 
                         Thumbnail = _modViewModels.MaxBy(m => m.Version)?.Thumbnail;
                         this.RaisePropertyChanged(nameof(Thumbnail));
@@ -107,6 +115,7 @@ namespace ModMyFactoryGUI.ViewModels
                         {
                             _modViewModels.Remove(vm);
                             vm.Dispose();
+                            this.RaisePropertyChanged(nameof(Authors));
 
                             Thumbnail = _modViewModels.MaxBy(m => m.Version)?.Thumbnail;
                             this.RaisePropertyChanged(nameof(Thumbnail));
@@ -117,6 +126,7 @@ namespace ModMyFactoryGUI.ViewModels
 
                 case NotifyCollectionChangedAction.Reset:
                     _modViewModels.Clear();
+                    this.RaisePropertyChanged(nameof(Authors));
                     Thumbnail = null;
                     this.RaisePropertyChanged(nameof(Thumbnail));
                     this.RaisePropertyChanged(nameof(HasThumbnail));
@@ -141,6 +151,40 @@ namespace ModMyFactoryGUI.ViewModels
         {
             RefreshEnabledState();
             this.RaisePropertyChanged(nameof(IsEnabled));
+        }
+
+        public void ApplyFuzzyFilter(in string filter)
+        {
+            if (string.IsNullOrWhiteSpace(filter))
+            {
+                MatchesSearch = true;
+                SearchScore = 0;
+                return;
+            }
+
+            // We allow searching for title, name and authors
+            bool titleMatches = DisplayName.FuzzyMatch(filter, out int titleScore);
+            bool nameMatches = FamilyName.FuzzyMatch(filter, out int nameScore);
+
+            bool authorsMatch = false;
+            int authorsScore = 0;
+            foreach (var author in _family.Authors)
+            {
+                bool authorMatches = author.FuzzyMatch(filter, out int authorScore);
+                if (authorMatches)
+                {
+                    authorsMatch = true;
+                    authorsScore += authorScore;
+                }
+            }
+
+            int score = 0;
+            if (titleMatches) score += titleScore;
+            if (nameMatches) score += nameScore;
+            if (authorsMatch) score += authorsScore;
+
+            MatchesSearch = titleMatches || nameMatches || authorsMatch;
+            SearchScore = score;
         }
 
         #region IDisposable Support

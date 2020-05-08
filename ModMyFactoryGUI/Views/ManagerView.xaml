@@ -36,7 +36,7 @@ the Free Software Foundation, either version 3 of the License, or
         <TextBlock Margin="6,1,6,2" Classes="h2" FontWeight="SemiBold" Text="{l:LocalizedResource ModsHeader}" />
       </Border>
 
-      <controls:SearchBox Grid.Column="0" Grid.Row="1" Margin="4,4,0,4" />
+      <controls:SearchBox Grid.Column="0" Grid.Row="1" Margin="4,4,0,4" Text="{Binding ModFilter}" />
 
       <TabControl Grid.Column="0" Grid.Row="2" Margin="2,2,0,2" Items="{Binding ModVersionGroupings}">
         <TabControl.ItemTemplate>
@@ -86,7 +86,7 @@ the Free Software Foundation, either version 3 of the License, or
         <TextBlock Margin="6,1,6,2" Classes="h2" FontWeight="SemiBold" Text="{l:LocalizedResource ModpacksHeader}" />
       </Border>
 
-      <controls:SearchBox Grid.Column="2" Grid.Row="1" Margin="0,4,4,4" />
+      <controls:SearchBox Grid.Column="2" Grid.Row="1" Margin="0,4,4,4" Text="{Binding ModpackFilter}" />
 
       <ListBox Grid.Column="2" Grid.Row="2" Margin="0,4,4,4">
 
