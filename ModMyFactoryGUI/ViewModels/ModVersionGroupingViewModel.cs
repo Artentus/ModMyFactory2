@@ -7,6 +7,7 @@
 
 using ModMyFactory.BaseTypes;
 using ModMyFactory.Mods;
+using ModMyFactoryGUI.Helpers;
 using ReactiveUI;
 using System;
 using System.Collections.Specialized;
@@ -67,7 +68,10 @@ namespace ModMyFactoryGUI.ViewModels
                         if (_familyViewModels.ContainsKey(mod.Name))
                         {
                             if (!_manager.TryGetFamily(mod.Name, out var family) || family.Count == 0)
-                                _familyViewModels.Remove(mod.Name);
+                            {
+                                if (_familyViewModels.RemoveEx(mod.Name, out var vm))
+                                    vm.Dispose();
+                            }
                         }
                     }
                     break;

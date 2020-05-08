@@ -160,6 +160,7 @@ namespace ModMyFactoryGUI.ViewModels
                 if (_modManager.Contains(_modName, Info.Version, out var mod))
                 {
                     _modManager.Remove(mod);
+                    mod.Dispose();
                     mod.File.Delete();
                 }
             }

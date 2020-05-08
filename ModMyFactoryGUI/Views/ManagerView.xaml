@@ -14,6 +14,7 @@ the Free Software Foundation, either version 3 of the License, or
              xmlns:l="clr-namespace:ModMyFactoryGUI.Localization"
              xmlns:local="clr-namespace:ModMyFactoryGUI"
              xmlns:models="clr-namespace:ModMyFactoryGUI.ViewModels"
+             xmlns:controls="clr-namespace:ModMyFactoryGUI.Controls"
              x:Class="ModMyFactoryGUI.Views.ManagerView">
 
   <UserControl.Styles>
@@ -23,7 +24,7 @@ the Free Software Foundation, either version 3 of the License, or
   </UserControl.Styles>
 
   <Border BorderThickness="1" BorderBrush="{DynamicResource ThemeBorderMidBrush}">
-    <Grid Margin="4" RowDefinitions="Auto,*,Auto">
+    <Grid Margin="4" RowDefinitions="Auto,Auto,*">
       <Grid.ColumnDefinitions>
         <ColumnDefinition Width="{local:SettingBinding ManagerGridLength1, Mode=TwoWay}" />
         <ColumnDefinition Width="Auto" />
@@ -34,7 +35,9 @@ the Free Software Foundation, either version 3 of the License, or
         <TextBlock Margin="6,1,6,2" Classes="h2" FontWeight="SemiBold" Text="{l:LocalizedResource ModsHeader}" />
       </Border>
 
-      <TabControl Grid.Column="0" Grid.Row="1" Margin="2,2,0,2" Items="{Binding ModVersionGroupings}">
+      <controls:SearchBox Grid.Column="0" Grid.Row="1" Margin="4,4,0,4" />
+
+      <TabControl Grid.Column="0" Grid.Row="2" Margin="2,2,0,2" Items="{Binding ModVersionGroupings}">
         <TabControl.ItemTemplate>
           <DataTemplate DataType="{x:Type models:ModVersionGroupingViewModel}">
             <TextBlock Text="{Binding FactorioVersion}" />
@@ -48,8 +51,20 @@ the Free Software Foundation, either version 3 of the License, or
               <ListBox.ItemTemplate>
                 <DataTemplate DataType="{x:Type models:ModFamilyViewModel}">
 
-                  <Grid>
-                    <TextBlock Text="{Binding DisplayName}" />
+                  <Grid ColumnDefinitions="Auto,Auto,Auto,*" RowDefinitions="Auto,Auto" Margin="2">
+                    <CheckBox Grid.Column="0" Grid.Row="0" Grid.RowSpan="2" Margin="4" IsChecked="{Binding IsEnabled}" />
+                    <Image Grid.Column="1" Grid.Row="0" Grid.RowSpan="3" Margin="2" Width="48" Height="48" Source="{Binding Thumbnail}" />
+                    <TextBlock Grid.Column="2" Grid.Row="0" Margin="4,2" Classes="h3" Text="{Binding DisplayName}" />
+
+                    <ComboBox Grid.Column="2" Grid.Row="1" Margin="4,2" MaxWidth="150" HorizontalAlignment="Left"
+                              Items="{Binding ModViewModels}" SelectedItem="{Binding SelectedModViewModel, Mode=TwoWay}">
+                      <ComboBox.ItemTemplate>
+                        <DataTemplate DataType="{x:Type models:ModViewModel}">
+                          <TextBlock Text="{Binding Version}" />
+                        </DataTemplate>
+                      </ComboBox.ItemTemplate>
+                    </ComboBox>
+
                   </Grid>
 
                 </DataTemplate>
@@ -67,7 +82,9 @@ the Free Software Foundation, either version 3 of the License, or
         <TextBlock Margin="6,1,6,2" Classes="h2" FontWeight="SemiBold" Text="{l:LocalizedResource ModpacksHeader}" />
       </Border>
 
-      <ListBox Grid.Column="2" Grid.Row="1" Margin="0,4,4,4">
+      <controls:SearchBox Grid.Column="2" Grid.Row="1" Margin="0,4,4,4" />
+
+      <ListBox Grid.Column="2" Grid.Row="2" Margin="0,4,4,4">
 
       </ListBox>
 
