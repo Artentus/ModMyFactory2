@@ -10,6 +10,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Specialized;
+using System.ComponentModel;
 using System.Linq;
 
 namespace ModMyFactory.Mods
@@ -18,7 +19,7 @@ namespace ModMyFactory.Mods
     /// Groups mods with the same name but different version.
     /// Only one mod in a family can be enabled at a time.
     /// </summary>
-    public sealed class ModFamily : ICollection<Mod>, IReadOnlyCollection<Mod>, INotifyCollectionChanged
+    public sealed class ModFamily : ICollection<Mod>, IReadOnlyCollection<Mod>, INotifyCollectionChanged, INotifyPropertyChanged
     {
         private readonly List<Mod> _mods;
         private Mod _enabledMod;
@@ -34,6 +35,8 @@ namespace ModMyFactory.Mods
         /// </summary>
         public event NotifyCollectionChangedEventHandler CollectionChanged;
 
+        public event PropertyChangedEventHandler PropertyChanged;
+
         /// <summary>
         /// The shared name of this mod family
         /// </summary>
@@ -43,6 +46,11 @@ namespace ModMyFactory.Mods
         /// The currently enabled mod of this family, or null if no mod is enabled
         /// </summary>
         public Mod EnabledMod => _enabledMod;
+
+        /// <summary>
+        /// The authors of the mods in the family
+        /// </summary>
+        public IReadOnlyList<string> Authors { get; private set; }
 
         /// <summary>
         /// The display name of the family
@@ -60,6 +68,7 @@ namespace ModMyFactory.Mods
         {
             _mods = new List<Mod>();
             FamilyName = familyName;
+            Authors = new string[0];
         }
 
         public ModFamily(Mod mod)
@@ -67,6 +76,7 @@ namespace ModMyFactory.Mods
         {
             if (mod is null) throw new ArgumentNullException();
             Add(mod);
+            Authors = new string[] { mod.Author };
         }
 
         private void OnModEnabledChanged(object sender, EventArgs e)
@@ -87,11 +97,26 @@ namespace ModMyFactory.Mods
             else if (senderMod == _enabledMod)
                 _enabledMod = null;
 
-            if (_raiseEvent) ModsEnabledChanged?.Invoke(this, EventArgs.Empty);
+            if (_raiseEvent)
+            {
+                ModsEnabledChanged?.Invoke(this, EventArgs.Empty);
+                OnPropertyChanged(new PropertyChangedEventArgs(nameof(EnabledMod)));
+            }
         }
 
         private void OnCollectionChanged(NotifyCollectionChangedEventArgs e)
             => CollectionChanged?.Invoke(this, e);
+
+        private void OnPropertyChanged(PropertyChangedEventArgs e)
+            => PropertyChanged?.Invoke(this, e);
+
+        private IReadOnlyList<string> GetAuthors()
+        {
+            var result = new string[_mods.Count];
+            for (int i = 0; i < result.Length; i++)
+                result[i] = _mods[i].Author;
+            return result;
+        }
 
         /// <summary>
         /// Adds a mod to the family
@@ -115,6 +140,10 @@ namespace ModMyFactory.Mods
             mod.EnabledChanged += OnModEnabledChanged;
 
             OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add, mod));
+            OnPropertyChanged(new PropertyChangedEventArgs(nameof(Count)));
+
+            Authors = GetAuthors();
+            OnPropertyChanged(new PropertyChangedEventArgs(nameof(Authors)));
         }
 
         /// <summary>
@@ -132,7 +161,12 @@ namespace ModMyFactory.Mods
                 if (mod == _enabledMod) _enabledMod = null;
 
                 OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Remove, mod));
+                OnPropertyChanged(new PropertyChangedEventArgs(nameof(Count)));
+
+                Authors = GetAuthors();
+                OnPropertyChanged(new PropertyChangedEventArgs(nameof(Authors)));
             }
+
             return result;
         }
 
@@ -154,6 +188,10 @@ namespace ModMyFactory.Mods
             _mods.Clear();
 
             OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset, listCopy));
+            OnPropertyChanged(new PropertyChangedEventArgs(nameof(Count)));
+
+            Authors = new string[0];
+            OnPropertyChanged(new PropertyChangedEventArgs(nameof(Authors)));
         }
 
         /// <summary>
