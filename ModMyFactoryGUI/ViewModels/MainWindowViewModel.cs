@@ -110,7 +110,7 @@ namespace ModMyFactoryGUI.ViewModels
             App.ShuttingDown += (sender, e) => DownloadQueue.StopQueue();
 
             ManagerViewModel = new ManagerViewModel();
-            OnlineModsViewModel = new OnlineModsViewModel(DownloadQueue);
+            OnlineModsViewModel = new OnlineModsViewModel(Program.Manager, DownloadQueue);
             FactorioViewModel = new FactorioViewModel(DownloadQueue);
             SettingsViewModel = new SettingsViewModel(DownloadQueue);
             SelectedViewModel = ManagerViewModel;

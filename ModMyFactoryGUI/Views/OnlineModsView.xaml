@@ -15,6 +15,7 @@ the Free Software Foundation, either version 3 of the License, or
              xmlns:models="clr-namespace:ModMyFactoryGUI.ViewModels"
              xmlns:views="clr-namespace:ModMyFactoryGUI.Views"
              xmlns:controls="clr-namespace:ModMyFactoryGUI.Controls"
+             xmlns:icons="clr-namespace:ModMyFactoryGUI.Controls.Icons"
              xmlns:l="clr-namespace:ModMyFactoryGUI.Localization"
              x:Class="ModMyFactoryGUI.Views.OnlineModsView">
 
@@ -72,12 +73,14 @@ the Free Software Foundation, either version 3 of the License, or
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="Auto" SharedSizeGroup="dlcount" />
+                <ColumnDefinition Width="Auto" SharedSizeGroup="dlcount_icon" />
               </Grid.ColumnDefinitions>
 
               <TextBlock Grid.Column="0" Margin="4" Text="{Binding DisplayName}" />
               <TextBlock Grid.Column="1" Margin="0,4,4,4" Classes="muted"
                          Text="{Binding Author, Converter={StaticResource LocalizedFormatter}, ConverterParameter=AuthorFormat}" />
               <TextBlock Grid.Column="3" Margin="4" Text="{Binding DownloadCount}" HorizontalAlignment="Right" />
+              <icons:DownloadCountIcon Grid.Column="4" Margin="2" VerticalAlignment="Top" />
             </Grid>
           </DataTemplate>
         </ListBox.ItemTemplate>

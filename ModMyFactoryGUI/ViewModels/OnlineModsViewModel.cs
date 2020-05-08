@@ -5,6 +5,7 @@
 //  the Free Software Foundation, either version 3 of the License, or
 //  (at your option) any later version.
 
+using ModMyFactory;
 using ModMyFactory.BaseTypes;
 using ModMyFactory.WebApi;
 using ModMyFactory.WebApi.Mods;
@@ -21,6 +22,7 @@ namespace ModMyFactoryGUI.ViewModels
 {
     internal sealed class OnlineModsViewModel : MainViewModelBase<OnlineModsView>
     {
+        private readonly Manager _manager;
         private readonly DownloadQueue _downloadQueue;
         private ICollection<OnlineModViewModel> _onlineMods;
         private ModComparer _selectedComparer;
@@ -110,14 +112,18 @@ namespace ModMyFactoryGUI.ViewModels
                             mod.ApplyFuzzyFilter(_filter);
                     }
 
-                    OnlineMods.Refresh();
-                    this.RaisePropertyChanged(nameof(OnlineMods));
+                    if (!(OnlineMods is null))
+                    {
+                        OnlineMods.Refresh();
+                        this.RaisePropertyChanged(nameof(OnlineMods));
+                    }
                 }
             }
         }
 
-        public OnlineModsViewModel(DownloadQueue downloadQueue)
+        public OnlineModsViewModel(Manager manager, DownloadQueue downloadQueue)
         {
+            _manager = manager;
             _downloadQueue = downloadQueue;
             RefreshCommand = ReactiveCommand.CreateFromTask(RefreshOnlineModsAsync);
 
@@ -147,7 +153,7 @@ namespace ModMyFactoryGUI.ViewModels
             var result = new List<OnlineModViewModel>(page.Mods.Length);
 
             foreach (var info in page.Mods)
-                result.Add(new OnlineModViewModel(info, _downloadQueue));
+                result.Add(new OnlineModViewModel(info, _manager, _downloadQueue));
             return result;
         }
 

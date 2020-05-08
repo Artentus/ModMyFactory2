@@ -6,6 +6,7 @@
 //  (at your option) any later version.
 
 using Avalonia.Media.Imaging;
+using ModMyFactory;
 using ModMyFactory.BaseTypes;
 using ModMyFactory.WebApi;
 using ModMyFactory.WebApi.Mods;
@@ -23,6 +24,7 @@ namespace ModMyFactoryGUI.ViewModels
     {
         private static readonly CollectionView<ModReleaseViewModel> _emptyReleases = new CollectionView<ModReleaseViewModel>(new ModReleaseViewModel[0]);
 
+        private readonly Manager _manager;
         private readonly DownloadQueue _downloadQueue;
         private ApiModInfo _info;
         private volatile bool _isExtended;
@@ -98,8 +100,8 @@ namespace ModMyFactoryGUI.ViewModels
 
         public AccurateVersion FactorioVersion => Info.LatestRelease.Info.FactorioVersion.ToMajor();
 
-        public OnlineModViewModel(ApiModInfo info, DownloadQueue downloadQueue)
-            => (_info, _downloadQueue, Releases) = (info, downloadQueue, _emptyReleases);
+        public OnlineModViewModel(ApiModInfo info, Manager manager, DownloadQueue downloadQueue)
+            => (_info, _manager, _downloadQueue, Releases) = (info, manager, downloadQueue, _emptyReleases);
 
         ~OnlineModViewModel()
         {
@@ -150,16 +152,17 @@ namespace ModMyFactoryGUI.ViewModels
         {
             if (Info.Releases is null)
             {
-                _releases = new ModReleaseViewModel[0];
+                _releases = null;
+                Releases = _emptyReleases;
             }
             else
             {
                 _releases = new ModReleaseViewModel[Info.Releases.Length];
                 for (int i = 0; i < _releases.Length; i++)
-                    _releases[i] = new ModReleaseViewModel(Info.Releases[i], Info.DisplayName, _downloadQueue);
+                    _releases[i] = new ModReleaseViewModel(Info.Releases[i], Info.Name, Info.DisplayName, _manager, _downloadQueue);
+                Releases = new CollectionView<ModReleaseViewModel>(_releases, (a, b) => b.Version.CompareTo(a.Version));
             }
 
-            Releases = new CollectionView<ModReleaseViewModel>(_releases, (a, b) => b.Version.CompareTo(a.Version));
             this.RaisePropertyChanged(nameof(Releases));
         }
 
@@ -191,6 +194,12 @@ namespace ModMyFactoryGUI.ViewModels
         {
             if (!isDisposed)
             {
+                if (!(_releases is null))
+                {
+                    foreach (var release in _releases)
+                        release.Dispose();
+                }
+
                 Thumbnail?.Dispose();
                 isDisposed = true;
             }

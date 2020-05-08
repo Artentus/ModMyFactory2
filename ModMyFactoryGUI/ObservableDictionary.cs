@@ -3,7 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.ComponentModel;
-using System.Linq;
 
 namespace ModMyFactoryGUI
 {
@@ -27,9 +26,7 @@ namespace ModMyFactoryGUI
 
             private void OnParentCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
             {
-                var newItems = e.NewItems?.Cast<KeyValuePair<TKey, TValue>>()?.Select(Map)?.ToList();
-                var oldItems = e.OldItems?.Cast<KeyValuePair<TKey, TValue>>()?.Select(Map)?.ToList();
-                OnCollectionChanged(new NotifyCollectionChangedEventArgs(e.Action, newItems, oldItems));
+                OnCollectionChanged(e);
                 if (e.Action != NotifyCollectionChangedAction.Replace)
                     OnPropertyChanged(new PropertyChangedEventArgs(nameof(Count)));
             }

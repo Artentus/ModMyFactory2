@@ -17,6 +17,8 @@ namespace ModMyFactoryGUI.Tasks
     {
         public T Job { get; }
 
+        public bool Success => Job.Success;
+
         public JobCompletedEventArgs(T job)
             => Job = job;
     }

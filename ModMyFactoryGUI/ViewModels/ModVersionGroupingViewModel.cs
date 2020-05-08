@@ -64,8 +64,11 @@ namespace ModMyFactoryGUI.ViewModels
                     foreach (Mod mod in e.OldItems)
                     {
                         // If the removed mod was the last mod in its family we need to remove the view model
-                        if (!_manager.TryGetFamily(mod.Name, out _) && _familyViewModels.ContainsKey(mod.Name))
-                            _familyViewModels.Remove(mod.Name);
+                        if (_familyViewModels.ContainsKey(mod.Name))
+                        {
+                            if (!_manager.TryGetFamily(mod.Name, out var family) || family.Count == 0)
+                                _familyViewModels.Remove(mod.Name);
+                        }
                     }
                     break;
 

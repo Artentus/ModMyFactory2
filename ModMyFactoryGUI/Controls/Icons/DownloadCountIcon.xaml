@@ -1,0 +1,20 @@
+<!--
+Copyright (C) 2020 Mathis Rech
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+-->
+
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             x:Class="ModMyFactoryGUI.Controls.Icons.DownloadCountIcon">
+
+  <Grid Width="16" Height="16" RowDefinitions="*,Auto">
+    <Path Grid.Row="0" Margin="2,0" Fill="{DynamicResource ThemeForegroundBrush}" Data="F1M9.0146,4.9863L9.0146,6.9863 6.0146,9.9863 3.0146,6.9863 3.0146,4.9863 5.0146,6.9863 5.0146,2.9863 7.0146,2.9863 7.0146,6.9863z" />
+    <Path Grid.Row="1" Fill="{DynamicResource ThemeForegroundBrush}" Data="F1M3,8L2,8 2,7 3,7z M1,6L1,10 2,10 2,11 4,11 4,10 12,10 12,11 14,11 14,10 15,10 15,6z" />
+  </Grid>
+</UserControl>
