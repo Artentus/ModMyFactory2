@@ -55,7 +55,7 @@ namespace ModMyFactory.Mods
         protected virtual void Dispose(bool disposing)
         {
             if (disposing)
-                Thumbnail.Dispose();
+                Thumbnail?.Dispose();
         }
 
         /// <summary>
@@ -152,7 +152,7 @@ namespace ModMyFactory.Mods
 
         public void Delete()
         {
-            Thumbnail.Dispose();
+            Thumbnail?.Dispose();
             _file.Delete();
         }
 
