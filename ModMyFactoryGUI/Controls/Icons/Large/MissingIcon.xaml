@@ -1,0 +1,22 @@
+<!--
+Copyright (C) 2020 Mathis Rech
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+-->
+
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             x:Class="ModMyFactoryGUI.Controls.Icons.Large.MissingIcon">
+
+  <Grid Width="128" Height="128">
+    <Grid.RenderTransform>
+      <ScaleTransform ScaleX="0.5" ScaleY="0.5" />
+    </Grid.RenderTransform>
+    <Path Margin="-64" Fill="{DynamicResource ThemeForegroundBrush}" Data="F1M144,144C161.648,144,176,129.641,176,112L176,80C176,61.457 155.813,48 127.992,48 100.18,48 80,61.457 80,80L80,96 112,96 112,83.25C114.539,81.844 120.07,80 127.992,80 135.922,80 141.461,81.844 144,83.25L144,112C126.352,112,111.992,126.359,111.992,144L111.992,160 143.992,160z M143.992,192C143.992,200.844 136.836,208 127.992,208 119.164,208 111.992,200.844 111.992,192 111.992,183.172 119.164,176 127.992,176 136.836,176 143.992,183.172 143.992,192" />
+  </Grid>
+</UserControl>

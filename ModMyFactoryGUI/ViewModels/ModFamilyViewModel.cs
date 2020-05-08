@@ -54,7 +54,9 @@ namespace ModMyFactoryGUI.ViewModels
             set => this.RaiseAndSetIfChanged(ref _selectedModViewModel, value, nameof(SelectedModViewModel));
         }
 
-        public IBitmap Thumbnail => _modViewModels.MaxBy(m => m.Version)?.Thumbnail;
+        public IBitmap Thumbnail { get; private set; }
+
+        public bool HasThumbnail => !(Thumbnail is null);
 
         public string DisplayName => _family.DisplayName;
 
@@ -72,6 +74,8 @@ namespace ModMyFactoryGUI.ViewModels
                 _modViewModels.Add(vm);
             }
 
+            Thumbnail = _modViewModels.MaxBy(m => m.Version)?.Thumbnail;
+
             family.CollectionChanged += OnModCollectionChanged;
             family.ModsEnabledChanged += OnModsEnabledChanged;
 
@@ -87,7 +91,10 @@ namespace ModMyFactoryGUI.ViewModels
                     {
                         var vm = new ModViewModel(mod);
                         _modViewModels.Add(vm);
+
+                        Thumbnail = _modViewModels.MaxBy(m => m.Version)?.Thumbnail;
                         this.RaisePropertyChanged(nameof(Thumbnail));
+                        this.RaisePropertyChanged(nameof(HasThumbnail));
                     }
                     break;
 
@@ -100,14 +107,19 @@ namespace ModMyFactoryGUI.ViewModels
                         {
                             _modViewModels.Remove(vm);
                             vm.Dispose();
+
+                            Thumbnail = _modViewModels.MaxBy(m => m.Version)?.Thumbnail;
                             this.RaisePropertyChanged(nameof(Thumbnail));
+                            this.RaisePropertyChanged(nameof(HasThumbnail));
                         }
                     }
                     break;
 
                 case NotifyCollectionChangedAction.Reset:
                     _modViewModels.Clear();
+                    Thumbnail = null;
                     this.RaisePropertyChanged(nameof(Thumbnail));
+                    this.RaisePropertyChanged(nameof(HasThumbnail));
                     break;
             }
         }
