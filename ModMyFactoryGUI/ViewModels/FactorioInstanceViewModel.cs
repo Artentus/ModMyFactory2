@@ -257,6 +257,8 @@ namespace ModMyFactoryGUI.ViewModels
         private void OnInstanceRemoved(EventArgs e)
             => InstanceRemoved?.Invoke(this, e);
 
+        public string GetUniqueKey() => GetNameKey(this);
+
         public void Remove()
         {
             if (_instance.IsSteamInstance()) throw new InvalidOperationException("Cannot remove the Steam instance");

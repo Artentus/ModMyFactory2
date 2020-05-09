@@ -1,12 +1,3 @@
-<!--
-Copyright (C) 2020 Mathis Rech
-
-This program is free software: you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
-(at your option) any later version.
--->
-
 <Style xmlns="https://github.com/avaloniaui"
        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
@@ -52,6 +43,10 @@ the Free Software Foundation, either version 3 of the License, or
     <Color x:Key="IconColor4">#FFf0ca94</Color>
     <Color x:Key="IconColor5">#FFf38b76</Color>
 
+    <Color x:Key="StartButtonLowColor">#FF008000</Color>
+    <Color x:Key="StartButtonMidColor">#FF009900</Color>
+    <Color x:Key="StartButtonHighColor">#FF00B200</Color>
+
     <SolidColorBrush x:Key="ThemeBackgroundBrush" Color="{DynamicResource ThemeBackgroundColor}"></SolidColorBrush>
     <SolidColorBrush x:Key="ThemeBackgroundHighBrush" Color="{DynamicResource ThemeBackgroundHighColor}"></SolidColorBrush>
     <SolidColorBrush x:Key="ThemeBackgroundLowBrush" Color="{DynamicResource ThemeBackgroundLowColor}"></SolidColorBrush>
@@ -93,6 +88,10 @@ the Free Software Foundation, either version 3 of the License, or
     <SolidColorBrush x:Key="NotificationCardSuccessBackgroundBrush" Color="#1F9E45" Opacity="0.75" />
     <SolidColorBrush x:Key="NotificationCardWarningBackgroundBrush" Color="#FDB328" Opacity="0.75" />
     <SolidColorBrush x:Key="NotificationCardErrorBackgroundBrush" Color="#BD202C" Opacity="0.75" />
+
+    <SolidColorBrush x:Key="StartButtonLowBrush" Color="{DynamicResource StartButtonLowColor}" />
+    <SolidColorBrush x:Key="StartButtonMidBrush" Color="{DynamicResource StartButtonMidColor}" />
+    <SolidColorBrush x:Key="StartButtonHighBrush" Color="{DynamicResource StartButtonHighColor}" />
 
     <Thickness x:Key="ThemeBorderThickness">1</Thickness>
     <x:Double x:Key="ThemeDisabledOpacity">0.5</x:Double>

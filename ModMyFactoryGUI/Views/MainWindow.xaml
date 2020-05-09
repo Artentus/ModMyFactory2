@@ -208,13 +208,46 @@ the Free Software Foundation, either version 3 of the License, or
     </Menu>
 
     <!-- Toolbar -->
-    <controls:Toolbar DockPanel.Dock="Top" Items="{Binding ToolbarItems}" Margin="4,0,0,0">
-      <controls:Toolbar.DataTemplates>
-        <DataTemplate DataType="{x:Type models:MenuHeaderViewModel}">
-          <TextBlock Text="{Binding HeaderKey, Converter={StaticResource LocalizeConverter}}" />
-        </DataTemplate>
-      </controls:Toolbar.DataTemplates>
-    </controls:Toolbar>
+    <Grid DockPanel.Dock="Top" ColumnDefinitions="Auto,Auto,*">
+      <ComboBox Grid.Column="0" Margin="4" Width="250" FontSize="{DynamicResource FontSizeMedium}"
+                Items="{Binding FactorioViewModel.Instances}" SelectedItem="{Binding SelectedFactorioInstance, Mode=TwoWay}">
+        <ComboBox.ItemTemplate>
+          <DataTemplate DataType="{x:Type models:FactorioInstanceViewModel}">
+            <Grid ColumnDefinitions="Auto,Auto">
+              <TextBlock Grid.Column="0" Margin="4,2" Text="{Binding Name}" />
+              <TextBlock Grid.Column="1" Margin="4,2" Text="{Binding Version, StringFormat=Factorio {0}}" Classes="muted" />
+            </Grid>
+          </DataTemplate>
+        </ComboBox.ItemTemplate>
+      </ComboBox>
+
+      <Button Grid.Column="1" Margin="4" Content="{l:LocalizedResource StartGameButton}" Command="{Binding StartGameCommand}">
+        <Button.Styles>
+          <Style Selector="Button">
+            <Setter Property="MinWidth" Value="120" />
+            <Setter Property="Padding" Value="6" />
+            <Setter Property="FontSize" Value="{DynamicResource FontSizeLarge}" />
+            <Setter Property="FontWeight" Value="Bold" />
+            <Setter Property="Background" Value="{DynamicResource StartButtonMidBrush}" />
+            <Setter Property="BorderThickness" Value="0" />
+          </Style>
+          <Style Selector="Button:pointerover /template/ ContentPresenter">
+            <Setter Property="Background" Value="{DynamicResource StartButtonHighBrush}" />
+          </Style>
+          <Style Selector="Button:pressed /template/ ContentPresenter">
+            <Setter Property="Background" Value="{DynamicResource StartButtonLowBrush}" />
+          </Style>
+        </Button.Styles>
+      </Button>
+
+      <controls:Toolbar Grid.Column="2" Items="{Binding ToolbarItems}" Margin="4,0,0,0">
+        <controls:Toolbar.DataTemplates>
+          <DataTemplate DataType="{x:Type models:MenuHeaderViewModel}">
+            <TextBlock Text="{Binding HeaderKey, Converter={StaticResource LocalizeConverter}}" />
+          </DataTemplate>
+        </controls:Toolbar.DataTemplates>
+      </controls:Toolbar>
+    </Grid>
 
     <!-- Download status -->
     <Border DockPanel.Dock="Bottom" Background="{DynamicResource ThemeBackgroundHighBrush}">

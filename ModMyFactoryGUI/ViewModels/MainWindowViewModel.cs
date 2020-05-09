@@ -6,6 +6,7 @@
 //  (at your option) any later version.
 
 using Avalonia.Controls;
+using ModMyFactory.Game;
 using ModMyFactory.Mods;
 using ModMyFactoryGUI.Helpers;
 using ModMyFactoryGUI.MVVM;
@@ -28,6 +29,9 @@ namespace ModMyFactoryGUI.ViewModels
         private readonly Progress<(DownloadJob, double)> _downloadProgress;
         private TabItem _selectedTab;
         private IMainViewModel _selectedViewModel;
+        private FactorioInstanceViewModel _selectedFactorioInstance;
+
+        public ICommand StartGameCommand { get; }
 
         public ICommand NavigateToUrlCommand { get; }
 
@@ -94,11 +98,25 @@ namespace ModMyFactoryGUI.ViewModels
             }
         }
 
+        public FactorioInstanceViewModel SelectedFactorioInstance
+        {
+            get => _selectedFactorioInstance;
+            set
+            {
+                this.RaiseAndSetIfChanged(ref _selectedFactorioInstance, value, nameof(SelectedFactorioInstance));
+
+                if (value is null) Program.Settings.Remove(SettingName.SelectedInstance);
+                else Program.Settings.Set(SettingName.SelectedInstance, value.GetUniqueKey());
+                Program.Settings.Save();
+            }
+        }
+
         public IEnumerable<CultureViewModel> AvailableCultures
             => App.Current.Locales.AvailableCultures.Select(c => new CultureViewModel(c));
 
         public MainWindowViewModel()
         {
+            StartGameCommand = ReactiveCommand.Create(StartGame);
             NavigateToUrlCommand = ReactiveCommand.Create<string>(NavigateToUrl);
             OpenAboutWindowCommand = ReactiveCommand.CreateFromTask(OpenAboutWindow);
 
@@ -121,12 +139,44 @@ namespace ModMyFactoryGUI.ViewModels
                 this.RaisePropertyChanged(nameof(DownloadDescription));
                 this.RaisePropertyChanged(nameof(DownloadQueueLength));
             };
+
+            if (Program.Settings.TryGet<string>(SettingName.SelectedInstance, out var key))
+            {
+                foreach (var instance in FactorioViewModel.Instances)
+                {
+                    if (instance.GetUniqueKey() == key)
+                    {
+                        _selectedFactorioInstance = instance;
+                        break;
+                    }
+                }
+            }
+            if (_selectedFactorioInstance is null)
+            {
+                _selectedFactorioInstance = FactorioViewModel.Instances.FirstOrDefault();
+                if (_selectedFactorioInstance is null)
+                {
+                    Program.Settings.Set(SettingName.SelectedInstance, _selectedFactorioInstance.GetUniqueKey());
+                    Program.Settings.Save();
+                }
+            }
         }
 
         private void OnDownloadQueueLengthChanged(object sender, EventArgs e)
         {
             this.RaisePropertyChanged(nameof(DownloadQueueLength));
             this.RaisePropertyChanged(nameof(ShowDownloadQueueLength));
+        }
+
+        private void StartGame()
+        {
+            if (!(SelectedFactorioInstance is null))
+            {
+                var instance = SelectedFactorioInstance.Instance;
+                var modDir = Program.Locations.GetModDir(instance.Version);
+                if (!modDir.Exists) modDir.Create();
+                instance.Start(modDir);
+            }
         }
 
         private void NavigateToUrl(string url)
