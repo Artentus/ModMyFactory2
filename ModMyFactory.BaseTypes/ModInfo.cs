@@ -100,7 +100,7 @@ namespace ModMyFactory.BaseTypes
         public async Task SaveToFileAsync(FileInfo file, Formatting formatting = Formatting.Indented, JsonSerializerSettings settings = null)
         {
             if (!file.Directory.Exists) file.Directory.Create();
-            using var fs = file.OpenWrite();
+            using var fs = file.Open(FileMode.Create, FileAccess.Write);
             using var writer = new StreamWriter(fs);
             string json = ToJson(formatting, settings);
             await writer.WriteAsync(json);

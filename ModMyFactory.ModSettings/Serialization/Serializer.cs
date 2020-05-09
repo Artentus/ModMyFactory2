@@ -194,7 +194,7 @@ namespace ModMyFactory.ModSettings.Serialization
         public static void SaveToFile(string json, FileInfo file, AccurateVersion fileVersion)
         {
             if (!file.Directory.Exists) file.Directory.Create();
-            using var stream = file.OpenWrite();
+            using var stream = file.Open(FileMode.Create, FileAccess.Write);
             using var writer = new AccurateBinaryWriter(stream);
 
             writer.Write(fileVersion);

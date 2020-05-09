@@ -38,7 +38,7 @@ namespace ModMyFactoryGUI.Helpers
             Task WriteAllTextAsync(string path, string contents, Encoding encoding)
         {
 #if NETFULL
-            using var stream = File.OpenWrite(path);
+            using var stream = File.Open(path, FileMode.Create, FileAccess.Write);
             using var writer = new StreamWriter(stream, encoding);
             await writer.WriteAsync(contents);
 #elif NETCORE
