@@ -22,7 +22,6 @@
   
   <ItemGroup Condition="'$(Configuration)' == 'Debug'">
     <ProjectReference Include="..\ModMyFactory.BaseTypes\ModMyFactory.BaseTypes.csproj" />
-    <ProjectReference Include="..\ModMyFactory.Export\ModMyFactory.Export.csproj" />
     <ProjectReference Include="..\ModMyFactory.Localization\ModMyFactory.Localization.csproj" />
     <ProjectReference Include="..\ModMyFactory.ModSettings\ModMyFactory.ModSettings.csproj" />
     <ProjectReference Include="..\ModMyFactory.WebApi\ModMyFactory.WebApi.csproj" />
@@ -31,7 +30,6 @@
   
   <ItemGroup Condition="'$(Configuration)' == 'Release'">
     <PackageReference Include="ModMyFactory.BaseTypes" Version="1.0.0.10-alpha" />
-    <PackageReference Include="ModMyFactory.Export" Version="1.0.0.8-alpha" />
     <PackageReference Include="ModMyFactory.Localization" Version="1.0.0.5-alpha" />
     <PackageReference Include="ModMyFactory.ModSettings" Version="1.0.0.10-alpha" />
     <PackageReference Include="ModMyFactory.WebApi" Version="1.0.0.15-alpha" />

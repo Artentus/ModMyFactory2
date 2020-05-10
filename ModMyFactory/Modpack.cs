@@ -97,11 +97,26 @@ namespace ModMyFactory
         private void OnModEnabledChanged(object sender, EventArgs e)
             => EvaluateEnabledState();
 
+        private void AssertCanAdd(Modpack pack)
+        {
+            if (pack == this) throw new InvalidOperationException("Cannot create circular modpack references");
+
+            foreach (var item in pack)
+                AssertCanAdd(item);
+        }
+
+        private void AssertCanAdd(ICanEnable item)
+        {
+            if (item is Modpack pack) AssertCanAdd(pack);
+        }
+
         protected virtual void OnEnabledChanged(EventArgs e)
             => EnabledChanged?.Invoke(this, e);
 
         public virtual void Add(ICanEnable item)
         {
+            AssertCanAdd(item);
+
             _mods.Add(item);
             item.EnabledChanged += OnModEnabledChanged;
             EvaluateEnabledState();
@@ -109,9 +124,11 @@ namespace ModMyFactory
 
         public virtual void AddRange(IEnumerable<ICanEnable> collection)
         {
-            _mods.AddRange(collection);
             foreach (var item in collection)
+            {
+                Add(item);
                 item.EnabledChanged += OnModEnabledChanged;
+            }
             EvaluateEnabledState();
         }
 
