@@ -1,3 +1,4 @@
+using ModMyFactory.Mods;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -42,6 +43,16 @@ namespace ModMyFactory
         /// Only use locally, not across machines
         /// </summary>
         public Guid Uid { get; }
+
+        /// <summary>
+        /// The mods in this modpack
+        /// </summary>
+        public IEnumerable<Mod> Mods => this.Where(i => i is Mod).Cast<Mod>();
+
+        /// <summary>
+        /// The modpacks in this modpack
+        /// </summary>
+        public IEnumerable<Modpack> Modpacks => this.Where(i => i is Modpack).Cast<Modpack>();
 
         bool ICanEnable.CanDisable => true;
 
