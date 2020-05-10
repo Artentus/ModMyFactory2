@@ -12,48 +12,48 @@ using System.Threading.Tasks;
 namespace ModMyFactory.BaseTypes
 {
     /// <summary>
-    /// Information about a mod.
+    /// Information about a mod
     /// </summary>
     public struct ModInfo
     {
         /// <summary>
-        /// The unique name of the mod.
+        /// The unique name of the mod
         /// </summary>
         [JsonProperty("name")]
         readonly public string Name;
 
         /// <summary>
-        /// The mods display name.
+        /// The mods display name
         /// </summary>
         [JsonProperty("title")]
         readonly public string DisplayName;
 
         /// <summary>
-        /// The mods version.
+        /// The mods version
         /// </summary>
         [JsonProperty("version")]
         readonly public AccurateVersion Version;
 
         /// <summary>
-        /// The version of Factorio this mod works on.
+        /// The version of Factorio this mod works on
         /// </summary>
         [JsonProperty("factorio_version")]
         readonly public AccurateVersion FactorioVersion;
 
         /// <summary>
-        /// The author of the mod.
+        /// The author of the mod
         /// </summary>
         [JsonProperty("author")]
         readonly public string Author;
 
         /// <summary>
-        /// A description of the mod.
+        /// A description of the mod
         /// </summary>
         [JsonProperty("description")]
         readonly public string Description;
 
         /// <summary>
-        /// The dependencies of this mod.
+        /// The dependencies of this mod
         /// </summary>
         [JsonProperty("dependencies")]
         [JsonConverter(typeof(SingleOrArrayConverter<Dependency>))]
@@ -66,13 +66,13 @@ namespace ModMyFactory.BaseTypes
                = (name, displayName, version, factorioVersion, author, description, dependencies);
 
         /// <summary>
-        /// Loads mod info from a json string.
+        /// Loads mod info from a json string
         /// </summary>
         public static ModInfo FromJson(string json)
             => JsonConvert.DeserializeObject<ModInfo>(json);
 
         /// <summary>
-        /// Loads a mod info file.
+        /// Loads a mod info file
         /// </summary>
         public static async Task<ModInfo> FromFileAsync(FileInfo file)
         {
@@ -83,19 +83,19 @@ namespace ModMyFactory.BaseTypes
         }
 
         /// <summary>
-        /// Loads a mod info file.
+        /// Loads a mod info file
         /// </summary>
-        public static async Task<ModInfo> FromFileAsync(string fileName)
-            => await FromFileAsync(new FileInfo(fileName));
+        public static Task<ModInfo> FromFileAsync(string fileName)
+            => FromFileAsync(new FileInfo(fileName));
 
         /// <summary>
-        /// Creates a json string from this mod info.
+        /// Creates a json string from this mod info
         /// </summary>
         public string ToJson(Formatting formatting = Formatting.Indented, JsonSerializerSettings settings = null)
             => JsonConvert.SerializeObject(this, formatting, settings);
 
         /// <summary>
-        /// Saves a mod info file.
+        /// Saves a mod info file
         /// </summary>
         public async Task SaveToFileAsync(FileInfo file, Formatting formatting = Formatting.Indented, JsonSerializerSettings settings = null)
         {
@@ -107,9 +107,9 @@ namespace ModMyFactory.BaseTypes
         }
 
         /// <summary>
-        /// Saves a mod info file.
+        /// Saves a mod info file
         /// </summary>
-        public async Task SaveToFileAsync(string fileName, Formatting formatting = Formatting.Indented, JsonSerializerSettings settings = null)
-            => await SaveToFileAsync(new FileInfo(fileName), formatting, settings);
+        public Task SaveToFileAsync(string fileName, Formatting formatting = Formatting.Indented, JsonSerializerSettings settings = null)
+            => SaveToFileAsync(new FileInfo(fileName), formatting, settings);
     }
 }
