@@ -6,59 +6,33 @@
 //  (at your option) any later version.
 
 using Newtonsoft.Json;
-using System.ComponentModel;
+using System;
+using System.Collections.Generic;
 
 namespace ModMyFactory.Export
 {
     public sealed class ModpackDefinition
     {
-        private static volatile int GlobalUid = 0;
-
+        public int Uid { get; }
 
         public string Name { get; }
 
-        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
-        public ModDefinition[] Mods { get; }
+        public IReadOnlyList<int> ModIds { get; }
 
-        // -------------- File version 1 --------------
-        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
-        public string[] Modpacks { get; }
+        public IReadOnlyList<int> ModpackIds { get; }
 
-        [DefaultValue(-1)]
-        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
-        public int Uid { get; }
-
-        // -------------- File version 2 --------------
-        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
-        public int[] ModIds { get; }
-
-        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
-        public int[] ModpackIds { get; }
-
+        /// <param name="uid">Unique ID of the modpack inside the package</param>
+        /// <param name="name">Name of the modpack</param>
+        /// <param name="modIds">IDs of mods in the modpack</param>
+        /// <param name="modpackIds">IDs of other modpacks inside the modpack</param>
         [JsonConstructor]
-        private ModpackDefinition(int uid, string name, ModDefinition[] mods, string[] modpacks, int[] modIds, int[] modpackIds)
+        public ModpackDefinition(in int uid, in string name, in IReadOnlyList<int> modIds, in IReadOnlyList<int> modpackIds)
         {
+            if (string.IsNullOrWhiteSpace(name)) throw new ArgumentNullException(nameof(name));
+            if (modIds is null) throw new ArgumentNullException(nameof(modIds));
+            if (modpackIds is null) throw new ArgumentNullException(nameof(modpackIds));
+
             Uid = uid;
-            Name = name;
-            Mods = mods;
-            Modpacks = modpacks;
-            ModIds = modIds;
-            ModpackIds = modpackIds;
-        }
-
-        public ModpackDefinition(string name, ModDefinition[] mods, string[] modpacks)
-        {
-            Uid = -1;
-            Name = name;
-            Mods = mods;
-            Modpacks = modpacks;
-        }
-
-        public ModpackDefinition(string name, int[] modIds, int[] modpackIds)
-        {
-            Uid = GlobalUid;
-            GlobalUid++;
-
             Name = name;
             ModIds = modIds;
             ModpackIds = modpackIds;

@@ -7,73 +7,75 @@
 
 using ModMyFactory.BaseTypes;
 using Newtonsoft.Json;
-using System.ComponentModel;
+using System;
 
 namespace ModMyFactory.Export
 {
     public sealed class ModDefinition
     {
-        private static volatile int GlobalUid = 0;
-
+        public int Uid { get; }
 
         public string Name { get; }
 
         [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         public AccurateVersion Version { get; }
 
-        [DefaultValue(-1)]
-        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
-        public int Uid { get; }
-
-        // -------------- File version 2 --------------
-        [DefaultValue(ExportMode.Version1)]
-        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
-        public ExportMode ExportMode { get; }
-
         [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         public AccurateVersion FactorioVersion { get; }
 
-        [JsonIgnore]
-        public ExportMode MaskedExportMode => ExportMode & ExportMode.Mask;
+        public ExportMode ExportMode { get; }
 
-        [JsonIgnore]
-        public bool Included => ExportMode.HasFlag(ExportMode.Included);
-
-        [JsonIgnore]
-        public bool DownloadNewer => ExportMode.HasFlag(ExportMode.DownloadNewer);
+        [JsonIgnore] public ExportMode MaskedExportMode => ExportMode & ExportMode.Mask;
+        [JsonIgnore] public bool Included => ExportMode.HasFlag(ExportMode.Included);
+        [JsonIgnore] public bool DownloadNewer => ExportMode.HasFlag(ExportMode.DownloadNewer);
 
         [JsonConstructor]
-        private ModDefinition(int uid, string name, ExportMode exportMode, AccurateVersion version, AccurateVersion factorioVersion)
+        private ModDefinition(in int uid, in string name, in ExportMode exportMode, in AccurateVersion version, in AccurateVersion factorioVersion)
         {
+            if (string.IsNullOrWhiteSpace(name)) throw new ArgumentNullException(nameof(name));
+
             Uid = uid;
             Name = name;
             ExportMode = exportMode;
             Version = version;
             FactorioVersion = factorioVersion;
+
+            if (MaskedExportMode == ExportMode.Invalid) throw new ArgumentException("Export mode is not valid", nameof(exportMode));
         }
 
-        // -------------- File version 1 --------------
-
-        public ModDefinition(string name, AccurateVersion version = default)
+        /// <param name="uid">Unique ID of the mod inside the package</param>
+        /// <param name="name">Name of the mod</param>
+        /// <param name="exportMode">Export mode of the mod</param>
+        /// <param name="version">Either the mods version, the target Factorio version or ignored depending on export mode</param>
+        public ModDefinition(in int uid, in string name, in ExportMode exportMode, in AccurateVersion version = default)
         {
-            Uid = -1;
-            Name = name;
-            Version = version;
-        }
+            if (string.IsNullOrWhiteSpace(name)) throw new ArgumentNullException(nameof(name));
 
-        public ModDefinition(string name, ExportMode exportMode, AccurateVersion versionOrFactorioVersion = default)
-        {
-            Uid = GlobalUid;
-            GlobalUid++;
-
+            Uid = uid;
             Name = name;
             ExportMode = exportMode;
 
-            exportMode &= ExportMode.Mask;
-            if (exportMode == ExportMode.SpecificVersion)
-                Version = versionOrFactorioVersion;
-            else if (exportMode == ExportMode.FactorioVersion)
-                FactorioVersion = versionOrFactorioVersion;
+            var masked = MaskedExportMode;
+            switch (masked)
+            {
+                case ExportMode.LatestVersion:
+                    // We don't need to store any version information
+                    Version = default;
+                    FactorioVersion = default;
+                    break;
+
+                case ExportMode.SpecificVersion:
+                    Version = version;
+                    FactorioVersion = default;
+                    break;
+
+                case ExportMode.FactorioVersion:
+                    Version = default;
+                    FactorioVersion = version;
+                    break;
+            }
+
+            if (masked == ExportMode.Invalid) throw new ArgumentException("Export mode is not valid", nameof(exportMode));
         }
     }
 }

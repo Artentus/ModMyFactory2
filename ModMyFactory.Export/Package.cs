@@ -6,52 +6,32 @@
 //  (at your option) any later version.
 
 using Newtonsoft.Json;
-using System.ComponentModel;
+using System;
+using System.Collections.Generic;
 
 namespace ModMyFactory.Export
 {
     public sealed class Package
     {
-        [DefaultValue(1)]
-        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         public int Version { get; }
 
-        public ModDefinition[] Mods { get; }
+        public IReadOnlyList<ModDefinition> Mods { get; }
 
-        public ModpackDefinition[] Modpacks { get; }
+        public IReadOnlyList<ModpackDefinition> Modpacks { get; }
 
-        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
-        public bool IncludesVersionInfo { get; }
-
+        /// <param name="version">Version of the package</param>
+        /// <param name="mods"></param>
+        /// <param name="modpacks"></param>
         [JsonConstructor]
-        private Package(int version, ModDefinition[] mods, ModpackDefinition[] modpacks, bool includesVersionInfo)
+        internal Package(in int version, in IReadOnlyList<ModDefinition> mods, in IReadOnlyList<ModpackDefinition> modpacks)
         {
+            if (version < 2) throw new ArgumentException("Only versions 2 or higher are supported", nameof(version));
+            if (mods is null) throw new ArgumentNullException(nameof(mods));
+            if (modpacks is null) throw new ArgumentNullException(nameof(modpacks));
+
             Version = version;
             Mods = mods;
             Modpacks = modpacks;
-            IncludesVersionInfo = includesVersionInfo;
         }
-
-        // -------------- File version 1 --------------
-        public Package(ModDefinition[] mods, ModpackDefinition[] modpacks, bool includesVersionInfo)
-        {
-            Version = 1;
-            Mods = mods;
-            Modpacks = modpacks;
-            IncludesVersionInfo = includesVersionInfo;
-        }
-
-        // -------------- File version 2 --------------
-
-        public Package(ModDefinition[] mods, ModpackDefinition[] modpacks)
-        {
-            Version = 2;
-            Mods = mods;
-            Modpacks = modpacks;
-        }
-
-        // -------------- File version 3 --------------
-
-        // Mod settings
     }
 }
