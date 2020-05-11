@@ -24,5 +24,14 @@ namespace ModMyFactoryGUI.Helpers
             return dict.Remove(key);
 #endif
         }
+
+        // This function has to be treated with care since it is not given that the reversal of keys and values will yield another valid dictionary
+        public static IDictionary<TValue, TKey> Swap<TKey, TValue>(this IDictionary<TKey, TValue> dictionary)
+        {
+            var result = new Dictionary<TValue, TKey>();
+            foreach (var kvp in dictionary)
+                result.Add(kvp.Value, kvp.Key);
+            return result;
+        }
     }
 }
