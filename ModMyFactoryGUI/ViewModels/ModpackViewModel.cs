@@ -1,4 +1,5 @@
 using ModMyFactory;
+using ModMyFactoryGUI.Helpers;
 using ReactiveUI;
 using System;
 
@@ -27,6 +28,11 @@ namespace ModMyFactoryGUI.ViewModels
             set => Modpack.Enabled = value;
         }
 
+        // Store information for fuzzy search
+        public bool MatchesSearch { get; private set; } = true;
+
+        public int SearchScore { get; private set; } = 0;
+
         public ModpackViewModel(Modpack modpack)
         {
             Modpack = modpack;
@@ -35,6 +41,20 @@ namespace ModMyFactoryGUI.ViewModels
 
         private void ModpackEnabledChangedHandler(object sender, EventArgs e)
             => this.RaisePropertyChanged(nameof(Enabled));
+
+        public void ApplyFuzzyFilter(in string filter)
+        {
+            if (string.IsNullOrWhiteSpace(filter))
+            {
+                MatchesSearch = true;
+                SearchScore = 0;
+                return;
+            }
+
+            // We allow searching for title only
+            MatchesSearch = DisplayName.FuzzyMatch(filter, out int titleScore);
+            if (MatchesSearch) SearchScore = titleScore;
+        }
 
         #region IDisposable Support
 

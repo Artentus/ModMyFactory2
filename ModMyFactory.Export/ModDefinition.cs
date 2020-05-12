@@ -40,7 +40,9 @@ namespace ModMyFactory.Export
             Version = version;
             FactorioVersion = factorioVersion;
 
+#pragma warning disable CS0612
             if (MaskedExportMode == ExportMode.Invalid) throw new ArgumentException("Export mode is not valid", nameof(exportMode));
+#pragma warning restore CS0612
         }
 
         /// <param name="uid">Unique ID of the mod inside the package</param>
@@ -75,7 +77,9 @@ namespace ModMyFactory.Export
                     break;
             }
 
+#pragma warning disable CS0612
             if (masked == ExportMode.Invalid) throw new ArgumentException("Export mode is not valid", nameof(exportMode));
+#pragma warning restore CS0612
         }
     }
 }

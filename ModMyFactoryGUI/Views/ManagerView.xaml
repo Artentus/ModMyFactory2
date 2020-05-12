@@ -88,7 +88,7 @@ the Free Software Foundation, either version 3 of the License, or
 
       <controls:SearchBox Grid.Column="2" Grid.Row="1" Margin="0,4,4,4" Text="{Binding ModpackFilter}" />
 
-      <ListBox Grid.Column="2" Grid.Row="2" Margin="0,4,4,4">
+      <ListBox Grid.Column="2" Grid.Row="2" Margin="0,4,4,4" Items="{Binding Modpacks}">
 
       </ListBox>
 

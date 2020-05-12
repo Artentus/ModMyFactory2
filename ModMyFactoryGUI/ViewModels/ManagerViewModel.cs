@@ -10,15 +10,31 @@ using ModMyFactoryGUI.Views;
 using ReactiveUI;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 
 namespace ModMyFactoryGUI.ViewModels
 {
     internal sealed class ManagerViewModel : MainViewModelBase<ManagerView>
     {
+        private sealed class ModpackComparer : IComparer<ModpackViewModel>
+        {
+            public int Compare(ModpackViewModel first, ModpackViewModel second)
+            {
+                // Search score always takes precendence over the default alphabeticaal sorting
+                int result = second.SearchScore.CompareTo(first.SearchScore);
+                if (result == 0) result = first.DisplayName.CompareTo(second.DisplayName);
+                return result;
+            }
+        }
+
+
         private readonly ObservableCollection<ModVersionGroupingViewModel> _modVersionGroupings;
+        private readonly ObservableCollection<ModpackViewModel> _modpacks;
         private string _modFilter, _modpackFilter;
 
         public CollectionView<ModVersionGroupingViewModel> ModVersionGroupings { get; }
+
+        public CollectionView<ModpackViewModel> Modpacks { get; }
 
         public string ModFilter
         {
@@ -45,6 +61,12 @@ namespace ModMyFactoryGUI.ViewModels
                 {
                     _modpackFilter = value;
                     this.RaisePropertyChanged(nameof(ModpackFilter));
+
+                    foreach (var vm in _modpacks)
+                        vm.ApplyFuzzyFilter(_modpackFilter);
+
+                    Modpacks.Refresh();
+                    this.RaisePropertyChanged(nameof(Modpacks));
                 }
             }
         }
@@ -52,10 +74,7 @@ namespace ModMyFactoryGUI.ViewModels
         public ManagerViewModel()
         {
             _modVersionGroupings = new ObservableCollection<ModVersionGroupingViewModel>();
-
-            static int CompareViewModels(ModVersionGroupingViewModel first, ModVersionGroupingViewModel second)
-                => first.FactorioVersion.CompareTo(second.FactorioVersion);
-            ModVersionGroupings = new CollectionView<ModVersionGroupingViewModel>(_modVersionGroupings, CompareViewModels);
+            _modpacks = new ObservableCollection<ModpackViewModel>();
 
             foreach (var modManager in Program.Manager.ModManagers)
             {
@@ -63,13 +82,78 @@ namespace ModMyFactoryGUI.ViewModels
                 _modVersionGroupings.Add(vm);
             }
 
+            foreach (var modpack in Program.Modpacks)
+            {
+                var vm = new ModpackViewModel(modpack);
+                _modpacks.Add(vm);
+            }
+
+
+            static int CompareVersionGroupings(ModVersionGroupingViewModel first, ModVersionGroupingViewModel second)
+                => first.FactorioVersion.CompareTo(second.FactorioVersion);
+            ModVersionGroupings = new CollectionView<ModVersionGroupingViewModel>(_modVersionGroupings, CompareVersionGroupings);
+
+            Modpacks = new CollectionView<ModpackViewModel>(_modpacks, new ModpackComparer(), FilterModpack);
+
+
             Program.Manager.ModManagerCreated += OnModManagerCreated;
+            Program.Modpacks.CollectionChanged += OnModpackCollectionChanged;
+        }
+
+        private bool FilterModpack(ModpackViewModel modpack)
+        {
+            // Filter based on fuzzy search
+            return modpack.MatchesSearch;
         }
 
         private void OnModManagerCreated(object sender, ModManagerCreatedEventArgs e)
         {
             var vm = new ModVersionGroupingViewModel(e.ModManager);
             _modVersionGroupings.Add(vm);
+        }
+
+        private bool TryGetViewModel(Modpack modpack, out ModpackViewModel result)
+        {
+            foreach (var vm in _modpacks)
+            {
+                if (vm.Modpack == modpack)
+                {
+                    result = vm;
+                    return true;
+                }
+            }
+
+            result = null;
+            return false;
+        }
+
+        private void OnModpackCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            switch (e.Action)
+            {
+                case NotifyCollectionChangedAction.Add:
+                    foreach (Modpack modpack in e.NewItems)
+                    {
+                        var vm = new ModpackViewModel(modpack);
+                        _modpacks.Add(vm);
+                    }
+                    this.RaisePropertyChanged(nameof(Modpacks));
+                    break;
+
+                case NotifyCollectionChangedAction.Remove:
+                    foreach (Modpack modpack in e.OldItems)
+                    {
+                        if (TryGetViewModel(modpack, out var vm))
+                            _modpacks.Remove(vm);
+                    }
+                    this.RaisePropertyChanged(nameof(Modpacks));
+                    break;
+
+                case NotifyCollectionChangedAction.Reset:
+                    _modpacks.Clear();
+                    this.RaisePropertyChanged(nameof(Modpacks));
+                    break;
+            }
         }
 
         protected override List<IMenuItemViewModel> GetEditMenuViewModels()

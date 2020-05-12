@@ -308,6 +308,10 @@
     "type": "string",
     "value": "Factorio"
   },
+  "ExportTabHeader": {
+    "type": "string",
+    "value": "Modpack\nExport"
+  },
   "SettingsTabHeader": {
     "type": "string",
     "value": "Settings"

@@ -10,9 +10,9 @@ using Avalonia.Markup.Xaml;
 
 namespace ModMyFactoryGUI.Controls.Icons.Large
 {
-    public class FactorioIcon : UserControl
+    internal class ExportIcon : UserControl
     {
-        public FactorioIcon()
+        public ExportIcon()
         {
             InitializeComponent();
         }

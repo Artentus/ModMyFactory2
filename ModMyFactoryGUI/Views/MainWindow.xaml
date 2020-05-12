@@ -270,7 +270,7 @@ the Free Software Foundation, either version 3 of the License, or
         <TabItem.Header>
           <StackPanel Width="120" Margin="0,8">
             <largeicons:ManagerIcon HorizontalAlignment="Center" />
-            <TextBlock Text="{l:LocalizedResource ManagerTabHeader}" TextAlignment="Center" />
+            <TextBlock Margin="4" Text="{l:LocalizedResource ManagerTabHeader}" TextAlignment="Center" />
           </StackPanel>
         </TabItem.Header>
 
@@ -282,7 +282,7 @@ the Free Software Foundation, either version 3 of the License, or
         <TabItem.Header>
           <StackPanel Width="120" Margin="0,8">
             <largeicons:DownloadModsIcon HorizontalAlignment="Center" />
-            <TextBlock Text="{l:LocalizedResource OnlineModsTabHeader}" TextAlignment="Center" />
+            <TextBlock Margin="4" Text="{l:LocalizedResource OnlineModsTabHeader}" TextAlignment="Center" />
           </StackPanel>
         </TabItem.Header>
 
@@ -293,12 +293,24 @@ the Free Software Foundation, either version 3 of the License, or
       <TabItem>
         <TabItem.Header>
           <StackPanel Width="120" Margin="0,8">
-            <largeicons:FactorioIcon HorizontalAlignment="Center" />
-            <TextBlock Text="{l:LocalizedResource FactorioTabHeader}" TextAlignment="Center" />
+            <Image Width="64" Height="64" HorizontalAlignment="Center" Source="/Assets/Factorio_Icon.png" />
+            <TextBlock Margin="4" Text="{l:LocalizedResource FactorioTabHeader}" TextAlignment="Center" />
           </StackPanel>
         </TabItem.Header>
 
         <views:FactorioView DataContext="{Binding FactorioViewModel}" />
+      </TabItem>
+
+      <!-- Export -->
+      <TabItem>
+        <TabItem.Header>
+          <StackPanel Width="120" Margin="0,8">
+            <largeicons:ExportIcon HorizontalAlignment="Center" />
+            <TextBlock Margin="4" Text="{l:LocalizedResource ExportTabHeader}" TextAlignment="Center" />
+          </StackPanel>
+        </TabItem.Header>
+
+        <views:ExportView DataContext="{Binding ExportViewModel}" />
       </TabItem>
 
       <!-- Settings -->
@@ -306,7 +318,7 @@ the Free Software Foundation, either version 3 of the License, or
         <TabItem.Header>
           <StackPanel Width="120" Margin="0,8">
             <largeicons:SettingsIcon HorizontalAlignment="Center" />
-            <TextBlock Text="{l:LocalizedResource SettingsTabHeader}" TextAlignment="Center" />
+            <TextBlock Margin="4" Text="{l:LocalizedResource SettingsTabHeader}" TextAlignment="Center" />
           </StackPanel>
         </TabItem.Header>
 

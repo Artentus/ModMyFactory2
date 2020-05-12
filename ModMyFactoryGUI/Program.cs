@@ -276,5 +276,8 @@ namespace ModMyFactoryGUI
             _modpacks.Add(id, modpack);
             return modpack;
         }
+
+        public static bool DeleteModpack(Modpack modpack)
+            => _modpacks.RemoveValue(modpack);
     }
 }

@@ -33,5 +33,23 @@ namespace ModMyFactoryGUI.Helpers
                 result.Add(kvp.Value, kvp.Key);
             return result;
         }
+
+        public static bool RemoveValue<TKey, TValue>(this IDictionary<TKey, TValue> dictionary, TValue value)
+        {
+            bool keyFound = false;
+            TKey key = default;
+            foreach (var kvp in dictionary)
+            {
+                if (kvp.Value.Equals(value))
+                {
+                    keyFound = true;
+                    key = kvp.Key;
+                    break;
+                }
+            }
+
+            if (keyFound) dictionary.Remove(key);
+            return keyFound;
+        }
     }
 }

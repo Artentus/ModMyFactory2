@@ -300,6 +300,10 @@
     "type": "string",
     "value": "Mods\nherunterladen"
   },
+  "ExportTabHeader": {
+    "type": "string",
+    "value": "Modpacks\nExportieren"
+  },
   "SettingsTabHeader": {
     "type": "string",
     "value": "Einstellungen"

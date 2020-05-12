@@ -11,7 +11,7 @@ namespace ModMyFactory
     /// </summary>
     public class Modpack : ICanEnable, ICollection<ICanEnable>
     {
-        private readonly List<ICanEnable> _mods;
+        private readonly List<ICanEnable> _mods = new List<ICanEnable>();
         private bool? _enabled;
 
         /// <summary>

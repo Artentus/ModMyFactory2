@@ -12,7 +12,7 @@ namespace ModMyFactory.IO.Win32
 {
     internal sealed class JunctionInfo : ISymlinkInfo
     {
-        private string? _destinationPath;
+        private string _destinationPath;
 
         public string Name { get; }
 

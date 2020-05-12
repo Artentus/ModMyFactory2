@@ -1,0 +1,21 @@
+<!--
+Copyright (C) 2020 Mathis Rech
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+-->
+
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             x:Class="ModMyFactoryGUI.Controls.Icons.Large.ExportIcon">
+
+  <Grid Width="64" Height="64">
+    <Path Fill="{DynamicResource IconBaseBrush1}" Data="F1M35.7309,0.00010000000000332L31.9979,6.2241 28.2609,0.00010000000000332 25.2709,0.00010000000000332 1.2839,8.9971 8.7889,14.0001 5.9999,14.0001 5.9999,64.0001 57.9999,64.0001 57.9999,14.0001 55.2109,14.0001 62.7169,8.9971 38.7269,0.00010000000000332z" />
+    <Path Fill="{DynamicResource IconBaseBrush2}" Data="F1M28,54L16,54 16,42 28,42z M48,54L36,54 36,42 48,42z M48,36L36,36 36,24 48,24z M28,36L16,36 16,24 28,24z M42,18L54,10 37.998,3.999 32,14 25.998,3.999 10,10 22,18 10,18 10,60 54,60 54,18z" />
+    <Path Fill="{DynamicResource IconBaseBrush1}" Data="F1M28,42L16,42 16,54 28,54z M48,42L36,42 36,54 48,54z M48,24L36,24 36,36 48,36z M28,36L16,36 16,24 28,24z" />
+  </Grid>
+</UserControl>

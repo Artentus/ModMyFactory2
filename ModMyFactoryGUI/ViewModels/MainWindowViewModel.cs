@@ -58,6 +58,8 @@ namespace ModMyFactoryGUI.ViewModels
 
         public FactorioViewModel FactorioViewModel { get; }
 
+        public ExportViewModel ExportViewModel { get; }
+
         public SettingsViewModel SettingsViewModel { get; }
 
         public IReadOnlyCollection<IControl> FileMenuItems { get; private set; }
@@ -130,6 +132,7 @@ namespace ModMyFactoryGUI.ViewModels
             ManagerViewModel = new ManagerViewModel();
             OnlineModsViewModel = new OnlineModsViewModel(Program.Manager, DownloadQueue);
             FactorioViewModel = new FactorioViewModel(DownloadQueue);
+            ExportViewModel = new ExportViewModel();
             SettingsViewModel = new SettingsViewModel(DownloadQueue);
             SelectedViewModel = ManagerViewModel;
 
