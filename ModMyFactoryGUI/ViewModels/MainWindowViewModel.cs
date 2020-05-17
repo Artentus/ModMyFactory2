@@ -34,6 +34,10 @@ namespace ModMyFactoryGUI.ViewModels
 
         public ICommand StartGameCommand { get; }
 
+        public ICommand OpenFactorioDirCommand { get; }
+
+        public ICommand OpenModDirCommand { get; }
+
         public ICommand NavigateToUrlCommand { get; }
 
         public ICommand OpenAboutWindowCommand { get; }
@@ -122,6 +126,8 @@ namespace ModMyFactoryGUI.ViewModels
         public MainWindowViewModel()
         {
             StartGameCommand = ReactiveCommand.Create(StartGame);
+            OpenFactorioDirCommand = ReactiveCommand.Create(OpenFactorioDir);
+            OpenModDirCommand = ReactiveCommand.Create(OpenModDir);
             NavigateToUrlCommand = ReactiveCommand.Create<string>(NavigateToUrl);
             OpenAboutWindowCommand = ReactiveCommand.CreateFromTask(OpenAboutWindow);
 
@@ -183,6 +189,18 @@ namespace ModMyFactoryGUI.ViewModels
                 if (!modDir.Exists) modDir.Create();
                 instance.Start(modDir);
             }
+        }
+
+        private void OpenFactorioDir()
+        {
+            var dir = Program.Locations.GetFactorioDir();
+            PlatformHelper.OpenDirectory(dir);
+        }
+
+        private void OpenModDir()
+        {
+            var dir = Program.Locations.GetModDir();
+            PlatformHelper.OpenDirectory(dir);
         }
 
         private void NavigateToUrl(string url)

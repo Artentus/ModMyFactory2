@@ -6,9 +6,11 @@
 //  (at your option) any later version.
 
 using ModMyFactory;
+using ModMyFactory.Mods;
 using ModMyFactoryGUI.Helpers;
 using ReactiveUI;
 using System;
+using System.Collections.Generic;
 
 namespace ModMyFactoryGUI.ViewModels
 {
@@ -39,6 +41,10 @@ namespace ModMyFactoryGUI.ViewModels
         public bool MatchesSearch { get; private set; } = true;
 
         public int SearchScore { get; private set; } = 0;
+
+        public IEnumerable<Modpack> Modpacks => Modpack.Modpacks;
+
+        public IEnumerable<Mod> Mods => Modpack.Mods;
 
         public ModpackViewModel(Modpack modpack)
         {

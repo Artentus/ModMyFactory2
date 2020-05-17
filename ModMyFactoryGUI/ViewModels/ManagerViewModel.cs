@@ -202,7 +202,6 @@ namespace ModMyFactoryGUI.ViewModels
                             else
                             {
                                 var modDir = Program.Locations.GetModDir(modFile.Info.FactorioVersion);
-                                if (!modDir.Exists) modDir.Create();
                                 var movedFile = await modFile.CopyToAsync(modDir.FullName);
 
                                 var mod = new Mod(movedFile);

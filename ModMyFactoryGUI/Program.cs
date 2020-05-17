@@ -147,7 +147,7 @@ namespace ModMyFactoryGUI
 
             foreach (var modpackDef in package.Modpacks)
             {
-                var modpack = new Modpack();
+                var modpack = new Modpack { DisplayName = modpackDef.Name };
 
                 // Instead of throwing an error when a mod or modpack is not found we just ignore it.
                 // This way people are free to delete mods from within Factorio or even manually without causing a crash.

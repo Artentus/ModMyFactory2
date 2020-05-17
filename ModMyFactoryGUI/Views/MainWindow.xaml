@@ -64,22 +64,12 @@ the Free Software Foundation, either version 3 of the License, or
       <MenuItem Header="{l:LocalizedResource ViewMenuItem}">
 
         <!-- Open folders -->
-        <MenuItem Header="{l:LocalizedResource OpenFactorioFolderMenuItem}">
+        <MenuItem Header="{l:LocalizedResource OpenFactorioFolderMenuItem}" Command="{Binding OpenFactorioDirCommand}">
           <MenuItem.Icon>
             <icons:OpenFolderIcon />
           </MenuItem.Icon>
         </MenuItem>
-        <MenuItem Header="{l:LocalizedResource OpenModFolderMenuItem}">
-          <MenuItem.Icon>
-            <icons:OpenFolderIcon />
-          </MenuItem.Icon>
-        </MenuItem>
-        <MenuItem Header="{l:LocalizedResource OpenSavegameFolderMenuItem}">
-          <MenuItem.Icon>
-            <icons:OpenFolderIcon />
-          </MenuItem.Icon>
-        </MenuItem>
-        <MenuItem Header="{l:LocalizedResource OpenScenarioFolderMenuItem}">
+        <MenuItem Header="{l:LocalizedResource OpenModFolderMenuItem}" Command="{Binding OpenModDirCommand}">
           <MenuItem.Icon>
             <icons:OpenFolderIcon />
           </MenuItem.Icon>

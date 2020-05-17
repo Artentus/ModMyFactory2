@@ -230,14 +230,6 @@
     "type": "string",
     "value": "Mod-Ordner öffnen"
   },
-  "OpenSavegameFolderMenuItem": {
-    "type": "string",
-    "value": "Spielstand-Ordner öffnen"
-  },
-  "OpenScenarioFolderMenuItem": {
-    "type": "string",
-    "value": "Szenario-Ordner öffnen"
-  },
   "ThemeMenuItem": {
     "type": "string",
     "value": "Erscheinungsbild"

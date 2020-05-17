@@ -89,7 +89,24 @@ the Free Software Foundation, either version 3 of the License, or
       <controls:SearchBox Grid.Column="2" Grid.Row="1" Margin="0,4,4,4" Text="{Binding ModpackFilter}" />
 
       <ListBox Grid.Column="2" Grid.Row="2" Margin="0,4,4,4" Items="{Binding Modpacks}">
+        <ListBox.ItemTemplate>
+          <DataTemplate DataType="{x:Type models:ModpackViewModel}">
+            <Expander>
+              <Expander.Header>
+                <TextBlock Text="{Binding DisplayName}" />
+              </Expander.Header>
 
+              <StackPanel Margin="2" Orientation="Vertical">
+                <ItemsControl Items="{Binding Modpacks}">
+
+                </ItemsControl>
+                <ItemsControl Items="{Binding Mods}">
+
+                </ItemsControl>
+              </StackPanel>
+            </Expander>
+          </DataTemplate>
+        </ListBox.ItemTemplate>
       </ListBox>
 
     </Grid>

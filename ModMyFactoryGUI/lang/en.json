@@ -230,14 +230,6 @@
     "type": "string",
     "value": "Open mod folder"
   },
-  "OpenSavegameFolderMenuItem": {
-    "type": "string",
-    "value": "Open savegame folder"
-  },
-  "OpenScenarioFolderMenuItem": {
-    "type": "string",
-    "value": "Open scenario folder"
-  },
   "ThemeMenuItem": {
     "type": "string",
     "value": "Visual theme"

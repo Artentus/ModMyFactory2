@@ -7,6 +7,7 @@
 
 using ModMyFactory.WebApi.Factorio;
 using System.Diagnostics;
+using System.IO;
 
 #if NETCORE
 
@@ -42,6 +43,50 @@ namespace ModMyFactoryGUI.Helpers
             else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
             {
                 Process.Start("open", url);
+            }
+            else
+            {
+                throw new PlatformNotSupportedException();
+            }
+#else
+            throw new PlatformNotSupportedException();
+#endif
+        }
+
+        public static void OpenDirectory(DirectoryInfo directory)
+        {
+#if NETFULL
+            string path = directory.FullName;
+            if (!path.EndsWith(Path.DirectorySeparatorChar.ToString()))
+                path += Path.DirectorySeparatorChar;
+
+            Process.Start(new ProcessStartInfo()
+            {
+                FileName = path,
+                UseShellExecute = true,
+                Verb = "open"
+            });
+#elif NETCORE
+            string path = directory.FullName;
+            if (!path.EndsWith(Path.DirectorySeparatorChar))
+                path += Path.DirectorySeparatorChar;
+
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            {
+                Process.Start(new ProcessStartInfo()
+                {
+                    FileName = path,
+                    UseShellExecute = true,
+                    Verb = "open"
+                });
+            }
+            else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+            {
+                Process.Start("xdg-open", path);
+            }
+            else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+            {
+                Process.Start("open", path);
             }
             else
             {

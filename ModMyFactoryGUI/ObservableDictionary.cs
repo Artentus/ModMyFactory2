@@ -24,9 +24,42 @@ namespace ModMyFactoryGUI
                 _parent.CollectionChanged += OnParentCollectionChanged;
             }
 
+            private IList MapList(IList list)
+            {
+                var result = new List<T>(list.Count);
+                foreach (KeyValuePair<TKey, TValue> kvp in list)
+                    result.Add(Map(kvp));
+                return result;
+            }
+
             private void OnParentCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
             {
-                OnCollectionChanged(e);
+                IList newItems, oldItems;
+
+                switch (e.Action)
+                {
+                    case NotifyCollectionChangedAction.Add:
+                        newItems = MapList(e.NewItems);
+                        OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add, newItems));
+                        break;
+
+                    case NotifyCollectionChangedAction.Remove:
+                        oldItems = MapList(e.OldItems);
+                        OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Remove, oldItems));
+                        break;
+
+                    case NotifyCollectionChangedAction.Replace:
+                        newItems = MapList(e.NewItems);
+                        oldItems = MapList(e.OldItems);
+                        OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Replace, newItems, oldItems));
+                        break;
+
+                    case NotifyCollectionChangedAction.Reset:
+                        oldItems = MapList(e.OldItems);
+                        OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset, oldItems));
+                        break;
+                }
+
                 if (e.Action != NotifyCollectionChangedAction.Replace)
                     OnPropertyChanged(new PropertyChangedEventArgs(nameof(Count)));
             }
