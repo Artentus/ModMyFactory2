@@ -30,9 +30,10 @@ namespace ModMyFactory.Mods
         /// <summary>
         /// Creates and groups state information of all families in a mod manager
         /// </summary>
-        public static ModFamilyStateGrouping FromManager(ModManager manager)
+        public static ModFamilyStateGrouping FromManager(ModManager manager, bool includeBase = false)
         {
-            var states = new List<ModFamilyStateInfo>(manager.Families.Count);
+            var states = new List<ModFamilyStateInfo>(manager.Families.Count + (includeBase ? 1 : 0));
+            if (includeBase) states.Add(ModFamilyStateInfo.Base);
             foreach (var family in manager.Families)
                 states.Add(ModFamilyStateInfo.FromFamily(family));
             return new ModFamilyStateGrouping(states);

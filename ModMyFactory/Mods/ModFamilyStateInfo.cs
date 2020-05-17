@@ -17,6 +17,11 @@ namespace ModMyFactory.Mods
     public sealed class ModFamilyStateInfo
     {
         /// <summary>
+        /// A representation of the base mod
+        /// </summary>
+        public static readonly ModFamilyStateInfo Base = new ModFamilyStateInfo("base", true, default);
+
+        /// <summary>
         /// Name of the family
         /// </summary>
         [JsonProperty("name")]
