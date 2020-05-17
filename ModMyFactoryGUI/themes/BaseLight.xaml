@@ -38,10 +38,11 @@
     <Color x:Key="IconBaseColor1">#FFFFFFFF</Color>
     <Color x:Key="IconBaseColor2">#FF414141</Color>
     <Color x:Key="IconColor1">#FF1ba1e2</Color>
-    <Color x:Key="IconColor2">#FF8dd28a</Color>
+    <Color x:Key="IconColor2">#FF388a34</Color>
     <Color x:Key="IconColor3">#FFDCB679</Color>
     <Color x:Key="IconColor4">#FFf0ca94</Color>
     <Color x:Key="IconColor5">#FFf38b76</Color>
+    <Color x:Key="IconColor6">#FFC27C19</Color>
 
     <Color x:Key="StartButtonLowColor">#FF7bd17b</Color>
     <Color x:Key="StartButtonMidColor">#FF84e084</Color>
@@ -82,6 +83,7 @@
     <SolidColorBrush x:Key="IconBrush3" Color="{DynamicResource IconColor3}"></SolidColorBrush>
     <SolidColorBrush x:Key="IconBrush4" Color="{DynamicResource IconColor4}"></SolidColorBrush>
     <SolidColorBrush x:Key="IconBrush5" Color="{DynamicResource IconColor5}"></SolidColorBrush>
+    <SolidColorBrush x:Key="IconBrush6" Color="{DynamicResource IconColor6}"></SolidColorBrush>
 
     <SolidColorBrush x:Key="NotificationCardBackgroundBrush" Color="#444444" Opacity="0.75" />
     <SolidColorBrush x:Key="NotificationCardInformationBackgroundBrush" Color="#007ACC" Opacity="0.75" />

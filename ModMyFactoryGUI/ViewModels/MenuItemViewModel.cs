@@ -6,6 +6,7 @@
 //  (at your option) any later version.
 
 using Avalonia.Controls;
+using Avalonia.Input;
 using ReactiveUI;
 using System;
 using System.Collections.Generic;
@@ -19,7 +20,21 @@ namespace ModMyFactoryGUI.ViewModels
         bool IsInToolbar { get; }
     }
 
-    internal abstract class MenuItemViewModelBase : ReactiveObject, IMenuItemViewModel
+    internal interface IHeaderedItemViewModel : IMenuItemViewModel
+    {
+        MenuHeaderViewModel Header { get; }
+
+        IControl Icon { get; }
+    }
+
+    internal interface ICommandItemViewModel : IHeaderedItemViewModel
+    {
+        ICommand Command { get; }
+
+        KeyGesture Gesture { get; }
+    }
+
+    internal abstract class MenuItemViewModelBase : ReactiveObject, IHeaderedItemViewModel
     {
         private readonly Func<IControl> _iconFactory;
 
@@ -36,14 +51,17 @@ namespace ModMyFactoryGUI.ViewModels
         }
     }
 
-    internal class MenuItemViewModel : MenuItemViewModelBase
+    internal class MenuItemViewModel : MenuItemViewModelBase, ICommandItemViewModel
     {
         public ICommand Command { get; }
 
-        public MenuItemViewModel(ICommand command, bool isInToolbar, Func<IControl> iconFactory, string headerKey, string inputGestureKey = null)
+        public KeyGesture Gesture { get; }
+
+        public MenuItemViewModel(ICommand command, KeyGesture gesture, bool isInToolbar, Func<IControl> iconFactory, string headerKey, string inputGestureKey = null)
            : base(isInToolbar, iconFactory, headerKey, inputGestureKey)
         {
             Command = command;
+            Gesture = gesture;
         }
     }
 

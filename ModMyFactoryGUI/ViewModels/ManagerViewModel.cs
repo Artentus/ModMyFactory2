@@ -5,12 +5,19 @@
 //  the Free Software Foundation, either version 3 of the License, or
 //  (at your option) any later version.
 
+using Avalonia.Controls;
+using Avalonia.Input;
 using ModMyFactory;
+using ModMyFactory.Mods;
+using ModMyFactoryGUI.Controls.Icons;
 using ModMyFactoryGUI.Views;
 using ReactiveUI;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
+using System.IO;
+using System.Threading.Tasks;
+using System.Windows.Input;
 
 namespace ModMyFactoryGUI.ViewModels
 {
@@ -71,6 +78,10 @@ namespace ModMyFactoryGUI.ViewModels
             }
         }
 
+        public ICommand AddModsCommand { get; }
+
+        public ICommand CreateModpackCommand { get; }
+
         public ManagerViewModel()
         {
             _modVersionGroupings = new ObservableCollection<ModVersionGroupingViewModel>();
@@ -98,6 +109,10 @@ namespace ModMyFactoryGUI.ViewModels
 
             Program.Manager.ModManagerCreated += OnModManagerCreated;
             Program.Modpacks.CollectionChanged += OnModpackCollectionChanged;
+
+
+            AddModsCommand = ReactiveCommand.CreateFromTask(AddModsAsync);
+            CreateModpackCommand = ReactiveCommand.Create(CreateModpack);
         }
 
         private bool FilterModpack(ModpackViewModel modpack)
@@ -144,16 +159,70 @@ namespace ModMyFactoryGUI.ViewModels
                     foreach (Modpack modpack in e.OldItems)
                     {
                         if (TryGetViewModel(modpack, out var vm))
+                        {
                             _modpacks.Remove(vm);
+                            vm.Dispose();
+                        }
                     }
                     this.RaisePropertyChanged(nameof(Modpacks));
                     break;
 
                 case NotifyCollectionChangedAction.Reset:
+                    foreach (var vm in _modpacks) vm.Dispose();
                     _modpacks.Clear();
                     this.RaisePropertyChanged(nameof(Modpacks));
                     break;
             }
+        }
+
+        private async Task AddModsAsync()
+        {
+            var filter = new FileDialogFilter();
+            filter.Extensions.Add("zip");
+            filter.Name = (string)App.Current.Locales.GetResource("ArchiveFileType");
+
+            var ofd = new OpenFileDialog { AllowMultiple = true };
+            ofd.Filters.Add(filter);
+
+            var paths = await ofd.ShowAsync(App.Current.MainWindow);
+            if (!(paths is null) && (paths.Length > 0))
+            {
+                foreach (var path in paths)
+                {
+                    var file = new FileInfo(path);
+                    if (file.Exists)
+                    {
+                        var (success, modFile) = await ModFile.TryLoadAsync(file);
+                        if (success)
+                        {
+                            if (Program.Manager.ContainsMod(modFile.Info.Name, modFile.Info.Version))
+                            {
+                                // ToDo: show info message
+                            }
+                            else
+                            {
+                                var modDir = Program.Locations.GetModDir(modFile.Info.FactorioVersion);
+                                if (!modDir.Exists) modDir.Create();
+                                var movedFile = await modFile.CopyToAsync(modDir.FullName);
+
+                                var mod = new Mod(movedFile);
+                                Program.Manager.AddMod(mod);
+                            }
+                        }
+                        else
+                        {
+                            // ToDo: show error message
+                        }
+                    }
+                }
+            }
+        }
+
+        private void CreateModpack()
+        {
+            // ToDo: localize and focus
+            var modpack = Program.CreateModpack();
+            modpack.DisplayName = "New Modpack";
         }
 
         protected override List<IMenuItemViewModel> GetEditMenuViewModels()
@@ -164,8 +233,11 @@ namespace ModMyFactoryGUI.ViewModels
 
         protected override List<IMenuItemViewModel> GetFileMenuViewModels()
         {
-            // ToDo: implement
-            return new List<IMenuItemViewModel>();
+            return new List<IMenuItemViewModel>
+            {
+                new MenuItemViewModel(AddModsCommand, new KeyGesture(Avalonia.Input.Key.O, KeyModifiers.Control), true, () => new AddModsIcon(), "AddModFilesMenuItem", "AddModFilesHotkey"),
+                new MenuItemViewModel(CreateModpackCommand, new KeyGesture(Avalonia.Input.Key.N, KeyModifiers.Control), true, () => new NewModpackIcon(), "NewModpackMenuItem", "NewModpackHotkey")
+            };
         }
     }
 }

@@ -138,25 +138,13 @@
     "type": "string",
     "value": "_Datei"
   },
-  "AddModsMenuItem": {
+  "AddModFilesMenuItem": {
     "type": "string",
     "value": "Mods hinzufügen"
   },
-  "DownloadModsMenuItem": {
-    "type": "string",
-    "value": "Mods herunterladen"
-  },
-  "DownloadModsHotkey": {
-    "type": "string",
-    "value": "F7"
-  },
-  "AddModFilesMenuItem": {
-    "type": "string",
-    "value": "Mod-Dateien hinzufügen"
-  },
   "AddModFilesHotkey": {
     "type": "string",
-    "value": "F8"
+    "value": "Strg+O"
   },
   "NewModpackMenuItem": {
     "type": "string",

@@ -59,7 +59,7 @@ namespace ModMyFactoryGUI
 
             // Global shutdown command
             var shutdownCommand = ReactiveCommand.CreateFromTask(ShutdownAsync);
-            ShutdownItemViewModel = new MenuItemViewModel(shutdownCommand, false, () => new CloseIcon(), "CloseMenuItem", "CloseHotkey");
+            ShutdownItemViewModel = new MenuItemViewModel(shutdownCommand, null, false, () => new CloseIcon(), "CloseMenuItem", "CloseHotkey");
         }
 
         private static LocaleManager LoadLocales()

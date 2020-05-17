@@ -20,6 +20,12 @@ namespace ModMyFactoryGUI.ViewModels
         private IReadOnlyCollection<IMenuItemViewModel> _fileMenuViewModels, _editMenuViewModels;
         private IReadOnlyCollection<IControl> _fileMenuItems, _editMenuItems, _toolbarItems;
 
+        public IReadOnlyCollection<IMenuItemViewModel> FileMenuViewModels
+            => _fileMenuViewModels ??= BuildFileMenuViewModelCollection();
+
+        public IReadOnlyCollection<IMenuItemViewModel> EditMenuViewModels
+            => _editMenuViewModels ??= BuildEditMenuViewModelCollection();
+
         public IReadOnlyCollection<IControl> FileMenuItems
             => _fileMenuItems ??= BuildFileMenuItemCollection();
 
@@ -145,9 +151,11 @@ namespace ModMyFactoryGUI.ViewModels
             var filteredEditViewModels = editViewModels.Where(vm => vm.IsInToolbar).ToList();
 
             bool addSeparator = (filteredFileViewModels.Count) > 0 && (filteredEditViewModels.Count > 0);
-            int totalCount = filteredEditViewModels.Count + filteredEditViewModels.Count + (addSeparator ? 1 : 0);
-            var result = new List<IControl>(totalCount);
+            int totalCount = filteredFileViewModels.Count + filteredEditViewModels.Count;
+            int countWithSep = totalCount + (addSeparator ? 1 : 0) + (totalCount > 0 ? 1 : 0);
 
+            var result = new List<IControl>(countWithSep);
+            if (totalCount > 0) result.Add(new Separator());
             result.AddRange(filteredFileViewModels.ConvertAll(CreateTopLevelToolbarItem));
             if (addSeparator) result.Add(new Separator());
             result.AddRange(filteredEditViewModels.ConvertAll(CreateTopLevelToolbarItem));

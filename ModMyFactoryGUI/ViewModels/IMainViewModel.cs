@@ -13,6 +13,10 @@ namespace ModMyFactoryGUI.ViewModels
 {
     internal interface IMainViewModel : IRoutableViewModel
     {
+        IReadOnlyCollection<IMenuItemViewModel> FileMenuViewModels { get; }
+
+        IReadOnlyCollection<IMenuItemViewModel> EditMenuViewModels { get; }
+
         IReadOnlyCollection<IControl> FileMenuItems { get; }
 
         IReadOnlyCollection<IControl> EditMenuItems { get; }

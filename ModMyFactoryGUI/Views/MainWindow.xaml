@@ -240,7 +240,7 @@ the Free Software Foundation, either version 3 of the License, or
         </Button.Styles>
       </Button>
 
-      <controls:Toolbar Grid.Column="2" Items="{Binding ToolbarItems}" Margin="4,0,0,0">
+      <controls:Toolbar Grid.Column="2" Items="{Binding ToolbarItems}" Margin="0,4">
         <controls:Toolbar.DataTemplates>
           <DataTemplate DataType="{x:Type models:MenuHeaderViewModel}">
             <TextBlock Text="{Binding HeaderKey, Converter={StaticResource LocalizeConverter}}" />

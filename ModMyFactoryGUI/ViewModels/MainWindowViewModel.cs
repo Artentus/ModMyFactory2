@@ -6,6 +6,7 @@
 //  (at your option) any later version.
 
 using Avalonia.Controls;
+using Avalonia.Input;
 using ModMyFactory.Game;
 using ModMyFactory.Mods;
 using ModMyFactoryGUI.Helpers;
@@ -95,7 +96,9 @@ namespace ModMyFactoryGUI.ViewModels
                 {
                     _selectedViewModel = value;
                     this.RaisePropertyChanged(nameof(SelectedViewModel));
+
                     RebuildMenuItems(_selectedViewModel);
+                    ReassignKeyBindings(_selectedViewModel);
                 }
             }
         }
@@ -267,6 +270,38 @@ namespace ModMyFactoryGUI.ViewModels
 
             ToolbarItems = viewModel.ToolbarItems;
             this.RaisePropertyChanged(nameof(ToolbarItems));
+        }
+
+        private void ReassignKeyBindings(IMainViewModel viewModel)
+        {
+            if (!(AttachedView is null))
+            {
+                AttachedView.KeyBindings.Clear();
+
+                var vms = Enumerable.Concat(viewModel.FileMenuViewModels, viewModel.EditMenuViewModels);
+                foreach (var vm in vms)
+                {
+                    if (vm is ICommandItemViewModel cmdVM)
+                    {
+                        if (!(cmdVM.Gesture is null))
+                        {
+                            var keyBinding = new KeyBinding
+                            {
+                                Command = cmdVM.Command,
+                                Gesture = cmdVM.Gesture
+                            };
+
+                            AttachedView.KeyBindings.Add(keyBinding);
+                        }
+                    }
+                }
+            }
+        }
+
+        protected override void OnViewChanged(EventArgs e)
+        {
+            base.OnViewChanged(e);
+            ReassignKeyBindings(SelectedViewModel);
         }
     }
 }

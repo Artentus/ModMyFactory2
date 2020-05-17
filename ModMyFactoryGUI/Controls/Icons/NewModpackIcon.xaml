@@ -1,0 +1,30 @@
+<!--
+Copyright (C) 2020 Mathis Rech
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+-->
+
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             x:Class="ModMyFactoryGUI.Controls.Icons.NewModpackIcon">
+
+  <Grid Width="16" Height="16">
+    <Grid VerticalAlignment="Bottom" HorizontalAlignment="Right">
+      <Path Fill="{DynamicResource IconBaseBrush1}" Data="F1M9.5004,-0.000199999999999534L8.0004,2.4998 6.4994,-0.000199999999999534 5.4994,-0.000199999999999534 1.9994,2.4998 1.9994,15.9998 14.0004,15.9998 14.0004,2.4998 10.5004,-0.000199999999999534z" />
+      <Path Fill="{DynamicResource IconBaseBrush2}" Data="F1M12,9L9,9 9,6 12,6z M12,14L9,14 9,11 12,11z M7,9L4,9 4,6 7,6z M7,14L4,14 4,11 7,11z M12.2,3.05L9.85,1 8,4.5 6.171,1.049 3.879,3.125 5.781,4.219 6.899,5 3,5 3,15 13,15 13,5 9.167,5 10.313,4.25z" />
+    </Grid>
+    <Grid Width="7" Height="7" VerticalAlignment="Top" HorizontalAlignment="Left">
+      <Path Fill="{DynamicResource IconBaseBrush1}" Data="F1M0,7L7,7 7,0 0,0z" />
+      <Path Fill="{DynamicResource IconBrush6}" Data="F1M1,2L2,2 2,1 1,1z" />
+      <Path Fill="{DynamicResource IconBrush6}" Data="F1M5,2L6,2 6,1 5,1z" />
+      <Path Fill="{DynamicResource IconBrush6}" Data="F1M5,6L6,6 6,5 5,5z" />
+      <Path Fill="{DynamicResource IconBrush6}" Data="F1M1,6L2,6 2,5 1,5z" />
+      <Path Fill="{DynamicResource IconBrush6}" Data="F1M4,4L3,4 3,3 4,3z M4,2L4,1 3,1 3,2 2,2 2,3 1,3 1,4 2,4 2,5 3,5 3,6 4,6 4,5 5,5 5,4 6,4 6,3 5,3 5,2z" />
+    </Grid>
+  </Grid>
+</UserControl>

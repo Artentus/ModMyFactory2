@@ -118,12 +118,4 @@ Style slightly modified from the Avalonia default style
     <Setter Property="Background" Value="{DynamicResource ThemeAccentBrush3}" />
   </Style>
 
-  <Style Selector="Separator">
-    <Setter Property="Height" Value="3" />
-    <Setter Property="Template">
-      <ControlTemplate>
-        <Rectangle Fill="{DynamicResource ThemeBorderLowBrush}" Margin="2,1" Height="1" />
-      </ControlTemplate>
-    </Setter>
-  </Style>
 </Styles>

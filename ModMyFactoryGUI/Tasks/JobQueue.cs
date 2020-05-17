@@ -58,7 +58,14 @@ namespace ModMyFactoryGUI.Tasks
 
             while (!token.IsCancellationRequested)
             {
-                _currentJob = await _jobQueue.Dequeue(token).ConfigureAwait(false);
+                try
+                {
+                    _currentJob = await _jobQueue.Dequeue(token).ConfigureAwait(false);
+                }
+                catch (TaskCanceledException)
+                {
+                    break;
+                }
 
                 // Job taken from queue, decrement queue length
                 Interlocked.Decrement(ref _length);
