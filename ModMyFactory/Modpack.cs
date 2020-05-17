@@ -121,24 +121,37 @@ namespace ModMyFactory
             if (item is Modpack pack) AssertCanAdd(pack);
         }
 
+        private bool AddInternal(ICanEnable item)
+        {
+            if (!_mods.Contains(item))
+            {
+                AssertCanAdd(item);
+
+                _mods.Add(item);
+                return true;
+            }
+
+            return false;
+        }
+
         protected virtual void OnEnabledChanged(EventArgs e)
             => EnabledChanged?.Invoke(this, e);
 
         public virtual void Add(ICanEnable item)
         {
-            AssertCanAdd(item);
-
-            _mods.Add(item);
-            item.EnabledChanged += OnModEnabledChanged;
-            EvaluateEnabledState();
+            if (AddInternal(item))
+            {
+                item.EnabledChanged += OnModEnabledChanged;
+                EvaluateEnabledState();
+            }
         }
 
         public virtual void AddRange(IEnumerable<ICanEnable> collection)
         {
             foreach (var item in collection)
             {
-                Add(item);
-                item.EnabledChanged += OnModEnabledChanged;
+                if (AddInternal(item))
+                    item.EnabledChanged += OnModEnabledChanged;
             }
             EvaluateEnabledState();
         }
