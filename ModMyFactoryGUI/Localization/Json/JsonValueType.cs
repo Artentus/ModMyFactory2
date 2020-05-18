@@ -25,5 +25,8 @@ namespace ModMyFactoryGUI.Localization.Json
 
         [EnumMember(Value = "date")]
         Date,
+
+        [EnumMember(Value = "alias")]
+        Alias,
     }
 }

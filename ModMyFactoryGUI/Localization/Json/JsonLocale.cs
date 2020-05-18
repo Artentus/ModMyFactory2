@@ -14,7 +14,7 @@ namespace ModMyFactoryGUI.Localization.Json
 {
     internal sealed class JsonLocale : ILocale
     {
-        private readonly IDictionary<string, object> _values;
+        private readonly IDictionary<string, JsonValue> _values;
 
         public object this[string key] => _values[key];
         public string Culture { get; }
@@ -28,21 +28,46 @@ namespace ModMyFactoryGUI.Localization.Json
             using var reader = new StreamReader(fs);
 
             string json = reader.ReadToEnd();
-            var dict = JsonConvert.DeserializeObject<IDictionary<string, JsonValue>>(json);
-
-            _values = new Dictionary<string, object>();
-            foreach (var kvp in dict)
-                _values.Add(kvp.Key, kvp.Value.Value);
+            _values = JsonConvert.DeserializeObject<IDictionary<string, JsonValue>>(json);
 
             Culture = culture;
         }
 
         public bool ContainsKey(string key) => _values.ContainsKey(key);
 
-        public bool TryGetValue(string key, out object value) => _values.TryGetValue(key, out value);
+        public bool TryGetValue(string key, out object value)
+        {
+            if (_values.TryGetValue(key, out var jsonValue))
+            {
+                if (jsonValue.Type == JsonValueType.Alias)
+                {
+                    // We resolve aliases recursively
+                    // If the alias key does exist but the aliased key doesn't
+                    // we return as if the alias key itself didn't exist
+                    string aliasKey = (string)jsonValue.Value;
+                    return TryGetValue(aliasKey, out value);
+                }
+                else
+                {
+                    value = jsonValue.Value;
+                    return true;
+                }
+            }
 
-        public IEnumerator<KeyValuePair<string, object>> GetEnumerator() => _values.GetEnumerator();
+            value = null;
+            return false;
+        }
 
-        IEnumerator IEnumerable.GetEnumerator() => ((IEnumerable)_values).GetEnumerator();
+        public IEnumerator<KeyValuePair<string, object>> GetEnumerator()
+        {
+            foreach (var kvp in _values)
+            {
+                // We need to iterate manuelly to properly resolve aliases
+                if (TryGetValue(kvp.Key, out var value))
+                    yield return new KeyValuePair<string, object>(kvp.Key, value);
+            }
+        }
+
+        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
     }
 }

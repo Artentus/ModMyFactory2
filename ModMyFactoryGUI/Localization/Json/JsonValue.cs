@@ -28,6 +28,7 @@ namespace ModMyFactoryGUI.Localization.Json
                 JsonValueType.Integer => Convert.ToInt64(value),
                 JsonValueType.Float => Convert.ToDouble(value),
                 JsonValueType.Date => Convert.ToDateTime(value),
+                JsonValueType.Alias => Convert.ToString(value),
                 _ => value,
             };
         }
