@@ -6,6 +6,7 @@
 //  (at your option) any later version.
 
 using System;
+using System.Collections;
 using System.Collections.Generic;
 
 namespace ModMyFactoryGUI.Helpers
@@ -81,6 +82,15 @@ namespace ModMyFactoryGUI.Helpers
                 }
 
                 return maxElement;
+            }
+        }
+
+        public static IEnumerable<T> FilterByType<T>(this IEnumerable collection)
+        {
+            foreach (var item in collection)
+            {
+                if (item is T filtered)
+                    yield return filtered;
             }
         }
     }

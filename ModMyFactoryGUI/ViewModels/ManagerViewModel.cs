@@ -190,38 +190,30 @@ namespace ModMyFactoryGUI.ViewModels
                 foreach (var path in paths)
                 {
                     var file = new FileInfo(path);
-                    if (file.Exists)
-                    {
-                        var (success, modFile) = await ModFile.TryLoadAsync(file);
-                        if (success)
-                        {
-                            if (Program.Manager.ContainsMod(modFile.Info.Name, modFile.Info.Version))
-                            {
-                                // ToDo: show info message
-                            }
-                            else
-                            {
-                                var modDir = Program.Locations.GetModDir(modFile.Info.FactorioVersion);
-                                var movedFile = await modFile.CopyToAsync(modDir.FullName);
-
-                                var mod = new Mod(movedFile);
-                                Program.Manager.AddMod(mod);
-                            }
-                        }
-                        else
-                        {
-                            // ToDo: show error message
-                        }
-                    }
+                    if (file.Exists) await ImportModAsync(file.FullName);
                 }
+            }
+        }
+
+        private async Task ImportModFileAsync(IModFile modFile)
+        {
+            if (Program.Manager.ContainsMod(modFile.Info.Name, modFile.Info.Version))
+            {
+                // ToDo: show info message
+            }
+            else
+            {
+                var modDir = Program.Locations.GetModDir(modFile.Info.FactorioVersion);
+                var movedFile = await modFile.CopyToAsync(modDir.FullName);
+
+                var mod = new Mod(movedFile);
+                Program.Manager.AddMod(mod);
             }
         }
 
         private void CreateModpack()
         {
-            // ToDo: localize and focus
             var modpack = Program.CreateModpack();
-            modpack.DisplayName = "New Modpack";
         }
 
         protected override List<IMenuItemViewModel> GetEditMenuViewModels()
@@ -237,6 +229,19 @@ namespace ModMyFactoryGUI.ViewModels
                 new MenuItemViewModel(AddModsCommand, new KeyGesture(Avalonia.Input.Key.O, KeyModifiers.Control), true, () => new AddModsIcon(), "AddModFilesMenuItem", "AddModFilesHotkey"),
                 new MenuItemViewModel(CreateModpackCommand, new KeyGesture(Avalonia.Input.Key.N, KeyModifiers.Control), true, () => new NewModpackIcon(), "NewModpackMenuItem", "NewModpackHotkey")
             };
+        }
+
+        public async Task ImportModAsync(string path)
+        {
+            var (success, modFile) = await ModFile.TryLoadAsync(path);
+            if (success)
+            {
+                await ImportModFileAsync(modFile);
+            }
+            else
+            {
+                // ToDo: show error message
+            }
         }
     }
 }

@@ -16,6 +16,10 @@
     "type": "string",
     "value": "Archive"
   },
+  "DefaultModpackName": {
+    "type": "string",
+    "value": "Neues Modpack"
+  },
 
   // --------- Messages ---------
   "ServerError_Title": {

@@ -65,6 +65,8 @@ namespace ModMyFactoryGUI.ViewModels
 
         public int SearchScore { get; private set; } = 0;
 
+        public ModFamily Family => _family;
+
         public string DisplayName => _family?.DisplayName;
 
         public string FamilyName => _family?.FamilyName;

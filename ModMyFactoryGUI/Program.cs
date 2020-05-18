@@ -272,7 +272,8 @@ namespace ModMyFactoryGUI
         public static Modpack CreateModpack()
         {
             var id = GetNextModpackId();
-            var modpack = new Modpack();
+            var name = (App.Current?.Locales?.GetResource("DefaultModpackName") as string) ?? "New Modpack";
+            var modpack = new Modpack { DisplayName = name };
             _modpacks.Add(id, modpack);
             return modpack;
         }

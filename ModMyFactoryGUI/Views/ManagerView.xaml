@@ -48,14 +48,17 @@ the Free Software Foundation, either version 3 of the License, or
         <TabControl.ContentTemplate>
           <DataTemplate DataType="{x:Type models:ModVersionGroupingViewModel}">
 
-            <ListBox Items="{Binding FamilyViewModels}">
-              <ListBox.ItemTemplate>
+            <controls:DragDropListBox Name="ModList" Items="{Binding FamilyViewModels}" DragDrop.AllowDrop="True"
+                                      PreviewPointerPressed="PointerPressedHandler" PreviewPointerReleased="PointerReleasedHandler"
+                                      PreviewPointerMoved="PointerMovedHandler" DragOver="DragOverHandler" Drop="DropHandler">
+              <controls:DragDropListBox.ItemTemplate>
                 <DataTemplate DataType="{x:Type models:ModFamilyViewModel}">
 
                   <Grid ColumnDefinitions="Auto,Auto,Auto,*" RowDefinitions="Auto,Auto" Margin="2">
                     <CheckBox Grid.Column="0" Grid.Row="0" Grid.RowSpan="2" Margin="4" IsChecked="{Binding IsEnabled}" />
 
-                    <Image Grid.Column="1" Grid.Row="0" Grid.RowSpan="3" Margin="2" Width="48" Height="48" Source="{Binding Thumbnail}" IsVisible="{Binding HasThumbnail}" />
+                    <Image Grid.Column="1" Grid.Row="0" Grid.RowSpan="3" Margin="2" Width="48" Height="48"
+                           Source="{Binding Thumbnail}" IsVisible="{Binding HasThumbnail}" />
                     <icons:MissingIcon Grid.Column="1" Grid.Row="0" Grid.RowSpan="3" Margin="2" IsVisible="{Binding !HasThumbnail}" />
 
                     <TextBlock Grid.Column="2" Grid.Row="0" Margin="4,2" Classes="h3" Text="{Binding DisplayName}" />
@@ -72,8 +75,8 @@ the Free Software Foundation, either version 3 of the License, or
                   </Grid>
 
                 </DataTemplate>
-              </ListBox.ItemTemplate>
-            </ListBox>
+              </controls:DragDropListBox.ItemTemplate>
+            </controls:DragDropListBox>
 
           </DataTemplate>
         </TabControl.ContentTemplate>
@@ -88,26 +91,47 @@ the Free Software Foundation, either version 3 of the License, or
 
       <controls:SearchBox Grid.Column="2" Grid.Row="1" Margin="0,4,4,4" Text="{Binding ModpackFilter}" />
 
-      <ListBox Grid.Column="2" Grid.Row="2" Margin="0,4,4,4" Items="{Binding Modpacks}">
-        <ListBox.ItemTemplate>
+      <controls:DragDropListBox Name="ModpackList" Grid.Column="2" Grid.Row="2" Margin="0,4,4,4" Items="{Binding Modpacks}" DragDrop.AllowDrop="True"
+                                PreviewPointerPressed="PointerPressedHandler" PreviewPointerReleased="PointerReleasedHandler"
+                                PreviewPointerMoved="PointerMovedHandler" DragOver="DragOverHandler" Drop="DropHandler">
+        <controls:DragDropListBox.ItemTemplate>
           <DataTemplate DataType="{x:Type models:ModpackViewModel}">
-            <Expander>
+            <Expander Background="Transparent">
               <Expander.Header>
                 <TextBlock Text="{Binding DisplayName}" />
               </Expander.Header>
 
               <StackPanel Margin="2" Orientation="Vertical">
+
                 <ItemsControl Items="{Binding Modpacks}">
-
+                  <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                      <Grid ColumnDefinitions="Auto,*">
+                        <icons:ModpackIcon Grid.Column="0" Margin="2" />
+                        <TextBlock Grid.Column="1" Margin="2" Text="{Binding DisplayName}" />
+                      </Grid>
+                    </DataTemplate>
+                  </ItemsControl.ItemTemplate>
                 </ItemsControl>
+
                 <ItemsControl Items="{Binding Mods}">
-
+                  <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                      <Grid ColumnDefinitions="Auto,Auto,Auto,*">
+                        <icons:ModIcon Grid.Column="0" Margin="2" />
+                        <TextBlock Grid.Column="1" Margin="2" Text="{Binding DisplayName}" />
+                        <TextBlock Grid.Column="2" Margin="2" Text="{Binding Version}" Classes="muted" />
+                      </Grid>
+                    </DataTemplate>
+                  </ItemsControl.ItemTemplate>
                 </ItemsControl>
+
               </StackPanel>
+
             </Expander>
           </DataTemplate>
-        </ListBox.ItemTemplate>
-      </ListBox>
+        </controls:DragDropListBox.ItemTemplate>
+      </controls:DragDropListBox>
 
     </Grid>
   </Border>

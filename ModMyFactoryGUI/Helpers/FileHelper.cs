@@ -141,5 +141,8 @@ namespace ModMyFactoryGUI.Helpers
 
         public static bool FilesEqual(FileInfo first, FileInfo second)
             => PathsEqual(first.FullName, second.FullName);
+
+        public static bool PathExists(string path)
+            => File.Exists(path) || Directory.Exists(path);
     }
 }
