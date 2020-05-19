@@ -6,15 +6,35 @@
 //  (at your option) any later version.
 
 using CommandLine;
+using CommandLine.Text;
+using System.Collections.Generic;
 
 namespace ModMyFactoryGUI.CommandLine
 {
     [Verb("run", true, HelpText = "Starts ModMyFactory GUI")]
     internal sealed class RunOptions : OptionsBase
     {
-        public RunOptions(bool verbose, bool noLog, string appDataPath, bool noAutoUpdate)
-            : base(verbose, noLog, appDataPath, noAutoUpdate)
+        [Usage(ApplicationAlias = "ModMyFactory")]
+        public static IEnumerable<Example> Examples
         {
+            get
+            {
+                return new Example[]
+                {
+                    new Example("Import package files",
+                        new RunOptions(false, new[] { "package_1.fmp", "package_2.fmpa" }, false, false, null))
+                };
+            }
         }
+
+        [Option('u', "no-update", HelpText = "Disables the automatic update check")]
+        public bool NoAutoUpdate { get; }
+
+        [Option('i', "import", Min = 1, Separator = ';', HelpText = "Optional list of package files to import")]
+        public IEnumerable<string> ImportList { get; }
+
+        public RunOptions(bool noAutoUpdate, IEnumerable<string> importList, bool verbose, bool noLog, string appDataPath)
+            : base(verbose, noLog, appDataPath)
+            => (NoAutoUpdate, ImportList) = (noAutoUpdate, importList);
     }
 }

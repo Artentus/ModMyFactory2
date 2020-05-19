@@ -141,7 +141,7 @@ namespace ModMyFactoryGUI
             return themes;
         }
 
-        private void Shutdown() => Lifetime.Shutdown();
+        private void Shutdown() => Lifetime.Shutdown((int)ErrorCode.NoError);
 
         private async Task ShutdownAsync()
         {

@@ -29,7 +29,11 @@ namespace ModMyFactoryGUI
             if (success)
             {
                 manager.AddInstance(instance);
-                Log.Information($"Successfully loaded Factorio Steam instance");
+                Log.Verbose("Successfully loaded Factorio Steam instance");
+            }
+            else
+            {
+                Log.Verbose("Unable to load Factorio Steam instance");
             }
 
             // Load instances managed by the GUI
@@ -40,7 +44,11 @@ namespace ModMyFactoryGUI
                 if (success)
                 {
                     _ = manager.AddInstance(instance);
-                    Log.Information($"Successfully loaded managed Factorio instance from '{subDir.Name}'");
+                    Log.Verbose($"Successfully loaded managed Factorio instance from '{subDir.Name}'");
+                }
+                else
+                {
+                    Log.Verbose($"Unable to load managed Factorio instance from '{subDir.Name}'");
                 }
             }
 
@@ -53,7 +61,11 @@ namespace ModMyFactoryGUI
                     if (success)
                     {
                         _ = manager.AddInstance(instance);
-                        Log.Information($"Successfully loaded external Factorio instance from '{path}'");
+                        Log.Verbose($"Successfully loaded external Factorio instance from '{path}'");
+                    }
+                    else
+                    {
+                        Log.Verbose($"Unable to load external Factorio instance from '{path}'");
                     }
                 }
             }
@@ -79,7 +91,7 @@ namespace ModMyFactoryGUI
                         if (success)
                         {
                             modManager.Add(mod);
-                            Log.Information($"Successfully loaded mod {mod.Name} version {mod.Version}");
+                            Log.Verbose($"Successfully loaded mod {mod.Name} version {mod.Version}");
                         }
                     }
 
@@ -91,10 +103,11 @@ namespace ModMyFactoryGUI
                         {
                             var state = await ModFamilyStateGrouping.FromFileAsync(file);
                             state.ApplyToManager(modManager);
+                            Log.Verbose($"Successfully loaded mod list file '{file.FullName}'");
                         }
                         catch (Exception ex)
                         {
-                            Log.Warning(ex, $"Unable to load file '{file.FullName}'");
+                            Log.Warning(ex, $"Unable to load mod list file '{file.FullName}'");
                         }
                     }
                 }

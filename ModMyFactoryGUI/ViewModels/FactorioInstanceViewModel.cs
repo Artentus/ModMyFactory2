@@ -25,8 +25,6 @@ namespace ModMyFactoryGUI.ViewModels
 {
     internal sealed class FactorioInstanceViewModel : ReactiveObject
     {
-        private static readonly Dictionary<string, string> NameTable;
-
         private readonly Manager _manager;
         private readonly LocationManager _locations;
         private bool _isInDownloadQueue, _isDownloading, _isExtracting, _isInstalled, _isRenaming;
@@ -65,8 +63,7 @@ namespace ModMyFactoryGUI.ViewModels
             {
                 if (this.RaiseAndSetIfChanged(ref _isRenaming, value, nameof(IsRenaming)) && !value)
                 {
-                    Program.Settings.Set(SettingName.FactorioNameTable, NameTable);
-                    Program.Settings.Save();
+                    FactorioInstanceExtensions.SaveNames();
                 }
             }
         }
@@ -94,8 +91,8 @@ namespace ModMyFactoryGUI.ViewModels
 
         public string Name
         {
-            get => GetName(this);
-            set => SetName(this, value);
+            get => GetName();
+            set => SetName(value);
         }
 
         public IBitmap Icon { get; private set; }
@@ -122,12 +119,6 @@ namespace ModMyFactoryGUI.ViewModels
             DeleteCommand = ReactiveCommand.Create(Delete);
         }
 
-        static FactorioInstanceViewModel()
-        {
-            if (!Program.Settings.TryGet(SettingName.FactorioNameTable, out NameTable))
-                NameTable = new Dictionary<string, string>();
-        }
-
         /// <summary>
         /// Use this constructor for already existing instances
         /// </summary>
@@ -139,7 +130,7 @@ namespace ModMyFactoryGUI.ViewModels
 
             _isInstalled = true;
 
-            IsExternal = IsInstanceExternal(instance);
+            IsExternal = instance.IsExternal();
 
             bool isSteam = instance.IsSteamInstance();
             if (isSteam) Icon = LoadIcon("Steam_Icon.png");
@@ -179,85 +170,36 @@ namespace ModMyFactoryGUI.ViewModels
             return new Bitmap(stream);
         }
 
-        private static bool IsInstanceExternal(ManagedFactorioInstance instance)
+        private string GetName()
         {
-            var instDir = instance.Directory.Parent;
-            var managedDir = Program.Locations.GetFactorioDir();
-            return !FileHelper.DirectoriesEqual(instDir, managedDir);
-        }
-
-        private static string GetNameKey(FactorioInstanceViewModel vm)
-        {
-            var instance = vm.Instance;
-            if (vm.IsExternal)
-            {
-                // We use the full path of the instance as unique key
-                string result = instance.Directory.FullName.Trim().ToLower();
-
-                // We have to sanitize the path to make sure it's a proper unique key
-                result = result.Replace('/', '_');
-                result = result.Replace('\\', '_');
-                if (result.EndsWith("_")) result = result.Substring(0, result.Length - 1);
-
-                return result;
-            }
-            else
-            {
-                // The directory name is already a unique key, no need to use the full path
-                return instance.Directory.Name;
-            }
-        }
-
-        private static string GetName(FactorioInstanceViewModel vm)
-        {
-            var instance = vm.Instance;
-            if (instance is null)
+            if (Instance is null)
             {
                 // Doesn't have a name yet (either downloading or extracting)
                 return string.Empty;
             }
             else
             {
-                if (instance.IsSteamInstance())
-                {
-                    // Steam instance has fixed name
-                    return "Steam";
-                }
-                else
-                {
-                    string key = GetNameKey(vm);
-                    return NameTable.GetValue(key, "Factorio");
-                }
+                return Instance.GetName();
             }
         }
 
-        private static void SetName(FactorioInstanceViewModel vm, string name)
+        private void SetName(string name)
         {
-            var instance = vm.Instance;
-            if (instance is null)
+            if (Instance is null)
             {
                 // Can't have a name yet (either downloading or extracting)
                 return;
             }
             else
             {
-                if (instance.IsSteamInstance())
-                {
-                    // Steam instance has fixed name
-                    return;
-                }
-                else
-                {
-                    string key = GetNameKey(vm);
-                    NameTable[key] = name;
-                }
+                Instance.SetName(name);
             }
         }
 
         private void OnInstanceRemoved(EventArgs e)
             => InstanceRemoved?.Invoke(this, e);
 
-        public string GetUniqueKey() => GetNameKey(this);
+        public string GetUniqueKey() => Instance.GetUniqueKey();
 
         public void Remove()
         {

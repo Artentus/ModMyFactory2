@@ -6,20 +6,43 @@
 //  (at your option) any later version.
 
 using CommandLine;
+using CommandLine.Text;
+using System.Collections.Generic;
 
 namespace ModMyFactoryGUI.CommandLine
 {
     [Verb("start-game", HelpText = "Starts a Factorio instance")]
     internal sealed class StartGameOptions : OptionsBase
     {
-        [Option("uid", Required = true, SetName = "_uid", HelpText = "The unique ID of the Factorio instance to start")]
+        [Usage(ApplicationAlias = "ModMyFactory")]
+        public static IEnumerable<Example> Examples
+        {
+            get
+            {
+                return new Example[]
+                {
+                    new Example("Start a Factorio instance using a specific modpack",
+                        new StartGameOptions(null, "Instance-01", null, "Modpack-01", false, false, null))
+                };
+            }
+        }
+
+        [Option("id", Required = true, SetName = "_id", HelpText = "The unique ID of the Factorio instance to start")]
         public string Uid { get; }
 
-        [Option("name", Required = true, SetName = "_name", HelpText = "Name of the Factorio instance to start")]
+        [Option("name", Required = true, SetName = "_name", HelpText = "Name of the Factorio instance to start (case sensitive)")]
         public string Name { get; }
 
-        public StartGameOptions(string uid, string name, bool verbose, bool noLog, string appDataPath, bool noAutoUpdate)
-            : base(verbose, noLog, appDataPath, noAutoUpdate)
-            => (Uid, Name) = (uid, name);
+        [Option("pack-id", Default = null, HelpText = "Optional modpack ID")]
+        public int? ModpackId { get; }
+
+        [Option("pack-name", HelpText = "Optional modpack name (case sensitive)")]
+        public string ModpackName { get; }
+
+        public StartGameOptions(
+            string uid, string name, int? modpackId, string modpackName,
+            bool verbose, bool noLog, string appDataPath)
+            : base(verbose, noLog, appDataPath)
+            => (Uid, Name, ModpackId, ModpackName) = (uid, name, modpackId, modpackName);
     }
 }

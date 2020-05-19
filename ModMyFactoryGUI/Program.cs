@@ -12,6 +12,7 @@ using Avalonia.ReactiveUI;
 using CommandLine;
 using ModMyFactory;
 using ModMyFactory.Export;
+using ModMyFactory.Game;
 using ModMyFactory.Mods;
 using ModMyFactoryGUI.CommandLine;
 using ModMyFactoryGUI.Helpers;
@@ -27,9 +28,6 @@ namespace ModMyFactoryGUI
 {
     internal static class Program
     {
-        public const int NoError = 0;
-        public const int GeneralError = 1;
-
         private static ObservableDictionary<int, Modpack> _modpacks;
 
         // These objects are global to the entire app, even before any GUI is loaded
@@ -47,26 +45,7 @@ namespace ModMyFactoryGUI
 
         public static ObservableDictionary<int, Modpack>.ObservableValueCollection Modpacks => _modpacks.Values;
 
-        private static int StartGame(StartGameOptions options)
-        {
-            return NoError;
-        }
-
-        // Avalonia configuration, don't remove; also used by visual designer.
-        private static AppBuilder BuildAvaloniaApp()
-        {
-            return AppBuilder.Configure<App>()
-#if DEBUG
-                .LogToDebug()
-#endif
-                .UsePlatformDetect()
-                .UseReactiveUI();
-        }
-
-        private static int StartApp(string[] args, OptionsBase options)
-        {
-            return BuildAvaloniaApp().StartWithClassicDesktopLifetime(args, ShutdownMode.OnMainWindowClose);
-        }
+        #region Utility Functions
 
         private static DirectoryInfo GetApplicationDataDirectory()
         {
@@ -90,37 +69,63 @@ namespace ModMyFactoryGUI
             return new DirectoryInfo(path);
         }
 
-        private static void SetDirectories()
+        private static void SetDirectories(OptionsBase options)
         {
             // Application directory
             var assembly = Assembly.GetEntryAssembly();
             ApplicationDirectory = new DirectoryInfo(Path.GetDirectoryName(assembly.Location));
 
             // Data directory
-            ApplicationDataDirectory = GetApplicationDataDirectory();
-            if (!ApplicationDataDirectory.Exists) ApplicationDataDirectory.Create();
+            if (string.IsNullOrWhiteSpace(options.AppDataPath))
+            {
+                ApplicationDataDirectory = GetApplicationDataDirectory();
+                if (!ApplicationDataDirectory.Exists) ApplicationDataDirectory.Create();
+            }
+            else
+            {
+                try
+                {
+                    ApplicationDataDirectory = new DirectoryInfo(options.AppDataPath);
+                    if (!ApplicationDataDirectory.Exists) ApplicationDataDirectory.Create();
+                }
+                catch
+                {
+                    // We play it safe here and fall back to the default since at this point
+                    // in the app lifetime we cannot properly handle this error except crashing
+                    ApplicationDataDirectory = GetApplicationDataDirectory();
+                    if (!ApplicationDataDirectory.Exists) ApplicationDataDirectory.Create();
+                }
+            }
 
             // Temporary directory
             TemporaryDirectory = new DirectoryInfo(Path.Combine(Path.GetTempPath(), "ModMyFactoryGUI"));
             if (!TemporaryDirectory.Exists) TemporaryDirectory.Create();
         }
 
-        private static void InitLogger()
+        private static void InitLogger(OptionsBase options)
         {
+            var eventLevel = options.Verbose ? LogEventLevel.Verbose : LogEventLevel.Information;
+
             var logFile = Path.Combine(ApplicationDataDirectory.FullName, "logs", "log_.txt");
-            Log.Logger = new LoggerConfiguration()
-                .WriteTo.Console(restrictedToMinimumLevel: LogEventLevel.Information)
-                .WriteTo.File(logFile, restrictedToMinimumLevel: LogEventLevel.Information,
-                              rollingInterval: RollingInterval.Day, retainedFileCountLimit: 7)
+            var config = new LoggerConfiguration()
+                .WriteTo.Console(restrictedToMinimumLevel: eventLevel)
 #if DEBUG
                 .WriteTo.Debug(restrictedToMinimumLevel: LogEventLevel.Verbose)
 #endif
-                .MinimumLevel.Verbose()
-                .CreateLogger();
+                .MinimumLevel.Verbose();
+
+            if (!options.NoLog) config = config.WriteTo.File(
+                logFile, restrictedToMinimumLevel: eventLevel,
+                rollingInterval: RollingInterval.Day, retainedFileCountLimit: 7);
+
+            Log.Logger = config.CreateLogger();
 
             Log.Information("GUI version: {0}", VersionStatistics.AppVersion);
             foreach (var kvp in VersionStatistics.LoadedAssemblyVersions)
-                Log.Information("{0} v{1}", kvp.Key.GetName().Name, kvp.Value);
+                Log.Information("Using {0} v{1}", kvp.Key.GetName().Name, kvp.Value);
+
+            Log.Verbose($"Application directory: {ApplicationDirectory.FullName}");
+            Log.Verbose($"Data directory: {ApplicationDataDirectory.FullName}");
         }
 
         private static async Task<ObservableDictionary<int, Modpack>> LoadModpacksAsync()
@@ -129,7 +134,11 @@ namespace ModMyFactoryGUI
 
             string path = Path.Combine(ApplicationDataDirectory.FullName, "modpacks.json");
             var file = new FileInfo(path);
-            if (!file.Exists) return result;
+            if (!file.Exists)
+            {
+                Log.Verbose("No mopack file found, skipping import");
+                return result;
+            }
 
             var imported = await Importer.ImportAsync(file, TemporaryDirectory.FullName, false);
             var package = imported.Package; // Disregard extracted files since there aren't any
@@ -163,6 +172,7 @@ namespace ModMyFactoryGUI
                 }
 
                 result.Add(modpackDef.Uid, modpack);
+                Log.Verbose($"Successfully loaded modpack '{modpack.DisplayName}' with ID {modpackDef.Uid}");
             }
 
             return result;
@@ -227,39 +237,16 @@ namespace ModMyFactoryGUI
 
         private static async Task UnloadProgramAsync()
         {
+            Log.Information("Saving settings...");
             await Settings.SaveAsync();
             await SaveModpacksAsync();
+            Log.Information("Shutting down");
             Log.CloseAndFlush();
         }
 
-        // Initialization code. Don't use any Avalonia, third-party APIs or any
-        // SynchronizationContext-reliant code before AppMain is called: things aren't initialized
-        // yet and stuff might break.
-        public static async Task<int> Main(string[] args)
-        {
-            bool hasConsole = ConsoleHelper.TryAttachConsole(out var consoleHandle);
+        #endregion Utility Functions
 
-            SetDirectories();
-            InitLogger();
-            await InitProgramAsync();
-
-            var parser = new Parser(config =>
-            {
-                config.CaseSensitive = false;
-                config.HelpWriter = Console.Out;
-            });
-            var parsedOptions = parser.ParseArguments<RunOptions, StartGameOptions>(args);
-
-            int result = parsedOptions.MapResult(
-                (RunOptions opts) => StartApp(args, opts),
-                (StartGameOptions opts) => StartGame(opts),
-                errs => GeneralError);
-
-            await UnloadProgramAsync();
-
-            if (hasConsole) ConsoleHelper.FreeConsole(consoleHandle);
-            return result;
-        }
+        #region Internal Functions
 
         private static int GetNextModpackId()
         {
@@ -280,5 +267,187 @@ namespace ModMyFactoryGUI
 
         public static bool DeleteModpack(Modpack modpack)
             => _modpacks.RemoveValue(modpack);
+
+        #endregion Internal Functions
+
+        #region Initialization
+
+        // Avalonia configuration, don't remove; also used by visual designer.
+        private static AppBuilder BuildAvaloniaApp()
+        {
+            return AppBuilder.Configure<App>()
+#if DEBUG
+                .LogToDebug()
+#endif
+                .UsePlatformDetect()
+                .UseReactiveUI();
+        }
+
+        private static async Task<ErrorCode> StartAppAsync(string[] args, RunOptions options)
+        {
+            SetDirectories(options);
+            InitLogger(options);
+            await InitProgramAsync();
+
+            var code = (ErrorCode)BuildAvaloniaApp().StartWithClassicDesktopLifetime(args, ShutdownMode.OnMainWindowClose);
+
+            await UnloadProgramAsync();
+            return code;
+        }
+
+        private static bool TryGetInstance(StartGameOptions options, out IFactorioInstance instance)
+        {
+            if (!string.IsNullOrEmpty(options.Uid))
+            {
+                foreach (var inst in Manager.ManagedInstances)
+                {
+                    if (inst.GetUniqueKey() == options.Uid)
+                    {
+                        instance = inst;
+                        return true;
+                    }
+                }
+
+                Log.Error($"Factorio instance with ID {options.Uid} does not exist, aborting");
+                instance = null;
+                return false;
+            }
+
+            if (!string.IsNullOrEmpty(options.Name))
+            {
+                foreach (var inst in Manager.ManagedInstances)
+                {
+                    if (inst.GetName() == options.Name)
+                    {
+                        instance = inst;
+                        return true;
+                    }
+                }
+
+                Log.Error($"Factorio instance with name {options.Name} does not exist, aborting");
+                instance = null;
+                return false;
+            }
+
+            instance = null;
+            return false;
+        }
+
+        private static bool TryGetModpack(StartGameOptions options, out Modpack modpack)
+        {
+            if (options.ModpackId.HasValue)
+            {
+                if (_modpacks.TryGetValue(options.ModpackId.Value, out modpack))
+                {
+                    return true;
+                }
+                else
+                {
+                    Log.Warning($"Modpack with ID {options.ModpackId.Value} does not exist, no modpack enabled");
+                    return false;
+                }
+            }
+
+            if (!string.IsNullOrEmpty(options.ModpackName))
+            {
+                foreach (var pack in Modpacks)
+                {
+                    if (pack.DisplayName == options.ModpackName)
+                    {
+                        modpack = pack;
+                        return true;
+                    }
+                }
+
+                Log.Warning($"Modpack with name {options.ModpackName} does not exist, no modpack enabled");
+                modpack = null;
+                return false;
+            }
+
+            modpack = null;
+            return false;
+        }
+
+        private static async Task<ErrorCode> StartGameAsync(StartGameOptions options)
+        {
+            SetDirectories(options);
+            InitLogger(options);
+            await InitProgramAsync();
+
+            var code = ErrorCode.NoError;
+
+            try
+            {
+                if (TryGetInstance(options, out var instance))
+                {
+                    foreach (var modManager in Manager.ModManagers)
+                    {
+                        foreach (var mod in modManager)
+                            mod.Enabled = false;
+                    }
+
+                    if (TryGetModpack(options, out var modpack))
+                    {
+                        Log.Information($"Enabling modpack {modpack.DisplayName}");
+                        modpack.Enabled = true;
+                    }
+
+                    Log.Information($"Starting Factorio instance '{instance}'");
+                    instance.Start(Locations.GetModDir(instance.Version));
+                }
+                else
+                {
+                    code = ErrorCode.GameStart_InvalidInstance;
+                }
+            }
+            catch (Exception ex)
+            {
+                Log.Fatal(ex, "Unable to start Factorio instance");
+                code = ErrorCode.GameStart_General;
+            }
+
+            await UnloadProgramAsync();
+            return code;
+        }
+
+        // This has not yet been implemented in the latest stable release of CommandLineParser so we have to paste it into here
+        private static Task<TResult> MapResultAsync<T1, T2, TResult>(ParserResult<object> result,
+            Func<T1, Task<TResult>> parsedFunc1,
+            Func<T2, Task<TResult>> parsedFunc2,
+            Func<IEnumerable<Error>, Task<TResult>> notParsedFunc)
+        {
+            if (result is Parsed<object> parsed)
+            {
+                if (parsed.Value is T1) return parsedFunc1((T1)parsed.Value);
+                if (parsed.Value is T2) return parsedFunc2((T2)parsed.Value);
+                throw new InvalidOperationException();
+            }
+            return notParsedFunc(((NotParsed<object>)result).Errors);
+        }
+
+        // Initialization code. Don't use any Avalonia, third-party APIs or any
+        // SynchronizationContext-reliant code before AppMain is called: things aren't initialized
+        // yet and stuff might break.
+        public static async Task<int> Main(string[] args)
+        {
+            bool hasConsole = ConsoleHelper.TryAttachConsole(out var consoleHandle);
+
+            var parser = new Parser(config =>
+            {
+                config.CaseSensitive = false;
+                config.HelpWriter = Console.Out;
+            });
+            var parsedOptions = parser.ParseArguments<RunOptions, StartGameOptions>(args);
+
+            var code = await MapResultAsync(parsedOptions,
+                (RunOptions opts) => StartAppAsync(args, opts),
+                (StartGameOptions opts) => StartGameAsync(opts),
+                errors => Task.FromResult(ErrorCodeFactory.FromCommandLineErrors(errors)));
+
+            if (hasConsole) ConsoleHelper.FreeConsole(consoleHandle);
+            return (int)code;
+        }
+
+        #endregion Initialization
     }
 }
