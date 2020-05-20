@@ -7,6 +7,7 @@
 
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 
 namespace ModMyFactory.Export
 {
@@ -30,5 +31,42 @@ namespace ModMyFactory.Export
 
         internal ImportResult(Package package, IReadOnlyList<FileInfo> extractedFiles)
             => (Package, ExtractedFiles) = (package, extractedFiles);
+
+        /// <summary>
+        /// Tries to get the extracted file corresponding to a mod definition in the imported package
+        /// </summary>
+        public bool TryGetExtractedFile(ModDefinition mod, out FileInfo file)
+        {
+            file = null;
+            if (!mod.Included) return false;
+            if (!Package.Mods.Contains(mod)) return false;
+            if (ExtractedFiles is null) return false;
+
+            string prefix = $"{mod.Uid}+";
+            foreach (var extFile in ExtractedFiles)
+            {
+                if (extFile.Name.StartsWith(prefix))
+                {
+                    file = extFile;
+                    return true;
+                }
+            }
+
+            return true;
+        }
+
+        /// <summary>
+        /// Deletes all extracted files from the hard drive
+        /// </summary>
+        public void CleanupFiles()
+        {
+            if (!(ExtractedFiles is null))
+            {
+                foreach (var file in ExtractedFiles)
+                {
+                    if (file.Exists) file.Delete();
+                }
+            }
+        }
     }
 }

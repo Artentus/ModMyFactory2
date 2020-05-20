@@ -11,7 +11,7 @@ using System;
 
 namespace ModMyFactory.Export
 {
-    public sealed class ModDefinition
+    public sealed class ModDefinition : IEquatable<ModDefinition>
     {
         public int Uid { get; }
 
@@ -80,6 +80,33 @@ namespace ModMyFactory.Export
 #pragma warning disable CS0612
             if (masked == ExportMode.Invalid) throw new ArgumentException("Export mode is not valid", nameof(exportMode));
 #pragma warning restore CS0612
+        }
+
+        public bool Equals(ModDefinition other)
+        {
+            if (other is null) return false;
+            return (Uid == other.Uid) && (Name == other.Name) && (Version == other.Version) && (FactorioVersion == other.FactorioVersion);
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (obj is ModDefinition other) return Equals(other);
+            return false;
+        }
+
+        public override int GetHashCode()
+            => Uid.GetHashCode() ^ Name.GetHashCode() ^ Version.GetHashCode() ^ FactorioVersion.GetHashCode();
+
+        public static bool operator ==(ModDefinition first, ModDefinition second)
+        {
+            if (first is null) return second is null;
+            return first.Equals(second);
+        }
+
+        public static bool operator !=(ModDefinition first, ModDefinition second)
+        {
+            if (first is null) return !(second is null);
+            return !first.Equals(second);
         }
     }
 }
