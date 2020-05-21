@@ -67,9 +67,10 @@ namespace ModMyFactory.WebApi.Mods
 
         /// <summary>
         /// The latest release of this mod
+        /// Only available when info is not extended
         /// </summary>
         [JsonProperty("latest_release")]
-        readonly public ModReleaseInfo LatestRelease;
+        readonly public ModReleaseInfo? LatestRelease;
 
 
         // -------------- Extended data --------------
@@ -142,8 +143,11 @@ namespace ModMyFactory.WebApi.Mods
 
 
         [JsonConstructor]
-        internal ApiModInfo(string displayName, int downloadCount, string name, string summary, string author, double score, string category, string thumbnailUrl, ModReleaseInfo latestRelease,
-                         string description, string changelog, string faq, string homepage, string gitHubUrl, License license, ModReleaseInfo[] releases, DateTime creationDate, DateTime lastUpdateDate)
+        internal ApiModInfo(
+            string displayName, int downloadCount, string name, string summary, string author,
+            double score, string category, string thumbnailUrl, ModReleaseInfo? latestRelease,
+            string description, string changelog, string faq, string homepage, string gitHubUrl,
+            License license, ModReleaseInfo[] releases, DateTime creationDate, DateTime lastUpdateDate)
         {
             DisplayName = displayName;
             DownloadCount = downloadCount;
