@@ -98,7 +98,7 @@ namespace ModMyFactoryGUI.ViewModels
 
         public string Description => Info.Description;
 
-        public AccurateVersion FactorioVersion => Info.LatestRelease.Info.FactorioVersion.ToMajor();
+        public AccurateVersion FactorioVersion => Info.GetLatestReleaseSafe().Info.FactorioVersion.ToMajor();
 
         public OnlineModViewModel(ApiModInfo info, Manager manager, DownloadQueue downloadQueue)
             => (_info, _manager, _downloadQueue, Releases) = (info, manager, downloadQueue, _emptyReleases);

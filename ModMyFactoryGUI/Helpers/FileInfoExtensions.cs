@@ -67,6 +67,9 @@ namespace ModMyFactoryGUI.Helpers
 #endif
             }
         }
+
+        public static void Rename(this FileInfo file, string newName)
+            => file.MoveTo(Path.Combine(file.Directory.FullName, newName));
     }
 
     internal static class DirectoryInfoExtensions

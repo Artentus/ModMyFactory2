@@ -285,14 +285,53 @@ namespace ModMyFactoryGUI
 
         private static async Task<ErrorCode> StartAppAsync(string[] args, RunOptions options)
         {
-            SetDirectories(options);
-            InitLogger(options);
-            await InitProgramAsync();
+            var syncContext = GlobalSynchronizationContext.Current;
+            try
+            {
+                if (syncContext.IsFirst)
+                {
+                    // First instance, start like normal
 
-            var code = (ErrorCode)BuildAvaloniaApp().StartWithClassicDesktopLifetime(args, ShutdownMode.OnMainWindowClose);
+                    SetDirectories(options);
+                    InitLogger(options);
+                    await InitProgramAsync();
 
-            await UnloadProgramAsync();
-            return code;
+                    syncContext.BeginListen();
+
+                    try
+                    {
+                        return (ErrorCode)BuildAvaloniaApp().StartWithClassicDesktopLifetime(args, ShutdownMode.OnMainWindowClose);
+                    }
+                    catch
+                    {
+                        return ErrorCode.General;
+                    }
+                    finally
+                    {
+                        syncContext.EndListen();
+                        await UnloadProgramAsync();
+                    }
+                }
+                else
+                {
+                    // App already running, pass arguments and exit
+                    try
+                    {
+                        var message = Parser.Default.FormatCommandLine(options);
+                        await syncContext.SendMessageAsync(message);
+
+                        return ErrorCode.NoError;
+                    }
+                    catch
+                    {
+                        return ErrorCode.General;
+                    }
+                }
+            }
+            finally
+            {
+                syncContext.Dispose();
+            }
         }
 
         private static bool TryGetInstance(StartGameOptions options, out IFactorioInstance instance)

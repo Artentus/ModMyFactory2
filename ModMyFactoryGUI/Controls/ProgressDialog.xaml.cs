@@ -90,7 +90,7 @@ namespace ModMyFactoryGUI.Controls
             AvaloniaXamlLoader.Load(this);
         }
 
-        // Helper functions to make displaying the dialog for some operation a little easier
+        // Helper functions to make displaying the dialog for some operations a little easier
         // Only for static descriptions, if we want to update the description we need to show the dialog manually
         public static async Task<DialogResult> Show(string title, string description,
             Task operation, Progress<double> progress, double min, double max,
@@ -101,8 +101,7 @@ namespace ModMyFactoryGUI.Controls
             dialog.CancelCommand = ReactiveCommand.Create(cancellationSource.Cancel);
 
             // Use inner function instead of lambda so we can unsubscribe
-            void OnProgressChanged(object _, double p)
-                => dialog.Value = p;
+            void OnProgressChanged(object _, double p) => dialog.Value = p;
             progress.ProgressChanged += OnProgressChanged;
 
             // Show dialog but don't wait yet
@@ -129,8 +128,7 @@ namespace ModMyFactoryGUI.Controls
             var dialog = new ProgressDialog { Title = title, Description = description, Minimum = min, Maximum = max };
 
             // Use inner function instead of lambda so we can unsubscribe
-            void OnProgressChanged(object _, double p)
-                => dialog.Value = p;
+            void OnProgressChanged(object _, double p) => dialog.Value = p;
             progress.ProgressChanged += OnProgressChanged;
 
             // Show dialog but don't wait yet

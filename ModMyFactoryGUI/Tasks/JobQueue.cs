@@ -61,26 +61,26 @@ namespace ModMyFactoryGUI.Tasks
                 try
                 {
                     _currentJob = await _jobQueue.Dequeue(token).ConfigureAwait(false);
+
+                    // Job taken from queue, decrement queue length
+                    Interlocked.Decrement(ref _length);
+                    await OnLengthChanged(EventArgs.Empty).ConfigureAwait(false);
+
+                    if (!token.IsCancellationRequested)
+                    {
+                        var jobProgress = _currentJob.Progress;
+                        jobProgress.ProgressChanged += OnJobProgress;
+                        await _currentJob.Run(token).ConfigureAwait(false);
+                        jobProgress.ProgressChanged -= OnJobProgress;
+
+                        // Job completed, decrement inclusive queue length
+                        Interlocked.Decrement(ref _lengthInclusive);
+                        await OnJobCompleted(new JobCompletedEventArgs<T>(_currentJob)).ConfigureAwait(false);
+                    }
                 }
                 catch (TaskCanceledException)
                 {
                     break;
-                }
-
-                // Job taken from queue, decrement queue length
-                Interlocked.Decrement(ref _length);
-                await OnLengthChanged(EventArgs.Empty).ConfigureAwait(false);
-
-                if (!token.IsCancellationRequested)
-                {
-                    var jobProgress = _currentJob.Progress;
-                    jobProgress.ProgressChanged += OnJobProgress;
-                    await _currentJob.Run(token).ConfigureAwait(false);
-                    jobProgress.ProgressChanged -= OnJobProgress;
-
-                    // Job completed, decrement inclusive queue length
-                    Interlocked.Decrement(ref _lengthInclusive);
-                    await OnJobCompleted(new JobCompletedEventArgs<T>(_currentJob)).ConfigureAwait(false);
                 }
             }
         }

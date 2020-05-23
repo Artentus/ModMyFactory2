@@ -7,8 +7,11 @@
 
 using Avalonia.Controls;
 using Avalonia.Input;
+using Avalonia.Threading;
+using CommandLine;
 using ModMyFactory.Game;
 using ModMyFactory.Mods;
+using ModMyFactoryGUI.CommandLine;
 using ModMyFactoryGUI.Helpers;
 using ModMyFactoryGUI.MVVM;
 using ModMyFactoryGUI.Tasks;
@@ -172,6 +175,8 @@ namespace ModMyFactoryGUI.ViewModels
                     Program.Settings.Save();
                 }
             }
+
+            GlobalSynchronizationContext.Current.MessageReceived += MessageReceivedHandler;
         }
 
         private void OnDownloadQueueLengthChanged(object sender, EventArgs e)
@@ -260,10 +265,6 @@ namespace ModMyFactoryGUI.ViewModels
                 case DownloadModReleaseJob j:
                     await OnDownloadModCompleted(j);
                     break;
-
-                case DownloadFactorioJob j:
-                    // ToDo
-                    break;
             }
         }
 
@@ -316,10 +317,49 @@ namespace ModMyFactoryGUI.ViewModels
             }
         }
 
+        private async void ImportPackagesAsync(IEnumerable<string> paths)
+        {
+            var helper = new ImportHelper(paths);
+            await helper.ImportPackagesAsync();
+        }
+
+        private async Task EvaluateOptions(RunOptions options)
+        {
+            if (!(options.ImportList is null))
+                await Dispatcher.UIThread.InvokeAsync(() => ImportPackagesAsync(options.ImportList));
+        }
+
+        private async void MessageReceivedHandler(object sender, MessageReceivedEventArgs e)
+        {
+            var parser = new Parser(config =>
+            {
+                config.CaseSensitive = false;
+                config.HelpWriter = Console.Out;
+            });
+            var parsedOptions = parser.ParseArguments<RunOptions>(e.Message);
+
+            await parsedOptions.WithParsedAsync(EvaluateOptions);
+        }
+
+        private async void WindowOpenedHandler(object sender, EventArgs e)
+        {
+            var args = Environment.GetCommandLineArgs();
+
+            var parser = new Parser(config =>
+            {
+                config.CaseSensitive = false;
+                config.HelpWriter = Console.Out;
+            });
+            var parsedOptions = parser.ParseArguments<RunOptions>(args);
+
+            await parsedOptions.WithParsedAsync(EvaluateOptions);
+        }
+
         protected override void OnViewChanged(EventArgs e)
         {
             base.OnViewChanged(e);
             ReassignKeyBindings(SelectedViewModel);
+            AttachedView.Opened += WindowOpenedHandler;
         }
     }
 }
