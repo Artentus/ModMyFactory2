@@ -1,3 +1,10 @@
+//  Copyright (C) 2020 Mathis Rech
+//
+//  This program is free software: you can redistribute it and/or modify
+//  it under the terms of the GNU General Public License as published by
+//  the Free Software Foundation, either version 3 of the License, or
+//  (at your option) any later version.
+
 using ModMyFactory.Mods;
 using System;
 using System.Collections;
@@ -39,12 +46,6 @@ namespace ModMyFactory
         public string DisplayName { get; set; }
 
         /// <summary>
-        /// Unique identifier of this modpack
-        /// Only use locally, not across machines
-        /// </summary>
-        public Guid Uid { get; }
-
-        /// <summary>
         /// The mods in this modpack
         /// </summary>
         public IEnumerable<Mod> Mods => this.Where(i => i is Mod).Cast<Mod>();
@@ -59,13 +60,6 @@ namespace ModMyFactory
         public int Count => _mods.Count;
 
         bool ICollection<ICanEnable>.IsReadOnly => false;
-
-        public Modpack(Guid uid)
-            => Uid = uid;
-
-        public Modpack()
-            : this(Guid.NewGuid())
-        { }
 
         private void SetEnabledState(bool enabled)
         {
@@ -108,27 +102,50 @@ namespace ModMyFactory
         private void OnModEnabledChanged(object sender, EventArgs e)
             => EvaluateEnabledState();
 
-        private void AssertCanAdd(Modpack pack)
+        private bool CanAdd(Modpack pack)
         {
-            if (pack == this) throw new InvalidOperationException("Cannot create circular modpack references");
+            if (pack == this) return false;
 
             foreach (var item in pack)
-                AssertCanAdd(item);
+                if (!CanAdd(item)) return false;
+
+            return true;
+        }
+
+        private bool CanAdd(ICanEnable item)
+        {
+            if (item is Modpack pack) return CanAdd(pack);
+            return true;
         }
 
         private void AssertCanAdd(ICanEnable item)
         {
-            if (item is Modpack pack) AssertCanAdd(pack);
+            if (!CanAdd(item)) throw new InvalidOperationException("Cannot create circular modpack references");
         }
 
-        private bool AddInternal(ICanEnable item)
+        private bool AddInternal(ICanEnable item, bool safe)
         {
             if (!_mods.Contains(item))
             {
-                AssertCanAdd(item);
+                if (safe)
+                {
+                    if (CanAdd(item))
+                    {
+                        _mods.Add(item);
+                        return true;
+                    }
+                    else
+                    {
+                        return false;
+                    }
+                }
+                else
+                {
+                    AssertCanAdd(item);
 
-                _mods.Add(item);
-                return true;
+                    _mods.Add(item);
+                    return true;
+                }
             }
 
             return false;
@@ -137,20 +154,55 @@ namespace ModMyFactory
         protected virtual void OnEnabledChanged(EventArgs e)
             => EnabledChanged?.Invoke(this, e);
 
+        /// <summary>
+        /// Adds a mod or another modpack to the modpack
+        /// If the add operation would result in a circular reference an exception is thrown
+        /// </summary>
         public virtual void Add(ICanEnable item)
         {
-            if (AddInternal(item))
+            if (AddInternal(item, false))
             {
                 item.EnabledChanged += OnModEnabledChanged;
                 EvaluateEnabledState();
             }
         }
 
+        /// <summary>
+        /// Adds a mod or another modpack to the modpack
+        /// If the add operation would result in a circular reference it is ignored
+        /// </summary>
+        public virtual void AddSafe(ICanEnable item)
+        {
+            if (AddInternal(item, true))
+            {
+                item.EnabledChanged += OnModEnabledChanged;
+                EvaluateEnabledState();
+            }
+        }
+
+        /// <summary>
+        /// Adds a collection of mods and other modpacks to the modpack
+        /// If an add operation would result in a circular reference an exception is thrown
+        /// </summary>
         public virtual void AddRange(IEnumerable<ICanEnable> collection)
         {
             foreach (var item in collection)
             {
-                if (AddInternal(item))
+                if (AddInternal(item, false))
+                    item.EnabledChanged += OnModEnabledChanged;
+            }
+            EvaluateEnabledState();
+        }
+
+        /// <summary>
+        /// Adds a collection of mods and other modpacks to the modpack
+        /// If an add operation would result in a circular reference it is ignored
+        /// </summary>
+        public virtual void AddRangeSafe(IEnumerable<ICanEnable> collection)
+        {
+            foreach (var item in collection)
+            {
+                if (AddInternal(item, true))
                     item.EnabledChanged += OnModEnabledChanged;
             }
             EvaluateEnabledState();

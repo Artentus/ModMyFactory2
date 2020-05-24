@@ -164,9 +164,7 @@ namespace ModMyFactoryGUI.Views
                 var modpack = (item?.DataContext as ModpackViewModel)?.Modpack ?? Program.CreateModpack();
 
                 var list = e.Data.Get<IList<ICanEnable>>(InternalFormat);
-                if (list.Contains(modpack)) list.Remove(modpack); // Avoid obvious circular references
-
-                modpack.AddRange(list); // ToDo: handle circular reference errors
+                modpack.AddRangeSafe(list);
             }
         }
 
