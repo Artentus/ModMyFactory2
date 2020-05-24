@@ -48,7 +48,7 @@ the Free Software Foundation, either version 3 of the License, or
         <TabControl.ContentTemplate>
           <DataTemplate DataType="{x:Type models:ModVersionGroupingViewModel}">
 
-            <controls:DragDropListBox Name="ModList" Items="{Binding FamilyViewModels}" DragDrop.AllowDrop="True"
+            <controls:DragDropListBox Name="ModList" Items="{Binding FamilyViewModels}" SelectionMode="Multiple" DragDrop.AllowDrop="True"
                                       PreviewPointerPressed="PointerPressedHandler" PreviewPointerReleased="PointerReleasedHandler"
                                       PreviewPointerMoved="PointerMovedHandler" DragOver="DragOverHandler" Drop="DropHandler">
               <controls:DragDropListBox.ItemTemplate>
@@ -91,14 +91,18 @@ the Free Software Foundation, either version 3 of the License, or
 
       <controls:SearchBox Grid.Column="2" Grid.Row="1" Margin="0,4,4,4" Text="{Binding ModpackFilter}" />
 
-      <controls:DragDropListBox Name="ModpackList" Grid.Column="2" Grid.Row="2" Margin="0,4,4,4" Items="{Binding Modpacks}" DragDrop.AllowDrop="True"
+      <controls:DragDropListBox Name="ModpackList" Grid.Column="2" Grid.Row="2" Margin="0,4,4,4" Items="{Binding Modpacks}"
+                                SelectionMode="Multiple" DragDrop.AllowDrop="True"
                                 PreviewPointerPressed="PointerPressedHandler" PreviewPointerReleased="PointerReleasedHandler"
                                 PreviewPointerMoved="PointerMovedHandler" DragOver="DragOverHandler" Drop="DropHandler">
         <controls:DragDropListBox.ItemTemplate>
           <DataTemplate DataType="{x:Type models:ModpackViewModel}">
             <Expander Background="Transparent">
               <Expander.Header>
-                <TextBlock Text="{Binding DisplayName}" />
+                <Grid ColumnDefinitions="Auto,Auto">
+                  <CheckBox Grid.Column="0" IsChecked="{Binding Enabled}" />
+                  <TextBlock Grid.Column="1" Margin="8,2" Text="{Binding DisplayName}" IsHitTestVisible="False" />
+                </Grid>
               </Expander.Header>
 
               <StackPanel Margin="2" Orientation="Vertical">

@@ -1,0 +1,95 @@
+<!--
+Copyright (C) 2020 Mathis Rech
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+-->
+
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+  <Style Selector="Expander">
+    <Setter Property="ContentTransition">
+      <Setter.Value>
+        <CrossFade Duration="00:00:00.01" />
+      </Setter.Value>
+    </Setter>
+  </Style>
+
+  <Style Selector="Expander[ExpandDirection=Down]">
+    <Setter Property="Template">
+      <ControlTemplate>
+        <Border Background="{TemplateBinding Background}">
+          <Grid RowDefinitions="Auto,*">
+            <ToggleButton Name="PART_toggle" Grid.Row="0" HorizontalContentAlignment="Left"
+                          Content="{TemplateBinding Header}" IsChecked="{TemplateBinding IsExpanded, Mode=TwoWay}" />
+            <ContentPresenter Name="PART_ContentPresenter"
+                              Grid.Row="1"
+                              IsVisible="{TemplateBinding IsExpanded}"
+                              ContentTemplate="{TemplateBinding ContentTemplate}"
+                              Content="{TemplateBinding Content}"
+                              HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+                              VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
+                              Padding="{TemplateBinding Padding}" />
+          </Grid>
+        </Border>
+      </ControlTemplate>
+    </Setter>
+  </Style>
+
+  <Style Selector="Expander /template/ ToggleButton#PART_toggle">
+    <Setter Property="Template">
+      <ControlTemplate>
+
+        <Border>
+          <Grid ColumnDefinitions="*,Auto">
+
+            <ContentPresenter Name="PART_ContentPresenter"
+                              Grid.Column="0"
+                              Background="{x:Null}"
+                              Content="{TemplateBinding Content}"
+                              VerticalAlignment="Center"
+                              HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+                              VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
+                              Padding="{TemplateBinding Padding}" />
+
+            <Border Grid.Column="1" Width="24" Height="24" Margin="4" HorizontalAlignment="Center" VerticalAlignment="Center">
+              <Panel>
+                <Ellipse StrokeThickness="1" Stroke="{DynamicResource ThemeBorderHighBrush}" Fill="Transparent" />
+                <Path Fill="{DynamicResource ThemeForegroundBrush}"
+                      HorizontalAlignment="Center"
+                      VerticalAlignment="Center"
+                      Data="M 1 0 L 6 4 L 1 8 Z" />
+              </Panel>
+            </Border>
+
+          </Grid>
+        </Border>
+
+      </ControlTemplate>
+    </Setter>
+  </Style>
+
+  <Style Selector="Expander /template/ ToggleButton#PART_toggle /template/ Border">
+    <Setter Property="BorderBrush" Value="{x:Null}" />
+  </Style>
+
+  <Style Selector="Expander /template/ ToggleButton#PART_toggle:pointerover /template/ Border">
+    <Setter Property="BorderBrush" Value="{x:Null}" />
+  </Style>
+
+  <Style Selector="Expander:down /template/ ToggleButton#PART_toggle /template/ Path">
+    <Setter Property="RenderTransform">
+      <RotateTransform Angle="180" />
+    </Setter>
+  </Style>
+
+  <Style Selector="Expander:down:expanded /template/ ToggleButton#PART_toggle /template/ Path">
+    <Setter Property="RenderTransform">
+      <RotateTransform Angle="90" />
+    </Setter>
+  </Style>
+
+</Styles>

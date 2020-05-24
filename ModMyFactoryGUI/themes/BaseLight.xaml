@@ -12,9 +12,9 @@
     <Color x:Key="ThemeBackgroundHighColor">#FFeeeef2</Color>
     <Color x:Key="ThemeBackgroundLowColor">#FFf6f6f6</Color>
 
-    <Color x:Key="ThemeBorderLowColor">#FFcccedb</Color>
+    <Color x:Key="ThemeBorderLowColor">#FFe1e1e5</Color>
     <Color x:Key="ThemeBorderMidColor">#FFcccedb</Color>
-    <Color x:Key="ThemeBorderHighColor">#FFe1e1e5</Color>
+    <Color x:Key="ThemeBorderHighColor">#FFb4b6c2</Color>
 
     <Color x:Key="ThemeControlLowColor">#FF868999</Color>
     <Color x:Key="ThemeControlMidColor">#FFF5F5F5</Color>
