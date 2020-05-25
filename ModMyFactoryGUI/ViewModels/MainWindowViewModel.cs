@@ -14,6 +14,7 @@ using ModMyFactory.Mods;
 using ModMyFactoryGUI.CommandLine;
 using ModMyFactoryGUI.Helpers;
 using ModMyFactoryGUI.MVVM;
+using ModMyFactoryGUI.Synchronization;
 using ModMyFactoryGUI.Tasks;
 using ModMyFactoryGUI.Tasks.Web;
 using ModMyFactoryGUI.Views;
@@ -176,7 +177,7 @@ namespace ModMyFactoryGUI.ViewModels
                 }
             }
 
-            GlobalSynchronizationContext.Current.MessageReceived += MessageReceivedHandler;
+            GlobalContext.Current.MessageReceived += MessageReceivedHandler;
         }
 
         private void OnDownloadQueueLengthChanged(object sender, EventArgs e)

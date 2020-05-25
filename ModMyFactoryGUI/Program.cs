@@ -16,6 +16,7 @@ using ModMyFactory.Game;
 using ModMyFactory.Mods;
 using ModMyFactoryGUI.CommandLine;
 using ModMyFactoryGUI.Helpers;
+using ModMyFactoryGUI.Synchronization;
 using Serilog;
 using Serilog.Events;
 using System;
@@ -178,7 +179,7 @@ namespace ModMyFactoryGUI
             return result;
         }
 
-        private static async Task SaveModpacksAsync()
+        private static Task SaveModpacksAsync()
         {
             var factory = new ExporterFactory();
 
@@ -224,7 +225,7 @@ namespace ModMyFactoryGUI
 
             var exporter = factory.CreateExporter();
             string path = Path.Combine(ApplicationDataDirectory.FullName, "modpacks.json");
-            await exporter.ExportAsync(path);
+            return exporter.ExportAsync(path);
         }
 
         private static async Task InitProgramAsync()
@@ -238,7 +239,7 @@ namespace ModMyFactoryGUI
         private static async Task UnloadProgramAsync()
         {
             Log.Information("Saving settings...");
-            await Settings.SaveAsync();
+            Settings.Save();
             await SaveModpacksAsync();
             Log.Information("Shutting down");
             Log.CloseAndFlush();
@@ -285,14 +286,15 @@ namespace ModMyFactoryGUI
 
         private static async Task<ErrorCode> StartAppAsync(string[] args, RunOptions options)
         {
-            var syncContext = GlobalSynchronizationContext.Current;
+            SetDirectories(options);
+
+            var syncContext = GlobalContext.Current;
             try
             {
                 if (syncContext.IsFirst)
                 {
                     // First instance, start like normal
 
-                    SetDirectories(options);
                     InitLogger(options);
                     await InitProgramAsync();
 

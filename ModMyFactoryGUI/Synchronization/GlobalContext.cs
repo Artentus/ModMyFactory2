@@ -8,11 +8,12 @@
 using System;
 using System.Diagnostics;
 using System.IO.Pipes;
+using System.Net.Sockets;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace ModMyFactoryGUI
+namespace ModMyFactoryGUI.Synchronization
 {
     internal class MessageReceivedEventArgs : EventArgs
     {
@@ -22,11 +23,10 @@ namespace ModMyFactoryGUI
             => Message = message;
     }
 
-    internal sealed class GlobalSynchronizationContext : IDisposable
+    internal sealed class GlobalContext : IDisposable
     {
         private const string Uid = "ModMyFactoryGUI-uid(56F38E84-0DCD-475B-96F7-340ABBDEF8F1)";
-        private static readonly string _semaphoreName;
-        private readonly Semaphore _globalSemaphore;
+        private readonly IUniversalMutex _globalMutex;
         private readonly SemaphoreSlim _syncSemaphore;
         private CancellationTokenSource _cancellationSource;
         private volatile bool _listening;
@@ -34,39 +34,20 @@ namespace ModMyFactoryGUI
 
         public event EventHandler<MessageReceivedEventArgs> MessageReceived;
 
-        public static GlobalSynchronizationContext Current { get; }
+        public static GlobalContext Current { get; } = new GlobalContext();
 
         public bool IsFirst { get; }
 
-        private GlobalSynchronizationContext()
+        private GlobalContext()
         {
-            _globalSemaphore = new Semaphore(1, 1, _semaphoreName);
-
-            bool hasHandle = false;
-            try
-            {
-                hasHandle = _globalSemaphore.WaitOne(100, false);
-            }
-            catch (AbandonedMutexException)
-            {
-                hasHandle = true;
-            }
-            IsFirst = hasHandle;
+            _globalMutex = UniversalMutex.CreateForCurrentPlatform(Uid);
+            IsFirst = _globalMutex.TryAquire();
 
             _syncSemaphore = new SemaphoreSlim(1, 1);
         }
 
-        static GlobalSynchronizationContext()
-        {
-            // Make sure the mutex name is absolutely unique for the current user
-            _semaphoreName = $"Global\\{Uid}-{Environment.MachineName}-sid{Process.GetCurrentProcess().SessionId}";
-            Current = new GlobalSynchronizationContext();
-        }
-
         private async Task ListenAsync()
         {
-            await _syncSemaphore.WaitAsync();
-
             try
             {
                 var token = _cancellationSource.Token;
@@ -93,6 +74,11 @@ namespace ModMyFactoryGUI
                         _currentPipe = null;
                         MessageReceived?.Invoke(this, new MessageReceivedEventArgs(message));
                     }
+                    catch (SocketException se)
+                    {
+                        if (se.SocketErrorCode == SocketError.OperationAborted) break;
+                        else throw;
+                    }
                     catch (TaskCanceledException)
                     {
                         break;
@@ -114,6 +100,7 @@ namespace ModMyFactoryGUI
                     _listening = true;
                     _cancellationSource = new CancellationTokenSource();
 
+                    _syncSemaphore.Wait();
                     Task.Run(ListenAsync);
                 }
             }
@@ -134,10 +121,12 @@ namespace ModMyFactoryGUI
 
                     // Wait until the thread has safely exited
                     _syncSemaphore.Wait();
-                    _syncSemaphore.Release();
+                    
                     _cancellationSource.Dispose();
                     _cancellationSource = null;
                     _listening = false;
+
+                    _syncSemaphore.Release();
                 }
             }
             else
@@ -187,8 +176,8 @@ namespace ModMyFactoryGUI
             {
                 if (disposing)
                 {
-                    if (IsFirst) _globalSemaphore.Release();
-                    _globalSemaphore.Dispose();
+                    if (IsFirst) _globalMutex.Release();
+                    _globalMutex.Dispose();
                     _syncSemaphore.Dispose();
                 }
 

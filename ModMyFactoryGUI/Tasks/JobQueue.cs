@@ -99,8 +99,10 @@ namespace ModMyFactoryGUI.Tasks
                 _cancellationSource = new CancellationTokenSource();
                 await Task.Run(RunQueueAsync);
             }
-
-            throw new InvalidOperationException("Queue is already running");
+            else
+            {
+                throw new InvalidOperationException("Queue is already running");
+            }
         }
 
         public void StopQueue()

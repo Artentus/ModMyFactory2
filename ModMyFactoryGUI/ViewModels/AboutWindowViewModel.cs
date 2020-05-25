@@ -37,7 +37,10 @@ namespace ModMyFactoryGUI.ViewModels
             WeakSubscriptionManager.Subscribe(App.Current.Locales, nameof(LocaleManager.UICultureChanged), this);
             AssemblyVersions = VersionStatistics.LoadedAssemblyVersions.Select(kvp => new AssemblyVersionViewModel(kvp.Key, kvp.Value));
             CloseCommand = ReactiveCommand.Create(() => AttachedView.Close());
-            Changelog = File.ReadAllText("Changelog.md");
+
+            var changelogFile = new FileInfo(Path.Combine(Program.ApplicationDirectory.FullName, "Changelog.md"));
+            Changelog = changelogFile.Exists ? File.ReadAllText(changelogFile.FullName) : string.Empty;
+            
             Attributions = new AttributionViewModel();
         }
 
