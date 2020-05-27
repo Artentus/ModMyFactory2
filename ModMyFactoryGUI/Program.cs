@@ -23,6 +23,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace ModMyFactoryGUI
@@ -30,6 +31,7 @@ namespace ModMyFactoryGUI
     internal static class Program
     {
         private static ObservableDictionary<int, Modpack> _modpacks;
+        private static readonly SemaphoreSlim _syncSemaphore = new SemaphoreSlim(1, 1);
 
         // These objects are global to the entire app, even before any GUI is loaded
         public static DirectoryInfo ApplicationDirectory { get; private set; }
@@ -268,6 +270,20 @@ namespace ModMyFactoryGUI
 
         public static bool DeleteModpack(Modpack modpack)
             => _modpacks.RemoveValue(modpack);
+
+        public static async void SaveModpacks()
+        {
+            await _syncSemaphore.WaitAsync();
+
+            try
+            {
+                await SaveModpacksAsync();
+            }
+            finally
+            {
+                _syncSemaphore.Release();
+            }
+        }
 
         #endregion Internal Functions
 

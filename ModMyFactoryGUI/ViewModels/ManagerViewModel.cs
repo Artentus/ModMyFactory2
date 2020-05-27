@@ -15,6 +15,7 @@ using ReactiveUI;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
+using System.ComponentModel;
 using System.IO;
 using System.Threading.Tasks;
 using System.Windows.Input;
@@ -142,6 +143,15 @@ namespace ModMyFactoryGUI.ViewModels
             return false;
         }
 
+        private void OnModpackPropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == nameof(ModpackViewModel.IsRenaming))
+            {
+                var vm = (ModpackViewModel)sender;
+                if (!vm.IsRenaming) Modpacks.Refresh();
+            }
+        }
+
         private void OnModpackCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
             switch (e.Action)
@@ -150,6 +160,7 @@ namespace ModMyFactoryGUI.ViewModels
                     foreach (Modpack modpack in e.NewItems)
                     {
                         var vm = new ModpackViewModel(modpack);
+                        vm.PropertyChanged += OnModpackPropertyChanged;
                         _modpacks.Add(vm);
                     }
                     this.RaisePropertyChanged(nameof(Modpacks));
@@ -160,6 +171,7 @@ namespace ModMyFactoryGUI.ViewModels
                     {
                         if (TryGetViewModel(modpack, out var vm))
                         {
+                            vm.PropertyChanged -= OnModpackPropertyChanged;
                             _modpacks.Remove(vm);
                             vm.Dispose();
                         }
@@ -168,7 +180,11 @@ namespace ModMyFactoryGUI.ViewModels
                     break;
 
                 case NotifyCollectionChangedAction.Reset:
-                    foreach (var vm in _modpacks) vm.Dispose();
+                    foreach (var vm in _modpacks)
+                    {
+                        vm.PropertyChanged -= OnModpackPropertyChanged;
+                        vm.Dispose();
+                    }
                     _modpacks.Clear();
                     this.RaisePropertyChanged(nameof(Modpacks));
                     break;

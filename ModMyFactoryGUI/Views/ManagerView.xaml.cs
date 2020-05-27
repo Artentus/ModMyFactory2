@@ -165,6 +165,7 @@ namespace ModMyFactoryGUI.Views
 
                 var list = e.Data.Get<IList<ICanEnable>>(InternalFormat);
                 modpack.AddRangeSafe(list);
+                Program.SaveModpacks();
             }
         }
 

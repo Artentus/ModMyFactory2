@@ -18,14 +18,14 @@ the Free Software Foundation, either version 3 of the License, or
   <UserControl.Styles>
     <Style Selector="TextBox TextPresenter">
       <Setter Property="VerticalAlignment" Value="Center" />
-      <Setter Property="Margin" Value="4,0" />
+      <Setter Property="Margin" Value="2,0" />
       <Setter Property="FontSize" Value="{DynamicResource FontSizeLarge}" />
     </Style>
   </UserControl.Styles>
 
   <DockPanel>
     <Border DockPanel.Dock="Left" Background="{DynamicResource ThemeAccentBrush4}">
-      <icons:SearchIcon Margin="4,0" />
+      <icons:SearchIcon Margin="3" />
     </Border>
     <TextBox Text="{Binding Text, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type controls:SearchBox}}, Mode=TwoWay}" />
   </DockPanel>

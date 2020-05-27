@@ -98,10 +98,21 @@ the Free Software Foundation, either version 3 of the License, or
         <controls:DragDropListBox.ItemTemplate>
           <DataTemplate DataType="{x:Type models:ModpackViewModel}">
             <Expander Background="Transparent">
+
               <Expander.Header>
-                <Grid ColumnDefinitions="Auto,Auto">
+                <Grid ColumnDefinitions="Auto,Auto,Auto,*">
                   <CheckBox Grid.Column="0" IsChecked="{Binding Enabled}" />
-                  <TextBlock Grid.Column="1" Margin="8,2" Text="{Binding DisplayName}" IsHitTestVisible="False" />
+                  <TextBlock Grid.Column="1" Margin="8,4" Text="{Binding DisplayName}" IsHitTestVisible="False" />
+
+                  <TextBox Grid.Column="1" Margin="8,0" Text="{Binding DisplayName, Mode=TwoWay}" IsVisible="{Binding IsRenaming}">
+                    <TextBox.KeyBindings>
+                      <KeyBinding Gesture="Return" Command="{Binding EndRenameCommand}" />
+                    </TextBox.KeyBindings>
+                  </TextBox>
+                  <ToggleButton Grid.Column="2" Padding="0" MinWidth="1" Width="26" Height="26"
+                                HorizontalAlignment="Center" VerticalAlignment="Center" IsChecked="{Binding IsRenaming, Mode=TwoWay}">
+                    <icons:EditIcon />
+                  </ToggleButton>
                 </Grid>
               </Expander.Header>
 

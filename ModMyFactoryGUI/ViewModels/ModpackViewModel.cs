@@ -11,11 +11,14 @@ using ModMyFactoryGUI.Helpers;
 using ReactiveUI;
 using System;
 using System.Collections.Generic;
+using System.Windows.Input;
 
 namespace ModMyFactoryGUI.ViewModels
 {
     internal sealed class ModpackViewModel : ReactiveObject, IDisposable
     {
+        private bool _isRenaming;
+
         public Modpack Modpack { get; }
 
         public string DisplayName
@@ -37,10 +40,25 @@ namespace ModMyFactoryGUI.ViewModels
             set => Modpack.Enabled = value;
         }
 
+        public bool IsRenaming
+        {
+            get => _isRenaming;
+            set
+            {
+                if (this.RaiseAndSetIfChanged(ref _isRenaming, value, nameof(IsRenaming)) && !value)
+                {
+                    Program.SaveModpacks();
+                }
+            }
+        }
+
         // Store information for fuzzy search
         public bool MatchesSearch { get; private set; } = true;
 
         public int SearchScore { get; private set; } = 0;
+
+        public ICommand BeginRenameCommand { get; }
+        public ICommand EndRenameCommand { get; }
 
         public IEnumerable<Modpack> Modpacks => Modpack.Modpacks;
 
@@ -50,6 +68,9 @@ namespace ModMyFactoryGUI.ViewModels
         {
             Modpack = modpack;
             modpack.EnabledChanged += ModpackEnabledChangedHandler;
+
+            BeginRenameCommand = ReactiveCommand.Create(() => IsRenaming = true);
+            EndRenameCommand = ReactiveCommand.Create(() => IsRenaming = false);
         }
 
         private void ModpackEnabledChangedHandler(object sender, EventArgs e)
