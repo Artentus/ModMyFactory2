@@ -86,9 +86,9 @@ namespace ModMyFactory.Game
             => new DirectoryInfo(Path.Combine(basePath, "steamapps", "common"));
 
         /// <summary>
-        /// Tries to load Steam.
+        /// Tries to load Steam
         /// </summary>
-        /// <param name="steam">Out. The instance of Steam on this system.</param>
+        /// <param name="steam">Out. The instance of Steam on this system</param>
         public static bool TryLoad(out Steam steam)
         {
             steam = null;
@@ -129,7 +129,7 @@ namespace ModMyFactory.Game
         }
 
         /// <summary>
-        /// Gets a list of app libraries on the system.
+        /// Gets a list of app libraries on the system
         /// </summary>
         public async Task<List<DirectoryInfo>> GetLibrariesAsync()
         {
@@ -148,11 +148,11 @@ namespace ModMyFactory.Game
         }
 
         /// <summary>
-        /// Starts a Steam app.
+        /// Starts a Steam app
         /// </summary>
-        /// <param name="app">The app to start.</param>
-        /// <param name="args">Optional arguments.</param>
-        public void StartApp(SteamApp app, params string[] args)
+        /// <param name="app">The app to start</param>
+        /// <param name="arguments">Optional arguments</param>
+        public void StartApp(SteamApp app, string arguments)
         {
 #if NETFULL
             var startInfo = new ProcessStartInfo(Path.Combine(_path, "Steam.exe"));
@@ -173,10 +173,11 @@ namespace ModMyFactory.Game
 #else
             throw new PlatformException();
 #endif
-            string argString = $"-applaunch {(long)app}";
-            if (!(args is null) && (args.Length != 0))
-                argString += " " + string.Join(" ", args);
-            startInfo.Arguments = argString;
+            var builder = new ArgumentBuilder();
+            builder.AppendArgument("-applaunch");
+            builder.AppendArgument(((long)app).ToString());
+            builder.AppendExisting(arguments);
+            startInfo.Arguments = builder.ToString();
 
             Process.Start(startInfo);
         }

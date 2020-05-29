@@ -55,28 +55,92 @@ namespace ModMyFactory.Game
         /// <summary>
         /// Starts this instance
         /// </summary>
-        /// <param name="args">Optional command line arguments</param>
-        void Start(params string[] args);
+        /// <param name="arguments">Optional command line arguments</param>
+        void Start(string arguments = null);
     }
 
     public static class FactorioInstance
     {
         /// <summary>
-        /// Starts this instance and overrides its mod directory
+        /// Starts this instance
         /// </summary>
-        /// <param name="modDirectory">The mod directory to be used; overrides the instances default mod directory</param>
-        /// <param name="args">Optional command line arguments</param>
-        public static void Start(this IFactorioInstance instance, DirectoryInfo modDirectory, params string[] args)
+        /// <param name="modDirectory">
+        /// Optional<br/>The mod directory to be used<br/>
+        /// Overrides the instances default mod directory
+        /// </param>
+        /// <param name="savegameFile">
+        /// Optional<br/>The savegame to load
+        /// </param>
+        /// <param name="arguments">
+        /// Optional command line arguments
+        /// </param>
+        public static void Start(this IFactorioInstance instance, DirectoryInfo modDirectory = null, FileInfo savegameFile = null, params string[] arguments)
         {
-            int argCount = (args?.Length ?? 0) + 2;
-            var actualArgs = new string[argCount];
-            args?.CopyTo(actualArgs, 2);
+            var builder = new ArgumentBuilder();
 
-            actualArgs[0] = "--mod-directory";
-            actualArgs[1] = $"\"{modDirectory.FullName}\"";
+            if (!(modDirectory is null))
+            {
+                builder.AppendArgument("--mod-directory");
+                builder.AppendArgument(modDirectory.FullName);
+            }
 
-            instance.Start(actualArgs);
+            if (!(savegameFile is null))
+            {
+                builder.AppendArgument("--load-game");
+                builder.AppendArgument(savegameFile.FullName);
+            }
+
+            if (!(arguments is null))
+            {
+                builder.AppendArguments(arguments);
+            }
+
+            instance.Start(builder.ToString());
         }
+
+        /// <summary>
+        /// Starts this instance
+        /// </summary>
+        /// <param name="modDirectory">
+        /// Optional<br/>The mod directory to be used<br/>
+        /// Overrides the instances default mod directory
+        /// </param>
+        /// <param name="savegameFile">
+        /// Optional<br/>The savegame to load
+        /// </param>
+        /// <param name="arguments">
+        /// Optional command line arguments
+        /// </param>
+        public static void Start(this IFactorioInstance instance, DirectoryInfo modDirectory = null, FileInfo savegameFile = null, string arguments = null)
+        {
+            var builder = new ArgumentBuilder();
+
+            if (!(modDirectory is null))
+            {
+                builder.AppendArgument("--mod-directory");
+                builder.AppendArgument(modDirectory.FullName);
+            }
+
+            if (!(savegameFile is null))
+            {
+                builder.AppendArgument("--load-game");
+                builder.AppendArgument(savegameFile.FullName);
+            }
+
+            if (!string.IsNullOrEmpty(arguments))
+            {
+                builder.AppendExisting(arguments);
+            }
+
+            instance.Start(builder.ToString());
+        }
+
+        /// <summary>
+        /// Starts this instance
+        /// </summary>
+        /// <param name="arguments">Optional command line arguments</param>
+        public static void Start(this IFactorioInstance instance, params string[] arguments)
+            => instance.Start(null, null, arguments);
 
         /// <summary>
         /// Checkes if this instance is the Steam instance

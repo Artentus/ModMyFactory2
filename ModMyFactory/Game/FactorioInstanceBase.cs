@@ -44,7 +44,7 @@ namespace ModMyFactory.Game
             }
         }
 
-        public abstract void Start(params string[] args);
+        public abstract void Start(string arguments);
 
         public void Dispose()
         {
