@@ -88,7 +88,7 @@ namespace ModMyFactory.Game
         /// <summary>
         /// Tries to load Steam
         /// </summary>
-        /// <param name="steam">Out. The instance of Steam on this system</param>
+        /// <param name="steam">Out<br/>The instance of Steam on this system</param>
         public static bool TryLoad(out Steam steam)
         {
             steam = null;

@@ -118,9 +118,9 @@ namespace ModMyFactory.Mods
         }
 
         /// <summary>
-        /// Loads a mod file.
+        /// Loads a mod file
         /// </summary>
-        /// <param name="directory">The directory to load.</param>
+        /// <param name="directory">The directory to load</param>
         public static async Task<ExtractedModFile> LoadAsync(DirectoryInfo directory)
         {
             (bool success, var result) = await TryLoadAsync(directory);

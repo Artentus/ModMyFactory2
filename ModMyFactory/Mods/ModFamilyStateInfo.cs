@@ -34,7 +34,8 @@ namespace ModMyFactory.Mods
         public bool Enabled { get; }
 
         /// <summary>
-        /// The version of the enabled mod in the family. Undefined if no mod is enabled
+        /// The version of the enabled mod in the family<br/>
+        /// Undefined if no mod is enabled
         /// </summary>
         [JsonProperty("version", DefaultValueHandling = DefaultValueHandling.Ignore)]
         public AccurateVersion Version { get; }

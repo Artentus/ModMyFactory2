@@ -10,8 +10,8 @@ namespace ModMyFactory.Mods
     public static class ModFamilyExtensions
     {
         /// <summary>
-        /// Gets the default mod in this family.
-        /// The default mod is the mod that will be selected by Factorio if no version is specified.
+        /// Gets the default mod in this family<br/>
+        /// The default mod is the mod that will be selected by Factorio if no version is specified
         /// </summary>
         public static Mod GetDefaultMod(this ModFamily family)
         {

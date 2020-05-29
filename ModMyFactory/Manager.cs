@@ -56,7 +56,7 @@ namespace ModMyFactory
             => ModManagerCreated?.Invoke(this, new ModManagerCreatedEventArgs(modManager));
 
         /// <summary>
-        /// Tries to gets the mod manager associated with a specific version of Factorio
+        /// Tries to gets the mod manager associated with a specific version of Factorio<br/>
         /// Fails if no mod manager has been created for the specified version yet
         /// </summary>
         public bool TryGetModManager(AccurateVersion factorioVersion, out ModManager result)
@@ -66,7 +66,7 @@ namespace ModMyFactory
         }
 
         /// <summary>
-        /// Gets the mod manager associated with a specific version of Factorio
+        /// Gets the mod manager associated with a specific version of Factorio<br/>
         /// Creates a new mod manager if none has been created for the specified version yet
         /// </summary>
         public ModManager GetModManager(AccurateVersion factorioVersion)
@@ -84,7 +84,7 @@ namespace ModMyFactory
         }
 
         /// <summary>
-        /// Adds a Factorio instance to the manager
+        /// Adds a Factorio instance to the manager<br/>
         /// Instances that are already managed are not valid
         /// </summary>
         /// <param name="instance">The instance to add</param>

@@ -16,8 +16,8 @@ using System.Linq;
 namespace ModMyFactory.Mods
 {
     /// <summary>
-    /// Groups mods with the same name but different version.
-    /// Only one mod in a family can be enabled at a time.
+    /// Groups mods with the same name but different version<br/>
+    /// Only one mod in a family can be enabled at a time
     /// </summary>
     public sealed class ModFamily : ICollection<Mod>, IReadOnlyCollection<Mod>, INotifyCollectionChanged, INotifyPropertyChanged
     {

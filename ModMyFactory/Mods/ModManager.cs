@@ -50,7 +50,10 @@ namespace ModMyFactory.Mods
 
         bool ICollection<Mod>.IsReadOnly => false;
 
-        /// <param name="factorioVersion">The version of Factorio getting managed. Only considers major version.</param>
+        /// <param name="factorioVersion">
+        /// The version of Factorio getting managed<br/>
+        /// Only considers major version
+        /// </param>
         public ModManager(AccurateVersion factorioVersion)
         {
             _families = new Dictionary<string, ModFamily>();

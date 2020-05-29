@@ -10,7 +10,7 @@ using System;
 namespace ModMyFactory
 {
     /// <summary>
-    /// An exception thrown by the ModMyFactory core system.
+    /// An exception thrown by the ModMyFactory core system
     /// </summary>
     public class ManagerException : Exception
     {

@@ -13,7 +13,7 @@ namespace ModMyFactory
         event EventHandler EnabledChanged;
 
         /// <summary>
-        /// Whether the object is enabled, disabled or in an undefined state
+        /// Whether the object is enabled, disabled or in an undefined state<br/>
         /// The object can never be set to the undefined state
         /// </summary>
         bool? Enabled { get; set; }

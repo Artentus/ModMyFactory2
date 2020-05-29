@@ -46,7 +46,7 @@ namespace ModMyFactory.Mods
         public AccurateVersion Version { get; }
 
         /// <summary>
-        /// The version of Factorio this mod works on
+        /// The version of Factorio this mod works on<br/>
         /// Only considers the major version
         /// </summary>
         public AccurateVersion FactorioVersion { get; }
@@ -67,7 +67,8 @@ namespace ModMyFactory.Mods
         public Dependency[] Dependencies { get; }
 
         /// <summary>
-        /// A stream containing bitmap data of the mods thumbnail. Optional
+        /// A stream containing bitmap data of the mods thumbnail<br/>
+        /// May be null
         /// </summary>
         public Stream Thumbnail { get; }
 
@@ -77,8 +78,8 @@ namespace ModMyFactory.Mods
         public virtual bool CanDisable => true;
 
         /// <summary>
-        /// Gets or sets if this mod is enabled
-        /// If a mod is enabled all other mods in the same family will be disabled.
+        /// Gets or sets if this mod is enabled<br/>
+        /// If a mod is enabled all other mods in the same family will be disabled
         /// </summary>
         public bool Enabled
         {
@@ -102,8 +103,8 @@ namespace ModMyFactory.Mods
         }
 
         /// <summary>
-        /// The family this mod is part of
-        /// Is null if the mod has not been added to a family
+        /// The family this mod is part of<br/>
+        /// Null if the mod has not been added to a family
         /// </summary>
         public ModFamily Family { get; internal set; }
 

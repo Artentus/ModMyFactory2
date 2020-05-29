@@ -98,8 +98,8 @@ namespace ModMyFactory.Game
         internal void UnlinkModDirectoryInternal() => UnlinkDirectory(ModDirectory);
 
         /// <summary>
-        /// Creates a managed Factorio instance from an existing instance
-        /// The created instance will not be associated with an instance manager
+        /// Creates a managed Factorio instance from an existing instance<br/>
+        /// The created instance will not be associated with an instance manager<br/>
         /// If the instance is already managed it will be returned directly
         /// </summary>
         public static ManagedFactorioInstance FromInstance(IFactorioInstance instance, ModManager modManager)
@@ -117,41 +117,41 @@ namespace ModMyFactory.Game
             return new ManagedFactorioInstance(instance, modManager, false);
         }
 
-        public void Start(string[] args) => _baseInstance.Start(args);
+        public void Start(string arguments) => _baseInstance.Start(arguments);
 
         /// <summary>
-        /// Links this instances save directory to another location.
-        /// All contents in the old directory will be deleted!
+        /// Links this instances save directory to another location<br/>
+        /// All contents in the old directory will be deleted
         /// </summary>
-        /// <param name="destination">The location to link to.</param>
+        /// <param name="destination">The location to link to</param>
         public void LinkSavegameDirectory(string destination) => LinkDirectory(SavegameDirectory, destination);
 
         /// <summary>
-        /// Unlinks this instances save directory so it points to its original location.
+        /// Unlinks this instances save directory so it points to its original location
         /// </summary>
         public void UnlinkSavegameDirectory() => UnlinkDirectory(SavegameDirectory);
 
         /// <summary>
-        /// Links this instances scenario directory to another location.
-        /// All contents in the old directory will be deleted!
+        /// Links this instances scenario directory to another location<br/>
+        /// All contents in the old directory will be deleted
         /// </summary>
-        /// <param name="destination">The location to link to.</param>
+        /// <param name="destination">The location to link to</param>
         public void LinkScenarioDirectory(string destination) => LinkDirectory(ScenarioDirectory, destination);
 
         /// <summary>
-        /// Unlinks this instances scenario directory so it points to its original location.
+        /// Unlinks this instances scenario directory so it points to its original location
         /// </summary>
         public void UnlinkScenarioDirectory() => UnlinkDirectory(ScenarioDirectory);
 
         /// <summary>
-        /// Links this instances mod directory to another location.
-        /// All contents in the old directory will be deleted!
+        /// Links this instances mod directory to another location<br/>
+        /// All contents in the old directory will be deleted
         /// </summary>
-        /// <param name="destination">The location to link to.</param>
+        /// <param name="destination">The location to link to</param>
         public void LinkModDirectory(string destination) => LinkDirectory(ModDirectory, destination);
 
         /// <summary>
-        /// Unlinks this instances mod directory so it points to its original location.
+        /// Unlinks this instances mod directory so it points to its original location
         /// </summary>
         public void UnlinkModDirectory() => UnlinkDirectory(ModDirectory);
 

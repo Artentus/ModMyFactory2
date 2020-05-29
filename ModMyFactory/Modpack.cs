@@ -27,7 +27,7 @@ namespace ModMyFactory
         public event EventHandler EnabledChanged;
 
         /// <summary>
-        /// Whether the modpack is enabled
+        /// Whether the modpack is enabled<br/>
         /// Undefined if mods in the modpack have different enabled states
         /// </summary>
         public bool? Enabled
@@ -155,7 +155,7 @@ namespace ModMyFactory
             => EnabledChanged?.Invoke(this, e);
 
         /// <summary>
-        /// Adds a mod or another modpack to the modpack
+        /// Adds a mod or another modpack to the modpack<br/>
         /// If the add operation would result in a circular reference an exception is thrown
         /// </summary>
         public virtual void Add(ICanEnable item)
@@ -168,7 +168,7 @@ namespace ModMyFactory
         }
 
         /// <summary>
-        /// Adds a mod or another modpack to the modpack
+        /// Adds a mod or another modpack to the modpack<br/>
         /// If the add operation would result in a circular reference it is ignored
         /// </summary>
         public virtual void AddSafe(ICanEnable item)
@@ -181,7 +181,7 @@ namespace ModMyFactory
         }
 
         /// <summary>
-        /// Adds a collection of mods and other modpacks to the modpack
+        /// Adds a collection of mods and other modpacks to the modpack<br/>
         /// If an add operation would result in a circular reference an exception is thrown
         /// </summary>
         public virtual void AddRange(IEnumerable<ICanEnable> collection)
@@ -195,7 +195,7 @@ namespace ModMyFactory
         }
 
         /// <summary>
-        /// Adds a collection of mods and other modpacks to the modpack
+        /// Adds a collection of mods and other modpacks to the modpack<br/>
         /// If an add operation would result in a circular reference it is ignored
         /// </summary>
         public virtual void AddRangeSafe(IEnumerable<ICanEnable> collection)

@@ -25,7 +25,8 @@ namespace ModMyFactory.Mods
         ModInfo Info { get; }
 
         /// <summary>
-        /// Optional. A stream containing bitmap data of the mods thumbnail
+        /// A stream containing bitmap data of the mods thumbnail<br/>
+        /// May be null
         /// </summary>
         Stream Thumbnail { get; }
 
@@ -35,7 +36,7 @@ namespace ModMyFactory.Mods
         bool IsExtracted { get; }
 
         /// <summary>
-        /// Gets or sets if this mod file is enabled on file level
+        /// Gets or sets if this mod file is enabled on file level<br/>
         /// A disabled mod file will not be recognized by Factorio
         /// </summary>
         bool Enabled { get; set; }

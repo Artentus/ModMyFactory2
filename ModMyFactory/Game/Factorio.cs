@@ -141,7 +141,7 @@ namespace ModMyFactory.Game
         /// </summary>
         /// <param name="archiveFile">The file to extract</param>
         /// <param name="destination">Where to extract to</param>
-        /// <param name="dirName">Optional. The name of the top level directory of the resulting instance, if successfull</param>
+        /// <param name="dirName">Optional<br/>The name of the top level directory of the resulting instance, if successfull</param>
         public static async Task<(bool, IFactorioInstance)> TryExtract(FileInfo archiveFile, string destination, string dirName = default)
         {
             var destinationDir = new DirectoryInfo(destination);

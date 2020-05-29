@@ -45,9 +45,9 @@ namespace ModMyFactory.Mods
         }
 
         /// <summary>
-        /// Tries to load a mod file.
+        /// Tries to load a mod file
         /// </summary>
-        /// <param name="path">The path to load the mod from.</param>
+        /// <param name="path">The path to load the mod from</param>
         public static async Task<(bool, IModFile)> TryLoadAsync(string path)
         {
             var file = new FileInfo(path);
@@ -60,15 +60,15 @@ namespace ModMyFactory.Mods
         }
 
         /// <summary>
-        /// Tries to load a mod file.
+        /// Tries to load a mod file
         /// </summary>
-        /// <param name="fileSystemInfo">The path to load the mod from.</param>
+        /// <param name="fileSystemInfo">The path to load the mod from</param>
         public static async Task<(bool, IModFile)> TryLoadAsync(FileSystemInfo fileSystemInfo) => await TryLoadAsync(fileSystemInfo.FullName);
 
         /// <summary>
-        /// Loads a mod file.
+        /// Loads a mod file
         /// </summary>
-        /// <param name="path">The path to load the mod from.</param>
+        /// <param name="path">The path to load the mod from</param>
         public static async Task<IModFile> LoadAsync(string path)
         {
             (bool success, var result) = await TryLoadAsync(path);
@@ -77,9 +77,9 @@ namespace ModMyFactory.Mods
         }
 
         /// <summary>
-        /// Loads a mod file.
+        /// Loads a mod file
         /// </summary>
-        /// <param name="fileSystemInfo">The path to load the mod from.</param>
+        /// <param name="fileSystemInfo">The path to load the mod from</param>
         public static async Task<IModFile> LoadAsync(FileSystemInfo fileSystemInfo) => await LoadAsync(fileSystemInfo.FullName);
     }
 }
