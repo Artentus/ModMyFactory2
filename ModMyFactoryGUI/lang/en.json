@@ -16,6 +16,10 @@
     "type": "string",
     "value": "Archives"
   },
+  "SymlinkFileType": {
+    "type": "string",
+    "value": "Links"
+  },
   "DefaultModpackName": {
     "type": "string",
     "value": "New Modpack"
@@ -468,6 +472,28 @@
   "ThirdPartySoftwareHeader": {
     "type": "string",
     "value": "Third party software"
+  },
+
+  // --------- Shortcut properties window ---------
+  "ShortcutPropertiesWindowTitle": {
+    "type": "string",
+    "value": "Edit shortcut properties"
+  },
+  "CreateShortcutButton": {
+    "type": "string",
+    "value": "Create shortcut"
+  },
+  "UseModpackHeader": {
+    "type": "string",
+    "value": "Start with modpack"
+  },
+  "UseSavegameHeader": {
+    "type": "string",
+    "value": "Load save file"
+  },
+  "UseCustomArgsHeader": {
+    "type": "string",
+    "value": "Pass custom arguments"
   },
 
   // --------- Visual theme names ---------

@@ -46,7 +46,7 @@ the Free Software Foundation, either version 3 of the License, or
 
     <Style Selector="Button">
       <Setter Property="MinWidth" Value="120" />
-      <Setter Property="Padding" Value="7" />
+      <Setter Property="Padding" Value="10,7" />
       <Setter Property="FontSize" Value="{DynamicResource FontSizeLarge}" />
       <Setter Property="Background" Value="{DynamicResource ThemeAccentBrush4}" />
       <Setter Property="BorderThickness" Value="0" />

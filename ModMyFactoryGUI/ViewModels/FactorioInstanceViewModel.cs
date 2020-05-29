@@ -6,18 +6,24 @@
 //  (at your option) any later version.
 
 using Avalonia;
+using Avalonia.Controls;
 using Avalonia.Media.Imaging;
 using Avalonia.Platform;
+using CommandLine;
 using ModMyFactory;
 using ModMyFactory.BaseTypes;
 using ModMyFactory.Game;
 using ModMyFactory.WebApi.Factorio;
+using ModMyFactoryGUI.CommandLine;
+using ModMyFactoryGUI.Controls;
 using ModMyFactoryGUI.Helpers;
+using ModMyFactoryGUI.MVVM;
 using ModMyFactoryGUI.Tasks.Web;
 using ReactiveUI;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Reflection;
 using System.Threading.Tasks;
 using System.Windows.Input;
 
@@ -103,6 +109,7 @@ namespace ModMyFactoryGUI.ViewModels
 
         public ICommand BeginRenameCommand { get; }
         public ICommand EndRenameCommand { get; }
+        public ICommand CreateShortcutCommand { get; }
         public ICommand RemoveCommand { get; }
         public ICommand DeleteCommand { get; }
 
@@ -115,6 +122,7 @@ namespace ModMyFactoryGUI.ViewModels
 
             BeginRenameCommand = ReactiveCommand.Create(() => IsRenaming = true);
             EndRenameCommand = ReactiveCommand.Create(() => IsRenaming = false);
+            CreateShortcutCommand = ReactiveCommand.CreateFromTask(CreateShortcutAsync);
             RemoveCommand = ReactiveCommand.Create(Remove);
             DeleteCommand = ReactiveCommand.Create(Delete);
         }
@@ -199,7 +207,61 @@ namespace ModMyFactoryGUI.ViewModels
         private void OnInstanceRemoved(EventArgs e)
             => InstanceRemoved?.Invoke(this, e);
 
+        private string BuildArguments(ShortcutPropertiesViewModel vm)
+        {
+            int? modpackId = vm.UseModpack ? (int?)Program.GetModpackId(vm.SelectedModpack) : null;
+            var savegamePath = vm.UseSavegame ? vm.SavegamePath : null;
+            var customArgs = vm.UseCustomArgs ? vm.CustomArgs.Replace('"', '\'') : null;
+            var opts = new StartGameOptions(Instance.GetUniqueKey(), null, modpackId, null, savegamePath, customArgs, false, false, null);
+
+            var args = Parser.Default.FormatCommandLine(opts);
+#if !SELFCONTAINED
+            var assemblyPath = Assembly.GetExecutingAssembly().Location;
+            args = $"\"{assemblyPath}\" {args}";
+#endif
+            return args;
+        }
+
+        private string GetTargetPath()
+        {
+#if SELFCONTAINED
+            return Assembly.GetExecutingAssembly().Location;
+#else
+            return "dotnet";
+#endif
+        }
+
         public string GetUniqueKey() => Instance.GetUniqueKey();
+
+        public async Task CreateShortcutAsync()
+        {
+            var vm = new ShortcutPropertiesViewModel();
+            var dialog = View.CreateAndAttach(vm);
+            var result = await dialog.ShowDialog<DialogResult>(App.Current.MainWindow);
+            if (result == DialogResult.Ok)
+            {
+                var extensions = PlatformHelper.GetSymbolicLinkExtensions();
+                var sfd = new SaveFileDialog();
+
+                if (extensions.Length > 0)
+                {
+                    var filter = new FileDialogFilter();
+                    filter.Extensions.AddRange(extensions);
+                    filter.Name = (string)App.Current.Locales.GetResource("SymlinkFileType");
+                    sfd.Filters.Add(filter);
+                    sfd.DefaultExtension = extensions[0];
+                }
+
+                var path = await sfd.ShowAsync(App.Current.MainWindow);
+                if (!string.IsNullOrEmpty(path))
+                {
+                    var args = BuildArguments(vm);
+                    var target = GetTargetPath();
+                    var iconPath = Path.Combine(Program.ApplicationDirectory.FullName, "Factorio_Icon.ico");
+                    PlatformHelper.CreateSymbolicLink(path, target, args, iconPath);
+                }
+            }
+        }
 
         public void Remove()
         {

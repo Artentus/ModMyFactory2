@@ -16,6 +16,10 @@
     "type": "string",
     "value": "Archive"
   },
+  "SymlinkFileType": {
+    "type": "string",
+    "value": "Verknüpfungen"
+  },
   "DefaultModpackName": {
     "type": "string",
     "value": "Neues Modpack"
@@ -438,6 +442,28 @@
   "ThirdPartySoftwareHeader": {
     "type": "string",
     "value": "Software von Drittanbietern"
+  },
+
+  // --------- Shortcut properties window ---------
+  "ShortcutPropertiesWindowTitle": {
+    "type": "string",
+    "value": "Verknüpfungseigenschaften"
+  },
+  "CreateShortcutButton": {
+    "type": "string",
+    "value": "Verknüpfung erstellen"
+  },
+  "UseModpackHeader": {
+    "type": "string",
+    "value": "Mit Modpack starten"
+  },
+  "UseSavegameHeader": {
+    "type": "string",
+    "value": "Speicherstand laden"
+  },
+  "UseCustomArgsHeader": {
+    "type": "string",
+    "value": "Benutzerdefinierte Argumente senden"
   },
 
   // --------- Visual theme names ---------

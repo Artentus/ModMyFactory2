@@ -1,0 +1,19 @@
+<!--
+Copyright (C) 2020 Mathis Rech
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+-->
+
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             x:Class="ModMyFactoryGUI.Controls.Icons.ShortcutIcon">
+
+  <Grid Width="16" Height="16">
+    <Path Fill="{DynamicResource IconBaseBrush1}" Data="F1M14,1L2,1 2,2 14,2 14,15 15,15 15,1z M5.151,4L12,4 12,10.697 10.15,12.697 10.15,6.85 3.15,14 2.023,12.85 8.85,6 3.3,6z" />
+  </Grid>
+</UserControl>

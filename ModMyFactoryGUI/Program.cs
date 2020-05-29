@@ -285,6 +285,19 @@ namespace ModMyFactoryGUI
             }
         }
 
+        public static int GetModpackId(Modpack modpack)
+        {
+            if (modpack is null) throw new ArgumentNullException(nameof(modpack));
+
+            foreach (var kvp in _modpacks)
+            {
+                if (kvp.Value == modpack)
+                    return kvp.Key;
+            }
+
+            return -1;
+        }
+
         #endregion Internal Functions
 
         #region Initialization
@@ -449,8 +462,22 @@ namespace ModMyFactoryGUI
                         modpack.Enabled = true;
                     }
 
+                    FileInfo savegameFile = null;
+                    if (!string.IsNullOrWhiteSpace(options.SavegameFile))
+                    {
+                        try
+                        {
+                            savegameFile = new FileInfo(options.SavegameFile);
+                            if (!savegameFile.Exists) savegameFile = null;
+                        }
+                        catch
+                        {
+                            savegameFile = null;
+                        }
+                    }
+
                     Log.Information($"Starting Factorio instance '{instance}'");
-                    instance.Start(Locations.GetModDir(instance.Version));
+                    instance.Start(Locations.GetModDir(instance.Version), savegameFile, options.CustomArguments.Replace('\'', '"'));
                 }
                 else
                 {

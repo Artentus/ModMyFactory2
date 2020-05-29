@@ -9,19 +9,25 @@ branches:
     - master
 
 build_script:
-  - dotnet publish ModMyFactoryGUI\ -c Release -f netcoreapp3.0 --version-suffix %APPVEYOR_BUILD_VERSION%
-  - dotnet publish ModMyFactoryGUI\ -c Release -f net472 --version-suffix %APPVEYOR_BUILD_VERSION%
+  - dotnet publish ModMyFactoryGUI\ -o ModMyFactoryGUI\bin\publish\linux-x64\ -c Release -f netcoreapp3.0 -r linux-x64 -p:PublishTrimmed=true -p:Standalone=true --version-suffix %APPVEYOR_BUILD_VERSION%
+  - dotnet publish ModMyFactoryGUI\ -o ModMyFactoryGUI\bin\publish\osx-x64\ -c Release -f netcoreapp3.0 -r osx-x64 -p:PublishTrimmed=true -p:Standalone=true --version-suffix %APPVEYOR_BUILD_VERSION%
+  - dotnet publish ModMyFactoryGUI\ -o ModMyFactoryGUI\bin\publish\win-x64\ -c Release -f netcoreapp3.0 -r win-x64 -p:PublishTrimmed=true -p:Standalone=true --version-suffix %APPVEYOR_BUILD_VERSION%
+  - dotnet publish ModMyFactoryGUI\ -o ModMyFactoryGUI\bin\publish\netcoreapp3.0\ -c Release -f netcoreapp3.0 --version-suffix %APPVEYOR_BUILD_VERSION%
+  - dotnet publish ModMyFactoryGUI\ -o ModMyFactoryGUI\bin\publish\net472\ -c Release -f net472 --version-suffix %APPVEYOR_BUILD_VERSION%
 
 after_build:
-  - 7z a mmf_%APPVEYOR_BUILD_VERSION%_netcoreapp3.0.zip .\ModMyFactoryGUI\bin\Release\netcoreapp3.0\publish\*
-  - 7z a mmf_%APPVEYOR_BUILD_VERSION%_net472.zip .\ModMyFactoryGUI\bin\Release\net472\publish\*
+  - 7z a %APPVEYOR_BUILD_VERSION%_standalone_linux64.zip .\ModMyFactoryGUI\bin\publish\linux-x64\*
+  - 7z a %APPVEYOR_BUILD_VERSION%_standalone_osx.zip .\ModMyFactoryGUI\bin\publish\osx-x64\*
+  - 7z a %APPVEYOR_BUILD_VERSION%_standalone_win64.zip .\ModMyFactoryGUI\bin\publish\win-x64\*
+  - 7z a %APPVEYOR_BUILD_VERSION%_x-plat.zip .\ModMyFactoryGUI\bin\publish\netcoreapp3.0\*
+  - 7z a %APPVEYOR_BUILD_VERSION%_win.zip .\ModMyFactoryGUI\bin\publish\net472\*
 
 cache:
   - '%userprofile%\.nuget\packages'
   - '%LocalAppData%\NuGet\v3-cache'
 
 artifacts:
-  path: mmf_%APPVEYOR_BUILD_VERSION%_*.zip
+  path: %APPVEYOR_BUILD_VERSION%_*.zip
   name: Binaries
 
 deploy:

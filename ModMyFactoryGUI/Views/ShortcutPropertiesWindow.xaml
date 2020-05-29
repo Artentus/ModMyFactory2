@@ -1,0 +1,43 @@
+<!--
+Copyright (C) 2020 Mathis Rech
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+-->
+
+<Window x:Class="ModMyFactoryGUI.Views.ShortcutPropertiesWindow"
+        xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:l="clr-namespace:ModMyFactoryGUI.Localization"
+        xmlns:controls="clr-namespace:ModMyFactoryGUI.Controls"
+        Icon="/Assets/MMF_Icon.ico"
+        Title="{l:LocalizedResource ShortcutPropertiesWindowTitle}"
+        Width="500" Height="320">
+
+  <Grid Margin="8" RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,*,Auto">
+    <CheckBox Grid.Row="0" Margin="8,8,8,0" Content="{l:LocalizedResource UseModpackHeader}" IsChecked="{Binding UseModpack, Mode=TwoWay}" />
+    <ComboBox Grid.Row="1" Margin="8" Height="30" IsEnabled="{Binding UseModpack}" FontSize="{DynamicResource FontSizeNormal}"
+              Items="{Binding Modpacks}" SelectedItem="{Binding SelectedModpack, Mode=TwoWay}">
+      <ComboBox.ItemTemplate>
+        <DataTemplate>
+          <TextBlock Margin="4,2" Text="{Binding DisplayName}" />
+        </DataTemplate>
+      </ComboBox.ItemTemplate>
+    </ComboBox>
+
+    <CheckBox Grid.Row="2" Margin="8,8,8,0" Content="{l:LocalizedResource UseSavegameHeader}" IsChecked="{Binding UseSavegame, Mode=TwoWay}" />
+    <controls:FolderBrowserTextBox Grid.Row="3" Margin="8" Text="{Binding SavegamePath, Mode=TwoWay}" IsEnabled="{Binding UseSavegame}" />
+
+    <CheckBox Grid.Row="4" Margin="8,8,8,0" Content="{l:LocalizedResource UseCustomArgsHeader}" IsChecked="{Binding UseCustomArgs, Mode=TwoWay}" />
+    <TextBox Grid.Row="5" Margin="8" Text="{Binding CustomArgs, Mode=TwoWay}" IsEnabled="{Binding UseCustomArgs}" />
+
+    <DockPanel Grid.Row="7">
+      <Button DockPanel.Dock="Right" Margin="8" IsDefault="True" HorizontalAlignment="Right"
+              Content="{l:LocalizedResource CreateShortcutButton}" Command="{Binding CreateCommand}" IsEnabled="{Binding CanCreate}" />
+      <Button DockPanel.Dock="Right" Margin="0,8" IsCancel="True" HorizontalAlignment="Right"
+              Content="{l:LocalizedResource CancelButton}" Command="{Binding CancelCommand}" />
+    </DockPanel>
+  </Grid>
+</Window>

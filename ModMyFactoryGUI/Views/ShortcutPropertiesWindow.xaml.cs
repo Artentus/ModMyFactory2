@@ -11,9 +11,9 @@ using ModMyFactoryGUI.Controls;
 
 namespace ModMyFactoryGUI.Views
 {
-    partial class AboutWindow : ModalWindowBase
+    partial class ShortcutPropertiesWindow : ModalWindowBase
     {
-        public AboutWindow()
+        public ShortcutPropertiesWindow()
         {
             InitializeComponent();
 #if DEBUG

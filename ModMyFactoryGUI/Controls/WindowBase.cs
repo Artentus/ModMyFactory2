@@ -41,7 +41,7 @@ namespace ModMyFactoryGUI.Controls
 
         private static IntPtr SetClassLong(IntPtr hWnd, ClassLongIndex nIndex, IntPtr dwNewLong)
         {
-            if (Environment.Is64BitOperatingSystem)
+            if (Environment.Is64BitProcess)
                 return SetClassLong64(hWnd, nIndex, dwNewLong);
 
             return SetClassLong32(hWnd, nIndex, dwNewLong);
@@ -55,7 +55,7 @@ namespace ModMyFactoryGUI.Controls
 
         private static IntPtr GetClassLong(IntPtr hWnd, ClassLongIndex nIndex)
         {
-            if (Environment.Is64BitOperatingSystem)
+            if (Environment.Is64BitProcess)
                 return GetClassLong64(hWnd, nIndex);
 
             return new IntPtr(GetClassLong32(hWnd, nIndex));

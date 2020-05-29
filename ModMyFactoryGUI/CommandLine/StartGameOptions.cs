@@ -21,8 +21,8 @@ namespace ModMyFactoryGUI.CommandLine
             {
                 return new Example[]
                 {
-                    new Example("Start a Factorio instance using a specific modpack",
-                        new StartGameOptions(null, "Instance-01", null, "Modpack-01", false, false, null))
+                    new Example("Start a Factorio instance using a specific modpack and loading a specific save",
+                        new StartGameOptions(null, "Instance-01", null, "Modpack-01", "Save-01.zip", null, false, false, null))
                 };
             }
         }
@@ -39,10 +39,17 @@ namespace ModMyFactoryGUI.CommandLine
         [Option("pack-name", HelpText = "Optional modpack name (case sensitive)")]
         public string ModpackName { get; }
 
+        [Option("load-save", HelpText = "Optional save file to load")]
+        public string SavegameFile { get; }
+
+        [Option("custom", HelpText = "Optional custom command line arguments that are passed to Factorio")]
+        public string CustomArguments { get; }
+
         public StartGameOptions(
-            string uid, string name, int? modpackId, string modpackName,
+            string uid, string name, int? modpackId, string modpackName, string savegameFile, string customArguments,
             bool verbose, bool noLog, string appDataPath)
             : base(verbose, noLog, appDataPath)
-            => (Uid, Name, ModpackId, ModpackName) = (uid, name, modpackId, modpackName);
+            => (Uid, Name, ModpackId, ModpackName, SavegameFile, CustomArguments)
+                = (uid, name, modpackId, modpackName, savegameFile, customArguments);
     }
 }

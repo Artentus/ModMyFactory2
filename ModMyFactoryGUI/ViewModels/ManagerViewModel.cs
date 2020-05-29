@@ -24,18 +24,6 @@ namespace ModMyFactoryGUI.ViewModels
 {
     internal sealed class ManagerViewModel : MainViewModelBase<ManagerView>
     {
-        private sealed class ModpackComparer : IComparer<ModpackViewModel>
-        {
-            public int Compare(ModpackViewModel first, ModpackViewModel second)
-            {
-                // Search score always takes precendence over the default alphabeticaal sorting
-                int result = second.SearchScore.CompareTo(first.SearchScore);
-                if (result == 0) result = first.DisplayName.CompareTo(second.DisplayName);
-                return result;
-            }
-        }
-
-
         private readonly ObservableCollection<ModVersionGroupingViewModel> _modVersionGroupings;
         private readonly ObservableCollection<ModpackViewModel> _modpacks;
         private string _modFilter, _modpackFilter;

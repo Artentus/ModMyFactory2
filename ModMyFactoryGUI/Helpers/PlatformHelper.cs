@@ -6,24 +6,23 @@
 //  (at your option) any later version.
 
 using ModMyFactory.WebApi.Factorio;
+using ModMyFactory.Win32;
+using Mono.Unix;
+using System;
 using System.Diagnostics;
 using System.IO;
-
-#if NETCORE
-
-using System;
 using System.Runtime.InteropServices;
-
-#endif
 
 namespace ModMyFactoryGUI.Helpers
 {
     internal static class PlatformHelper
     {
         private static readonly string[] WindowsArchiveExtensions = { "zip" };
+        private static readonly string[] WindowsSymbolicLinkExtensions = { "lnk" };
 #if NETCORE
         private static readonly string[] LinuxArchiveExtensions = { "tar.gz", "tar.xz" };
         private static readonly string[] MacArchiveExtensions = { "dmg" };
+        private static readonly string[] EmptyExtensions = new string[0];
 #endif
 
         public static void OpenWebUrl(string url)
@@ -139,6 +138,62 @@ namespace ModMyFactoryGUI.Helpers
             else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
             {
                 return MacArchiveExtensions;
+            }
+            else
+            {
+                throw new PlatformNotSupportedException();
+            }
+#else
+            throw new PlatformNotSupportedException();
+#endif
+        }
+
+        public static string[] GetSymbolicLinkExtensions()
+        {
+#if NETFULL
+            return WindowsSymbolicLinkExtensions;
+#elif NETCORE
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            {
+                return WindowsSymbolicLinkExtensions;
+            }
+            else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux)
+                || RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+            {
+                return EmptyExtensions;
+            }
+            else
+            {
+                throw new PlatformNotSupportedException();
+            }
+#else
+            throw new PlatformNotSupportedException();
+#endif
+        }
+
+#if NETCORE
+
+        private static void CreateSymbolicLinkUnix(string linkPath, string targetPath, string arguments)
+        {
+            var info = new UnixSymbolicLinkInfo(linkPath);
+            info.CreateSymbolicLinkTo($"{targetPath} {arguments}");
+        }
+
+#endif
+
+        public static void CreateSymbolicLink(string linkPath, string targetPath, string arguments, string iconLocation)
+        {
+#if NETFULL
+            Shell.CreateSymbolicLink(linkPath, targetPath, arguments, iconLocation);
+#elif NETCORE
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            {
+                Shell.CreateSymbolicLink(linkPath, targetPath, arguments, iconLocation);
+            }
+            else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux)
+                || RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+            {
+                CreateSymbolicLinkUnix(linkPath, targetPath, arguments);
             }
             else
             {

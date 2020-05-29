@@ -14,8 +14,9 @@ the Free Software Foundation, either version 3 of the License, or
         xmlns:vm="clr-namespace:ModMyFactoryGUI.ViewModels"
         xmlns:controls="clr-namespace:ModMyFactoryGUI.Controls"
         xmlns:views="clr-namespace:ModMyFactoryGUI.Views"
-        Icon="/Assets/MMF_Icon.ico" Title="{l:LocalizedResource AboutWindowTitle}"
-        Width="700" Height="400" WindowStartupLocation="CenterOwner" CanResize="False">
+        Icon="/Assets/MMF_Icon.ico"
+        Title="{l:LocalizedResource AboutWindowTitle}"
+        Width="700" Height="400">
 
   <Window.Resources>
     <l:LocalizedFormatter x:Key="LocalizedFormatter" />
