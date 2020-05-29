@@ -75,10 +75,10 @@ namespace ModMyFactory.Game
             }
             else
             {
-                throw new PlatformException();
+                throw new PlatformNotSupportedException();
             }
 #else
-            throw new PlatformException();
+            throw new PlatformNotSupportedException();
 #endif
         }
 
@@ -168,10 +168,10 @@ namespace ModMyFactory.Game
             }
             else
             {
-                throw new PlatformException();
+                throw new PlatformNotSupportedException();
             }
 #else
-            throw new PlatformException();
+            throw new PlatformNotSupportedException();
 #endif
             var builder = new ArgumentBuilder();
             builder.AppendArgument("-applaunch");

@@ -9,6 +9,12 @@ using ModMyFactory.Mods;
 using System;
 using System.IO;
 
+#if NETCORE
+
+using System.Runtime.InteropServices;
+
+#endif
+
 namespace ModMyFactory.Game
 {
     internal sealed class FactorioSteamInstance : FactorioInstanceBase
@@ -23,13 +29,19 @@ namespace ModMyFactory.Game
             string appDataPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Factorio");
 #elif NETCORE
             string appDataPath;
-            var os = Environment.OSVersion;
-            if (os.Platform == PlatformID.Win32NT)
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            {
                 appDataPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Factorio");
-            else if (os.Platform == PlatformID.Unix)
+            }
+            else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux)
+                || RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+            {
                 appDataPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), ".factorio");
+            }
             else
-                throw new PlatformException();
+            {
+                throw new PlatformNotSupportedException();
+            }
 #endif
             SavegamePath = Path.Combine(appDataPath, "saves");
             ScenarioPath = Path.Combine(appDataPath, "scenarios");

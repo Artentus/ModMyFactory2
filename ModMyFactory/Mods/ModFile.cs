@@ -71,9 +71,13 @@ namespace ModMyFactory.Mods
         /// <param name="path">The path to load the mod from</param>
         public static async Task<IModFile> LoadAsync(string path)
         {
-            (bool success, var result) = await TryLoadAsync(path);
-            if (!success) throw new InvalidPathException("The path does not point to a valid mod file.");
-            return result;
+            var file = new FileInfo(path);
+            if (file.Exists) return await ZippedModFile.LoadAsync(file);
+
+            var directory = new DirectoryInfo(path);
+            if (directory.Exists) return await ExtractedModFile.LoadAsync(directory);
+
+            throw new PathNotFoundException("The specified path does not exist");
         }
 
         /// <summary>

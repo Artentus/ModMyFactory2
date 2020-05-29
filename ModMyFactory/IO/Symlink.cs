@@ -6,6 +6,7 @@
 //  (at your option) any later version.
 
 using ModMyFactory.IO.Win32;
+using System;
 
 #if NETCORE
 
@@ -34,10 +35,10 @@ namespace ModMyFactory.IO
             }
             else
             {
-                throw new PlatformException();
+                throw new PlatformNotSupportedException();
             }
 #else
-            throw new PlatformException();
+            throw new PlatformNotSupportedException();
 #endif
         }
     }

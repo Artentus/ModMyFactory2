@@ -13,6 +13,12 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
+#if NETCORE
+
+using System.Runtime.InteropServices;
+
+#endif
+
 namespace ModMyFactory.Game
 {
     public static class Factorio
@@ -37,13 +43,20 @@ namespace ModMyFactory.Game
             executable = new FileInfo(Path.Combine(directory.FullName, "bin", "x64", "factorio.exe"));
             return executable.Exists;
 #elif NETCORE
-            var os = Environment.OSVersion;
-            if (os.Platform == PlatformID.Win32NT)
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            {
                 executable = new FileInfo(Path.Combine(directory.FullName, "bin", "x64", "factorio.exe"));
-            else if (os.Platform == PlatformID.Unix)
+            }
+            else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux)
+                || RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+            {
                 executable = new FileInfo(Path.Combine(directory.FullName, "bin", "x64", "factorio"));
+            }
             else
-                throw new PlatformException();
+            {
+                throw new PlatformNotSupportedException();
+            }
+
             return executable.Exists;
 #endif
         }
@@ -82,8 +95,10 @@ namespace ModMyFactory.Game
         /// <param name="directory">The directory the instance is stored in</param>
         public static async Task<IFactorioInstance> LoadAsync(DirectoryInfo directory)
         {
+            if (directory.Exists) throw new PathNotFoundException("The specified directory does not exist");
+
             (bool success, var result) = await TryLoadAsync(directory);
-            if (!success) throw new InvalidPathException("The directory does not contain a valid Factorio instance");
+            if (!success) throw new InvalidFactorioDataException("The directory does not contain a valid Factorio instance");
             return result;
         }
 
@@ -132,7 +147,7 @@ namespace ModMyFactory.Game
         public static async Task<IFactorioInstance> LoadSteamAsync()
         {
             (bool success, var result) = await TryLoadSteamAsync();
-            if (!success) throw new ManagerException("Factorio Steam version not found");
+            if (!success) throw new SteamInstanceNotFoundException("Factorio Steam version not found");
             return result;
         }
 
