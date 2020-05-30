@@ -6,28 +6,42 @@
 //  (at your option) any later version.
 
 using System;
+using System.Reflection;
 using System.Runtime.InteropServices;
 
 namespace ModMyFactory.Win32
 {
     public static class Shell
     {
+        // We have to invoke manually using reflection because the dynamic type does not support COM objects in .Net Core
+        private static object Call(this object obj, string methodName, params object[] parameters)
+        {
+            var t = obj.GetType();
+            return t.InvokeMember(methodName, BindingFlags.InvokeMethod, null, obj, parameters);
+        }
+
+        private static void Set(this object obj, string propertyName, object value)
+        {
+            var t = obj.GetType();
+            t.InvokeMember(propertyName, BindingFlags.SetProperty, null, obj, new[] { value });
+        }
+
         public static void CreateSymbolicLink(string linkPath, string targetPath, string arguments, string iconLocation)
         {
-            // Create the windows script host shell object
-            Type t = Type.GetTypeFromCLSID(new Guid("72C24DD5-D70A-438B-8A42-98424B88AFB8"));
-            dynamic shell = Activator.CreateInstance(t);
+            // Create the Windows script host shell object
+            Type shellType = Type.GetTypeFromCLSID(new Guid("72C24DD5-D70A-438B-8A42-98424B88AFB8"));
+            object shell = Activator.CreateInstance(shellType);
 
             try
             {
-                dynamic shortcut = shell.CreateShortcut(linkPath);
+                object shortcut = shell.Call("CreateShortcut", linkPath);
 
                 try
                 {
-                    shortcut.TargetPath = targetPath;
-                    shortcut.Arguments = arguments;
-                    shortcut.IconLocation = iconLocation;
-                    shortcut.Save();
+                    shortcut.Set("TargetPath", targetPath);
+                    shortcut.Set("Arguments", arguments);
+                    shortcut.Set("IconLocation", iconLocation);
+                    shortcut.Call("Save");
                 }
                 finally
                 {
