@@ -11,7 +11,7 @@ Style slightly modified from the Avalonia default style
     <Setter Property="BorderThickness" Value="1" />
     <Setter Property="SelectionBrush" Value="{DynamicResource HighlightBrush}" />
     <Setter Property="SelectionForegroundBrush" Value="{DynamicResource HighlightForegroundBrush}" />
-    <Setter Property="Padding" Value="4,3" />
+    <Setter Property="Padding" Value="4,1" />
     <Setter Property="Template">
       <ControlTemplate>
         <Border Name="border"

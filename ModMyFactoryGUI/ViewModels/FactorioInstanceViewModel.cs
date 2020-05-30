@@ -67,9 +67,11 @@ namespace ModMyFactoryGUI.ViewModels
             get => _isRenaming;
             set
             {
-                if (this.RaiseAndSetIfChanged(ref _isRenaming, value, nameof(IsRenaming)) && !value)
+                if (value != _isRenaming)
                 {
-                    FactorioInstanceExtensions.SaveNames();
+                    _isRenaming = value;
+                    if (!_isRenaming) FactorioInstanceExtensions.SaveNames();
+                    this.RaisePropertyChanged(nameof(IsRenaming));
                 }
             }
         }
@@ -201,6 +203,7 @@ namespace ModMyFactoryGUI.ViewModels
             else
             {
                 Instance.SetName(name);
+                this.RaisePropertyChanged(nameof(Name));
             }
         }
 
@@ -293,6 +296,7 @@ namespace ModMyFactoryGUI.ViewModels
             // ToDo: ask user
             OnInstanceRemoved(EventArgs.Empty);
             _manager.RemoveInstance(_instance);
+            _instance.Dispose();
             _instance.Directory.Delete(true);
         }
 

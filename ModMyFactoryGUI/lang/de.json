@@ -340,6 +340,18 @@
     "type": "string",
     "value": "Experimentell"
   },
+  "RenameButton": {
+    "type": "string",
+    "value": "Umbenennen"
+  },
+  "ShortcutButton": {
+    "type": "string",
+    "value": "Verknüpfung erstellen"
+  },
+  "RemoveButton": {
+    "type": "string",
+    "value": "Aus Manager entfernen"
+  },
 
   // --------- Online mods view ---------
   "LoadingMessage": {
