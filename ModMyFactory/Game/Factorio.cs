@@ -151,6 +151,20 @@ namespace ModMyFactory.Game
             return result;
         }
 
+        private static string GetTopDirectory(string path)
+        {
+            string current = path;
+            string next = current;
+
+            while (!string.IsNullOrEmpty(next))
+            {
+                current = next;
+                next = Path.GetDirectoryName(current);
+            }
+
+            return current;
+        }
+
         /// <summary>
         /// Tries to extract an archive containing Factorio
         /// </summary>
@@ -173,10 +187,10 @@ namespace ModMyFactory.Game
                 {
                     // All files in a valid Factorio archive must reside
                     // in a top-level folder called 'Factorio_*'. If we
-                    // we find a file that doesn't we can stop immediately.
+                    // find a file that doesn't we can stop immediately.
                     if (topLevelDir is null)
                     {
-                        topLevelDir = Path.GetPathRoot(reader.Entry.Key.TrimStart('/', '\\'));
+                        topLevelDir = GetTopDirectory(reader.Entry.Key.TrimStart('/', '\\'));
                         topLevelDir = topLevelDir.TrimEnd('/', '\\');
 
                         if (!topLevelDir.StartsWith("factorio", StringComparison.OrdinalIgnoreCase))
@@ -184,14 +198,14 @@ namespace ModMyFactory.Game
                     }
                     else
                     {
-                        string dir = Path.GetPathRoot(reader.Entry.Key.TrimStart('/', '\\'));
+                        string dir = GetTopDirectory(reader.Entry.Key.TrimStart('/', '\\'));
                         dir = dir.TrimEnd('/', '\\');
                         if (!string.Equals(dir, topLevelDir, StringComparison.OrdinalIgnoreCase))
                             return (false, topLevelDir);
-
-                        if (!reader.Entry.IsDirectory)
-                            reader.WriteEntryToDirectory(destination, new ExtractionOptions() { ExtractFullPath = true });
                     }
+
+                    if (!reader.Entry.IsDirectory)
+                        reader.WriteEntryToDirectory(destination, new ExtractionOptions() { ExtractFullPath = true });
                 }
                 return (true, topLevelDir);
             });
@@ -213,15 +227,8 @@ namespace ModMyFactory.Game
                     dir.MoveTo(Path.Combine(dir.Parent.FullName, dirName));
 
                 var (success, instance) = await TryLoadAsync(dir);
-                if (success)
-                {
-                    return (true, instance);
-                }
-                else
-                {
-                    dir.Delete(true);
-                    return (false, null);
-                }
+                if (!success) dir.Delete();
+                return (success, instance);
             }
         }
     }
