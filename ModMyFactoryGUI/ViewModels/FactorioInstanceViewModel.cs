@@ -258,6 +258,9 @@ namespace ModMyFactoryGUI.ViewModels
                 var path = await sfd.ShowAsync(App.Current.MainWindow);
                 if (!string.IsNullOrEmpty(path))
                 {
+                    // We need to check this because in Lunix the default extension is not automatically appended
+                    if (string.IsNullOrEmpty(Path.GetExtension(path))) path += "." + extensions[0];
+
                     var args = BuildArguments(vm);
                     var target = GetTargetPath();
                     var iconPath = Path.Combine(Program.ApplicationDirectory.FullName, "Factorio_Icon.ico");

@@ -21,6 +21,7 @@ namespace ModMyFactoryGUI.Helpers
         private static readonly string[] WindowsSymbolicLinkExtensions = { "lnk" };
 #if NETCORE
         private static readonly string[] LinuxArchiveExtensions = { "tar.gz", "tar.xz" };
+        private static readonly string[] LinuxSymbolicLinkExtensions = { "sh" };
         private static readonly string[] MacArchiveExtensions = { "dmg" };
         private static readonly string[] EmptyExtensions = new string[0];
 #endif
@@ -157,8 +158,15 @@ namespace ModMyFactoryGUI.Helpers
             {
                 return WindowsSymbolicLinkExtensions;
             }
-            else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux)
-                || RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+            else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+            {
+#if SELFCONTAINED
+                return EmptyExtensions;
+#else
+                return LinuxSymbolicLinkExtensions;
+#endif
+            }
+            else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
             {
                 return EmptyExtensions;
             }
@@ -173,11 +181,28 @@ namespace ModMyFactoryGUI.Helpers
 
 #if NETCORE
 
-        private static void CreateSymbolicLinkUnix(string linkPath, string targetPath, string arguments)
+        private static void CreateUnixSymbolicLink(string linkPath, string targetPath, string arguments)
         {
             var info = new UnixSymbolicLinkInfo(linkPath);
             info.CreateSymbolicLinkTo($"{targetPath} {arguments}");
         }
+
+#if !SELFCONTAINED
+
+        private static void CreateLinuxShellScript(string scriptPath, string targetPath, string arguments)
+        {
+            var file = new FileInfo(scriptPath);
+            using var fs = file.Open(FileMode.Create, FileAccess.Write);
+            using var writer = new StreamWriter(fs);
+            writer.WriteLine("#!/usr/bin/env bash");
+            writer.WriteLine($"{targetPath} {arguments}");
+
+            var info = new UnixFileInfo(file.FullName);
+            info.FileAccessPermissions |= FileAccessPermissions.UserExecute | FileAccessPermissions.GroupExecute;
+            info.Refresh();
+        }
+
+#endif
 
 #endif
 
@@ -190,10 +215,18 @@ namespace ModMyFactoryGUI.Helpers
             {
                 Shell.CreateSymbolicLink(linkPath, targetPath, arguments, iconLocation);
             }
-            else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux)
-                || RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+            else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
             {
-                CreateSymbolicLinkUnix(linkPath, targetPath, arguments);
+#if SELFCONTAINED
+                CreateUnixSymbolicLink(linkPath, targetPath, arguments);
+#else
+                // If the app is not standalone we need to create a shell script instead of an actual link
+                CreateLinuxShellScript(linkPath, targetPath, arguments);
+#endif
+            }
+            else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+            {
+                CreateUnixSymbolicLink(linkPath, targetPath, arguments);
             }
             else
             {
