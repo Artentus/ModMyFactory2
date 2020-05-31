@@ -27,7 +27,7 @@ cache:
   - '%LocalAppData%\NuGet\v3-cache'
 
 artifacts:
-  path: %APPVEYOR_BUILD_VERSION%_*.zip
+  path: '%APPVEYOR_BUILD_VERSION%_*.zip'
   name: Binaries
 
 deploy:
