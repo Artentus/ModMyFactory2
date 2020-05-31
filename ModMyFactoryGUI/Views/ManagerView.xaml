@@ -109,7 +109,7 @@ the Free Software Foundation, either version 3 of the License, or
                       <KeyBinding Gesture="Return" Command="{Binding EndRenameCommand}" />
                     </TextBox.KeyBindings>
                   </TextBox>
-                  <ToggleButton Grid.Column="2" Padding="0" MinWidth="1" Width="26" Height="26"
+                  <ToggleButton Grid.Column="2" Padding="0" MinWidth="1" Width="26" Height="26" ToolTip.Tip="{l:LocalizedResource RenameButton}"
                                 HorizontalAlignment="Center" VerticalAlignment="Center" IsChecked="{Binding IsRenaming, Mode=TwoWay}">
                     <icons:EditIcon />
                   </ToggleButton>

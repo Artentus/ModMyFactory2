@@ -15,10 +15,10 @@ the Free Software Foundation, either version 3 of the License, or
              x:Class="ModMyFactoryGUI.Controls.FolderBrowserTextBox">
 
   <DockPanel>
-    <Button x:Name="Button" DockPanel.Dock="Right" Margin="4,0,0,0" Padding="5,0" MinWidth="1">
+    <Button x:Name="Button" DockPanel.Dock="Right" Margin="4,0,0,0" Padding="5" MinWidth="1">
       <icons:FolderIcon />
     </Button>
-    <TextBox x:Name="TextBox" DockPanel.Dock="Left" />
+    <TextBox x:Name="TextBox" DockPanel.Dock="Left" Padding="4,3" />
   </DockPanel>
 
 </UserControl>

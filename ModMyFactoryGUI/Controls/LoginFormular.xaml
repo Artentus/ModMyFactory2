@@ -18,9 +18,9 @@ the Free Software Foundation, either version 3 of the License, or
   <UserControl.Template>
     <ControlTemplate TargetType="{x:Type controls:LoginFormular}">
       <StackPanel>
-        <TextBox Watermark="{l:LocalizedResource Username}" x:Name="Username"
+        <TextBox Watermark="{l:LocalizedResource Username}" x:Name="Username" Padding="4,3"
                  UseFloatingWatermark="True" Text="{TemplateBinding Username, Mode=TwoWay}" />
-        <TextBox Margin="0,8,0,0" Watermark="{l:LocalizedResource Password}" PasswordChar="●"
+        <TextBox Margin="0,8,0,0" Watermark="{l:LocalizedResource Password}" Padding="4,3" PasswordChar="●"
                  UseFloatingWatermark="True" Text="{TemplateBinding Password, Mode=TwoWay}" />
       </StackPanel>
     </ControlTemplate>

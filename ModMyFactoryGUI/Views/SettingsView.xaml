@@ -28,7 +28,7 @@ the Free Software Foundation, either version 3 of the License, or
                  HorizontalAlignment="Center" VerticalAlignment="Center">
 
         <!-- Credentials -->
-        <StackPanel>
+        <StackPanel Margin="6">
           <Border Margin="4" Background="{DynamicResource ThemeAccentBrush2}">
             <TextBlock Margin="4,3,4,2" Text="{l:LocalizedResource CredentialsHeader}" Classes="h3" />
           </Border>
@@ -39,7 +39,7 @@ the Free Software Foundation, either version 3 of the License, or
         </StackPanel>
 
         <!-- Factorio folder -->
-        <StackPanel>
+        <StackPanel Margin="6">
           <Border Margin="4" Background="{DynamicResource ThemeAccentBrush2}">
             <TextBlock Margin="4,3,4,2" Text="{l:LocalizedResource FactorioLocationHeader}" Classes="h3" />
           </Border>
@@ -52,13 +52,15 @@ the Free Software Foundation, either version 3 of the License, or
           <RadioButton Margin="8,2" IsChecked="{Binding FactorioLocationIsCustom, Mode=TwoWay}">
             <StackPanel>
               <TextBlock Margin="4,2" Text="{l:LocalizedResource CustomOption}" />
-              <controls:FolderBrowserTextBox Margin="4,2" Text="{Binding CustomFactorioLocation, Mode=TwoWay}" MinWidth="400" />
+              <controls:FolderBrowserTextBox Margin="4,2" MinWidth="400"
+                                             IsEnabled="{Binding FactorioLocationIsCustom}"
+                                             Text="{Binding CustomFactorioLocation, Mode=TwoWay}" />
             </StackPanel>
           </RadioButton>
         </StackPanel>
 
         <!-- Mod folder -->
-        <StackPanel>
+        <StackPanel Margin="6">
           <Border Margin="4" Background="{DynamicResource ThemeAccentBrush2}">
             <TextBlock Margin="4,3,4,2" Text="{l:LocalizedResource ModLocationHeader}" Classes="h3" />
           </Border>
@@ -71,7 +73,9 @@ the Free Software Foundation, either version 3 of the License, or
           <RadioButton Margin="8,2" IsChecked="{Binding ModLocationIsCustom, Mode=TwoWay}">
             <StackPanel>
               <TextBlock Margin="4,2" Text="{l:LocalizedResource CustomOption}" />
-              <controls:FolderBrowserTextBox Margin="4,2" Text="{Binding CustomModLocation, Mode=TwoWay}" MinWidth="400" />
+              <controls:FolderBrowserTextBox Margin="4,2" MinWidth="400"
+                                             IsEnabled="{Binding ModLocationIsCustom}"
+                                             Text="{Binding CustomModLocation, Mode=TwoWay}" />
             </StackPanel>
           </RadioButton>
         </StackPanel>

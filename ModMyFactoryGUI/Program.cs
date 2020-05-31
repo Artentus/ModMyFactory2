@@ -477,7 +477,7 @@ namespace ModMyFactoryGUI
                     }
 
                     Log.Information($"Starting Factorio instance '{instance}'");
-                    instance.Start(Locations.GetModDir(instance.Version), savegameFile, options.CustomArguments.Replace('\'', '"'));
+                    instance.Start(Locations.GetModDir(instance.Version), savegameFile, options.CustomArguments?.Replace('\'', '"'));
                 }
                 else
                 {
