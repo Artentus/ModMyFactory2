@@ -9,6 +9,8 @@ using ModMyFactory.Mods;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.Specialized;
+using System.ComponentModel;
 using System.Linq;
 
 namespace ModMyFactory
@@ -16,15 +18,20 @@ namespace ModMyFactory
     /// <summary>
     /// Groups mods and other modpacks
     /// </summary>
-    public class Modpack : ICanEnable, ICollection<ICanEnable>
+    public class Modpack : ICanEnable, ICollection<ICanEnable>, IReadOnlyCollection<ICanEnable>, INotifyCollectionChanged, INotifyPropertyChanged
     {
-        private readonly List<ICanEnable> _mods = new List<ICanEnable>();
+        private readonly List<ICanEnable> _children = new List<ICanEnable>();
         private bool? _enabled;
+        private string _displayName;
 
         /// <summary>
         /// Raised when the enabled state of the modpack changes
         /// </summary>
         public event EventHandler EnabledChanged;
+
+        public event NotifyCollectionChangedEventHandler CollectionChanged;
+
+        public event PropertyChangedEventHandler PropertyChanged;
 
         /// <summary>
         /// Whether the modpack is enabled<br/>
@@ -43,7 +50,18 @@ namespace ModMyFactory
         /// <summary>
         /// The modpacks name
         /// </summary>
-        public string DisplayName { get; set; }
+        public string DisplayName
+        {
+            get => _displayName;
+            set
+            {
+                if (value != _displayName)
+                {
+                    _displayName = value;
+                    OnPropertyChanged(new PropertyChangedEventArgs(nameof(DisplayName)));
+                }
+            }
+        }
 
         /// <summary>
         /// The mods in this modpack
@@ -57,7 +75,7 @@ namespace ModMyFactory
 
         bool ICanEnable.CanDisable => true;
 
-        public int Count => _mods.Count;
+        public int Count => _children.Count;
 
         bool ICollection<ICanEnable>.IsReadOnly => false;
 
@@ -66,21 +84,23 @@ namespace ModMyFactory
             if (_enabled.Value != enabled)
             {
                 _enabled = enabled;
-                _mods.ForEach(m => m.Enabled = enabled);
+                _children.ForEach(m => m.Enabled = enabled);
+
                 OnEnabledChanged(EventArgs.Empty);
+                OnPropertyChanged(new PropertyChangedEventArgs(nameof(Enabled)));
             }
         }
 
         private void EvaluateEnabledState()
         {
             bool? newState;
-            if (_mods.Count == 0)
+            if (_children.Count == 0)
             {
                 newState = false;
             }
             else
             {
-                var relevantMods = _mods.Where(m => m.CanDisable); // Don't evaluate mods that cannot be disabled
+                var relevantMods = _children.Where(m => m.CanDisable); // Don't evaluate mods that cannot be disabled
                 if (relevantMods.Count() == 0)
                 {
                     newState = true; // All mods in the pack are always enabled
@@ -96,6 +116,7 @@ namespace ModMyFactory
             {
                 _enabled = newState;
                 OnEnabledChanged(EventArgs.Empty);
+                OnPropertyChanged(new PropertyChangedEventArgs(nameof(Enabled)));
             }
         }
 
@@ -125,13 +146,13 @@ namespace ModMyFactory
 
         private bool AddInternal(ICanEnable item, bool safe)
         {
-            if (!_mods.Contains(item))
+            if (!_children.Contains(item))
             {
                 if (safe)
                 {
                     if (CanAdd(item))
                     {
-                        _mods.Add(item);
+                        _children.Add(item);
                         return true;
                     }
                     else
@@ -143,7 +164,7 @@ namespace ModMyFactory
                 {
                     AssertCanAdd(item);
 
-                    _mods.Add(item);
+                    _children.Add(item);
                     return true;
                 }
             }
@@ -154,6 +175,12 @@ namespace ModMyFactory
         protected virtual void OnEnabledChanged(EventArgs e)
             => EnabledChanged?.Invoke(this, e);
 
+        protected virtual void OnCollectionChanged(NotifyCollectionChangedEventArgs e)
+            => CollectionChanged?.Invoke(this, e);
+
+        protected virtual void OnPropertyChanged(PropertyChangedEventArgs e)
+            => PropertyChanged?.Invoke(this, e);
+
         /// <summary>
         /// Adds a mod or another modpack to the modpack<br/>
         /// If the add operation would result in a circular reference an exception is thrown
@@ -163,6 +190,9 @@ namespace ModMyFactory
             if (AddInternal(item, false))
             {
                 item.EnabledChanged += OnModEnabledChanged;
+
+                OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add, item));
+                OnPropertyChanged(new PropertyChangedEventArgs(nameof(Count)));
                 EvaluateEnabledState();
             }
         }
@@ -176,6 +206,9 @@ namespace ModMyFactory
             if (AddInternal(item, true))
             {
                 item.EnabledChanged += OnModEnabledChanged;
+
+                OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add, item));
+                OnPropertyChanged(new PropertyChangedEventArgs(nameof(Count)));
                 EvaluateEnabledState();
             }
         }
@@ -191,6 +224,9 @@ namespace ModMyFactory
                 if (AddInternal(item, false))
                     item.EnabledChanged += OnModEnabledChanged;
             }
+
+            OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add, (IList)collection.ToList()));
+            OnPropertyChanged(new PropertyChangedEventArgs(nameof(Count)));
             EvaluateEnabledState();
         }
 
@@ -205,31 +241,47 @@ namespace ModMyFactory
                 if (AddInternal(item, true))
                     item.EnabledChanged += OnModEnabledChanged;
             }
+
+            OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add, (IList)collection.ToList()));
+            OnPropertyChanged(new PropertyChangedEventArgs(nameof(Count)));
             EvaluateEnabledState();
         }
 
         public virtual bool Remove(ICanEnable item)
         {
             item.EnabledChanged -= OnModEnabledChanged;
-            bool result = _mods.Remove(item);
-            EvaluateEnabledState();
+            bool result = _children.Remove(item);
+
+            if (result)
+            {
+                OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Remove, item));
+                OnPropertyChanged(new PropertyChangedEventArgs(nameof(Count)));
+                EvaluateEnabledState();
+            }
+
             return result;
         }
 
         public virtual void Clear()
         {
-            _mods.ForEach(m => m.EnabledChanged -= OnModEnabledChanged);
-            _mods.Clear();
+            var copy = new ICanEnable[_children.Count];
+            _children.CopyTo(copy);
+
+            _children.ForEach(m => m.EnabledChanged -= OnModEnabledChanged);
+            _children.Clear();
+
+            OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset, (IList)copy));
+            OnPropertyChanged(new PropertyChangedEventArgs(nameof(Count)));
             EvaluateEnabledState();
         }
 
         public bool Contains(ICanEnable item)
-            => _mods.Contains(item);
+            => _children.Contains(item);
 
         public void CopyTo(ICanEnable[] array, int arrayIndex)
-            => _mods.CopyTo(array, arrayIndex);
+            => _children.CopyTo(array, arrayIndex);
 
-        public IEnumerator<ICanEnable> GetEnumerator() => _mods.GetEnumerator();
+        public IEnumerator<ICanEnable> GetEnumerator() => _children.GetEnumerator();
 
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
     }

@@ -17,7 +17,7 @@ namespace ModMyFactory.Mods
     /// <summary>
     /// Manages mods for one Factorio version
     /// </summary>
-    public sealed class ModManager : ICollection<Mod>, INotifyCollectionChanged
+    public sealed class ModManager : ICollection<Mod>, IReadOnlyCollection<Mod>, INotifyCollectionChanged
     {
         private readonly Dictionary<string, ModFamily> _families;
         private volatile bool _clearing = false;
