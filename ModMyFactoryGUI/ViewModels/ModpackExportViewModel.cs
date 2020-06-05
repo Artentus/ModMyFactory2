@@ -6,22 +6,224 @@
 //  (at your option) any later version.
 
 using ModMyFactory;
+using ModMyFactory.Mods;
 using ModMyFactoryGUI.Helpers;
 using ReactiveUI;
 using System;
+using System.Collections.ObjectModel;
+using System.Collections.Specialized;
+using System.ComponentModel;
 
 namespace ModMyFactoryGUI.ViewModels
 {
     internal sealed class ModpackExportViewModel : ReactiveObject, IDisposable
     {
+        private readonly ObservableCollection<ModExportViewModel> _mods;
+        private bool _isSelected, _isUpdating;
+        private bool _useLatestVersion, _useFactorioVersion, _useSpecificVersion;
+        private bool _includeFile, _downloadNewer;
+
         public Modpack Modpack { get; }
+
+        public CollectionView<ModExportViewModel> Mods { get; }
 
         // Store information for fuzzy search
         public bool MatchesSearch { get; private set; } = true;
 
         public int SearchScore { get; private set; } = 0;
 
+        public bool IsSelected
+        {
+            get => _isSelected;
+            set => this.RaiseAndSetIfChanged(ref _isSelected, value, nameof(IsSelected));
+        }
+
+        public bool UseLatestVersion
+        {
+            get => _useLatestVersion;
+            set
+            {
+                this.RaiseAndSetIfChanged(ref _useLatestVersion, value, nameof(UseLatestVersion));
+
+                if (value)
+                {
+                    _isUpdating = true;
+                    foreach (var mod in _mods)
+                        mod.UseLatestVersion = true;
+                    _isUpdating = false;
+                }
+            }
+        }
+
+        public bool UseFactorioVersion
+        {
+            get => _useFactorioVersion;
+            set
+            {
+                this.RaiseAndSetIfChanged(ref _useFactorioVersion, value, nameof(UseFactorioVersion));
+
+                if (value)
+                {
+                    _isUpdating = true;
+                    foreach (var mod in _mods)
+                        mod.UseFactorioVersion = true;
+                    _isUpdating = false;
+                }
+            }
+        }
+
+        public bool UseSpecificVersion
+        {
+            get => _useSpecificVersion;
+            set
+            {
+                this.RaiseAndSetIfChanged(ref _useSpecificVersion, value, nameof(UseSpecificVersion));
+
+                if (value)
+                {
+                    _isUpdating = true;
+                    foreach (var mod in _mods)
+                        mod.UseSpecificVersion = true;
+                    _isUpdating = false;
+                }
+            }
+        }
+
+        public bool IncludeFile
+        {
+            get => _includeFile;
+            set
+            {
+                this.RaiseAndSetIfChanged(ref _includeFile, value, nameof(IncludeFile));
+
+                _isUpdating = true;
+                foreach (var mod in _mods)
+                    mod.IncludeFile = value;
+                _isUpdating = false;
+            }
+        }
+
+        public bool DownloadNewer
+        {
+            get => _downloadNewer;
+            set
+            {
+                this.RaiseAndSetIfChanged(ref _downloadNewer, value, nameof(DownloadNewer));
+
+                _isUpdating = true;
+                foreach (var mod in _mods)
+                    mod.DownloadNewer = value;
+                _isUpdating = false;
+            }
+        }
+
         public string DisplayName => Modpack.DisplayName;
+
+        public ModpackExportViewModel(Modpack modpack)
+        {
+            _mods = new ObservableCollection<ModExportViewModel>();
+            foreach (var mod in modpack.Mods)
+            {
+                var vm = new ModExportViewModel(mod);
+                vm.PropertyChanged += ModPropertyChangedHandler;
+                _mods.Add(vm);
+            }
+            Mods = new CollectionView<ModExportViewModel>(_mods, new AlphabeticalModComparer());
+
+            EvaluateProperties();
+
+            Modpack = modpack;
+            modpack.CollectionChanged += ModpackCollectionChangedHandler;
+            modpack.PropertyChanged += ModpackPropertyChangedHandler;
+        }
+
+        private void EvaluateProperties()
+        {
+            foreach (var vm in _mods)
+            {
+                if (!vm.UseLatestVersion) _useLatestVersion = false;
+                if (!vm.UseFactorioVersion) _useFactorioVersion = false;
+                if (!vm.UseSpecificVersion) _useSpecificVersion = false;
+                if (!vm.IncludeFile) _includeFile = false;
+                if (!vm.DownloadNewer) _downloadNewer = false;
+            }
+
+            this.RaisePropertyChanged(nameof(UseLatestVersion));
+            this.RaisePropertyChanged(nameof(UseFactorioVersion));
+            this.RaisePropertyChanged(nameof(UseSpecificVersion));
+            this.RaisePropertyChanged(nameof(IncludeFile));
+            this.RaisePropertyChanged(nameof(DownloadNewer));
+        }
+
+        private void ModPropertyChangedHandler(object sender, PropertyChangedEventArgs e)
+        {
+            if (!_isUpdating)
+                EvaluateProperties();
+        }
+
+        private bool TryGetViewModel(Mod mod, out ModExportViewModel result)
+        {
+            foreach (var vm in _mods)
+            {
+                if (vm.Mod == mod)
+                {
+                    result = vm;
+                    return true;
+                }
+            }
+
+            result = null;
+            return false;
+        }
+
+        private void ModpackCollectionChangedHandler(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            switch (e.Action)
+            {
+                case NotifyCollectionChangedAction.Add:
+                    foreach (ICanEnable item in e.NewItems)
+                    {
+                        if (item is Mod mod)
+                        {
+                            var vm = new ModExportViewModel(mod);
+                            vm.PropertyChanged += ModPropertyChangedHandler;
+                            _mods.Add(vm);
+                        }
+                    }
+                    this.RaisePropertyChanged(nameof(Mods));
+                    break;
+
+                case NotifyCollectionChangedAction.Remove:
+                    foreach (ICanEnable item in e.OldItems)
+                    {
+                        if (item is Mod mod)
+                        {
+                            if (TryGetViewModel(mod, out var vm))
+                            {
+                                _mods.Remove(vm);
+                                vm.PropertyChanged -= ModPropertyChangedHandler;
+                            }
+                        }
+                    }
+                    this.RaisePropertyChanged(nameof(Mods));
+                    break;
+
+                case NotifyCollectionChangedAction.Reset:
+                    foreach (var vm in _mods)
+                        vm.PropertyChanged -= ModPropertyChangedHandler;
+                    _mods.Clear();
+                    this.RaisePropertyChanged(nameof(Mods));
+                    break;
+            }
+
+            EvaluateProperties();
+        }
+
+        private void ModpackPropertyChangedHandler(object sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == nameof(ModMyFactory.Modpack.DisplayName))
+                this.RaisePropertyChanged(nameof(DisplayName));
+        }
 
         public void ApplyFuzzyFilter(in string filter)
         {
@@ -39,17 +241,19 @@ namespace ModMyFactoryGUI.ViewModels
 
         #region IDisposable Support
 
-        private bool disposed = false;
+        private bool _disposed = false;
 
         private void Dispose(bool disposing)
         {
-            if (!disposed)
+            if (!_disposed)
             {
                 if (disposing)
                 {
+                    Modpack.CollectionChanged -= ModpackCollectionChangedHandler;
+                    Modpack.PropertyChanged -= ModpackPropertyChangedHandler;
                 }
 
-                disposed = true;
+                _disposed = true;
             }
         }
 

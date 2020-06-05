@@ -11,10 +11,48 @@ the Free Software Foundation, either version 3 of the License, or
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:controls="clr-namespace:ModMyFactoryGUI.Controls"
+             xmlns:models="clr-namespace:ModMyFactoryGUI.ViewModels"
              x:Class="ModMyFactoryGUI.Views.ExportView">
 
   <Border BorderThickness="1" BorderBrush="{DynamicResource ThemeBorderMidBrush}">
-    <Grid Margin="4">
+    <Grid Margin="4" RowDefinitions="Auto,*,Auto">
+      <controls:SearchBox Grid.Row="0" Margin="4" Text="{Binding Filter}" />
+
+      <Border Grid.Row="1" Margin="4" BorderThickness="1"
+              BorderBrush="{DynamicResource ThemeBorderMidBrush}"
+              Background="{DynamicResource ThemeBackgroundLowBrush}">
+        <ScrollViewer HorizontalScrollBarVisibility="Visible" VerticalScrollBarVisibility="Visible">
+          <ItemsControl Margin="2" Items="{Binding Modpacks}">
+            <ItemsControl.ItemTemplate>
+
+              <DataTemplate DataType="{x:Type models:ModpackExportViewModel}">
+                <Expander>
+                  <Expander.Header>
+                    <Grid ColumnDefinitions="Auto,*">
+                      <CheckBox Grid.Column="0" IsChecked="{Binding IsSelected, Mode=TwoWay}" />
+                      <TextBlock Grid.Column="1" Margin="8,2" Text="{Binding DisplayName}" />
+                    </Grid>
+                  </Expander.Header>
+
+                  <ItemsControl Margin="20,4" Items="{Binding Mods}">
+                    <ItemsControl.ItemTemplate>
+                      <DataTemplate DataType="{x:Type models:ModExportViewModel}">
+                        <Grid ColumnDefinitions="*">
+                          <TextBlock Grid.Column="0" Text="{Binding DisplayName}" />
+                        </Grid>
+                      </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                  </ItemsControl>
+
+                </Expander>
+              </DataTemplate>
+
+            </ItemsControl.ItemTemplate>
+          </ItemsControl>
+        </ScrollViewer>
+      </Border>
+
     </Grid>
   </Border>
 </UserControl>

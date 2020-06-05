@@ -129,8 +129,8 @@ namespace ModMyFactoryGUI.ViewModels
 
             Comparers = new ModComparer[]
             {
-                new AlphabeticalComparer(),
-                new DownloadCountComparer()
+                new AlphabeticalModComparer(),
+                new DownloadCountModComparer()
             };
             SelectedComparer = Comparers[0];
 

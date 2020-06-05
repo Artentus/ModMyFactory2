@@ -92,16 +92,16 @@ namespace ModMyFactoryGUI.ViewModels
 
         #region IDisposable Support
 
-        private bool disposed = false;
+        private bool _disposed = false;
 
         private void Dispose(bool disposing)
         {
-            if (!disposed)
+            if (!_disposed)
             {
                 if (disposing)
                     Modpack.EnabledChanged -= ModpackEnabledChangedHandler;
 
-                disposed = true;
+                _disposed = true;
             }
         }
 

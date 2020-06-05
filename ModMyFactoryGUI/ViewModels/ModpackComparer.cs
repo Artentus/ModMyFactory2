@@ -10,11 +10,19 @@ using System.Collections.Generic;
 
 namespace ModMyFactoryGUI.ViewModels
 {
-    internal sealed class ModpackComparer : IComparer<ModpackViewModel>, IComparer<Modpack>
+    internal sealed class ModpackComparer : IComparer<ModpackViewModel>, IComparer<ModpackExportViewModel>, IComparer<Modpack>
     {
         public int Compare(ModpackViewModel first, ModpackViewModel second)
         {
-            // Search score always takes precendence over the default alphabeticaal sorting
+            // Search score always takes precendence over the default alphabetical sorting
+            int result = second.SearchScore.CompareTo(first.SearchScore);
+            if (result == 0) result = first.DisplayName.CompareTo(second.DisplayName);
+            return result;
+        }
+
+        public int Compare(ModpackExportViewModel first, ModpackExportViewModel second)
+        {
+            // Search score always takes precendence over the default alphabetical sorting
             int result = second.SearchScore.CompareTo(first.SearchScore);
             if (result == 0) result = first.DisplayName.CompareTo(second.DisplayName);
             return result;

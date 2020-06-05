@@ -85,6 +85,7 @@ namespace ModMyFactoryGUI.ViewModels
             foreach (var modpack in Program.Modpacks)
             {
                 var vm = new ModpackViewModel(modpack);
+                vm.PropertyChanged += OnModpackPropertyChanged;
                 _modpacks.Add(vm);
             }
 
