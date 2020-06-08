@@ -52,7 +52,8 @@ the Free Software Foundation, either version 3 of the License, or
                     <KeyBinding Gesture="Return" Command="{Binding EndRenameCommand}" />
                   </TextBox.KeyBindings>
                 </TextBox>
-                <ToggleButton Grid.Column="2" Grid.Row="0" Grid.RowSpan="2" Margin="4" Padding="0" MinWidth="1" Width="26" Height="26" ToolTip.Tip="{l:LocalizedResource RenameButton}"
+                <ToggleButton Grid.Column="2" Grid.Row="0" Grid.RowSpan="2" Margin="4" Padding="0" MinWidth="1" Width="26" Height="26"
+                              ToolTip.Tip="{l:LocalizedResource RenameButton}" FontSize="{DynamicResource FontSizeNormal}"
                               HorizontalAlignment="Center" VerticalAlignment="Center" IsChecked="{Binding IsRenaming, Mode=TwoWay}">
                   <ToggleButton.IsVisible>
                     <MultiBinding Converter="{x:Static BoolConverters.And}">
@@ -62,12 +63,14 @@ the Free Software Foundation, either version 3 of the License, or
                   </ToggleButton.IsVisible>
                   <icons:EditIcon />
                 </ToggleButton>
-                <Button Grid.Column="3" Grid.Row="0" Grid.RowSpan="2" Margin="4" Padding="0" MinWidth="1" Width="26" Height="26" ToolTip.Tip="{l:LocalizedResource ShortcutButton}"
+                <Button Grid.Column="3" Grid.Row="0" Grid.RowSpan="2" Margin="4" Padding="0" MinWidth="1" Width="26" Height="26"
+                        ToolTip.Tip="{l:LocalizedResource ShortcutButton}" FontSize="{DynamicResource FontSizeNormal}"
                         HorizontalAlignment="Center" VerticalAlignment="Center" Command="{Binding CreateShortcutCommand}" IsVisible="{Binding IsInstalled}">
                   <icons:ShortcutIcon />
                 </Button>
 
-                <Button Grid.Column="5" Grid.Row="0" Grid.RowSpan="2" Margin="4" Padding="0" MinWidth="1" Width="26" Height="26" ToolTip.Tip="{l:LocalizedResource RemoveButton}"
+                <Button Grid.Column="5" Grid.Row="0" Grid.RowSpan="2" Margin="4" Padding="0" MinWidth="1" Width="26" Height="26"
+                        ToolTip.Tip="{l:LocalizedResource RemoveButton}" FontSize="{DynamicResource FontSizeNormal}"
                         HorizontalAlignment="Center" VerticalAlignment="Center" Command="{Binding RemoveCommand}">
                   <Button.IsVisible>
                     <MultiBinding Converter="{x:Static BoolConverters.And}">
@@ -77,7 +80,8 @@ the Free Software Foundation, either version 3 of the License, or
                   </Button.IsVisible>
                   <icons:UnlinkIcon />
                 </Button>
-                <Button Grid.Column="6" Grid.Row="0" Grid.RowSpan="2" Margin="4" Padding="0" MinWidth="1" Width="26" Height="26" ToolTip.Tip="{l:LocalizedResource DeleteButton}"
+                <Button Grid.Column="6" Grid.Row="0" Grid.RowSpan="2" Margin="4" Padding="0" MinWidth="1" Width="26" Height="26"
+                        ToolTip.Tip="{l:LocalizedResource DeleteButton}" FontSize="{DynamicResource FontSizeNormal}"
                         HorizontalAlignment="Center" VerticalAlignment="Center" Command="{Binding DeleteCommand}">
                   <Button.IsVisible>
                     <MultiBinding Converter="{x:Static BoolConverters.And}">

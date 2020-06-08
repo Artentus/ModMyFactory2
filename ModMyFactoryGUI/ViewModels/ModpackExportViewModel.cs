@@ -21,7 +21,7 @@ namespace ModMyFactoryGUI.ViewModels
         private readonly ObservableCollection<ModExportViewModel> _mods;
         private bool _isSelected, _isUpdating;
         private bool _useLatestVersion, _useFactorioVersion, _useSpecificVersion;
-        private bool _includeFile, _downloadNewer;
+        private bool? _includeFile, _downloadNewer;
 
         public Modpack Modpack { get; }
 
@@ -89,30 +89,34 @@ namespace ModMyFactoryGUI.ViewModels
             }
         }
 
-        public bool IncludeFile
+        public bool? IncludeFile
         {
             get => _includeFile;
             set
             {
+                if (!value.HasValue) throw new ArgumentNullException();
+
                 this.RaiseAndSetIfChanged(ref _includeFile, value, nameof(IncludeFile));
 
                 _isUpdating = true;
                 foreach (var mod in _mods)
-                    mod.IncludeFile = value;
+                    mod.IncludeFile = value.Value;
                 _isUpdating = false;
             }
         }
 
-        public bool DownloadNewer
+        public bool? DownloadNewer
         {
             get => _downloadNewer;
             set
             {
+                if (!value.HasValue) throw new ArgumentNullException();
+
                 this.RaiseAndSetIfChanged(ref _downloadNewer, value, nameof(DownloadNewer));
 
                 _isUpdating = true;
                 foreach (var mod in _mods)
-                    mod.DownloadNewer = value;
+                    mod.DownloadNewer = value.Value;
                 _isUpdating = false;
             }
         }
@@ -131,6 +135,8 @@ namespace ModMyFactoryGUI.ViewModels
             Mods = new CollectionView<ModExportViewModel>(_mods, new AlphabeticalModComparer());
 
             EvaluateProperties();
+            _includeFile = _mods.SelectFromAll(vm => vm.IncludeFile);
+            _downloadNewer = _mods.SelectFromAll(vm => vm.DownloadNewer);
 
             Modpack = modpack;
             modpack.CollectionChanged += ModpackCollectionChangedHandler;
@@ -139,26 +145,49 @@ namespace ModMyFactoryGUI.ViewModels
 
         private void EvaluateProperties()
         {
+            _useLatestVersion = true;
+            _useFactorioVersion = true;
+            _useSpecificVersion = true;
+
             foreach (var vm in _mods)
             {
                 if (!vm.UseLatestVersion) _useLatestVersion = false;
                 if (!vm.UseFactorioVersion) _useFactorioVersion = false;
                 if (!vm.UseSpecificVersion) _useSpecificVersion = false;
-                if (!vm.IncludeFile) _includeFile = false;
-                if (!vm.DownloadNewer) _downloadNewer = false;
             }
 
             this.RaisePropertyChanged(nameof(UseLatestVersion));
             this.RaisePropertyChanged(nameof(UseFactorioVersion));
             this.RaisePropertyChanged(nameof(UseSpecificVersion));
-            this.RaisePropertyChanged(nameof(IncludeFile));
-            this.RaisePropertyChanged(nameof(DownloadNewer));
         }
 
         private void ModPropertyChangedHandler(object sender, PropertyChangedEventArgs e)
         {
-            if (!_isUpdating)
-                EvaluateProperties();
+            switch (e.PropertyName)
+            {
+                case nameof(ModExportViewModel.UseLatestVersion):
+                case nameof(ModExportViewModel.UseFactorioVersion):
+                case nameof(ModExportViewModel.UseSpecificVersion):
+                    if (!_isUpdating) EvaluateProperties();
+                    break;
+
+                case nameof(ModExportViewModel.IncludeFile):
+                    if (!_isUpdating)
+                    {
+                        _includeFile = _mods.SelectFromAll(vm => vm.IncludeFile);
+                        this.RaisePropertyChanged(nameof(IncludeFile));
+                    }
+                    break;
+
+                case nameof(ModExportViewModel.DownloadNewer):
+                    if (!_isUpdating)
+                    {
+                        _downloadNewer = _mods.SelectFromAll(vm => vm.DownloadNewer);
+                        this.RaisePropertyChanged(nameof(DownloadNewer));
+                    }
+                    break;
+            }
+
         }
 
         private bool TryGetViewModel(Mod mod, out ModExportViewModel result)

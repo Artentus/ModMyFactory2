@@ -23,7 +23,7 @@ the Free Software Foundation, either version 3 of the License, or
       <ControlTemplate>
         <Border Background="{TemplateBinding Background}">
           <Grid RowDefinitions="Auto,*">
-            <ToggleButton Name="PART_toggle" Grid.Row="0" HorizontalContentAlignment="Left"
+            <ToggleButton Name="PART_toggle" Grid.Row="0" HorizontalContentAlignment="Stretch"
                           Content="{TemplateBinding Header}" IsChecked="{TemplateBinding IsExpanded, Mode=TwoWay}" />
             <ContentPresenter Name="PART_ContentPresenter"
                               Grid.Row="1"
@@ -55,7 +55,7 @@ the Free Software Foundation, either version 3 of the License, or
                               VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
                               Padding="{TemplateBinding Padding}" />
 
-            <Border Grid.Column="1" Width="24" Height="24" Margin="4" HorizontalAlignment="Center" VerticalAlignment="Center">
+            <Border Grid.Column="1" Width="24" Height="24" Margin="6" HorizontalAlignment="Center" VerticalAlignment="Center">
               <Panel>
                 <Ellipse StrokeThickness="1" Stroke="{DynamicResource ThemeBorderHighBrush}" Fill="Transparent" />
                 <Path Fill="{DynamicResource ThemeForegroundBrush}"

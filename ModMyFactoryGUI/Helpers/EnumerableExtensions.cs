@@ -27,71 +27,120 @@ namespace ModMyFactoryGUI.Helpers
 
         public static TSource MaxBy<TSource, TKey>(this IEnumerable<TSource> source, Func<TSource, TKey> selector, IComparer<TKey> comparer = null)
         {
-            if (source == null) throw new ArgumentNullException(nameof(source));
-            if (selector == null) throw new ArgumentNullException(nameof(selector));
+            if (source is null) throw new ArgumentNullException(nameof(source));
+            if (selector is null) throw new ArgumentNullException(nameof(selector));
 
-            if (comparer == null) comparer = Comparer<TKey>.Default;
+            if (comparer is null) comparer = Comparer<TKey>.Default;
 
-            using (var enumerator = source.GetEnumerator())
+            using var enumerator = source.GetEnumerator();
+            if (!enumerator.MoveNext()) return default(TSource);
+
+            TSource maxElement = enumerator.Current;
+            TKey maxKey = selector.Invoke(maxElement);
+
+            while (enumerator.MoveNext())
             {
-                if (!enumerator.MoveNext()) return default(TSource);
+                TSource element = enumerator.Current;
+                TKey key = selector.Invoke(element);
 
-                TSource maxElement = enumerator.Current;
-                TKey maxKey = selector.Invoke(maxElement);
-
-                while (enumerator.MoveNext())
+                if (comparer.Compare(key, maxKey) > 0)
                 {
-                    TSource element = enumerator.Current;
-                    TKey key = selector.Invoke(element);
-
-                    if (comparer.Compare(key, maxKey) > 0)
-                    {
-                        maxElement = element;
-                        maxKey = key;
-                    }
+                    maxElement = element;
+                    maxKey = key;
                 }
-
-                return maxElement;
             }
+
+            return maxElement;
         }
 
         public static TSource MinBy<TSource, TKey>(this IEnumerable<TSource> source, Func<TSource, TKey> selector, IComparer<TKey> comparer = null)
         {
-            if (source == null) throw new ArgumentNullException(nameof(source));
-            if (selector == null) throw new ArgumentNullException(nameof(selector));
+            if (source is null) throw new ArgumentNullException(nameof(source));
+            if (selector is null) throw new ArgumentNullException(nameof(selector));
 
-            if (comparer == null) comparer = Comparer<TKey>.Default;
+            if (comparer is null) comparer = Comparer<TKey>.Default;
 
-            using (var enumerator = source.GetEnumerator())
+            using var enumerator = source.GetEnumerator();
+            if (!enumerator.MoveNext()) return default(TSource);
+
+            TSource maxElement = enumerator.Current;
+            TKey maxKey = selector.Invoke(maxElement);
+
+            while (enumerator.MoveNext())
             {
-                if (!enumerator.MoveNext()) return default(TSource);
+                TSource element = enumerator.Current;
+                TKey key = selector.Invoke(element);
 
-                TSource maxElement = enumerator.Current;
-                TKey maxKey = selector.Invoke(maxElement);
-
-                while (enumerator.MoveNext())
+                if (comparer.Compare(key, maxKey) < 0)
                 {
-                    TSource element = enumerator.Current;
-                    TKey key = selector.Invoke(element);
-
-                    if (comparer.Compare(key, maxKey) < 0)
-                    {
-                        maxElement = element;
-                        maxKey = key;
-                    }
+                    maxElement = element;
+                    maxKey = key;
                 }
-
-                return maxElement;
             }
+
+            return maxElement;
         }
 
-        public static IEnumerable<T> FilterByType<T>(this IEnumerable collection)
+        public static IEnumerable<T> FilterByType<T>(this IEnumerable source)
         {
-            foreach (var item in collection)
+            foreach (var item in source)
             {
                 if (item is T filtered)
                     yield return filtered;
             }
         }
+
+        public static TResult? SelectFromAll<TSource, TResult>(this IEnumerable<TSource> source, Func<TSource, TResult> selector, IEqualityComparer<TResult> comparer = null)
+            where TResult : struct
+        {
+            if (source is null) throw new ArgumentNullException(nameof(source));
+            if (selector is null) throw new ArgumentNullException(nameof(selector));
+
+            if (comparer is null) comparer = EqualityComparer<TResult>.Default;
+
+            using var enumerator = source.GetEnumerator();
+            if (!enumerator.MoveNext()) return null;
+
+            TResult result = selector(enumerator.Current);
+
+            while (enumerator.MoveNext())
+            {
+                TResult current = selector(enumerator.Current);
+                if (!comparer.Equals(result, current)) return null;
+            }
+
+            return result;
+        }
+
+        public static T? SelectFromAll<T>(this IEnumerable<T> source, IEqualityComparer<T> comparer = null)
+            where T : struct
+            => source.SelectFromAll(item => item, comparer);
+
+        public static TResult? SelectFromAll<TSource, TResult>(this IEnumerable<TSource> source, Func<TSource, TResult?> selector, IEqualityComparer<TResult?> comparer = null)
+            where TResult : struct
+        {
+            if (source is null) throw new ArgumentNullException(nameof(source));
+            if (selector is null) throw new ArgumentNullException(nameof(selector));
+
+            if (comparer is null) comparer = EqualityComparer<TResult?>.Default;
+
+            using var enumerator = source.GetEnumerator();
+            if (!enumerator.MoveNext()) return null;
+
+            TResult? result = selector(enumerator.Current);
+            if (result is null) return null;
+
+            while (enumerator.MoveNext())
+            {
+                TResult? current = selector(enumerator.Current);
+                if (!comparer.Equals(result, current)) return null;
+            }
+
+            return result;
+        }
+
+        public static T? SelectFromAll<T>(this IEnumerable<T?> source, IEqualityComparer<T?> comparer = null)
+            where T : struct
+            => source.SelectFromAll(item => item, comparer);
     }
 }

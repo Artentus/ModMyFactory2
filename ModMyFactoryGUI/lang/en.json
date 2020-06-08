@@ -417,6 +417,71 @@
     "value": "By download count"
   },
 
+  // --------- Export view ---------
+  "ExportButton": {
+    "type": "string",
+    "value": "Export"
+  },
+  "UseLatestOption": {
+    "type": "string",
+    "value": "Use the latest version of the mod"
+  },
+  "UseFactorioOption": {
+    "type": "string",
+    "value": "Use the latest version of the mod that is\ncompatible with its current Factorio version"
+  },
+  "UseSpecificOption": {
+    "type": "string",
+    "value": "Use the currently installed version of the mod"
+  },
+  "IncludeOption": {
+    "type": "string",
+    "value": "Include the mod file"
+  },
+  "DownloadNewerOption": {
+    "type": "string",
+    "value": "Download later versions of the mod\neven if the file is included"
+  },
+  "UseLatestOptionPack": {
+    "type": "string",
+    "value": "Use the latest version of all mods in the pack"
+  },
+  "UseFactorioOptionPack": {
+    "type": "string",
+    "value": "Use the latest version of all mods in the pack that\nare compatible with their respective Factorio version"
+  },
+  "UseSpecificOptionPack": {
+    "type": "string",
+    "value": "Use the currently installed version\nof all mods in the pack"
+  },
+  "IncludeOptionPack": {
+    "type": "string",
+    "value": "Include the files of all mods in the pack"
+  },
+  "DownloadNewerOptionPack": {
+    "type": "string",
+    "value": "Download later versions of the mods in\nthe pack even if their file is included"
+  },
+  "UseLatestOptionGlobal": {
+    "type": "string",
+    "value": "Use the latest version of all mods"
+  },
+  "UseFactorioOptionGlobal": {
+    "type": "string",
+    "value": "Use the latest version of all mods that are\ncompatible with their respective Factorio version"
+  },
+  "UseSpecificOptionGlobal": {
+    "type": "string",
+    "value": "Use the currently installed version of all mods"
+  },
+  "IncludeOptionGlobal": {
+    "type": "string",
+    "value": "Include the files of all mods"
+  },
+  "DownloadNewerOptionGlobal": {
+    "type": "string",
+    "value": "Download later versions of all mods even\nif their file is included in the package"
+  },
 
   // --------- Settings view ---------
   "CredentialsHeader": {

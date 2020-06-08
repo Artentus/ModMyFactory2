@@ -391,6 +391,71 @@
     "value": "Nach Downloadzahl"
   },
 
+  // --------- Export view ---------
+  "ExportButton": {
+    "type": "string",
+    "value": "Exportieren"
+  },
+  "UseLatestOption": {
+    "type": "string",
+    "value": "Neuste Version der Mod verwenden"
+  },
+  "UseFactorioOption": {
+    "type": "string",
+    "value": "Neuste Version der Mod verwenden, die kompatibel\nmit ihrer Version von Factorio ist"
+  },
+  "UseSpecificOption": {
+    "type": "string",
+    "value": "Aktuell installierte Version der Mod verwenden"
+  },
+  "IncludeOption": {
+    "type": "string",
+    "value": "Mod-Datei einschließen"
+  },
+  "DownloadNewerOption": {
+    "type": "string",
+    "value": "Neuere Versionen der Mod herunterladen,\nselbst wenn die Datei im Paket enthalten ist"
+  },
+  "UseLatestOptionPack": {
+    "type": "string",
+    "value": "Neuste Version für alle Mods im Paket verwenden"
+  },
+  "UseFactorioOptionPack": {
+    "type": "string",
+    "value": "Neuste Version für alle Mods im Paket verwenden, die\nkompatibel mit ihrer entsprechenden Version von Factorio ist"
+  },
+  "UseSpecificOptionPack": {
+    "type": "string",
+    "value": "Aktuell installierte Version für alle Mods im Paket verwenden"
+  },
+  "IncludeOptionPack": {
+    "type": "string",
+    "value": "Dateien aller Mods im Paket einschließen"
+  },
+  "DownloadNewerOptionPack": {
+    "type": "string",
+    "value": "Neuere Versionen aller Mods im Paket herunterladen\nselbst wenn die Dateien im Paket enthalten sind"
+  },
+  "UseLatestOptionGlobal": {
+    "type": "string",
+    "value": "Neuste Version für alle Mods verwenden"
+  },
+  "UseFactorioOptionGlobal": {
+    "type": "string",
+    "value": "Neuste Version für alle Mods verwenden, die kompatibel\nmit ihrer entsprechenden Version von Factorio ist"
+  },
+  "UseSpecificOptionGlobal": {
+    "type": "string",
+    "value": "Aktuell installierte Version für alle Mods verwenden"
+  },
+  "IncludeOptionGlobal": {
+    "type": "string",
+    "value": "Dateien aller Mods einschließen"
+  },
+  "DownloadNewerOptionGlobal": {
+    "type": "string",
+    "value": "Neuere Versionen aller Mods herunterladen\nselbst wenn die Dateien im Paket enthalten sind"
+  },
 
   // --------- Settings view ---------
   "CredentialsHeader": {
