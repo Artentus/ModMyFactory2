@@ -91,7 +91,7 @@ namespace ModMyFactoryGUI.ViewModels
 
 
             static int CompareVersionGroupings(ModVersionGroupingViewModel first, ModVersionGroupingViewModel second)
-                => first.FactorioVersion.CompareTo(second.FactorioVersion);
+                => second.FactorioVersion.CompareTo(first.FactorioVersion);
             ModVersionGroupings = new CollectionView<ModVersionGroupingViewModel>(_modVersionGroupings, CompareVersionGroupings);
 
             Modpacks = new CollectionView<ModpackViewModel>(_modpacks, new ModpackComparer(), FilterModpack);

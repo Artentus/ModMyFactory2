@@ -19,8 +19,8 @@ the Free Software Foundation, either version 3 of the License, or
   <Border BorderThickness="1" BorderBrush="{DynamicResource ThemeBorderMidBrush}">
     <Grid Margin="4" RowDefinitions="Auto,*,Auto">
 
-      <DockPanel Grid.Row="0">
-        <StackPanel DockPanel.Dock="Right" Margin="8,0" Orientation="Horizontal" VerticalAlignment="Center">
+      <DockPanel Grid.Row="0" MaxWidth="808">
+        <StackPanel DockPanel.Dock="Right" Margin="40,0,8,0" Orientation="Horizontal" VerticalAlignment="Center">
           <RadioButton Margin="4" ToolTip.Tip="{l:LocalizedResource UseLatestOptionGlobal}" IsChecked="{Binding UseLatestVersion, Mode=TwoWay}" />
           <RadioButton Margin="4" ToolTip.Tip="{l:LocalizedResource UseFactorioOptionGlobal}" IsChecked="{Binding UseFactorioVersion, Mode=TwoWay}" />
           <RadioButton Margin="4" ToolTip.Tip="{l:LocalizedResource UseSpecificOptionGlobal}" IsChecked="{Binding UseSpecificVersion, Mode=TwoWay}" />
@@ -31,7 +31,7 @@ the Free Software Foundation, either version 3 of the License, or
           <CheckBox Margin="8,4" ToolTip.Tip="{l:LocalizedResource DownloadNewerOptionGlobal}" IsChecked="{Binding DownloadNewer, Mode=TwoWay}" />
         </StackPanel>
 
-        <controls:SearchBox DockPanel.Dock="Left" Margin="4" MaxWidth="500" Text="{Binding Filter}" />
+        <controls:SearchBox DockPanel.Dock="Left" Margin="4" Text="{Binding Filter}" />
       </DockPanel>
 
       <Border Grid.Row="1" Margin="4" BorderThickness="1"
@@ -42,7 +42,9 @@ the Free Software Foundation, either version 3 of the License, or
             <ItemsControl.ItemTemplate>
 
               <DataTemplate DataType="{x:Type models:ModpackExportViewModel}">
-                <Border Margin="3" BorderThickness="1" BorderBrush="{DynamicResource ThemeBorderMidBrush}" Background="{DynamicResource ThemeBackgroundBrush}">
+                <Border Margin="3" MaxWidth="800" BorderThickness="1"
+                        BorderBrush="{DynamicResource ThemeBorderMidBrush}"
+                        Background="{DynamicResource ThemeBackgroundBrush}">
                   <Expander>
 
                     <Expander.Header>

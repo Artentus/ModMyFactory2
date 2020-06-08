@@ -27,76 +27,81 @@ the Free Software Foundation, either version 3 of the License, or
 
       <Border Margin="4" Grid.Column="0" Grid.ColumnSpan="3" Grid.Row="0" BorderThickness="1"
               BorderBrush="{DynamicResource ThemeBorderMidBrush}" Background="{DynamicResource ThemeBackgroundLowBrush}">
-        <ItemsControl Margin="4" Items="{Binding Instances}">
-          <ItemsControl.ItemTemplate>
-            <DataTemplate DataType="{x:Type models:FactorioInstanceViewModel}">
+        <ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
+          <ItemsControl Margin="4" Items="{Binding Instances}">
+            <ItemsControl.ItemTemplate>
+              <DataTemplate DataType="{x:Type models:FactorioInstanceViewModel}">
 
-              <Grid Margin="2,1" MaxWidth="600" HorizontalAlignment="Stretch" ColumnDefinitions="Auto,Auto,Auto,Auto,*,Auto,Auto" RowDefinitions="Auto,Auto">
+                <Border Margin="3" MaxWidth="800" HorizontalAlignment="Stretch" BorderThickness="1"
+                        BorderBrush="{DynamicResource ThemeBorderMidBrush}" Background="{DynamicResource ThemeBackgroundBrush}">
+                  <Grid Margin="6,4" ColumnDefinitions="Auto,Auto,Auto,Auto,*,Auto,Auto" RowDefinitions="Auto,Auto">
 
-                <Image Grid.Column="0" Grid.Row="0" Grid.RowSpan="2" Margin="2" Source="{Binding Icon}" Width="40" Height="40" Stretch="UniformToFill" />
-                <icons:LinkIcon Grid.Column="0" Grid.Row="0" Grid.RowSpan="2" HorizontalAlignment="Right" VerticalAlignment="Bottom" IsVisible="{Binding IsExternal}" />
+                    <Image Grid.Column="0" Grid.Row="0" Grid.RowSpan="2" Margin="2" Source="{Binding Icon}" Width="40" Height="40" Stretch="UniformToFill" />
+                    <icons:LinkIcon Grid.Column="0" Grid.Row="0" Grid.RowSpan="2" HorizontalAlignment="Right" VerticalAlignment="Bottom" IsVisible="{Binding IsExternal}" />
 
-                <TextBlock Grid.Column="1" Grid.Row="0" Margin="11,2" Classes="h2" Text="{Binding Name}" IsVisible="{Binding IsInstalled}" />
-                <TextBlock Grid.Column="1" Grid.Row="1" Margin="11,0,11,4" Classes="muted" Text="{Binding Version, StringFormat=Factorio {0}}" IsVisible="{Binding IsInstalled}" />
+                    <TextBlock Grid.Column="1" Grid.Row="0" Margin="11,2" Classes="h2" Text="{Binding Name}" IsVisible="{Binding IsInstalled}" />
+                    <TextBlock Grid.Column="1" Grid.Row="1" Margin="11,0,11,4" Classes="muted" Text="{Binding Version, StringFormat=Factorio {0}}" IsVisible="{Binding IsInstalled}" />
 
-                <ProgressBar Grid.Column="1" Grid.Row="0" Margin="6,4"
-                             IsIndeterminate="{Binding IsExtracting}" IsVisible="{Binding !IsInstalled}"
-                             Minimum="0" Maximum="1" Value="{Binding DownloadProgress}" />
+                    <ProgressBar Grid.Column="1" Grid.Row="0" Margin="6,4"
+                                 IsIndeterminate="{Binding IsExtracting}" IsVisible="{Binding !IsInstalled}"
+                                 Minimum="0" Maximum="1" Value="{Binding DownloadProgress}" />
 
-                <TextBlock Grid.Column="1" Grid.Row="1" Margin="6,0,6,4" Classes="muted" IsVisible="{Binding IsInDownloadQueue}" Text="{l:LocalizedResource InDownloadQueueText}" />
-                <TextBlock Grid.Column="1" Grid.Row="1" Margin="6,0,6,4" Classes="muted" IsVisible="{Binding IsDownloading}" Text="{l:LocalizedResource DownloadingText}" />
-                <TextBlock Grid.Column="1" Grid.Row="1" Margin="6,0,6,4" Classes="muted" IsVisible="{Binding IsExtracting}" Text="{l:LocalizedResource ExtractingText}" />
+                    <TextBlock Grid.Column="1" Grid.Row="1" Margin="6,0,6,4" Classes="muted" IsVisible="{Binding IsInDownloadQueue}" Text="{l:LocalizedResource InDownloadQueueText}" />
+                    <TextBlock Grid.Column="1" Grid.Row="1" Margin="6,0,6,4" Classes="muted" IsVisible="{Binding IsDownloading}" Text="{l:LocalizedResource DownloadingText}" />
+                    <TextBlock Grid.Column="1" Grid.Row="1" Margin="6,0,6,4" Classes="muted" IsVisible="{Binding IsExtracting}" Text="{l:LocalizedResource ExtractingText}" />
 
-                <TextBox Grid.Column="1" Grid.Row="0" Margin="6,0" MinWidth="150" Text="{Binding Name, Mode=TwoWay}" IsVisible="{Binding IsRenaming}" FontSize="{DynamicResource FontSizeLarge}">
-                  <TextBox.KeyBindings>
-                    <KeyBinding Gesture="Return" Command="{Binding EndRenameCommand}" />
-                  </TextBox.KeyBindings>
-                </TextBox>
-                <ToggleButton Grid.Column="2" Grid.Row="0" Grid.RowSpan="2" Margin="4" Padding="0" MinWidth="1" Width="26" Height="26"
-                              ToolTip.Tip="{l:LocalizedResource RenameButton}" FontSize="{DynamicResource FontSizeNormal}"
-                              HorizontalAlignment="Center" VerticalAlignment="Center" IsChecked="{Binding IsRenaming, Mode=TwoWay}">
-                  <ToggleButton.IsVisible>
-                    <MultiBinding Converter="{x:Static BoolConverters.And}">
-                      <Binding Path="CanEditName" />
-                      <Binding Path="IsInstalled" />
-                    </MultiBinding>
-                  </ToggleButton.IsVisible>
-                  <icons:EditIcon />
-                </ToggleButton>
-                <Button Grid.Column="3" Grid.Row="0" Grid.RowSpan="2" Margin="4" Padding="0" MinWidth="1" Width="26" Height="26"
-                        ToolTip.Tip="{l:LocalizedResource ShortcutButton}" FontSize="{DynamicResource FontSizeNormal}"
-                        HorizontalAlignment="Center" VerticalAlignment="Center" Command="{Binding CreateShortcutCommand}" IsVisible="{Binding IsInstalled}">
-                  <icons:ShortcutIcon />
-                </Button>
+                    <TextBox Grid.Column="1" Grid.Row="0" Margin="6,0" MinWidth="150" Text="{Binding Name, Mode=TwoWay}" IsVisible="{Binding IsRenaming}" FontSize="{DynamicResource FontSizeLarge}">
+                      <TextBox.KeyBindings>
+                        <KeyBinding Gesture="Return" Command="{Binding EndRenameCommand}" />
+                      </TextBox.KeyBindings>
+                    </TextBox>
+                    <ToggleButton Grid.Column="2" Grid.Row="0" Grid.RowSpan="2" Margin="4" Padding="0" MinWidth="1" Width="26" Height="26"
+                                  ToolTip.Tip="{l:LocalizedResource RenameButton}" FontSize="{DynamicResource FontSizeNormal}"
+                                  HorizontalAlignment="Center" VerticalAlignment="Center" IsChecked="{Binding IsRenaming, Mode=TwoWay}">
+                      <ToggleButton.IsVisible>
+                        <MultiBinding Converter="{x:Static BoolConverters.And}">
+                          <Binding Path="CanEditName" />
+                          <Binding Path="IsInstalled" />
+                        </MultiBinding>
+                      </ToggleButton.IsVisible>
+                      <icons:EditIcon />
+                    </ToggleButton>
+                    <Button Grid.Column="3" Grid.Row="0" Grid.RowSpan="2" Margin="4" Padding="0" MinWidth="1" Width="26" Height="26"
+                            ToolTip.Tip="{l:LocalizedResource ShortcutButton}" FontSize="{DynamicResource FontSizeNormal}"
+                            HorizontalAlignment="Center" VerticalAlignment="Center" Command="{Binding CreateShortcutCommand}" IsVisible="{Binding IsInstalled}">
+                      <icons:ShortcutIcon />
+                    </Button>
 
-                <Button Grid.Column="5" Grid.Row="0" Grid.RowSpan="2" Margin="4" Padding="0" MinWidth="1" Width="26" Height="26"
-                        ToolTip.Tip="{l:LocalizedResource RemoveButton}" FontSize="{DynamicResource FontSizeNormal}"
-                        HorizontalAlignment="Center" VerticalAlignment="Center" Command="{Binding RemoveCommand}">
-                  <Button.IsVisible>
-                    <MultiBinding Converter="{x:Static BoolConverters.And}">
-                      <Binding Path="CanRemove" />
-                      <Binding Path="IsInstalled" />
-                    </MultiBinding>
-                  </Button.IsVisible>
-                  <icons:UnlinkIcon />
-                </Button>
-                <Button Grid.Column="6" Grid.Row="0" Grid.RowSpan="2" Margin="4" Padding="0" MinWidth="1" Width="26" Height="26"
-                        ToolTip.Tip="{l:LocalizedResource DeleteButton}" FontSize="{DynamicResource FontSizeNormal}"
-                        HorizontalAlignment="Center" VerticalAlignment="Center" Command="{Binding DeleteCommand}">
-                  <Button.IsVisible>
-                    <MultiBinding Converter="{x:Static BoolConverters.And}">
-                      <Binding Path="CanDelete" />
-                      <Binding Path="IsInstalled" />
-                    </MultiBinding>
-                  </Button.IsVisible>
-                  <icons:RemoveIcon />
-                </Button>
+                    <Button Grid.Column="5" Grid.Row="0" Grid.RowSpan="2" Margin="4" Padding="0" MinWidth="1" Width="26" Height="26"
+                            ToolTip.Tip="{l:LocalizedResource RemoveButton}" FontSize="{DynamicResource FontSizeNormal}"
+                            HorizontalAlignment="Center" VerticalAlignment="Center" Command="{Binding RemoveCommand}">
+                      <Button.IsVisible>
+                        <MultiBinding Converter="{x:Static BoolConverters.And}">
+                          <Binding Path="CanRemove" />
+                          <Binding Path="IsInstalled" />
+                        </MultiBinding>
+                      </Button.IsVisible>
+                      <icons:UnlinkIcon />
+                    </Button>
+                    <Button Grid.Column="6" Grid.Row="0" Grid.RowSpan="2" Margin="4" Padding="0" MinWidth="1" Width="26" Height="26"
+                            ToolTip.Tip="{l:LocalizedResource DeleteButton}" FontSize="{DynamicResource FontSizeNormal}"
+                            HorizontalAlignment="Center" VerticalAlignment="Center" Command="{Binding DeleteCommand}">
+                      <Button.IsVisible>
+                        <MultiBinding Converter="{x:Static BoolConverters.And}">
+                          <Binding Path="CanDelete" />
+                          <Binding Path="IsInstalled" />
+                        </MultiBinding>
+                      </Button.IsVisible>
+                      <icons:RemoveIcon />
+                    </Button>
 
-              </Grid>
+                  </Grid>
+                </Border>
 
-            </DataTemplate>
-          </ItemsControl.ItemTemplate>
-        </ItemsControl>
+              </DataTemplate>
+            </ItemsControl.ItemTemplate>
+          </ItemsControl>
+        </ScrollViewer>
       </Border>
 
       <StackPanel Grid.Column="1" Grid.Row="1" Margin="4" Orientation="Horizontal">
