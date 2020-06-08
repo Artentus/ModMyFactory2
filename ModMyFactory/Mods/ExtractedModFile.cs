@@ -123,7 +123,7 @@ namespace ModMyFactory.Mods
         /// <param name="directory">The directory to load</param>
         public static async Task<ExtractedModFile> LoadAsync(DirectoryInfo directory)
         {
-            if (directory.Exists) throw new PathNotFoundException("The specified directory does not exist");
+            if (!directory.Exists) throw new PathNotFoundException("The specified directory does not exist");
 
             (bool success, var result) = await TryLoadAsync(directory);
             if (!success) throw new InvalidModDataException("The specified directory is not a valid mod");

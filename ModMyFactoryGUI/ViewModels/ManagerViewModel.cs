@@ -210,6 +210,7 @@ namespace ModMyFactoryGUI.ViewModels
             {
                 var modDir = Program.Locations.GetModDir(modFile.Info.FactorioVersion);
                 var movedFile = await modFile.CopyToAsync(modDir.FullName);
+                modFile.Dispose();
 
                 var mod = new Mod(movedFile);
                 Program.Manager.AddMod(mod);

@@ -27,6 +27,8 @@ namespace ModMyFactory.Mods
 
             var newStream = new MemoryStream((int)thumbnail.Length);
             await thumbnail.CopyToAsync(newStream);
+
+            newStream.Position = 0;
             return newStream;
         }
 

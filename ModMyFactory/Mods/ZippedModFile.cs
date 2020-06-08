@@ -136,7 +136,7 @@ namespace ModMyFactory.Mods
         /// <param name="file">The archive file to load</param>
         public static async Task<ZippedModFile> LoadAsync(FileInfo file)
         {
-            if (file.Exists) throw new PathNotFoundException("The specified file does not exist");
+            if (!file.Exists) throw new PathNotFoundException("The specified file does not exist");
 
             (bool success, var result) = await TryLoadAsync(file);
             if (!success) throw new InvalidModDataException("The specified file is not a valid mod");
