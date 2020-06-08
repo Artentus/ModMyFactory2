@@ -10,13 +10,16 @@ using Avalonia.Input;
 using ModMyFactory;
 using ModMyFactory.Mods;
 using ModMyFactoryGUI.Controls.Icons;
+using ModMyFactoryGUI.Helpers;
 using ModMyFactoryGUI.Views;
 using ReactiveUI;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
 
@@ -27,6 +30,8 @@ namespace ModMyFactoryGUI.ViewModels
         private readonly ObservableCollection<ModVersionGroupingViewModel> _modVersionGroupings;
         private readonly ObservableCollection<ModpackViewModel> _modpacks;
         private string _modFilter, _modpackFilter;
+        private bool? _allModsEnabled, _allModpacksEnabled;
+        private bool _isUpdating;
 
         public CollectionView<ModVersionGroupingViewModel> ModVersionGroupings { get; }
 
@@ -67,6 +72,41 @@ namespace ModMyFactoryGUI.ViewModels
             }
         }
 
+        public bool? AllModsEnabled
+        {
+            get => _allModsEnabled;
+            set
+            {
+                if (!value.HasValue) throw new ArgumentNullException();
+
+                this.RaiseAndSetIfChanged(ref _allModsEnabled, value, nameof(AllModsEnabled));
+
+                _isUpdating = true;
+                foreach (var grouping in _modVersionGroupings)
+                {
+                    foreach (var family in grouping.FamilyViewModels)
+                        family.IsEnabled = value.Value;
+                }
+                _isUpdating = false;
+            }
+        }
+
+        public bool? AllModpacksEnabled
+        {
+            get => _allModpacksEnabled;
+            set
+            {
+                if (!value.HasValue) throw new ArgumentNullException();
+
+                this.RaiseAndSetIfChanged(ref _allModpacksEnabled, value, nameof(AllModpacksEnabled));
+
+                _isUpdating = true;
+                foreach (var pack in _modpacks)
+                    pack.Enabled = value.Value;
+                _isUpdating = false;
+            }
+        }
+
         public ICommand AddModsCommand { get; }
 
         public ICommand CreateModpackCommand { get; }
@@ -79,6 +119,9 @@ namespace ModMyFactoryGUI.ViewModels
             foreach (var modManager in Program.Manager.ModManagers)
             {
                 var vm = new ModVersionGroupingViewModel(modManager);
+                vm.FamilyViewModels.CollectionChanged += OnVersionGroupingCollectionChanged;
+                foreach (var family in vm.FamilyViewModels)
+                    family.PropertyChanged += OnFamilyPropertyChanged;
                 _modVersionGroupings.Add(vm);
             }
 
@@ -95,6 +138,10 @@ namespace ModMyFactoryGUI.ViewModels
             ModVersionGroupings = new CollectionView<ModVersionGroupingViewModel>(_modVersionGroupings, CompareVersionGroupings);
 
             Modpacks = new CollectionView<ModpackViewModel>(_modpacks, new ModpackComparer(), FilterModpack);
+
+
+            EvaluateModEnabledStates();
+            EvaluateModpackEnabledStates();
 
 
             Program.Manager.ModManagerCreated += OnModManagerCreated;
@@ -114,6 +161,9 @@ namespace ModMyFactoryGUI.ViewModels
         private void OnModManagerCreated(object sender, ModManagerCreatedEventArgs e)
         {
             var vm = new ModVersionGroupingViewModel(e.ModManager);
+            vm.FamilyViewModels.CollectionChanged += OnVersionGroupingCollectionChanged;
+            foreach (var family in vm.FamilyViewModels)
+                family.PropertyChanged += OnFamilyPropertyChanged;
             _modVersionGroupings.Add(vm);
         }
 
@@ -132,12 +182,57 @@ namespace ModMyFactoryGUI.ViewModels
             return false;
         }
 
+        private void EvaluateModEnabledStates()
+        {
+            _allModsEnabled = _modVersionGroupings
+                .SelectMany(grouping => grouping.FamilyViewModels)
+                .SelectFromAll(family => family.IsEnabled);
+            this.RaisePropertyChanged(nameof(AllModsEnabled));
+        }
+
+        private void EvaluateModpackEnabledStates()
+        {
+            _allModpacksEnabled = _modpacks.SelectFromAll(vm => vm.Enabled);
+            this.RaisePropertyChanged(nameof(AllModpacksEnabled));
+        }
+
+        private void OnFamilyPropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == nameof(ModFamilyViewModel.IsEnabled))
+            {
+                if (!_isUpdating) EvaluateModEnabledStates();
+            }
+        }
+
+        private void OnVersionGroupingCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            switch (e.Action)
+            {
+                case NotifyCollectionChangedAction.Add:
+                    foreach (ModFamilyViewModel vm in e.NewItems)
+                        vm.PropertyChanged += OnFamilyPropertyChanged;
+                    break;
+
+                case NotifyCollectionChangedAction.Remove:
+                case NotifyCollectionChangedAction.Reset:
+                    foreach (ModFamilyViewModel vm in e.OldItems)
+                        vm.PropertyChanged -= OnFamilyPropertyChanged;
+                    break;
+            }
+
+            EvaluateModEnabledStates();
+        }
+
         private void OnModpackPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             if (e.PropertyName == nameof(ModpackViewModel.IsRenaming))
             {
                 var vm = (ModpackViewModel)sender;
                 if (!vm.IsRenaming) Modpacks.Refresh();
+            }
+            else if (e.PropertyName == nameof(ModpackViewModel.Enabled))
+            {
+                EvaluateModpackEnabledStates();
             }
         }
 
@@ -178,6 +273,8 @@ namespace ModMyFactoryGUI.ViewModels
                     this.RaisePropertyChanged(nameof(Modpacks));
                     break;
             }
+
+            EvaluateModpackEnabledStates();
         }
 
         private async Task AddModsAsync()
