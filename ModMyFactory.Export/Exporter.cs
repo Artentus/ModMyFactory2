@@ -12,6 +12,7 @@ using SharpCompress.Writers;
 using SharpCompress.Writers.Zip;
 using System.Collections.Generic;
 using System.IO;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace ModMyFactory.Export
@@ -57,7 +58,9 @@ namespace ModMyFactory.Export
                 using var writer = new ZipWriter(stream, options);
 
                 string json = JsonConvert.SerializeObject(Package, Formatting.Indented);
-                writer.Write("pack.json", json);
+                byte[] data = Encoding.UTF8.GetBytes(json);
+                using var jsonStream = new MemoryStream(data);
+                writer.Write("pack.json", jsonStream);
 
                 foreach (var f in FilesToPack)
                     writer.Write(f.Name, f);
