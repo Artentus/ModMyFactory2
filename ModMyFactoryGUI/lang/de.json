@@ -20,6 +20,14 @@
     "type": "string",
     "value": "Verknüpfungen"
   },
+  "FmpFileType": {
+    "type": "string",
+    "value": "Factorio-Modpacks"
+  },
+  "FmpaFileType": {
+    "type": "string",
+    "value": "Factorio-Modpackarchive"
+  },
   "DefaultModpackName": {
     "type": "string",
     "value": "Neues Modpack"

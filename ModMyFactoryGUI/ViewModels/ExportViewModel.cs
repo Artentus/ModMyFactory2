@@ -5,6 +5,7 @@
 //  the Free Software Foundation, either version 3 of the License, or
 //  (at your option) any later version.
 
+using Avalonia.Controls;
 using ModMyFactory;
 using ModMyFactoryGUI.Helpers;
 using ModMyFactoryGUI.Views;
@@ -14,6 +15,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
+using System.IO;
 using System.Threading.Tasks;
 using System.Windows.Input;
 
@@ -276,9 +278,102 @@ namespace ModMyFactoryGUI.ViewModels
             }
         }
 
+        #region Export
+
+        private readonly Dictionary<Modpack, ModpackExportViewModel> _vmMappings
+            = new Dictionary<Modpack, ModpackExportViewModel>();
+
+        private void AddSubModpacksToExport(ModpackExportViewModel vm, HashSet<ModpackExportViewModel> set, Dictionary<Modpack, ModpackExportViewModel> mappings)
+        {
+            foreach (var subPack in vm.Modpack.Modpacks)
+            {
+                var subVm = mappings[subPack];
+                set.Add(subVm);
+                AddSubModpacksToExport(subVm, set, mappings);
+            }
+        }
+
+        private ICollection<ModpackExportViewModel> GetModpacksToExport()
+        {
+            // Build the required mappings beforehand
+            var mappings = new Dictionary<Modpack, ModpackExportViewModel>();
+            foreach (var vm in _modpacks)
+                mappings.Add(vm.Modpack, vm);
+
+            var result = new HashSet<ModpackExportViewModel>();
+            foreach (var vm in _modpacks)
+            {
+                if (vm.IsSelected)
+                {
+                    result.Add(vm);
+                    AddSubModpacksToExport(vm, result, mappings);
+                }
+            }
+            return result;
+        }
+
+        private bool CheckIncludesFiles()
+        {
+            // Only when false are none of the mods including files
+            return IncludeFile != false;
+        }
+
         private async Task ExportAsync()
         {
+            var sfd = new SaveFileDialog();
+
+            var normalFilter = new FileDialogFilter();
+            normalFilter.Extensions.Add("fmp");
+            normalFilter.Name = (string)App.Current.Locales.GetResource("FmpFileType");
+            var archiveFilter = new FileDialogFilter();
+            archiveFilter.Extensions.Add("fmpa");
+            archiveFilter.Name = (string)App.Current.Locales.GetResource("FmpaFileType");
+
+            bool includesFiles = CheckIncludesFiles();
+            if (includesFiles)
+            {
+                // Only archive export is supported
+                sfd.Filters.Add(archiveFilter);
+                sfd.DefaultExtension = archiveFilter.Extensions[0];
+            }
+            else
+            {
+                // Plain-text and archive export is supported
+                sfd.Filters.Add(normalFilter);
+                sfd.Filters.Add(archiveFilter);
+                sfd.DefaultExtension = normalFilter.Extensions[0];
+            }
+
+            var path = await sfd.ShowAsync(App.Current.MainWindow);
+            if (!string.IsNullOrEmpty(path))
+            {
+                // We need to check this because in Lunix the default extension is not automatically appended
+                if (string.IsNullOrEmpty(Path.GetExtension(path))) path += "." + sfd.DefaultExtension;
+
+                // ToDo: show progress dialog
+
+                // Run on the thread pool since it's an expensive operation
+                var helper = new ExportHelper(GetModpacksToExport());
+                var factory = await Task.Run(helper.PrepareExportAsync);
+
+                // Check if we are packing
+                var pathExt = Path.GetExtension(path).Substring(1); // Remove the dot
+                foreach (var ext in archiveFilter.Extensions)
+                {
+                    if (string.Equals(pathExt, ext, StringComparison.InvariantCultureIgnoreCase))
+                        factory.Forcepack = true;
+                }
+
+                var exporter = factory.CreateExporter();
+                await exporter.ExportAsync(path);
+
+                // We need to clean up any temporary files we created
+                foreach (var file in Program.TemporaryDirectory.EnumerateFiles())
+                    file.Delete();
+            }
         }
+
+        #endregion Export
 
         protected override List<IMenuItemViewModel> GetEditMenuViewModels()
         {
