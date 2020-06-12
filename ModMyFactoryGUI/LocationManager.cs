@@ -37,6 +37,8 @@ namespace ModMyFactoryGUI
         private Location _factorioLocation, _modLocation;
         private string _customFactorioPath, _customModPath;
 
+        public event EventHandler ModsReloaded;
+
         public Location FactorioLocation
         {
             get => _factorioLocation;
@@ -115,6 +117,9 @@ namespace ModMyFactoryGUI
             if (_modLocation == Location.Custom) _customModPath = modLocationString;
         }
 
+        private void OnModsReloaded(EventArgs e)
+            => ModsReloaded?.Invoke(this, e);
+
         private DirectoryInfo GetLocationDir(Location location, string dirName, string customPath)
         {
             return location switch
@@ -150,11 +155,6 @@ namespace ModMyFactoryGUI
             if (await FileHelper.AssureDirectorySafeForMoveAsync(dest))
             {
                 await FileHelper.MoveDirectoryWithStatusAsync(source, dest.FullName);
-
-                // Clear and reload
-                _manager.ClearInstances();
-                await _manager.LoadFactorioInstancesAsync(this, _settingManager);
-
                 return true;
             }
 
@@ -168,11 +168,6 @@ namespace ModMyFactoryGUI
             if (await FileHelper.AssureDirectorySafeForMoveAsync(dest))
             {
                 await FileHelper.MoveDirectoryWithStatusAsync(source, dest.FullName);
-
-                // Clear and reload
-                _manager.ClearMods();
-                await _manager.LoadModsAsync(this);
-
                 return true;
             }
 
@@ -234,6 +229,13 @@ namespace ModMyFactoryGUI
                 FactorioLocation = location;
                 CustomFactorioPath = customPath;
 
+                // Clear and reload
+                _manager.ClearInstances();
+                _manager.ClearMods();
+                await _manager.LoadFactorioInstancesAsync(this, _settingManager);
+                await _manager.LoadModsAsync(this); // We need to reload mods as well
+                OnModsReloaded(EventArgs.Empty);
+
                 await SaveFactorioLocationAsync();
             }
         }
@@ -251,6 +253,11 @@ namespace ModMyFactoryGUI
                 // If successfull (either no action required or accepted by the user) we update the location
                 ModLocation = location;
                 CustomModPath = customPath;
+
+                // Clear and reload
+                _manager.ClearMods();
+                await _manager.LoadModsAsync(this);
+                OnModsReloaded(EventArgs.Empty);
 
                 await SaveModLocationAsync();
             }

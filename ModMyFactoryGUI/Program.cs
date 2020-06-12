@@ -235,6 +235,10 @@ namespace ModMyFactoryGUI
             var factory = new GlobalSingletonFactory(ApplicationDirectory, ApplicationDataDirectory);
             Settings = await factory.LoadSettingsAsync();
             (Manager, Locations) = await factory.CreateManagerAsync(Settings);
+            Locations.ModsReloaded += async (s, e) =>
+            {
+                _modpacks = await LoadModpacksAsync();
+            };
             _modpacks = await LoadModpacksAsync();
         }
 
