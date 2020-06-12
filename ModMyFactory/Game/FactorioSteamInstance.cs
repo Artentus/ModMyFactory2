@@ -7,6 +7,7 @@
 
 using ModMyFactory.Mods;
 using System;
+using System.Diagnostics;
 using System.IO;
 
 #if NETCORE
@@ -60,6 +61,6 @@ namespace ModMyFactory.Game
             _steam = steam;
         }
 
-        public override void Start(string arguments) => _steam.StartApp(SteamApp.Factorio, arguments);
+        public override Process Start(string arguments) => _steam.StartApp(SteamApp.Factorio, arguments);
     }
 }

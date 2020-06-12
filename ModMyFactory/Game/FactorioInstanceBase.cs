@@ -8,6 +8,7 @@
 using ModMyFactory.BaseTypes;
 using ModMyFactory.Mods;
 using System;
+using System.Diagnostics;
 using System.IO;
 
 namespace ModMyFactory.Game
@@ -44,7 +45,7 @@ namespace ModMyFactory.Game
             }
         }
 
-        public abstract void Start(string arguments);
+        public abstract Process Start(string arguments);
 
         public void Dispose()
         {

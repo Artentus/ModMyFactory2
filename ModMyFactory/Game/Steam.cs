@@ -152,7 +152,7 @@ namespace ModMyFactory.Game
         /// </summary>
         /// <param name="app">The app to start</param>
         /// <param name="arguments">Optional arguments</param>
-        public void StartApp(SteamApp app, string arguments)
+        public Process StartApp(SteamApp app, string arguments)
         {
 #if NETFULL
             var startInfo = new ProcessStartInfo(Path.Combine(_path, "Steam.exe"));
@@ -179,7 +179,7 @@ namespace ModMyFactory.Game
             builder.AppendExisting(arguments);
             startInfo.Arguments = builder.ToString();
 
-            Process.Start(startInfo);
+            return Process.Start(startInfo);
         }
     }
 }

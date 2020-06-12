@@ -9,6 +9,7 @@ using ModMyFactory.BaseTypes;
 using ModMyFactory.IO;
 using ModMyFactory.Mods;
 using System;
+using System.Diagnostics;
 using System.IO;
 
 namespace ModMyFactory.Game
@@ -117,7 +118,7 @@ namespace ModMyFactory.Game
             return new ManagedFactorioInstance(instance, modManager, false);
         }
 
-        public void Start(string arguments) => _baseInstance.Start(arguments);
+        public Process Start(string arguments) => _baseInstance.Start(arguments);
 
         /// <summary>
         /// Links this instances save directory to another location<br/>

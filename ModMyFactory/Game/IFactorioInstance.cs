@@ -8,6 +8,7 @@
 using ModMyFactory.BaseTypes;
 using ModMyFactory.Mods;
 using System;
+using System.Diagnostics;
 using System.IO;
 
 namespace ModMyFactory.Game
@@ -56,7 +57,7 @@ namespace ModMyFactory.Game
         /// Starts this instance
         /// </summary>
         /// <param name="arguments">Optional command line arguments</param>
-        void Start(string arguments = null);
+        Process Start(string arguments = null);
     }
 
     public static class FactorioInstance
@@ -74,7 +75,7 @@ namespace ModMyFactory.Game
         /// <param name="arguments">
         /// Optional command line arguments
         /// </param>
-        public static void Start(this IFactorioInstance instance, DirectoryInfo modDirectory = null, FileInfo savegameFile = null, params string[] arguments)
+        public static Process Start(this IFactorioInstance instance, DirectoryInfo modDirectory = null, FileInfo savegameFile = null, params string[] arguments)
         {
             var builder = new ArgumentBuilder();
 
@@ -95,7 +96,7 @@ namespace ModMyFactory.Game
                 builder.AppendArguments(arguments);
             }
 
-            instance.Start(builder.ToString());
+            return instance.Start(builder.ToString());
         }
 
         /// <summary>
@@ -111,7 +112,7 @@ namespace ModMyFactory.Game
         /// <param name="arguments">
         /// Optional command line arguments
         /// </param>
-        public static void Start(this IFactorioInstance instance, DirectoryInfo modDirectory = null, FileInfo savegameFile = null, string arguments = null)
+        public static Process Start(this IFactorioInstance instance, DirectoryInfo modDirectory = null, FileInfo savegameFile = null, string arguments = null)
         {
             var builder = new ArgumentBuilder();
 
@@ -132,14 +133,14 @@ namespace ModMyFactory.Game
                 builder.AppendExisting(arguments);
             }
 
-            instance.Start(builder.ToString());
+            return instance.Start(builder.ToString());
         }
 
         /// <summary>
         /// Starts this instance
         /// </summary>
         /// <param name="arguments">Optional command line arguments</param>
-        public static void Start(this IFactorioInstance instance, params string[] arguments)
+        public static Process Start(this IFactorioInstance instance, params string[] arguments)
             => instance.Start(null, null, arguments);
 
         /// <summary>

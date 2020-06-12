@@ -24,10 +24,10 @@ namespace ModMyFactory.Game
             _executable = executable;
         }
 
-        public override void Start(string arguments)
+        public override Process Start(string arguments)
         {
             var startInfo = new ProcessStartInfo(_executable.FullName, arguments);
-            Process.Start(startInfo);
+            return Process.Start(startInfo);
         }
     }
 }
