@@ -187,7 +187,7 @@ namespace ModMyFactory.Mods
             _enabledMod = null;
             _mods.Clear();
 
-            OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset, listCopy));
+            OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Remove, listCopy));
             OnPropertyChanged(new PropertyChangedEventArgs(nameof(Count)));
 
             Authors = new string[0];

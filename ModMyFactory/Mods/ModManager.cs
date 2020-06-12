@@ -84,21 +84,7 @@ namespace ModMyFactory.Mods
             => CollectionChanged?.Invoke(this, e);
 
         private void OnFamilyCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
-        {
-            if (e.Action == NotifyCollectionChangedAction.Reset)
-            {
-                if (!_clearing) // Ignore if we are clearing globally
-                {
-                    // We need to propagate a reset event as multiple remove events since clearing a single family does not clear the entire manager
-                    foreach (Mod mod in e.OldItems)
-                        OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Remove, mod));
-                }
-            }
-            else
-            {
-                OnCollectionChanged(e);
-            }
-        }
+            => OnCollectionChanged(e);
 
         /// <summary>
         /// Tries to get the mod family with the specified name
@@ -154,8 +140,6 @@ namespace ModMyFactory.Mods
             }
             _families.Clear();
 
-            // Needs to be called manually since the event hook can't handle it
-            OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
             _clearing = false;
         }
 

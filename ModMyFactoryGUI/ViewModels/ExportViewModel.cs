@@ -265,16 +265,6 @@ namespace ModMyFactoryGUI.ViewModels
                     }
                     this.RaisePropertyChanged(nameof(Modpacks));
                     break;
-
-                case NotifyCollectionChangedAction.Reset:
-                    foreach (var vm in _modpacks)
-                    {
-                        vm.PropertyChanged -= OnModpackPropertyChanged;
-                        vm.Dispose();
-                    }
-                    _modpacks.Clear();
-                    this.RaisePropertyChanged(nameof(Modpacks));
-                    break;
             }
         }
 

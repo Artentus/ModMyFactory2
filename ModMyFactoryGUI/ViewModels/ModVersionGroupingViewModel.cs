@@ -115,10 +115,6 @@ namespace ModMyFactoryGUI.ViewModels
                         }
                     }
                     break;
-
-                case NotifyCollectionChangedAction.Reset:
-                    _familyViewModels.Clear();
-                    break;
             }
         }
     }

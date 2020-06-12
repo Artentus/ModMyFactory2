@@ -236,13 +236,6 @@ namespace ModMyFactoryGUI.ViewModels
                     }
                     this.RaisePropertyChanged(nameof(Mods));
                     break;
-
-                case NotifyCollectionChangedAction.Reset:
-                    foreach (var vm in _mods)
-                        vm.PropertyChanged -= ModPropertyChangedHandler;
-                    _mods.Clear();
-                    this.RaisePropertyChanged(nameof(Mods));
-                    break;
             }
 
             EvaluateProperties();

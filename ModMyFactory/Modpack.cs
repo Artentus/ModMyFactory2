@@ -270,7 +270,7 @@ namespace ModMyFactory
             _children.ForEach(m => m.EnabledChanged -= OnModEnabledChanged);
             _children.Clear();
 
-            OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset, (IList)copy));
+            OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Remove, (IList)copy));
             OnPropertyChanged(new PropertyChangedEventArgs(nameof(Count)));
             EvaluateEnabledState();
         }

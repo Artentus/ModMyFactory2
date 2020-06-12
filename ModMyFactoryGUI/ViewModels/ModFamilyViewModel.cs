@@ -127,14 +127,6 @@ namespace ModMyFactoryGUI.ViewModels
                         }
                     }
                     break;
-
-                case NotifyCollectionChangedAction.Reset:
-                    _modViewModels.Clear();
-                    this.RaisePropertyChanged(nameof(Authors));
-                    Thumbnail = null;
-                    this.RaisePropertyChanged(nameof(Thumbnail));
-                    this.RaisePropertyChanged(nameof(HasThumbnail));
-                    break;
             }
         }
 

@@ -60,11 +60,6 @@ namespace ModMyFactoryGUI
                         oldItems = MapList(e.OldItems);
                         OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Replace, newItems, oldItems));
                         break;
-
-                    case NotifyCollectionChangedAction.Reset:
-                        oldItems = MapList(e.OldItems);
-                        OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset, oldItems));
-                        break;
                 }
 
                 if (e.Action != NotifyCollectionChangedAction.Replace)
@@ -172,7 +167,7 @@ namespace ModMyFactoryGUI
 
         protected virtual void OnClear(IList<KeyValuePair<TKey, TValue>> items)
         {
-            OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset, (IList)items));
+            OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Remove, (IList)items));
             OnPropertyChanged(new PropertyChangedEventArgs(nameof(Count)));
             OnPropertyChanged(new PropertyChangedEventArgs(nameof(Keys)));
             OnPropertyChanged(new PropertyChangedEventArgs(nameof(Values)));
