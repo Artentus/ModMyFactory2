@@ -13,28 +13,28 @@ using System.Text.RegularExpressions;
 namespace ModMyFactory.BaseTypes
 {
     /// <summary>
-    /// Defines a dependency between mods.
+    /// Defines a dependency between mods
     /// </summary>
     [JsonConverter(typeof(DependencyConverter))]
     public class Dependency : IEquatable<Dependency>
     {
         /// <summary>
-        /// The type of the dependency.
+        /// The type of the dependency
         /// </summary>
         public DependencyType Type { get; }
 
         /// <summary>
-        /// The name of the mod the dependency is referencing.
+        /// The name of the mod the dependency is referencing
         /// </summary>
         public string ModName { get; }
 
         /// <summary>
-        /// The comparison function of this dependency.
+        /// The comparison function of this dependency
         /// </summary>
         public DependencyComparison Comparison { get; }
 
         /// <summary>
-        /// The version to compare the mod against using the comparison function.
+        /// The version to compare the mod against using the comparison function
         /// </summary>
         public AccurateVersion CompareVersion { get; }
 
@@ -42,7 +42,7 @@ namespace ModMyFactory.BaseTypes
             => (Type, ModName, Comparison, CompareVersion) = (type, modName, comparison, compareVersion);
 
         /// <summary>
-        /// Determines if a given mod matches this dependency.
+        /// Determines if a given mod matches this dependency
         /// </summary>
         protected virtual bool Matches(string modName, AccurateVersion modVersion)
         {
@@ -74,11 +74,11 @@ namespace ModMyFactory.BaseTypes
             }
             if (string.IsNullOrWhiteSpace(value)) return false;
 
-            const string pattern = @"\A(?<name>[a-zA-Z0-9_\-]+)(?:\s*(?<op><=|>=|<|>|=)\s*(?<ver>\d+(?:\.\d+){0,3}))?\Z";
+            const string pattern = @"\A(?<name>[a-zA-Z0-9_\-\s]+)(?:\s*(?<op><=|>=|<|>|=)\s*(?<ver>\d+(?:\.\d+){0,3}))?\Z";
             var match = Regex.Match(value, pattern);
             if (!match.Success) return false;
 
-            string name = match.Groups["name"].Value;
+            string name = match.Groups["name"].Value.TrimEnd();
             DependencyComparison comp;
             AccurateVersion version = default;
 
@@ -101,11 +101,11 @@ namespace ModMyFactory.BaseTypes
         }
 
         /// <summary>
-        /// Checks if a given mod satisfies this dependency.
-        /// If the dependency is inverted, a mod is assumed to satisfy it if it does NOT match the dependency.
+        /// Checks if a given mod satisfies this dependency<br/>
+        /// If the dependency is inverted, a mod is assumed to satisfy it if it does NOT match the dependency
         /// </summary>
-        /// <param name="modName">The name of the mod.</param>
-        /// <param name="modVersion">The version of the mod.</param>
+        /// <param name="modName">The name of the mod</param>
+        /// <param name="modVersion">The version of the mod</param>
         public bool IsSatisfiedBy(string modName, AccurateVersion modVersion)
         {
             if (Type == DependencyType.Inverted) return !Matches(modName, modVersion);
