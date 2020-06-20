@@ -25,7 +25,7 @@
   </ItemGroup>
   
   <ItemGroup Condition="'$(Configuration)' == 'Release'">
-    <PackageReference Include="ModMyFactory.BaseTypes" Version="1.0.0.12-alpha" />
+    <PackageReference Include="ModMyFactory.BaseTypes" Version="1.0.0.13-alpha" />
     <PackageReference Include="ModMyFactory" Version="1.0.0.48-alpha" />
   </ItemGroup>
 
