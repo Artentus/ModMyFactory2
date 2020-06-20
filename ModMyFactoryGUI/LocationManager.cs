@@ -7,11 +7,13 @@
 
 using ModMyFactory;
 using ModMyFactory.BaseTypes;
+using ModMyFactory.Game;
 using ModMyFactoryGUI.Helpers;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -229,9 +231,20 @@ namespace ModMyFactoryGUI
                 FactorioLocation = location;
                 CustomFactorioPath = customPath;
 
-                // Clear and reload
+                // Clear
+                var instances = new ManagedFactorioInstance[_manager.ManagedInstances.Count];
+                _manager.ManagedInstances.CopyTo(instances, 0);
                 _manager.ClearInstances();
+                foreach (var instance in _manager.ManagedInstances)
+                    instance.Dispose();
+
+                var mods = _manager.ModManagers.SelectMany(manager => manager.Families).SelectMany(family => family);
+                var modsCopy = mods.ToArray();
                 _manager.ClearMods();
+                foreach (var mod in modsCopy)
+                    mod.Dispose();
+
+                // Reload
                 await _manager.LoadFactorioInstancesAsync(this, _settingManager);
                 await _manager.LoadModsAsync(this); // We need to reload mods as well
                 OnModsReloaded(EventArgs.Empty);
@@ -254,8 +267,14 @@ namespace ModMyFactoryGUI
                 ModLocation = location;
                 CustomModPath = customPath;
 
-                // Clear and reload
+                // Clear
+                var mods = _manager.ModManagers.SelectMany(manager => manager.Families).SelectMany(family => family);
+                var modsCopy = mods.ToArray();
                 _manager.ClearMods();
+                foreach (var mod in modsCopy)
+                    mod.Dispose();
+
+                // Reload
                 await _manager.LoadModsAsync(this);
                 OnModsReloaded(EventArgs.Empty);
 

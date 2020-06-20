@@ -191,7 +191,7 @@ namespace ModMyFactory.Mods
             });
 
             var newDir = new DirectoryInfo(Path.Combine(destination, _file.NameWithoutExtension()));
-            var newThumbnail = ModFile.LoadThumbnail(newDir);
+            var newThumbnail = await ModFile.LoadThumbnail(newDir);
             var extractedFile = new ExtractedModFile(newDir, Info, newThumbnail);
 
             if (!Enabled) extractedFile.Enabled = false;

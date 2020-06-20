@@ -13,11 +13,16 @@ namespace ModMyFactory.Mods
 {
     public static class ModFile
     {
-        internal static Stream LoadThumbnail(DirectoryInfo directory)
+        internal static async Task<Stream> LoadThumbnail(DirectoryInfo directory)
         {
             Stream thumbnail = null;
             var thumbnailFile = new FileInfo(Path.Combine(directory.FullName, "thumbnail.png"));
-            if (thumbnailFile.Exists) thumbnail = thumbnailFile.Open(FileMode.Open, FileAccess.Read, FileShare.Read);
+            if (thumbnailFile.Exists)
+            {
+                using var fs = thumbnailFile.Open(FileMode.Open, FileAccess.Read, FileShare.Read);
+                thumbnail = new MemoryStream((int)thumbnailFile.Length);
+                await fs.CopyToAsync(thumbnail);
+            }
             return thumbnail;
         }
 

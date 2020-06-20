@@ -13,16 +13,17 @@ the Free Software Foundation, either version 3 of the License, or
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:l="clr-namespace:ModMyFactoryGUI.Localization"
         xmlns:controls="clr-namespace:ModMyFactoryGUI.Controls"
-        x:Class="ModMyFactoryGUI.Controls.ProgressDialog">
+        x:Class="ModMyFactoryGUI.Controls.ProgressDialog"
+        Width="450" Height="150">
 
   <Grid RowDefinitions="Auto,Auto,*,Auto">
-    <ProgressBar Grid.Row="0" Margin="8,4" Height="20"
+    <ProgressBar Grid.Row="0" Margin="16,4" Height="24"
                  Minimum="{Binding Minimum, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type controls:ProgressDialog}}}"
                  Maximum="{Binding Maximum, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type controls:ProgressDialog}}}"
                  Value="{Binding Value, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type controls:ProgressDialog}}}"
                  IsIndeterminate="{Binding IsIndeterminate, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type controls:ProgressDialog}}}" />
 
-    <TextBlock Grid.Row="1" Margin="8,0"
+    <TextBlock Grid.Row="1" Margin="16,0"
                Text="{Binding Description, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type controls:ProgressDialog}}}" />
 
     <Border Grid.Row="3" Background="{DynamicResource ThemeBackgroundHighBrush}"

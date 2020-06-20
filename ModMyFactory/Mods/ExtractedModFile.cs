@@ -103,7 +103,7 @@ namespace ModMyFactory.Mods
                 if ((fileName != info.Name) || (fileVersion != info.Version)) return (false, null);
             }
 
-            var thumbnail = ModFile.LoadThumbnail(directory);
+            var thumbnail = await ModFile.LoadThumbnail(directory);
             return (true, new ExtractedModFile(directory, info, thumbnail));
         }
 
@@ -150,7 +150,7 @@ namespace ModMyFactory.Mods
         {
             var fullPath = Path.Combine(destination, _directory.Name);
             var newDir = await _directory.CopyToAsync(fullPath);
-            var newThumbnail = ModFile.LoadThumbnail(newDir);
+            var newThumbnail = await ModFile.LoadThumbnail(newDir);
             return new ExtractedModFile(newDir, Info, newThumbnail);
         }
 
