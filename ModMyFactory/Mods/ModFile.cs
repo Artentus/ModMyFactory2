@@ -22,6 +22,7 @@ namespace ModMyFactory.Mods
                 using var fs = thumbnailFile.Open(FileMode.Open, FileAccess.Read, FileShare.Read);
                 thumbnail = new MemoryStream((int)thumbnailFile.Length);
                 await fs.CopyToAsync(thumbnail);
+                thumbnail.Position = 0;
             }
             return thumbnail;
         }

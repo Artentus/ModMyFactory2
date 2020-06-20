@@ -80,10 +80,10 @@ namespace ModMyFactory.Mods
                         var entry = reader.Entry;
                         if (!entry.IsDirectory)
                         {
-                            if (entry.Key.StartsWith(file.NameWithoutExtension() + "/", StringComparison.InvariantCultureIgnoreCase)
-                                && (entry.Key.IndexOf('/') == entry.Key.LastIndexOf('/'))) // All top level files
+                            string key = entry.Key.TrimStart('/');
+                            if (key.IndexOf('/') == key.LastIndexOf('/')) // All top level files
                             {
-                                if (entry.Key.EndsWith("info.json"))
+                                if (key.EndsWith("info.json"))
                                 {
                                     using var stream = reader.OpenEntryStream();
                                     using var sr = new StreamReader(stream, Encoding.UTF8);
@@ -92,7 +92,7 @@ namespace ModMyFactory.Mods
                                     info = ModInfo.FromJson(json);
                                     hasInfo = true;
                                 }
-                                else if (entry.Key.EndsWith("thumbnail.png"))
+                                else if (key.EndsWith("thumbnail.png"))
                                 {
                                     thumbnail = new MemoryStream();
                                     reader.WriteEntryTo(thumbnail);
