@@ -10,7 +10,6 @@ using Avalonia.Input;
 using Avalonia.Threading;
 using CommandLine;
 using ModMyFactory.Game;
-using ModMyFactory.Mods;
 using ModMyFactoryGUI.CommandLine;
 using ModMyFactoryGUI.Helpers;
 using ModMyFactoryGUI.MVVM;
@@ -19,7 +18,6 @@ using ModMyFactoryGUI.Tasks;
 using ModMyFactoryGUI.Tasks.Web;
 using ModMyFactoryGUI.Views;
 using ReactiveUI;
-using Serilog;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -232,41 +230,10 @@ namespace ModMyFactoryGUI.ViewModels
             this.RaisePropertyChanged(nameof(DownloadProgress));
         }
 
-        private async Task OnDownloadModCompleted(DownloadModReleaseJob job)
-        {
-            var fileHash = await job.File.ComputeSHA1Async();
-            var targetHash = job.Release.Checksum;
-            if (fileHash == targetHash)
-            {
-                var (success, mod) = await Mod.TryLoadAsync(job.File);
-                if (success)
-                {
-                    // Mod successfully downloaded
-                    Program.Manager.AddMod(mod);
-                    Log.Information($"Mod {mod.Name} version {mod.Version} successfully loaded");
-                }
-                else
-                {
-                    await Messages.InvalidModFile(job.File).Show();
-                }
-            }
-            else
-            {
-                await Messages.FileIntegrityError(job.File, targetHash, fileHash).Show();
-            }
-        }
-
-        private async void OnDownloadJobCompleted(object sender, JobCompletedEventArgs<DownloadJob> e)
+        private void OnDownloadJobCompleted(object sender, JobCompletedEventArgs<DownloadJob> e)
         {
             IsDownloading = false;
             this.RaisePropertyChanged(nameof(IsDownloading));
-
-            switch (e.Job)
-            {
-                case DownloadModReleaseJob j:
-                    await OnDownloadModCompleted(j);
-                    break;
-            }
         }
 
         private IMainViewModel GetViewModel(TabItem tab)

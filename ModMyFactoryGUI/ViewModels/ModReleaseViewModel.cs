@@ -13,6 +13,7 @@ using ModMyFactoryGUI.Helpers;
 using ModMyFactoryGUI.Tasks;
 using ModMyFactoryGUI.Tasks.Web;
 using ReactiveUI;
+using Serilog;
 using System;
 using System.Collections.Specialized;
 using System.Linq;
@@ -129,25 +130,44 @@ namespace ModMyFactoryGUI.ViewModels
         {
             if (!IsInstalled)
             {
-                IsInstalled = true;
-
                 var (success, username, token) = await App.Current.Credentials.TryLogInAsync();
                 if (success.IsTrue())
                 {
+                    IsInstalled = true;
                     var job = new DownloadModReleaseJob(Info, _modDisplayName, username, token);
 
-                    void JobCompletedHandler(object sender, JobCompletedEventArgs<DownloadJob> e)
+                    async void JobCompletedHandler(object sender, JobCompletedEventArgs<DownloadJob> e)
                     {
                         if (object.ReferenceEquals(e.Job, job)) IsInstalled = e.Success;
                         _downloadQueue.JobCompleted -= JobCompletedHandler;
+
+                        if (e.Success)
+                        {
+                            var fileHash = await job.File.ComputeSHA1Async();
+                            var targetHash = job.Release.Checksum;
+                            if (fileHash == targetHash)
+                            {
+                                var (success, mod) = await Mod.TryLoadAsync(job.File);
+                                if (success)
+                                {
+                                    // Mod successfully downloaded
+                                    _modManager.Add(mod);
+                                    Log.Information($"Mod {mod.Name} version {mod.Version} successfully loaded from mod portal");
+                                }
+                                else
+                                {
+                                    await Messages.InvalidModFile(job.File).Show();
+                                }
+                            }
+                            else
+                            {
+                                await Messages.FileIntegrityError(job.File, targetHash, fileHash).Show();
+                            }
+                        }
                     }
 
                     _downloadQueue.JobCompleted += JobCompletedHandler;
                     _downloadQueue.AddJob(job);
-                }
-                else
-                {
-                    IsInstalled = false;
                 }
             }
         }
