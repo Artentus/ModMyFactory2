@@ -28,10 +28,10 @@
   </ItemGroup>
   
   <ItemGroup Condition="'$(Configuration)' == 'Release'">
-    <PackageReference Include="ModMyFactory.BaseTypes" Version="*-*" />
-    <PackageReference Include="ModMyFactory.Localization" Version="*-*" />
-    <PackageReference Include="ModMyFactory.ModSettings" Version="*-*" />
-    <PackageReference Include="ModMyFactory.Win32" Version="*-*" />
+    <PackageReference Include="ModMyFactory.BaseTypes" Version="1.*-*" />
+    <PackageReference Include="ModMyFactory.Localization" Version="1.*-*" />
+    <PackageReference Include="ModMyFactory.ModSettings" Version="1.*-*" />
+    <PackageReference Include="ModMyFactory.Win32" Version="1.*-*" />
   </ItemGroup>
 
   <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0' OR '$(TargetFramework)' == 'netcoreapp3.0'">
