@@ -98,13 +98,13 @@
   </ItemGroup>
 
   <ItemGroup Condition="'$(Configuration)' == 'Release'">
-    <PackageReference Include="ModMyFactory.BaseTypes" Version="1.0.0.13-alpha" />
-    <PackageReference Include="ModMyFactory.Export" Version="1.0.0.13-alpha" />
-    <PackageReference Include="ModMyFactory.Localization" Version="1.0.0.5-alpha" />
-    <PackageReference Include="ModMyFactory.ModSettings" Version="1.0.0.12-alpha" />
-    <PackageReference Include="ModMyFactory.WebApi" Version="1.0.0.17-alpha" />
-    <PackageReference Include="ModMyFactory.Win32" Version="1.0.0.9-alpha" />
-    <PackageReference Include="ModMyFactory" Version="1.0.0.51-alpha" />
+    <PackageReference Include="ModMyFactory.BaseTypes" Version="1.*-*" />
+    <PackageReference Include="ModMyFactory.Export" Version="1.*-*" />
+    <PackageReference Include="ModMyFactory.Localization" Version="1.*-*" />
+    <PackageReference Include="ModMyFactory.ModSettings" Version="1.*-*" />
+    <PackageReference Include="ModMyFactory.WebApi" Version="1.*-*" />
+    <PackageReference Include="ModMyFactory.Win32" Version="1.*-*" />
+    <PackageReference Include="ModMyFactory" Version="1.*-*" />
   </ItemGroup>
 
   <ItemGroup>
