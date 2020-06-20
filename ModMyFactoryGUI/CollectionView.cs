@@ -109,8 +109,9 @@ namespace ModMyFactoryGUI
 
         public void Refresh()
         {
-            OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Remove, (IList)_evaluated.ToArray()));
+            var copy = _evaluated.ToArray();
             _evaluated = Evaluate(_baseCollection);
+            OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Remove, (IList)copy));
             OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add, (IList)_evaluated.ToArray()));
             OnPropertyChanged(new PropertyChangedEventArgs(nameof(Count)));
         }
