@@ -15,6 +15,10 @@ only_commits:
 skip_commits:
   files:
     - '**\*.yml'
+    
+install:
+  - ps: Invoke-WebRequest -Uri 'https://dot.net/v1/dotnet-install.ps1' -UseBasicParsing -OutFile "$env:temp\dotnet-install.ps1"
+  - ps: '& $env:temp\dotnet-install.ps1 -Architecture x64 -InstallDir "$env:ProgramFiles\dotnet"'
 
 build_script:
   - dotnet build ModMyFactory.Server\ -c Release --version-suffix %APPVEYOR_BUILD_VERSION%
