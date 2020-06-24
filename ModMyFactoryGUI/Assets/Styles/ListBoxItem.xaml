@@ -6,32 +6,48 @@ Style slightly modified from the Avalonia default style
   <Style Selector="ListBoxItem">
     <Setter Property="Background" Value="Transparent" />
     <Setter Property="BorderBrush" Value="Transparent" />
-    <Setter Property="BorderThickness" Value="0" />
-    <Setter Property="Padding" Value="2 1" />
+    <Setter Property="BorderThickness" Value="6,2,6,2" />
+    <Setter Property="Margin" Value="1" />
+    <Setter Property="Padding" Value="2,1" />
     <Setter Property="Template">
       <ControlTemplate>
-        <ContentPresenter Name="PART_ContentPresenter"
-                          Background="{TemplateBinding Background}"
-                          BorderBrush="{TemplateBinding BorderBrush}"
-                          BorderThickness="{TemplateBinding BorderThickness}"
-                          ContentTemplate="{TemplateBinding ContentTemplate}"
-                          Content="{TemplateBinding Content}"
-                          Padding="{TemplateBinding Padding}"
-                          VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
-                          HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}" />
+        <Border Background="{TemplateBinding Background}"
+                BorderBrush="{TemplateBinding BorderBrush}"
+                BorderThickness="{TemplateBinding BorderThickness}"
+                Padding="{TemplateBinding Padding}">
+          <ContentPresenter Name="PART_ContentPresenter" Background="Transparent"
+                            Content="{TemplateBinding Content}"
+                            ContentTemplate="{TemplateBinding ContentTemplate}"
+                            VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
+                            HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}" />
+        </Border>
       </ControlTemplate>
     </Setter>
   </Style>
 
-  <Style Selector="ListBoxItem:pointerover /template/ ContentPresenter">
+  <Style Selector="ListBoxItem:pointerover">
     <Setter Property="Background" Value="{DynamicResource ThemeAccentBrush2}" />
   </Style>
 
+  <Style Selector="ListBoxItem:selected">
+    <Setter Property="Background" Value="{DynamicResource Transparent}" />
+    <Setter Property="BorderBrush" Value="{DynamicResource ThemeAccentBrush4}" />
+  </Style>
+
+  <Style Selector="ListBoxItem:selected:pointerover">
+    <Setter Property="Background" Value="{DynamicResource ThemeAccentBrush2}" />
+    <Setter Property="BorderBrush" Value="{DynamicResource ThemeAccentBrush3}" />
+  </Style>
+
+  <Style Selector="ListBoxItem:pointerover /template/ ContentPresenter">
+    <Setter Property="Background" Value="Transparent" />
+  </Style>
+
   <Style Selector="ListBoxItem:selected /template/ ContentPresenter">
-    <Setter Property="Background" Value="{DynamicResource ThemeAccentBrush4}" />
+    <Setter Property="Background" Value="Transparent" />
   </Style>
 
   <Style Selector="ListBoxItem:selected:pointerover /template/ ContentPresenter">
-    <Setter Property="Background" Value="{DynamicResource ThemeAccentBrush3}" />
+    <Setter Property="Background" Value="Transparent" />
   </Style>
 </Styles>

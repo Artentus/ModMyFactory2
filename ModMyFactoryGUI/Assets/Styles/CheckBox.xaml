@@ -7,7 +7,7 @@ Style slightly modified from the Avalonia default style
 
   <Style Selector="CheckBox">
     <Setter Property="Foreground" Value="{DynamicResource ThemeForegroundBrush}" />
-    <Setter Property="Background" Value="Transparent" />
+    <Setter Property="Background" Value="{DynamicResource ThemeBackgroundLowBrush}" />
     <Setter Property="BorderBrush" Value="{DynamicResource ThemeBorderMidBrush}" />
     <Setter Property="BorderThickness" Value="{DynamicResource ThemeBorderThickness}" />
     <Setter Property="Padding" Value="4,0,0,0" />
@@ -25,7 +25,15 @@ Style slightly modified from the Avalonia default style
                   VerticalAlignment="Center">
             <Panel>
               <Path Name="checkMark"
-                    Fill="{DynamicResource IconBrush1}"
+                    Fill="{DynamicResource ThemeAccentBrush4}"
+                    Width="11"
+                    Height="10"
+                    Stretch="Uniform"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    Data="M 1145.607177734375,430 C1145.607177734375,430 1141.449951171875,435.0772705078125 1141.449951171875,435.0772705078125 1141.449951171875,435.0772705078125 1139.232177734375,433.0999755859375 1139.232177734375,433.0999755859375 1139.232177734375,433.0999755859375 1138,434.5538330078125 1138,434.5538330078125 1138,434.5538330078125 1141.482177734375,438 1141.482177734375,438 1141.482177734375,438 1141.96875,437.9375 1141.96875,437.9375 1141.96875,437.9375 1147,431.34619140625 1147,431.34619140625 1147,431.34619140625 1145.607177734375,430 1145.607177734375,430 z" />
+              <Path Name="checkMarkHover"
+                    Fill="{DynamicResource ThemeAccentBrush3}"
                     Width="11"
                     Height="10"
                     Stretch="Uniform"
@@ -33,7 +41,14 @@ Style slightly modified from the Avalonia default style
                     VerticalAlignment="Center"
                     Data="M 1145.607177734375,430 C1145.607177734375,430 1141.449951171875,435.0772705078125 1141.449951171875,435.0772705078125 1141.449951171875,435.0772705078125 1139.232177734375,433.0999755859375 1139.232177734375,433.0999755859375 1139.232177734375,433.0999755859375 1138,434.5538330078125 1138,434.5538330078125 1138,434.5538330078125 1141.482177734375,438 1141.482177734375,438 1141.482177734375,438 1141.96875,437.9375 1141.96875,437.9375 1141.96875,437.9375 1147,431.34619140625 1147,431.34619140625 1147,431.34619140625 1145.607177734375,430 1145.607177734375,430 z" />
               <Rectangle Name="indeterminateMark"
-                         Fill="{DynamicResource IconBrush1}"
+                         Fill="{DynamicResource ThemeAccentBrush4}"
+                         Width="10"
+                         Height="10"
+                         Stretch="Uniform"
+                         HorizontalAlignment="Center"
+                         VerticalAlignment="Center" />
+              <Rectangle Name="indeterminateMarkHover"
+                         Fill="{DynamicResource ThemeAccentBrush3}"
                          Width="10"
                          Height="10"
                          Stretch="Uniform"
@@ -54,4 +69,34 @@ Style slightly modified from the Avalonia default style
       </ControlTemplate>
     </Setter>
   </Style>
+
+  <Style Selector="CheckBox:pointerover /template/ Border#border">
+    <Setter Property="BorderBrush" Value="{DynamicResource ThemeBorderHighBrush}" />
+  </Style>
+  <Style Selector="CheckBox /template/ Path#checkMark">
+    <Setter Property="IsVisible" Value="False" />
+  </Style>
+  <Style Selector="CheckBox /template/ Rectangle#indeterminateMark">
+    <Setter Property="IsVisible" Value="False" />
+  </Style>
+  <Style Selector="CheckBox:checked /template/ Path#checkMark">
+    <Setter Property="IsVisible" Value="True" />
+  </Style>
+  <Style Selector="CheckBox:indeterminate /template/ Rectangle#indeterminateMark">
+    <Setter Property="IsVisible" Value="True" />
+  </Style>
+
+  <Style Selector="CheckBox /template/ Path#checkMarkHover">
+    <Setter Property="IsVisible" Value="False" />
+  </Style>
+  <Style Selector="CheckBox:checked:pointerover /template/ Path#checkMarkHover">
+    <Setter Property="IsVisible" Value="True" />
+  </Style>
+  <Style Selector="CheckBox /template/ Rectangle#indeterminateMarkHover">
+    <Setter Property="IsVisible" Value="False" />
+  </Style>
+  <Style Selector="CheckBox:indeterminate:pointerover /template/ Rectangle#indeterminateMarkHover">
+    <Setter Property="IsVisible" Value="True" />
+  </Style>
+
 </Styles>
