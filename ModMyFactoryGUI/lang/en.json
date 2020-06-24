@@ -336,6 +336,10 @@
     "type": "string",
     "value": "Modpacks"
   },
+  "RemoveFromPackButton": {
+    "type": "string",
+    "value": "Remove from modpack"
+  },
 
   // --------- Factorio instance view ---------
   "InDownloadQueueText": {

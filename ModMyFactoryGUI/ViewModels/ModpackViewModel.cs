@@ -60,6 +60,8 @@ namespace ModMyFactoryGUI.ViewModels
         public ICommand BeginRenameCommand { get; }
         public ICommand EndRenameCommand { get; }
 
+        public ICommand RemoveModCommand { get; }
+
         public IEnumerable<Modpack> Modpacks => Modpack.Modpacks;
 
         public IEnumerable<Mod> Mods => Modpack.Mods;
@@ -71,10 +73,21 @@ namespace ModMyFactoryGUI.ViewModels
 
             BeginRenameCommand = ReactiveCommand.Create(() => IsRenaming = true);
             EndRenameCommand = ReactiveCommand.Create(() => IsRenaming = false);
+            RemoveModCommand = ReactiveCommand.Create<ICanEnable>(RemoveMod);
         }
 
         private void ModpackEnabledChangedHandler(object sender, EventArgs e)
             => this.RaisePropertyChanged(nameof(Enabled));
+
+        private void RemoveMod(ICanEnable mod)
+        {
+            if (!(mod is null))
+            {
+                Modpack.Remove(mod);
+                this.RaisePropertyChanged(nameof(Mods));
+                this.RaisePropertyChanged(nameof(Modpacks));
+            }
+        }
 
         public void ApplyFuzzyFilter(in string filter)
         {

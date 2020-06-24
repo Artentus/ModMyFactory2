@@ -41,6 +41,7 @@ the Free Software Foundation, either version 3 of the License, or
 
       <controls:SearchBox Grid.Column="0" Grid.Row="1" Margin="4,4,0,4" Text="{Binding ModFilter}" />
 
+      <!-- Mod list -->
       <TabControl Grid.Column="0" Grid.Row="2" Margin="2,2,0,2" Items="{Binding ModVersionGroupings}">
         <TabControl.ItemTemplate>
           <DataTemplate DataType="{x:Type models:ModVersionGroupingViewModel}">
@@ -97,6 +98,7 @@ the Free Software Foundation, either version 3 of the License, or
 
       <controls:SearchBox Grid.Column="2" Grid.Row="1" Margin="0,4,4,4" Text="{Binding ModpackFilter}" />
 
+      <!-- Modpack list -->
       <controls:DragDropListBox Name="ModpackList" Grid.Column="2" Grid.Row="2" Margin="0,4,4,4" Items="{Binding Modpacks}"
                                 SelectionMode="Multiple" DragDrop.AllowDrop="True"
                                 PreviewPointerPressed="PointerPressedHandler" PreviewPointerReleased="PointerReleasedHandler"
@@ -123,14 +125,39 @@ the Free Software Foundation, either version 3 of the License, or
                 </Grid>
               </Expander.Header>
 
-              <StackPanel Margin="2" Orientation="Vertical">
+              <StackPanel Margin="30,2" Orientation="Vertical">
+                <StackPanel.Styles>
+                  <Style Selector="Button">
+                    <Setter Property="MinWidth" Value="1" />
+                    <Setter Property="MinHeight" Value="1" />
+                    <Setter Property="Width" Value="18" />
+                    <Setter Property="Height" Value="18" />
+                    <Setter Property="Padding" Value="0" />
+                    <Setter Property="FontSize" Value="{DynamicResource FontSizeNormal}" />
+                    <Setter Property="ToolTip.Tip" Value="{l:LocalizedResource RemoveFromPackButton}" />
+                    <Setter Property="Content">
+                      <Template>
+                        <Panel Margin="4">
+                          <Path Stretch="UniformToFill" UseLayoutRounding="True" StrokeThickness="1.1" Height="10" Width="10"
+                            Data="m 0.66221333 244.76984 3.14041897 3.24064"
+                            Stroke="{DynamicResource ThemeForegroundBrush}" />
+                          <Path Stretch="UniformToFill" UseLayoutRounding="True" StrokeThickness="1.1" Height="10" Width="10"
+                            Data="m 3.8360394 244.76984 -3.20723507 3.24064"
+                            Stroke="{DynamicResource ThemeForegroundBrush}" />
+                        </Panel>
+                      </Template>
+                    </Setter>
+                  </Style>
+                </StackPanel.Styles>
 
                 <ItemsControl Items="{Binding Modpacks}">
                   <ItemsControl.ItemTemplate>
                     <DataTemplate>
-                      <Grid ColumnDefinitions="Auto,*">
+                      <Grid ColumnDefinitions="Auto,*,Auto">
                         <icons:ModpackIcon Grid.Column="0" Margin="2" />
                         <TextBlock Grid.Column="1" Margin="2" Text="{Binding DisplayName}" />
+                        <Button Grid.Column="3" CommandParameter="{Binding}"
+                                Command="{Binding DataContext.RemoveModCommand, RelativeSource={RelativeSource AncestorType={x:Type Expander}}}" />
                       </Grid>
                     </DataTemplate>
                   </ItemsControl.ItemTemplate>
@@ -139,10 +166,12 @@ the Free Software Foundation, either version 3 of the License, or
                 <ItemsControl Items="{Binding Mods}">
                   <ItemsControl.ItemTemplate>
                     <DataTemplate>
-                      <Grid ColumnDefinitions="Auto,Auto,Auto,*">
+                      <Grid ColumnDefinitions="Auto,Auto,Auto,*,Auto">
                         <icons:ModIcon Grid.Column="0" Margin="2" />
                         <TextBlock Grid.Column="1" Margin="2" Text="{Binding DisplayName}" />
                         <TextBlock Grid.Column="2" Margin="2" Text="{Binding Version}" Classes="muted" />
+                        <Button Grid.Column="5" CommandParameter="{Binding}"
+                                Command="{Binding DataContext.RemoveModCommand, RelativeSource={RelativeSource AncestorType={x:Type Expander}}}" />
                       </Grid>
                     </DataTemplate>
                   </ItemsControl.ItemTemplate>

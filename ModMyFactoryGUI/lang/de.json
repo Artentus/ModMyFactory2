@@ -319,6 +319,12 @@
     "value": "In der Warteschlange: {0}"
   },
 
+  // --------- Manager view ---------
+  "RemoveFromPackButton": {
+    "type": "string",
+    "value": "Aus Modpack entfernen"
+  },
+
   // --------- Factorio instance view ---------
   "InDownloadQueueText": {
     "type": "string",
