@@ -233,7 +233,7 @@ namespace ModMyFactoryGUI.ViewModels
 
         private async void ImportPackagesAsync(IEnumerable<string> paths)
         {
-            var helper = new ImportHelper(paths);
+            using var helper = new ImportHelper(paths);
             await helper.ImportPackagesAsync();
         }
 

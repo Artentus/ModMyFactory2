@@ -88,8 +88,7 @@ the Free Software Foundation, either version 3 of the License, or
 
       <StackPanel Grid.Row="3" Grid.Column="0" Orientation="Horizontal" HorizontalAlignment="Left">
         <Button Margin="4" Content="{l:LocalizedResource AddModFilesMenuItem}" Command="{Binding AddModsCommand}" />
-        <!-- For next release -->
-        <!--<Button Margin="4" Content="{l:LocalizedResource UpdateModsMenuItem}" Command="{Binding UpdateModsCommand}" />-->
+        <Button Margin="4" Content="{l:LocalizedResource UpdateModsMenuItem}" Command="{Binding UpdateModsCommand}" />
       </StackPanel>
 
 

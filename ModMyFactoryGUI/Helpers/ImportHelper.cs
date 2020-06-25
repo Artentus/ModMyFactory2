@@ -9,20 +9,27 @@ using ModMyFactory;
 using ModMyFactory.BaseTypes;
 using ModMyFactory.Export;
 using ModMyFactory.Mods;
+using ModMyFactory.WebApi.Mods;
+using ModMyFactoryGUI.Caching.Web;
 using ModMyFactoryGUI.Controls;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace ModMyFactoryGUI.Helpers
 {
-    internal sealed class ImportHelper
+    internal sealed class ImportHelper : IDisposable
     {
+        private readonly ModInfoCache _infoCache;
         private readonly IEnumerable<string> _paths;
 
         public ImportHelper(IEnumerable<string> paths)
-            => _paths = paths;
+            => (_infoCache, _paths) = (new ModInfoCache(), paths);
+
+        public ImportHelper(params string[] paths)
+            => (_infoCache, _paths) = (new ModInfoCache(), paths);
 
         private static string GetOriginalFileName(FileInfo file)
         {
@@ -34,12 +41,63 @@ namespace ModMyFactoryGUI.Helpers
             return originalName;
         }
 
-        private static Task<AccurateVersion> GetVersionToDownloadAsync(ModDefinition modDef)
+        private async Task<ModReleaseInfo?> GetReleaseAsync(ModDefinition modDef, AccurateVersion version)
+        {
+            var info = await _infoCache.QueryAsync(modDef.Name);
+
+            foreach (var release in info.Releases)
+            {
+                if (release.Version == version)
+                    return release;
+            }
+
+            return null;
+        }
+
+        private async Task<AccurateVersion> GetLatestVersionAsync(ModDefinition modDef)
+        {
+            var info = await _infoCache.QueryAsync(modDef.Name);
+            return info.GetLatestReleaseSafe().Version;
+        }
+
+        private async Task<AccurateVersion> GetLatestVersionAsync(ModDefinition modDef, AccurateVersion factorioVersion)
+        {
+            var info = await _infoCache.QueryAsync(modDef.Name);
+            var latest = info.GetLatestRelease(factorioVersion);
+            if (latest is null) throw new InvalidOperationException($"The mod {modDef.Name} does not have any releases targeting Factorio version {factorioVersion}.");
+            else return latest.Value.Version;
+        }
+
+        private async Task<IModFile> DownloadAsync(ModDefinition modDef, AccurateVersion version, IProgress<double> progress)
+        {
+            // We do not need to download using the queue because while importing we block the app and display progress separately
+
+            var result = await GetReleaseAsync(modDef, version);
+            if (result.HasValue)
+            {
+                var release = result.Value;
+
+                var (isLoggedIn, username, token) = await App.Current.Credentials.TryLogInAsync();
+                if (isLoggedIn.IsTrue())
+                {
+                    var dir = Program.Locations.GetModDir(release.Info.FactorioVersion);
+                    string fileName = Path.Combine(dir.FullName, release.FileName);
+
+                    var file = await ModApi.DownloadModReleaseAsync(release, username, token, fileName, CancellationToken.None, progress);
+                    var (success, modFile) = await ModFile.TryLoadAsync(file);
+                    if (success) return modFile;
+                }
+            }
+
+            return null;
+        }
+
+        private Task<AccurateVersion> GetVersionToDownloadAsync(ModDefinition modDef)
         {
             return modDef.MaskedExportMode switch
             {
-                ExportMode.LatestVersion => modDef.GetLatestVersionAsync(),
-                ExportMode.FactorioVersion => modDef.GetLatestVersionAsync(modDef.FactorioVersion),
+                ExportMode.LatestVersion => GetLatestVersionAsync(modDef),
+                ExportMode.FactorioVersion => GetLatestVersionAsync(modDef, modDef.FactorioVersion),
                 ExportMode.SpecificVersion => Task.FromResult(modDef.Version),
                 _ => throw new InvalidOperationException("Invalid export mode")
             };
@@ -62,7 +120,7 @@ namespace ModMyFactoryGUI.Helpers
                     {
                         // File was in the package but we have to download a newer version
                         modFile.Delete();
-                        modFile = await modDef.DownloadAsync(versionToDownload, progress);
+                        modFile = await DownloadAsync(modDef, versionToDownload, progress);
                     }
                     else
                     {
@@ -74,13 +132,13 @@ namespace ModMyFactoryGUI.Helpers
                 else
                 {
                     // Mod file in the package was invalid
-                    modFile = await modDef.DownloadAsync(versionToDownload, progress);
+                    modFile = await DownloadAsync(modDef, versionToDownload, progress);
                 }
             }
             else
             {
                 // Package did not contain the mod file
-                modFile = await modDef.DownloadAsync(versionToDownload, progress);
+                modFile = await DownloadAsync(modDef, versionToDownload, progress);
             }
 
             progress.Report(1);
@@ -175,6 +233,19 @@ namespace ModMyFactoryGUI.Helpers
             }
         }
 
+        #region IDisposable
+
+        private bool _disposed;
+
+        private void Dispose(bool disposing)
+        {
+            if (!_disposed)
+            {
+                if (disposing) _infoCache.Dispose();
+                _disposed = true;
+            }
+        }
+
         public async Task ImportPackagesAsync()
         {
             foreach (var path in _paths)
@@ -183,5 +254,13 @@ namespace ModMyFactoryGUI.Helpers
                 if (packageFile.Exists) await ImportPackageAsync(packageFile);
             }
         }
+
+        public void Dispose()
+        {
+            Dispose(disposing: true);
+            GC.SuppressFinalize(this);
+        }
+
+        #endregion IDisposable
     }
 }
