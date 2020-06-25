@@ -160,9 +160,9 @@ namespace ModMyFactoryGUI.Controls
         /// <param name="e">The event args.</param>
         protected virtual void OnSubmenuOpened(RoutedEventArgs e)
         {
-            if (e.Source is MenuItem menuItem && menuItem.Parent == this)
+            if (e.Source is ToolbarItem menuItem && menuItem.Parent == this)
             {
-                foreach (var child in this.GetLogicalChildren().OfType<MenuItem>())
+                foreach (var child in this.GetLogicalChildren().OfType<ToolbarItem>())
                 {
                     if (child != menuItem && child.IsSubMenuOpen)
                     {
