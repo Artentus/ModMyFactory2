@@ -112,6 +112,7 @@ namespace ModMyFactoryGUI.ViewModels
         public ICommand BeginRenameCommand { get; }
         public ICommand EndRenameCommand { get; }
         public ICommand CreateShortcutCommand { get; }
+        public ICommand BrowseFilesCommand { get; }
         public ICommand RemoveCommand { get; }
         public ICommand DeleteCommand { get; }
 
@@ -125,6 +126,7 @@ namespace ModMyFactoryGUI.ViewModels
             BeginRenameCommand = ReactiveCommand.Create(() => IsRenaming = true);
             EndRenameCommand = ReactiveCommand.Create(() => IsRenaming = false);
             CreateShortcutCommand = ReactiveCommand.CreateFromTask(CreateShortcutAsync);
+            BrowseFilesCommand = ReactiveCommand.Create(BrowseFiles);
             RemoveCommand = ReactiveCommand.Create(Remove);
             DeleteCommand = ReactiveCommand.Create(Delete);
         }
@@ -267,6 +269,12 @@ namespace ModMyFactoryGUI.ViewModels
                     PlatformHelper.CreateSymbolicLink(path, target, args, iconPath);
                 }
             }
+        }
+
+        public void BrowseFiles()
+        {
+            if (IsInstalled)
+                PlatformHelper.OpenDirectory(Instance.Directory);
         }
 
         public void Remove()

@@ -362,6 +362,10 @@
     "type": "string",
     "value": "Verknüpfung erstellen"
   },
+  "BrowseFilesButton": {
+    "type": "string",
+    "value": "Dateien anzeigen"
+  },
   "RemoveButton": {
     "type": "string",
     "value": "Aus Manager entfernen"

@@ -177,6 +177,7 @@ the Free Software Foundation, either version 3 of the License, or
 
         <Separator />
 
+        <!-- ToDo: add hotkeys -->
         <controls:ToolbarItem>
           <controls:ToolbarItem.Header>
             <DockPanel>

@@ -34,7 +34,7 @@ the Free Software Foundation, either version 3 of the License, or
 
                 <Border Margin="3" MaxWidth="800" HorizontalAlignment="Stretch" BorderThickness="1"
                         BorderBrush="{DynamicResource ThemeBorderMidBrush}" Background="{DynamicResource ThemeBackgroundBrush}">
-                  <Grid Margin="6,4" ColumnDefinitions="Auto,Auto,Auto,Auto,*,Auto,Auto" RowDefinitions="Auto,Auto">
+                  <Grid Margin="6,4" ColumnDefinitions="Auto,Auto,Auto,Auto,Auto,*,Auto,Auto" RowDefinitions="Auto,Auto">
 
                     <Image Grid.Column="0" Grid.Row="0" Grid.RowSpan="2" Margin="2" Source="{Binding Icon}" Width="40" Height="40" Stretch="UniformToFill" />
                     <icons:LinkIcon Grid.Column="0" Grid.Row="0" Grid.RowSpan="2" HorizontalAlignment="Right" VerticalAlignment="Bottom" IsVisible="{Binding IsExternal}" />
@@ -71,8 +71,13 @@ the Free Software Foundation, either version 3 of the License, or
                             HorizontalAlignment="Center" VerticalAlignment="Center" Command="{Binding CreateShortcutCommand}" IsVisible="{Binding IsInstalled}">
                       <icons:ShortcutIcon />
                     </Button>
+                    <Button Grid.Column="4" Grid.Row="0" Grid.RowSpan="2" Margin="4" Padding="0" MinWidth="1" Width="26" Height="26"
+                            ToolTip.Tip="{l:LocalizedResource BrowseFilesButton}" FontSize="{DynamicResource FontSizeNormal}"
+                            HorizontalAlignment="Center" VerticalAlignment="Center" Command="{Binding BrowseFilesCommand}" IsVisible="{Binding IsInstalled}">
+                      <icons:FolderIcon />
+                    </Button>
 
-                    <Button Grid.Column="5" Grid.Row="0" Grid.RowSpan="2" Margin="4" Padding="0" MinWidth="1" Width="26" Height="26"
+                    <Button Grid.Column="6" Grid.Row="0" Grid.RowSpan="2" Margin="4" Padding="0" MinWidth="1" Width="26" Height="26"
                             ToolTip.Tip="{l:LocalizedResource RemoveButton}" FontSize="{DynamicResource FontSizeNormal}"
                             HorizontalAlignment="Center" VerticalAlignment="Center" Command="{Binding RemoveCommand}">
                       <Button.IsVisible>
@@ -83,7 +88,7 @@ the Free Software Foundation, either version 3 of the License, or
                       </Button.IsVisible>
                       <icons:UnlinkIcon />
                     </Button>
-                    <Button Grid.Column="6" Grid.Row="0" Grid.RowSpan="2" Margin="4" Padding="0" MinWidth="1" Width="26" Height="26"
+                    <Button Grid.Column="7" Grid.Row="0" Grid.RowSpan="2" Margin="4" Padding="0" MinWidth="1" Width="26" Height="26"
                             ToolTip.Tip="{l:LocalizedResource DeleteButton}" FontSize="{DynamicResource FontSizeNormal}"
                             HorizontalAlignment="Center" VerticalAlignment="Center" Command="{Binding DeleteCommand}">
                       <Button.IsVisible>

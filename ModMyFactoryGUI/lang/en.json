@@ -378,6 +378,10 @@
     "type": "string",
     "value": "Create shortcut"
   },
+  "BrowseFilesButton": {
+    "type": "string",
+    "value": "Browse files"
+  },
   "RemoveButton": {
     "type": "string",
     "value": "Remove from manager"
