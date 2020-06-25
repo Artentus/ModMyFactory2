@@ -5,6 +5,9 @@
 //  the Free Software Foundation, either version 3 of the License, or
 //  (at your option) any later version.
 
+using ModMyFactory.BaseTypes;
+using System.Linq;
+
 namespace ModMyFactory.WebApi.Mods
 {
     public static class ApiModInfoExtensions
@@ -20,6 +23,20 @@ namespace ModMyFactory.WebApi.Mods
             foreach (var release in info.Releases)
             {
                 if (release.Version > max.Version)
+                    max = release;
+            }
+            return max;
+        }
+
+        /// <summary>
+        /// Gets the latest release of the mod that is compatible with a given version of Factorio
+        /// </summary>
+        public static ModReleaseInfo? GetLatestRelease(this ApiModInfo info, AccurateVersion factorioVersion)
+        {
+            ModReleaseInfo? max = null;
+            foreach (var release in info.Releases.Where(r => r.Info.FactorioVersion == factorioVersion))
+            {
+                if ((max is null) || (release.Version > max.Value.Version))
                     max = release;
             }
             return max;
