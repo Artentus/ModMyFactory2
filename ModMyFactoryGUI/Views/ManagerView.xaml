@@ -140,8 +140,6 @@ the Free Software Foundation, either version 3 of the License, or
                     <Setter Property="Width" Value="18" />
                     <Setter Property="Height" Value="18" />
                     <Setter Property="Padding" Value="0" />
-                    <Setter Property="FontSize" Value="{DynamicResource FontSizeNormal}" />
-                    <Setter Property="ToolTip.Tip" Value="{l:LocalizedResource RemoveFromPackButton}" />
                     <Setter Property="Content">
                       <Template>
                         <Panel Margin="4">

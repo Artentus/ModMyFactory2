@@ -11,6 +11,7 @@ using ModMyFactoryGUI.Helpers;
 using ReactiveUI;
 using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Windows.Input;
 
 namespace ModMyFactoryGUI.ViewModels
@@ -70,6 +71,7 @@ namespace ModMyFactoryGUI.ViewModels
         {
             Modpack = modpack;
             modpack.EnabledChanged += ModpackEnabledChangedHandler;
+            modpack.CollectionChanged += ModpackCollectionChangedHandler;
 
             BeginRenameCommand = ReactiveCommand.Create(() => IsRenaming = true);
             EndRenameCommand = ReactiveCommand.Create(() => IsRenaming = false);
@@ -79,14 +81,15 @@ namespace ModMyFactoryGUI.ViewModels
         private void ModpackEnabledChangedHandler(object sender, EventArgs e)
             => this.RaisePropertyChanged(nameof(Enabled));
 
+        private void ModpackCollectionChangedHandler(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            this.RaisePropertyChanged(nameof(Mods));
+            this.RaisePropertyChanged(nameof(Modpacks));
+        }
+
         private void RemoveMod(ICanEnable mod)
         {
-            if (!(mod is null))
-            {
-                Modpack.Remove(mod);
-                this.RaisePropertyChanged(nameof(Mods));
-                this.RaisePropertyChanged(nameof(Modpacks));
-            }
+            if (!(mod is null)) Modpack.Remove(mod);
         }
 
         public void ApplyFuzzyFilter(in string filter)
@@ -112,7 +115,10 @@ namespace ModMyFactoryGUI.ViewModels
             if (!_disposed)
             {
                 if (disposing)
+                {
                     Modpack.EnabledChanged -= ModpackEnabledChangedHandler;
+                    Modpack.CollectionChanged -= ModpackCollectionChangedHandler;
+                }
 
                 _disposed = true;
             }
