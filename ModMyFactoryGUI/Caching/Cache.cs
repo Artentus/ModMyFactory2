@@ -37,14 +37,16 @@ namespace ModMyFactoryGUI.Caching
             }
         }
 
-        public Task<TValue> QueryAsync(TKey key)
+        public async Task<TValue> QueryAsync(TKey key)
         {
             if (_disposed) throw new ObjectDisposedException(this.ToString());
 
-            if (_cache.TryGetValue(key, out TValue result))
-                return Task.FromResult(result);
-
-            return ResolveCacheMiss(key);
+            if (!_cache.TryGetValue(key, out TValue result))
+            {
+                result = await ResolveCacheMiss(key);
+                _cache.Add(key, result);
+            }
+            return result;
         }
 
         public void Clear()
