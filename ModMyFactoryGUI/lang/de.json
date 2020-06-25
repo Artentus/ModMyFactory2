@@ -254,7 +254,7 @@
   // Language menu
   "LanguageMenuItem": {
     "type": "string",
-    "value": "_Sprache"
+    "value": "Sprache"
   },
 
   // Info menu
@@ -272,7 +272,7 @@
   },
   "CheckUpdateMenuItem": {
     "type": "string",
-    "value": "Auf Aktualisierung prüfen"
+    "value": "Aktualisieren"
   },
   "CheckUpdateHotkey": {
     "type": "string",
@@ -280,11 +280,11 @@
   },
   "ThreadMenuItem": {
     "type": "string",
-    "value": "ModMyFactory-Forum"
+    "value": "Forum"
   },
   "AboutMenuItem": {
     "type": "string",
-    "value": "Über ModMyFactory-GUI"
+    "value": "Über"
   },
   "AboutHotkey": {
     "type": "string",

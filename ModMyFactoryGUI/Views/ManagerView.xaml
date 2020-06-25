@@ -25,7 +25,7 @@ the Free Software Foundation, either version 3 of the License, or
   </UserControl.Styles>
 
   <Border BorderThickness="1" BorderBrush="{DynamicResource ThemeBorderMidBrush}">
-    <Grid Margin="4" RowDefinitions="Auto,Auto,*">
+    <Grid Margin="4" RowDefinitions="Auto,Auto,*,Auto">
       <Grid.ColumnDefinitions>
         <ColumnDefinition Width="{local:SettingBinding ManagerGridLength1, Mode=TwoWay}" />
         <ColumnDefinition Width="Auto" />
@@ -85,6 +85,13 @@ the Free Software Foundation, either version 3 of the License, or
           </DataTemplate>
         </TabControl.ContentTemplate>
       </TabControl>
+
+      <StackPanel Grid.Row="3" Grid.Column="0" Orientation="Horizontal" HorizontalAlignment="Left">
+        <Button Margin="4" Content="{l:LocalizedResource AddModFilesMenuItem}" Command="{Binding AddModsCommand}" />
+        <!-- For next release -->
+        <!--<Button Margin="4" Content="{l:LocalizedResource UpdateModsMenuItem}" Command="{Binding UpdateModsCommand}" />-->
+      </StackPanel>
+
 
       <GridSplitter Grid.Column="1" Grid.Row="0" Grid.RowSpan="3" Width="8"
                     Background="{DynamicResource ThemeBackgroundBrush}" />
@@ -183,6 +190,9 @@ the Free Software Foundation, either version 3 of the License, or
           </DataTemplate>
         </controls:DragDropListBox.ItemTemplate>
       </controls:DragDropListBox>
+
+      <Button Grid.Row="3" Grid.Column="2" HorizontalAlignment="Right" Margin="4"
+              Content="{l:LocalizedResource NewModpackMenuItem}" Command="{Binding CreateModpackCommand}" />
 
     </Grid>
   </Border>

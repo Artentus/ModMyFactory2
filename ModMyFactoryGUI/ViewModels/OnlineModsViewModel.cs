@@ -254,17 +254,5 @@ namespace ModMyFactoryGUI.ViewModels
             ModsLoaded = true;
             this.RaisePropertyChanged(nameof(ModsLoaded));
         }
-
-        protected override List<IMenuItemViewModel> GetEditMenuViewModels()
-        {
-            // ToDo: implement
-            return new List<IMenuItemViewModel>();
-        }
-
-        protected override List<IMenuItemViewModel> GetFileMenuViewModels()
-        {
-            // ToDo: implement
-            return new List<IMenuItemViewModel>();
-        }
     }
 }

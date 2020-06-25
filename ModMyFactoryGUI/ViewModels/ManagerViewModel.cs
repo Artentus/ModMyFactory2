@@ -6,15 +6,12 @@
 //  (at your option) any later version.
 
 using Avalonia.Controls;
-using Avalonia.Input;
 using ModMyFactory;
 using ModMyFactory.Mods;
-using ModMyFactoryGUI.Controls.Icons;
 using ModMyFactoryGUI.Helpers;
 using ModMyFactoryGUI.Views;
 using ReactiveUI;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
@@ -109,6 +106,8 @@ namespace ModMyFactoryGUI.ViewModels
 
         public ICommand AddModsCommand { get; }
 
+        public ICommand UpdateModsCommand { get; }
+
         public ICommand CreateModpackCommand { get; }
 
         public ManagerViewModel()
@@ -149,6 +148,7 @@ namespace ModMyFactoryGUI.ViewModels
 
 
             AddModsCommand = ReactiveCommand.CreateFromTask(AddModsAsync);
+            UpdateModsCommand = ReactiveCommand.CreateFromTask(UpdateModsAsync);
             CreateModpackCommand = ReactiveCommand.Create(CreateModpack);
         }
 
@@ -303,24 +303,15 @@ namespace ModMyFactoryGUI.ViewModels
             }
         }
 
+        private async Task UpdateModsAsync()
+        {
+            // ToDo: implement
+        }
+
         private void CreateModpack()
         {
             var modpack = Program.CreateModpack();
-        }
-
-        protected override List<IMenuItemViewModel> GetEditMenuViewModels()
-        {
-            // ToDo: implement
-            return new List<IMenuItemViewModel>();
-        }
-
-        protected override List<IMenuItemViewModel> GetFileMenuViewModels()
-        {
-            return new List<IMenuItemViewModel>
-            {
-                new MenuItemViewModel(AddModsCommand, new KeyGesture(Avalonia.Input.Key.O, KeyModifiers.Control), true, () => new AddModsIcon(), "AddModFilesMenuItem", "AddModFilesHotkey"),
-                new MenuItemViewModel(CreateModpackCommand, new KeyGesture(Avalonia.Input.Key.N, KeyModifiers.Control), true, () => new NewModpackIcon(), "NewModpackMenuItem", "NewModpackHotkey")
-            };
+            // ToDo: scroll into view and start renaming
         }
 
         public async Task ImportModAsync(string path)

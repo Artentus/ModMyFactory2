@@ -364,17 +364,5 @@ namespace ModMyFactoryGUI.ViewModels
         }
 
         #endregion Export
-
-        protected override List<IMenuItemViewModel> GetEditMenuViewModels()
-        {
-            // ToDo: implement
-            return new List<IMenuItemViewModel>();
-        }
-
-        protected override List<IMenuItemViewModel> GetFileMenuViewModels()
-        {
-            // ToDo: implement
-            return new List<IMenuItemViewModel>();
-        }
     }
 }

@@ -147,17 +147,5 @@ namespace ModMyFactoryGUI.ViewModels
             if (!await vm.TryCreateDownloadAsync(_downloadQueue, experimental))
                 _instances.Remove(vm);
         }
-
-        protected override List<IMenuItemViewModel> GetEditMenuViewModels()
-        {
-            // ToDo: implement
-            return new List<IMenuItemViewModel>();
-        }
-
-        protected override List<IMenuItemViewModel> GetFileMenuViewModels()
-        {
-            // ToDo: implement
-            return new List<IMenuItemViewModel>();
-        }
     }
 }

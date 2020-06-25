@@ -8,7 +8,6 @@
 using ModMyFactoryGUI.Tasks.Web;
 using ModMyFactoryGUI.Views;
 using ReactiveUI;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Windows.Input;
 
@@ -292,18 +291,6 @@ namespace ModMyFactoryGUI.ViewModels
             }
 
             SettingsChanged = false;
-        }
-
-        protected override List<IMenuItemViewModel> GetEditMenuViewModels()
-        {
-            // ToDo: implement
-            return new List<IMenuItemViewModel>();
-        }
-
-        protected override List<IMenuItemViewModel> GetFileMenuViewModels()
-        {
-            // ToDo: implement
-            return new List<IMenuItemViewModel>();
         }
     }
 }

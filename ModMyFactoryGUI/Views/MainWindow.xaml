@@ -37,221 +37,9 @@ the Free Software Foundation, either version 3 of the License, or
 
   <DockPanel>
 
-    <!-- Main Menu -->
-    <Menu DockPanel.Dock="Top" Margin="4,0,0,0">
-      <Menu.Styles>
-        <Style Selector="CheckBox">
-          <Setter Property="Foreground" Value="{DynamicResource ThemeForegroundBrush}" />
-          <Setter Property="Background" Value="Transparent" />
-          <Setter Property="BorderBrush" Value="{DynamicResource ThemeBorderMidBrush}" />
-          <Setter Property="BorderThickness" Value="{DynamicResource ThemeBorderThickness}" />
-          <Setter Property="Padding" Value="4,0,0,0" />
-          <Setter Property="VerticalContentAlignment" Value="Center" />
-          <Setter Property="HorizontalContentAlignment" Value="Left" />
-          <Setter Property="Template">
-            <ControlTemplate>
-              <Grid ColumnDefinitions="Auto,*">
-                <Border Name="border"
-                        Background="{TemplateBinding Background}"
-                        BorderBrush="{TemplateBinding BorderBrush}"
-                        BorderThickness="{TemplateBinding BorderThickness}"
-                        Width="18"
-                        Height="18"
-                        VerticalAlignment="Center">
-                  <Panel>
-                    <Path Name="checkMark"
-                          Fill="{DynamicResource IconBrush1}"
-                          Width="11"
-                          Height="10"
-                          Stretch="Uniform"
-                          HorizontalAlignment="Center"
-                          VerticalAlignment="Center"
-                          Data="M 1145.607177734375,430 C1145.607177734375,430 1141.449951171875,435.0772705078125 1141.449951171875,435.0772705078125 1141.449951171875,435.0772705078125 1139.232177734375,433.0999755859375 1139.232177734375,433.0999755859375 1139.232177734375,433.0999755859375 1138,434.5538330078125 1138,434.5538330078125 1138,434.5538330078125 1141.482177734375,438 1141.482177734375,438 1141.482177734375,438 1141.96875,437.9375 1141.96875,437.9375 1141.96875,437.9375 1147,431.34619140625 1147,431.34619140625 1147,431.34619140625 1145.607177734375,430 1145.607177734375,430 z" />
-                    <Rectangle Name="indeterminateMark"
-                               Fill="{DynamicResource IconBrush1}"
-                               Width="10"
-                               Height="10"
-                               Stretch="Uniform"
-                               HorizontalAlignment="Center"
-                               VerticalAlignment="Center" />
-                  </Panel>
-                </Border>
-                <ContentPresenter Name="PART_ContentPresenter"
-                                  TextBlock.Foreground="{TemplateBinding Foreground}"
-                                  ContentTemplate="{TemplateBinding ContentTemplate}"
-                                  Content="{TemplateBinding Content}"
-                                  Margin="{TemplateBinding Padding}"
-                                  VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
-                                  HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
-                                  IsVisible="{TemplateBinding Content, Converter={x:Static ObjectConverters.IsNotNull}}"
-                                  Grid.Column="1" />
-              </Grid>
-            </ControlTemplate>
-          </Setter>
-        </Style>
-      </Menu.Styles>
-
-      <Menu.DataTemplates>
-        <DataTemplate DataType="{x:Type models:MenuHeaderViewModel}">
-          <DockPanel>
-            <TextBlock DockPanel.Dock="Left" HorizontalAlignment="Left"
-                       Text="{Binding HeaderKey, Converter={StaticResource LocalizeConverter}}" />
-            <TextBlock DockPanel.Dock="Right" HorizontalAlignment="Right" Margin="16,0,0,0" Classes="muted"
-                       Text="{Binding InputGestureKey, Converter={StaticResource LocalizeConverter}}" IsVisible="{Binding InputGestureVisible}" />
-          </DockPanel>
-        </DataTemplate>
-      </Menu.DataTemplates>
-
-      <!-- File menu (dynamically built) -->
-      <MenuItem Header="{l:LocalizedResource FileMenuItem}"
-                IsVisible="{Binding FileMenuVisible}"
-                Items="{Binding FileMenuItems}" />
-
-      <!-- Edit menu (dynamically built) -->
-      <MenuItem Header="{l:LocalizedResource EditMenuItem}"
-                IsVisible="{Binding EditMenuVisible}"
-                Items="{Binding EditMenuItems}" />
-
-      <!-- View menu -->
-      <MenuItem Header="{l:LocalizedResource ViewMenuItem}">
-
-        <!-- Open folders -->
-        <MenuItem Header="{l:LocalizedResource OpenFactorioFolderMenuItem}" Command="{Binding OpenFactorioDirCommand}">
-          <MenuItem.Icon>
-            <icons:OpenFolderIcon />
-          </MenuItem.Icon>
-        </MenuItem>
-        <MenuItem Header="{l:LocalizedResource OpenModFolderMenuItem}" Command="{Binding OpenModDirCommand}">
-          <MenuItem.Icon>
-            <icons:OpenFolderIcon />
-          </MenuItem.Icon>
-        </MenuItem>
-
-        <Separator />
-
-        <!-- Visual theme -->
-        <MenuItem Name="ThemeParent" Header="{l:LocalizedResource ThemeMenuItem}" Items="{Binding AvailableThemes}">
-          <MenuItem.Icon>
-            <icons:VisualThemeIcon />
-          </MenuItem.Icon>
-          <MenuItem.Styles>
-            <Style Selector="MenuItem#ThemeParent > MenuItem">
-              <Setter Property="Command" Value="{Binding SelectCommand}" />
-              <Setter Property="Header">
-                <Setter.Value>
-                  <Template>
-                    <CheckBox Margin="-7,0,0,0" BorderThickness="0" IsHitTestVisible="False"
-                              IsChecked="{Binding Selected}" Content="{Binding DisplayName}" />
-                  </Template>
-                </Setter.Value>
-              </Setter>
-              <Setter Property="Icon">
-                <Setter.Value>
-                  <Template>
-                    <Image Source="{Binding Icon}" />
-                  </Template>
-                </Setter.Value>
-              </Setter>
-            </Style>
-          </MenuItem.Styles>
-        </MenuItem>
-      </MenuItem>
-
-      <!-- Language menu -->
-      <MenuItem Name="LangParent" Header="{l:LocalizedResource LanguageMenuItem}" Items="{Binding AvailableCultures}">
-        <MenuItem.Styles>
-          <Style Selector="MenuItem#LangParent > MenuItem">
-            <Setter Property="Command" Value="{Binding SelectCommand}" />
-            <Setter Property="Header">
-              <Setter.Value>
-                <Template>
-                  <CheckBox Margin="-7,0,0,0" BorderThickness="0" IsHitTestVisible="False"
-                            IsChecked="{Binding Selected}" Content="{Binding DisplayName}" />
-                </Template>
-              </Setter.Value>
-            </Setter>
-            <Setter Property="Icon">
-              <Setter.Value>
-                <Template>
-                  <Image Source="{Binding Icon}" />
-                </Template>
-              </Setter.Value>
-            </Setter>
-          </Style>
-        </MenuItem.Styles>
-      </MenuItem>
-
-      <!-- Info menu -->
-      <MenuItem Header="{l:LocalizedResource InfoMenuItem}">
-
-        <!-- Help -->
-        <MenuItem Command="{Binding NavigateToUrlCommand}" CommandParameter="https://github.com/Artentus/ModMyFactory2/wiki">
-          <MenuItem.Header>
-            <DockPanel>
-              <TextBlock DockPanel.Dock="Left" Text="{l:LocalizedResource HelpMenuItem}" HorizontalAlignment="Left" Margin="0,0,16,0" />
-              <TextBlock DockPanel.Dock="Right" Text="{l:LocalizedResource HelpHotkey}" HorizontalAlignment="Right" Classes="muted" />
-            </DockPanel>
-          </MenuItem.Header>
-          <MenuItem.Icon>
-            <icons:HelpIcon />
-          </MenuItem.Icon>
-        </MenuItem>
-
-        <!-- Check for update -->
-        <MenuItem>
-          <MenuItem.Header>
-            <DockPanel>
-              <TextBlock DockPanel.Dock="Left" Text="{l:LocalizedResource CheckUpdateMenuItem}" HorizontalAlignment="Left" Margin="0,0,16,0" />
-              <TextBlock DockPanel.Dock="Right" Text="{l:LocalizedResource CheckUpdateHotkey}" HorizontalAlignment="Right" Classes="muted" />
-            </DockPanel>
-          </MenuItem.Header>
-          <MenuItem.Icon>
-            <icons:UpdateIcon />
-          </MenuItem.Icon>
-        </MenuItem>
-
-        <Separator />
-
-        <!-- Web links -->
-        <MenuItem Header="factorio.com"
-                  Command="{Binding NavigateToUrlCommand}" CommandParameter="https://www.factorio.com/">
-          <MenuItem.Icon>
-            <icons:WebDestinationIcon />
-          </MenuItem.Icon>
-        </MenuItem>
-        <MenuItem Header="mods.factorio.com"
-                  Command="{Binding NavigateToUrlCommand}" CommandParameter="https://mods.factorio.com/">
-          <MenuItem.Icon>
-            <icons:WebDestinationIcon />
-          </MenuItem.Icon>
-        </MenuItem>
-        <MenuItem Header="{l:LocalizedResource ThreadMenuItem}"
-                  Command="{Binding NavigateToUrlCommand}" CommandParameter="https://forums.factorio.com/viewtopic.php?f=137&amp;t=33370">
-          <MenuItem.Icon>
-            <icons:WebDestinationIcon />
-          </MenuItem.Icon>
-        </MenuItem>
-
-        <Separator />
-
-        <!-- About -->
-        <MenuItem Command="{Binding OpenAboutWindowCommand}">
-          <MenuItem.Header>
-            <DockPanel>
-              <TextBlock DockPanel.Dock="Left" Text="{l:LocalizedResource AboutMenuItem}" HorizontalAlignment="Left" Margin="0,0,16,0" />
-              <TextBlock DockPanel.Dock="Right" Text="{l:LocalizedResource AboutHotkey}" HorizontalAlignment="Right" Classes="muted" />
-            </DockPanel>
-          </MenuItem.Header>
-          <MenuItem.Icon>
-            <icons:InformationIcon />
-          </MenuItem.Icon>
-        </MenuItem>
-      </MenuItem>
-    </Menu>
-
     <!-- Toolbar -->
     <Grid DockPanel.Dock="Top" ColumnDefinitions="Auto,Auto,*">
-      <ComboBox Grid.Column="0" Margin="4" Width="250" FontSize="{DynamicResource FontSizeMedium}"
+      <ComboBox Grid.Column="0" Margin="8" Width="250" FontSize="{DynamicResource FontSizeMedium}"
                 Items="{Binding FactorioViewModel.Instances}" SelectedItem="{Binding SelectedFactorioInstance, Mode=TwoWay}">
         <ComboBox.ItemTemplate>
           <DataTemplate DataType="{x:Type models:FactorioInstanceViewModel}">
@@ -263,7 +51,7 @@ the Free Software Foundation, either version 3 of the License, or
         </ComboBox.ItemTemplate>
       </ComboBox>
 
-      <Button Grid.Column="1" Margin="4" Content="{l:LocalizedResource StartGameButton}" Command="{Binding StartGameCommand}">
+      <Button Grid.Column="1" Margin="0,8" Content="{l:LocalizedResource StartGameButton}" Command="{Binding StartGameCommand}">
         <Button.Styles>
           <Style Selector="Button">
             <Setter Property="MinWidth" Value="120" />
@@ -282,12 +70,155 @@ the Free Software Foundation, either version 3 of the License, or
         </Button.Styles>
       </Button>
 
-      <controls:Toolbar Grid.Column="2" Items="{Binding ToolbarItems}" Margin="0,4">
-        <controls:Toolbar.DataTemplates>
-          <DataTemplate DataType="{x:Type models:MenuHeaderViewModel}">
-            <TextBlock Text="{Binding HeaderKey, Converter={StaticResource LocalizeConverter}}" />
-          </DataTemplate>
-        </controls:Toolbar.DataTemplates>
+      <controls:Toolbar Grid.Column="2" Margin="8" HorizontalAlignment="Right">
+        <controls:Toolbar.Styles>
+          <Style Selector="CheckBox">
+            <Setter Property="Foreground" Value="{DynamicResource ThemeForegroundBrush}" />
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="BorderBrush" Value="{DynamicResource ThemeBorderMidBrush}" />
+            <Setter Property="BorderThickness" Value="{DynamicResource ThemeBorderThickness}" />
+            <Setter Property="Padding" Value="4,0,0,0" />
+            <Setter Property="VerticalContentAlignment" Value="Center" />
+            <Setter Property="HorizontalContentAlignment" Value="Left" />
+            <Setter Property="Template">
+              <ControlTemplate>
+                <Grid ColumnDefinitions="Auto,*">
+                  <Border Name="border"
+                          Background="{TemplateBinding Background}"
+                          BorderBrush="{TemplateBinding BorderBrush}"
+                          BorderThickness="{TemplateBinding BorderThickness}"
+                          Width="18"
+                          Height="18"
+                          VerticalAlignment="Center">
+                    <Panel>
+                      <Path Name="checkMark"
+                            Fill="{DynamicResource IconBrush1}"
+                            Width="11"
+                            Height="10"
+                            Stretch="Uniform"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center"
+                            Data="M 1145.607177734375,430 C1145.607177734375,430 1141.449951171875,435.0772705078125 1141.449951171875,435.0772705078125 1141.449951171875,435.0772705078125 1139.232177734375,433.0999755859375 1139.232177734375,433.0999755859375 1139.232177734375,433.0999755859375 1138,434.5538330078125 1138,434.5538330078125 1138,434.5538330078125 1141.482177734375,438 1141.482177734375,438 1141.482177734375,438 1141.96875,437.9375 1141.96875,437.9375 1141.96875,437.9375 1147,431.34619140625 1147,431.34619140625 1147,431.34619140625 1145.607177734375,430 1145.607177734375,430 z" />
+                      <Rectangle Name="indeterminateMark"
+                                 Fill="{DynamicResource IconBrush1}"
+                                 Width="10"
+                                 Height="10"
+                                 Stretch="Uniform"
+                                 HorizontalAlignment="Center"
+                                 VerticalAlignment="Center" />
+                    </Panel>
+                  </Border>
+                  <ContentPresenter Name="PART_ContentPresenter"
+                                    TextBlock.Foreground="{TemplateBinding Foreground}"
+                                    ContentTemplate="{TemplateBinding ContentTemplate}"
+                                    Content="{TemplateBinding Content}"
+                                    Margin="{TemplateBinding Padding}"
+                                    VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                                    HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                    IsVisible="{TemplateBinding Content, Converter={x:Static ObjectConverters.IsNotNull}}"
+                                    Grid.Column="1" />
+                </Grid>
+              </ControlTemplate>
+            </Setter>
+          </Style>
+        </controls:Toolbar.Styles>
+
+        <controls:ToolbarItem Name="ThemeParent" Header="{l:LocalizedResource ThemeMenuItem}" Items="{Binding AvailableThemes}">
+          <controls:ToolbarItem.Icon>
+            <icons:VisualThemeIcon />
+          </controls:ToolbarItem.Icon>
+          <controls:ToolbarItem.Styles>
+            <Style Selector="controls|ToolbarItem#ThemeParent > controls|ToolbarItem">
+              <Setter Property="Command" Value="{Binding SelectCommand}" />
+              <Setter Property="Header">
+                <Setter.Value>
+                  <Template>
+                    <CheckBox Margin="-7,0,0,0" BorderThickness="0" IsHitTestVisible="False"
+                              IsChecked="{Binding Selected}" Content="{Binding DisplayName}" />
+                  </Template>
+                </Setter.Value>
+              </Setter>
+              <Setter Property="Icon">
+                <Setter.Value>
+                  <Template>
+                    <Image Source="{Binding Icon}" />
+                  </Template>
+                </Setter.Value>
+              </Setter>
+            </Style>
+          </controls:ToolbarItem.Styles>
+        </controls:ToolbarItem>
+
+        <controls:ToolbarItem Name="LangParent" Header="{l:LocalizedResource LanguageMenuItem}" Items="{Binding AvailableCultures}">
+          <controls:ToolbarItem.Icon>
+            <icons:LanguageIcon />
+          </controls:ToolbarItem.Icon>
+          <controls:ToolbarItem.Styles>
+            <Style Selector="controls|ToolbarItem#LangParent > controls|ToolbarItem">
+              <Setter Property="Command" Value="{Binding SelectCommand}" />
+              <Setter Property="Header">
+                <Setter.Value>
+                  <Template>
+                    <CheckBox Margin="-7,0,0,0" BorderThickness="0" IsHitTestVisible="False"
+                              IsChecked="{Binding Selected}" Content="{Binding DisplayName}" />
+                  </Template>
+                </Setter.Value>
+              </Setter>
+              <Setter Property="Icon">
+                <Setter.Value>
+                  <Template>
+                    <Image Source="{Binding Icon}" />
+                  </Template>
+                </Setter.Value>
+              </Setter>
+            </Style>
+          </controls:ToolbarItem.Styles>
+        </controls:ToolbarItem>
+
+        <Separator />
+
+        <controls:ToolbarItem>
+          <controls:ToolbarItem.Header>
+            <DockPanel>
+              <TextBlock DockPanel.Dock="Left" Text="{l:LocalizedResource CheckUpdateMenuItem}" HorizontalAlignment="Left" Margin="0,0,4,0" />
+              <TextBlock DockPanel.Dock="Right" Text="{l:LocalizedResource CheckUpdateHotkey, StringFormat=({0})}" HorizontalAlignment="Right" Classes="muted" />
+            </DockPanel>
+          </controls:ToolbarItem.Header>
+          <controls:ToolbarItem.Icon>
+            <icons:UpdateIcon />
+          </controls:ToolbarItem.Icon>
+        </controls:ToolbarItem>
+
+        <controls:ToolbarItem Command="{Binding OpenAboutWindowCommand}">
+          <controls:ToolbarItem.Header>
+            <DockPanel>
+              <TextBlock DockPanel.Dock="Left" Text="{l:LocalizedResource AboutMenuItem}" HorizontalAlignment="Left" Margin="0,0,4,0" />
+              <TextBlock DockPanel.Dock="Right" Text="{l:LocalizedResource AboutHotkey, StringFormat=({0})}" HorizontalAlignment="Right" Classes="muted" />
+            </DockPanel>
+          </controls:ToolbarItem.Header>
+          <controls:ToolbarItem.Icon>
+            <icons:InformationIcon />
+          </controls:ToolbarItem.Icon>
+        </controls:ToolbarItem>
+
+        <controls:ToolbarItem Header="{l:LocalizedResource ThreadMenuItem}"
+                  Command="{Binding NavigateToUrlCommand}" CommandParameter="https://forums.factorio.com/viewtopic.php?f=137&amp;t=33370">
+          <controls:ToolbarItem.Icon>
+            <icons:WebDestinationIcon />
+          </controls:ToolbarItem.Icon>
+        </controls:ToolbarItem>
+
+        <controls:ToolbarItem Command="{Binding NavigateToUrlCommand}" CommandParameter="https://github.com/Artentus/ModMyFactory2/wiki">
+          <controls:ToolbarItem.Header>
+            <DockPanel>
+              <TextBlock DockPanel.Dock="Left" Text="{l:LocalizedResource HelpMenuItem}" HorizontalAlignment="Left" Margin="0,0,4,0" />
+              <TextBlock DockPanel.Dock="Right" Text="{l:LocalizedResource HelpHotkey, StringFormat=({0})}" HorizontalAlignment="Right" Classes="muted" />
+            </DockPanel>
+          </controls:ToolbarItem.Header>
+          <controls:ToolbarItem.Icon>
+            <icons:HelpIcon />
+          </controls:ToolbarItem.Icon>
+        </controls:ToolbarItem>
       </controls:Toolbar>
     </Grid>
 

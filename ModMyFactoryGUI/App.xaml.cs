@@ -10,13 +10,11 @@ using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
 using Avalonia.ThemeManager;
 using Avalonia.Threading;
-using ModMyFactoryGUI.Controls.Icons;
 using ModMyFactoryGUI.Localization;
 using ModMyFactoryGUI.Localization.Json;
 using ModMyFactoryGUI.MVVM;
 using ModMyFactoryGUI.ViewModels;
 using ModMyFactoryGUI.Views;
-using ReactiveUI;
 using Serilog;
 using System;
 using System.IO;
@@ -32,8 +30,6 @@ namespace ModMyFactoryGUI
         public static event EventHandler ShuttingDown;
 
         public IClassicDesktopStyleApplicationLifetime Lifetime { get; private set; }
-
-        public MenuItemViewModel ShutdownItemViewModel { get; }
 
         public LayoutSettings LayoutSettings { get; }
 
@@ -56,10 +52,6 @@ namespace ModMyFactoryGUI
             Credentials = new CredentialsManager(Program.Settings);
 
             Program.Settings.Save();
-
-            // Global shutdown command
-            var shutdownCommand = ReactiveCommand.CreateFromTask(ShutdownAsync);
-            ShutdownItemViewModel = new MenuItemViewModel(shutdownCommand, null, false, () => new CloseIcon(), "CloseMenuItem", "CloseHotkey");
         }
 
         private static LocaleManager LoadLocales()

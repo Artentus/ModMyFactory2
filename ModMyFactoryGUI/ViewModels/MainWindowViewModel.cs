@@ -6,7 +6,6 @@
 //  (at your option) any later version.
 
 using Avalonia.Controls;
-using Avalonia.Input;
 using Avalonia.Threading;
 using CommandLine;
 using ModMyFactory.Game;
@@ -69,16 +68,6 @@ namespace ModMyFactoryGUI.ViewModels
 
         public SettingsViewModel SettingsViewModel { get; }
 
-        public IReadOnlyCollection<IControl> FileMenuItems { get; private set; }
-
-        public bool FileMenuVisible => FileMenuItems.Count > 0;
-
-        public IReadOnlyCollection<IControl> EditMenuItems { get; private set; }
-
-        public bool EditMenuVisible => EditMenuItems.Count > 0;
-
-        public IReadOnlyCollection<IControl> ToolbarItems { get; private set; }
-
         public TabItem SelectedTab
         {
             get => _selectedTab;
@@ -102,9 +91,6 @@ namespace ModMyFactoryGUI.ViewModels
                 {
                     _selectedViewModel = value;
                     this.RaisePropertyChanged(nameof(SelectedViewModel));
-
-                    RebuildMenuItems(_selectedViewModel);
-                    ReassignKeyBindings(_selectedViewModel);
                 }
             }
         }
@@ -245,46 +231,6 @@ namespace ModMyFactoryGUI.ViewModels
             throw new ArgumentException("Tab does not contain a valid view", nameof(tab));
         }
 
-        private void RebuildMenuItems(IMainViewModel viewModel)
-        {
-            FileMenuItems = viewModel.FileMenuItems;
-            this.RaisePropertyChanged(nameof(FileMenuItems));
-            this.RaisePropertyChanged(nameof(FileMenuVisible));
-
-            EditMenuItems = viewModel.EditMenuItems;
-            this.RaisePropertyChanged(nameof(EditMenuItems));
-            this.RaisePropertyChanged(nameof(EditMenuVisible));
-
-            ToolbarItems = viewModel.ToolbarItems;
-            this.RaisePropertyChanged(nameof(ToolbarItems));
-        }
-
-        private void ReassignKeyBindings(IMainViewModel viewModel)
-        {
-            if (!(AttachedView is null))
-            {
-                AttachedView.KeyBindings.Clear();
-
-                var vms = Enumerable.Concat(viewModel.FileMenuViewModels, viewModel.EditMenuViewModels);
-                foreach (var vm in vms)
-                {
-                    if (vm is ICommandItemViewModel cmdVM)
-                    {
-                        if (!(cmdVM.Gesture is null))
-                        {
-                            var keyBinding = new KeyBinding
-                            {
-                                Command = cmdVM.Command,
-                                Gesture = cmdVM.Gesture
-                            };
-
-                            AttachedView.KeyBindings.Add(keyBinding);
-                        }
-                    }
-                }
-            }
-        }
-
         private async void ImportPackagesAsync(IEnumerable<string> paths)
         {
             var helper = new ImportHelper(paths);
@@ -326,7 +272,6 @@ namespace ModMyFactoryGUI.ViewModels
         protected override void OnViewChanged(EventArgs e)
         {
             base.OnViewChanged(e);
-            ReassignKeyBindings(SelectedViewModel);
             AttachedView.Opened += WindowOpenedHandler;
         }
     }

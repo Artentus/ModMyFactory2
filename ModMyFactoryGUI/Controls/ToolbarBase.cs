@@ -5,15 +5,75 @@
 //  the Free Software Foundation, either version 3 of the License, or
 //  (at your option) any later version.
 
+using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Controls.Generators;
 using Avalonia.Controls.Platform;
+using Avalonia.Controls.Primitives;
+using Avalonia.Input;
+using Avalonia.Interactivity;
+using Avalonia.LogicalTree;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
 namespace ModMyFactoryGUI.Controls
 {
-    internal abstract class ToolbarBase : MenuBase, IToolbar
+    internal abstract class ToolbarBase : SelectingItemsControl, IFocusScope, IToolbar
     {
+        private bool _isOpen;
+        /// <summary>
+        /// Defines the <see cref="IsOpen"/> property.
+        /// </summary>
+        public static readonly DirectProperty<Toolbar, bool> IsOpenProperty =
+            AvaloniaProperty.RegisterDirect<Toolbar, bool>(
+                nameof(IsOpen),
+                o => o.IsOpen);
+
+        /// <summary>
+        /// Defines the <see cref="MenuOpened"/> event.
+        /// </summary>
+        public static readonly RoutedEvent<RoutedEventArgs> MenuOpenedEvent =
+            RoutedEvent.Register<ToolbarBase, RoutedEventArgs>(nameof(MenuOpened), RoutingStrategies.Bubble);
+
+        /// <summary>
+        /// Defines the <see cref="MenuClosed"/> event.
+        /// </summary>
+        public static readonly RoutedEvent<RoutedEventArgs> MenuClosedEvent =
+            RoutedEvent.Register<ToolbarBase, RoutedEventArgs>(nameof(MenuClosed), RoutingStrategies.Bubble);
+
+        /// <summary>
+        /// Occurs when a <see cref="Toolbar"/> is opened.
+        /// </summary>
+        public event EventHandler<RoutedEventArgs> MenuOpened
+        {
+            add { AddHandler(MenuOpenedEvent, value); }
+            remove { RemoveHandler(MenuOpenedEvent, value); }
+        }
+
+        /// <summary>
+        /// Occurs when a <see cref="Toolbar"/> is closed.
+        /// </summary>
+        public event EventHandler<RoutedEventArgs> MenuClosed
+        {
+            add { AddHandler(MenuClosedEvent, value); }
+            remove { RemoveHandler(MenuClosedEvent, value); }
+        }
+
+        /// <summary>
+        /// Gets the interaction handler for the menu.
+        /// </summary>
+        protected IMenuInteractionHandler InteractionHandler { get; }
+
+        /// <summary>
+        /// Gets a value indicating whether the menu is open.
+        /// </summary>
+        public bool IsOpen
+        {
+            get { return _isOpen; }
+            protected set { SetAndRaise(IsOpenProperty, ref _isOpen, value); }
+        }
+
         IToolbarItem IToolbarElement.SelectedItem
         {
             get
@@ -26,14 +86,106 @@ namespace ModMyFactoryGUI.Controls
             set => SelectedIndex = ItemContainerGenerator.IndexFromContainer(value);
         }
 
+        /// <inheritdoc/>
+        IMenuItem IMenuElement.SelectedItem
+        {
+            get => ((IToolbar)this).SelectedItem;
+            set => ((IToolbar)this).SelectedItem = (IToolbarItem)value;
+        }
+
         IEnumerable<IToolbarItem> IToolbarElement.SubItems
             => ItemContainerGenerator.Containers.Select(x => x.ContainerControl).OfType<IToolbarItem>();
 
-        protected ToolbarBase()
-        { }
+        /// <inheritdoc/>
+        IEnumerable<IMenuItem> IMenuElement.SubItems
+            => ((IToolbar)this).SubItems;
 
-        protected ToolbarBase(IMenuInteractionHandler interactionHandler)
-            : base(interactionHandler)
-        { }
+        /// <inheritdoc/>
+        IMenuInteractionHandler IMenu.InteractionHandler => InteractionHandler;
+
+        /// <summary>
+        /// Initializes static members of the <see cref="ToolbarBase"/> class.
+        /// </summary>
+        static ToolbarBase()
+        {
+            ToolbarItem.SubmenuOpenedEvent.AddClassHandler<ToolbarBase>((x, e) => x.OnSubmenuOpened(e));
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ToolbarBase"/> class.
+        /// </summary>
+        public ToolbarBase()
+        {
+            InteractionHandler = new DefaultMenuInteractionHandler(false);
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ToolbarBase"/> class.
+        /// </summary>
+        /// <param name="interactionHandler">The menu interaction handler.</param>
+        public ToolbarBase(IMenuInteractionHandler interactionHandler)
+        {
+            Contract.Requires<ArgumentNullException>(interactionHandler != null);
+
+            InteractionHandler = interactionHandler;
+        }
+
+        /// <inheritdoc/>
+        protected override IItemContainerGenerator CreateItemContainerGenerator()
+            => new ToolbarItemContainerGenerator(this);
+
+        /// <inheritdoc/>
+        protected override void OnKeyDown(KeyEventArgs e)
+        {
+            // Don't handle here: let the interaction handler handle it.
+        }
+
+        /// <inheritdoc/>
+        protected override void OnAttachedToVisualTree(VisualTreeAttachmentEventArgs e)
+        {
+            base.OnAttachedToVisualTree(e);
+            InteractionHandler.Attach(this);
+        }
+
+        /// <inheritdoc/>
+        protected override void OnDetachedFromVisualTree(VisualTreeAttachmentEventArgs e)
+        {
+            base.OnDetachedFromVisualTree(e);
+            InteractionHandler.Detach(this);
+        }
+
+        /// <summary>
+        /// Called when a submenu opens somewhere in the menu.
+        /// </summary>
+        /// <param name="e">The event args.</param>
+        protected virtual void OnSubmenuOpened(RoutedEventArgs e)
+        {
+            if (e.Source is MenuItem menuItem && menuItem.Parent == this)
+            {
+                foreach (var child in this.GetLogicalChildren().OfType<MenuItem>())
+                {
+                    if (child != menuItem && child.IsSubMenuOpen)
+                    {
+                        child.IsSubMenuOpen = false;
+                    }
+                }
+            }
+
+            IsOpen = true;
+        }
+
+        /// <summary>
+        /// Closes the menu.
+        /// </summary>
+        public abstract void Close();
+
+        /// <summary>
+        /// Opens the menu.
+        /// </summary>
+        public abstract void Open();
+
+        /// <inheritdoc/>
+        bool IMenuElement.MoveSelection(NavigationDirection direction, bool wrap)
+            => MoveSelection(direction, wrap);
     }
 }

@@ -14,6 +14,7 @@ the Free Software Foundation, either version 3 of the License, or
   <Style Selector="controls|ToolbarItem">
     <Setter Property="UseLayoutRounding" Value="True" />
     <Setter Property="Padding" Value="6,0" />
+    <Setter Property="Background" Value="Transparent" />
     <Setter Property="BorderBrush" Value="Transparent" />
     <Setter Property="BorderThickness" Value="0" />
     <Setter Property="Template">
@@ -65,6 +66,7 @@ the Free Software Foundation, either version 3 of the License, or
 
   <Style Selector="controls|Toolbar > controls|ToolbarItem">
     <Setter Property="Background" Value="Transparent" />
+    <Setter Property="ToolTip.Tip" Value="{Binding Header, RelativeSource={RelativeSource Self}}" />
     <Setter Property="Template">
       <ControlTemplate>
         <Border Name="root" Margin="1,0"
@@ -72,10 +74,11 @@ the Free Software Foundation, either version 3 of the License, or
                 BorderBrush="{TemplateBinding BorderBrush}"
                 BorderThickness="{TemplateBinding BorderThickness}">
 
-          <Grid>
+          <Grid ColumnDefinitions="*,Auto">
 
             <ContentPresenter Name="icon"
                               Content="{TemplateBinding Icon}"
+                              Grid.Column="0"
                               Width="16"
                               Height="16"
                               Margin="9"
@@ -85,6 +88,13 @@ the Free Software Foundation, either version 3 of the License, or
                 <ScaleTransform ScaleX="1.5" ScaleY="1.5" />
               </ContentPresenter.RenderTransform>
             </ContentPresenter>
+
+            <Path Name="arrow"
+                  Data="M0,0L3.5,4 7,0z"
+                  Fill="{DynamicResource ThemeForegroundBrush}"
+                  Margin="0,0,4,0"
+                  VerticalAlignment="Center"
+                  Grid.Column="1" />
 
             <Popup Name="PART_Popup"
                    IsOpen="{TemplateBinding IsSubMenuOpen, Mode=TwoWay}"
@@ -107,7 +117,7 @@ the Free Software Foundation, either version 3 of the License, or
     </Setter>
   </Style>
 
-  <Style Selector="controls|ToolbarItem:selected /template/ Border#root">
+  <Style Selector="controls|ToolbarItem:pointerover /template/ Border#root">
     <Setter Property="Background" Value="{DynamicResource ThemeAccentBrush2}" />
   </Style>
   <Style Selector="controls|Toolbar > controls|ToolbarItem:selected /template/ Border#root">
@@ -115,6 +125,10 @@ the Free Software Foundation, either version 3 of the License, or
   </Style>
   <Style Selector="controls|Toolbar > controls|ToolbarItem:pointerover /template/ Border#root">
     <Setter Property="Background" Value="{DynamicResource ThemeAccentBrush3}" />
+  </Style>
+
+  <Style Selector="controls|Toolbar > controls|ToolbarItem:empty /template/ Path#arrow">
+    <Setter Property="IsVisible" Value="False" />
   </Style>
 
 </Styles>

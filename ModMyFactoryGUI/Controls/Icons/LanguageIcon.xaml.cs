@@ -10,9 +10,9 @@ using Avalonia.Markup.Xaml;
 
 namespace ModMyFactoryGUI.Controls.Icons
 {
-    internal class AddModsIcon : UserControl
+    internal class LanguageIcon : UserControl
     {
-        public AddModsIcon()
+        public LanguageIcon()
         {
             InitializeComponent();
         }

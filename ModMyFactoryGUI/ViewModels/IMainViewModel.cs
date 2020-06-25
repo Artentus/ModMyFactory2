@@ -5,22 +5,11 @@
 //  the Free Software Foundation, either version 3 of the License, or
 //  (at your option) any later version.
 
-using Avalonia.Controls;
 using ReactiveUI;
-using System.Collections.Generic;
 
 namespace ModMyFactoryGUI.ViewModels
 {
-    internal interface IMainViewModel : IRoutableViewModel
-    {
-        IReadOnlyCollection<IMenuItemViewModel> FileMenuViewModels { get; }
-
-        IReadOnlyCollection<IMenuItemViewModel> EditMenuViewModels { get; }
-
-        IReadOnlyCollection<IControl> FileMenuItems { get; }
-
-        IReadOnlyCollection<IControl> EditMenuItems { get; }
-
-        IReadOnlyCollection<IControl> ToolbarItems { get; }
-    }
+    internal interface IMainViewModel
+        : IRoutableViewModel
+    { }
 }
