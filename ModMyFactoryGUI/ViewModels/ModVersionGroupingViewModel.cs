@@ -54,6 +54,16 @@ namespace ModMyFactoryGUI.ViewModels
             }
         }
 
+        public string Header
+        {
+            get
+            {
+                var version = FactorioVersion;
+                if (version == (0, 18)) return "1.0 (0.18)";
+                else return version.ToString(2);
+            }
+        }
+
         public AccurateVersion FactorioVersion => _manager.FactorioVersion;
 
         public ModVersionGroupingViewModel(ModManager manager)

@@ -45,7 +45,7 @@ the Free Software Foundation, either version 3 of the License, or
       <TabControl Grid.Column="0" Grid.Row="2" Margin="2,2,0,2" Items="{Binding ModVersionGroupings}">
         <TabControl.ItemTemplate>
           <DataTemplate DataType="{x:Type models:ModVersionGroupingViewModel}">
-            <TextBlock Text="{Binding FactorioVersion}" />
+            <TextBlock Text="{Binding Header}" />
           </DataTemplate>
         </TabControl.ItemTemplate>
 

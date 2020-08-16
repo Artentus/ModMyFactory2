@@ -215,7 +215,7 @@ namespace ModMyFactoryGUI
             => GetModDir(_modLocation, _customModPath);
 
         public DirectoryInfo GetModDir(AccurateVersion factorioVersion)
-            => GetModDir().CreateSubdirectory(factorioVersion.ToMajor().ToString(2));
+            => GetModDir().CreateSubdirectory(factorioVersion.ToFactorioMajor().ToString(2));
 
         public async Task MoveFactorioLocationAsync(Location location, string customPath)
         {

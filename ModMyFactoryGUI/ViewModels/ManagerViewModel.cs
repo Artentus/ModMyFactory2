@@ -8,6 +8,8 @@
 using Avalonia.Controls;
 using ModMyFactory;
 using ModMyFactory.Mods;
+using ModMyFactory.WebApi.Mods;
+using ModMyFactoryGUI.Caching.Web;
 using ModMyFactoryGUI.Helpers;
 using ModMyFactoryGUI.Views;
 using ReactiveUI;
@@ -290,7 +292,7 @@ namespace ModMyFactoryGUI.ViewModels
         {
             if (Program.Manager.ContainsMod(modFile.Info.Name, modFile.Info.Version))
             {
-                // ToDo: show info message
+                // Silently ignore this
             }
             else
             {
@@ -305,7 +307,23 @@ namespace ModMyFactoryGUI.ViewModels
 
         private async Task UpdateModsAsync()
         {
-            // ToDo: implement
+            using var infoCache = new ModInfoCache();
+            foreach (var modManager in Program.Manager.ModManagers)
+            {
+                foreach (var family in modManager.Families)
+                {
+                    var info = await infoCache.QueryAsync(family.FamilyName);
+                    var latest = info.GetLatestRelease(modManager.FactorioVersion);
+                    if (latest is null) continue; // Silently skip in case the local version of a mod does not exist on the portal
+
+                    // The default mod is also always the one with the highest version
+                    if (latest.Value.Version > family.GetDefaultMod().Version)
+                    {
+                        // Update available
+                        // ToDo: collect all available updates, then display update dialog
+                    }
+                }
+            }
         }
 
         private void CreateModpack()
