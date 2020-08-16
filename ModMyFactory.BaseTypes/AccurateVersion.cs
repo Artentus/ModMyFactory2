@@ -13,7 +13,7 @@ using System.Text;
 namespace ModMyFactory.BaseTypes
 {
     /// <summary>
-    /// A version representation identical in behavior to the one Factorio uses.
+    /// A version representation identical in behavior to the one Factorio uses
     /// </summary>
     [StructLayout(LayoutKind.Explicit)]
     [JsonConverter(typeof(AccurateVersionConverter))]
@@ -47,9 +47,20 @@ namespace ModMyFactory.BaseTypes
         }
 
         /// <summary>
-        /// Creates a version object containing only the main and major version parts of this version object.
+        /// Creates a version object containing only the main and major version parts of this version object
         /// </summary>
         public AccurateVersion ToMajor() => new AccurateVersion(Binary & 0xFFFFFFFF00000000);
+
+        /// <summary>
+        /// Creates a version object containing only the main and major version parts of this version object
+        /// This method considers Factorio version 1.0 the same as version 0.18 for compatibility reasons
+        /// </summary>
+        public AccurateVersion ToFactorioMajor()
+        {
+            var major = ToMajor();
+            if (major == (1, 0)) major = (0, 18);
+            return major;
+        }
 
         public void Deconstruct(out ushort main, out ushort major, out ushort minor, out ushort revision)
             => (main, major, minor, revision) = (Main, Major, Minor, Revision);
@@ -57,9 +68,7 @@ namespace ModMyFactory.BaseTypes
         public bool Equals(AccurateVersion other) => other.Binary == this.Binary;
 
         public override bool Equals(object obj)
-            => (obj is AccurateVersion other)
-            ? Equals(other)
-            : false;
+            => (obj is AccurateVersion other) && Equals(other);
 
         public int CompareTo(AccurateVersion other) => this.Binary.CompareTo(other.Binary);
 
@@ -122,7 +131,7 @@ namespace ModMyFactory.BaseTypes
 
 
         /// <summary>
-        /// Tries to interpret a string as a version.
+        /// Tries to interpret a string as a version
         /// </summary>
         public static bool TryParse(string value, out AccurateVersion version)
         {
@@ -145,7 +154,7 @@ namespace ModMyFactory.BaseTypes
         }
 
         /// <summary>
-        /// Interprets a string as a version.
+        /// Interprets a string as a version
         /// </summary>
         public static AccurateVersion Parse(string value)
         {

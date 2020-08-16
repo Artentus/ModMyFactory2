@@ -8,27 +8,27 @@
 namespace ModMyFactory.BaseTypes
 {
     /// <summary>
-    /// SPecifies the type of a dependency.
+    /// Specifies the type of a dependency
     /// </summary>
     public enum DependencyType
     {
         /// <summary>
-        /// A normal dependency.
+        /// A normal dependency
         /// </summary>
         Normal,
 
         /// <summary>
-        /// An inverted dependency.
+        /// An inverted dependency
         /// </summary>
         Inverted,
 
         /// <summary>
-        /// An optional dependency.
+        /// An optional dependency
         /// </summary>
         Optional,
 
         /// <summary>
-        /// A hidden dependency.
+        /// A hidden dependency
         /// </summary>
         Hidden
     }

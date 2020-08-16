@@ -8,7 +8,7 @@
 namespace ModMyFactory.BaseTypes
 {
     /// <summary>
-    /// A list of operators that are valid in a dependency.
+    /// A list of operators that are valid in a dependency
     /// </summary>
     public static class DependencyOperator
     {

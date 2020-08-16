@@ -16,6 +16,14 @@ namespace ModMyFactory.BaseTypes
     /// </summary>
     public struct ModInfo
     {
+#pragma warning disable IDE0052
+
+        // We store this only for the case that we want to save it again later on.
+        [JsonProperty("factorio_version")]
+        readonly private AccurateVersion ActualFactorioVersion;
+
+#pragma warning restore IDE0052
+
         /// <summary>
         /// The unique name of the mod
         /// </summary>
@@ -35,9 +43,10 @@ namespace ModMyFactory.BaseTypes
         readonly public AccurateVersion Version;
 
         /// <summary>
-        /// The version of Factorio this mod works on
+        /// The version of Factorio this mod works on<br/>
+        /// This is always a major version, where version 1.0 is considered to be version 0.18 for compatibility reasons
         /// </summary>
-        [JsonProperty("factorio_version")]
+        [JsonIgnore]
         readonly public AccurateVersion FactorioVersion;
 
         /// <summary>
@@ -60,10 +69,10 @@ namespace ModMyFactory.BaseTypes
         readonly public Dependency[] Dependencies;
 
         [JsonConstructor]
-        internal ModInfo(string name, string displayName, AccurateVersion version, AccurateVersion factorioVersion,
+        internal ModInfo(string name, string displayName, AccurateVersion version, AccurateVersion actualFactorioVersion,
                          string author, string description, params Dependency[] dependencies)
-            => (Name, DisplayName, Version, FactorioVersion, Author, Description, Dependencies)
-               = (name, displayName, version, factorioVersion, author, description, dependencies);
+            => (Name, DisplayName, Version, ActualFactorioVersion, FactorioVersion, Author, Description, Dependencies)
+               = (name, displayName, version, actualFactorioVersion, actualFactorioVersion.ToFactorioMajor(), author, description, dependencies);
 
         /// <summary>
         /// Loads mod info from a json string

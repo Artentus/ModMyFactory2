@@ -10,14 +10,14 @@ using System;
 namespace ModMyFactory.BaseTypes
 {
     /// <summary>
-    /// Implements comparison behavior of a dependency.
+    /// Implements comparison behavior of a dependency
     /// </summary>
     public class DependencyComparison
     {
         private readonly Func<AccurateVersion, AccurateVersion, bool> comparisonFunction;
 
         /// <summary>
-        /// The operator used for the comparison.
+        /// The operator used for the comparison
         /// </summary>
         public virtual string Operator { get; }
 
@@ -37,7 +37,7 @@ namespace ModMyFactory.BaseTypes
         }
 
         /// <summary>
-        /// Applies the comparison operator to a mods version and the dependency test version.
+        /// Applies the comparison operator to a mods version and the dependency test version
         /// </summary>
         protected internal virtual bool TestFor(AccurateVersion modVersion, AccurateVersion testVersion) => comparisonFunction(modVersion, testVersion);
 
