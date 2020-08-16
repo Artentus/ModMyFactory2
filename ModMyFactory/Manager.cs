@@ -61,7 +61,7 @@ namespace ModMyFactory
         /// </summary>
         public bool TryGetModManager(AccurateVersion factorioVersion, out ModManager result)
         {
-            factorioVersion = factorioVersion.ToMajor();
+            factorioVersion = factorioVersion.ToFactorioMajor();
             return _modManagers.TryGetValue(factorioVersion, out result);
         }
 
@@ -71,7 +71,7 @@ namespace ModMyFactory
         /// </summary>
         public ModManager GetModManager(AccurateVersion factorioVersion)
         {
-            factorioVersion = factorioVersion.ToMajor();
+            factorioVersion = factorioVersion.ToFactorioMajor();
 
             if (!_modManagers.TryGetValue(factorioVersion, out var result))
             {

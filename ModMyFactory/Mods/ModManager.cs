@@ -20,7 +20,6 @@ namespace ModMyFactory.Mods
     public sealed class ModManager : ICollection<Mod>, IReadOnlyCollection<Mod>, INotifyCollectionChanged
     {
         private readonly Dictionary<string, ModFamily> _families;
-        private volatile bool _clearing = false;
         internal static readonly AccurateVersion FormatSwitch = new AccurateVersion(0, 17); // Native support for multiple mods in Factorio 0.17 and onwards
 
         /// <summary>
@@ -59,7 +58,7 @@ namespace ModMyFactory.Mods
             _families = new Dictionary<string, ModFamily>();
             Families = _families.Values;
 
-            FactorioVersion = factorioVersion.ToMajor();
+            FactorioVersion = factorioVersion.ToFactorioMajor();
         }
 
         private void OnFamilyModsEnabledChanged(object sender, EventArgs e)
@@ -97,7 +96,7 @@ namespace ModMyFactory.Mods
         public void Add(Mod mod)
         {
             if (mod is null) throw new ArgumentNullException();
-            if (mod.FactorioVersion.ToMajor() != FactorioVersion) throw new ArgumentException("Mod has incorrect Factorio version.");
+            if (mod.FactorioVersion != FactorioVersion) throw new ArgumentException("Mod has incorrect Factorio version.");
 
             var family = GetFamily(mod.Name);
             if (family.Contains(mod)) return; // If mod already managed do nothing
@@ -131,16 +130,12 @@ namespace ModMyFactory.Mods
         /// </summary>
         public void Clear()
         {
-            _clearing = true;
-
             foreach (var family in Families)
             {
                 family.CollectionChanged -= OnFamilyCollectionChanged;
                 family.ModsEnabledChanged -= OnFamilyModsEnabledChanged;
             }
             _families.Clear();
-
-            _clearing = false;
         }
 
         /// <summary>

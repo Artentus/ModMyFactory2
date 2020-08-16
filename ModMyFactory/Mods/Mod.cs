@@ -47,7 +47,7 @@ namespace ModMyFactory.Mods
 
         /// <summary>
         /// The version of Factorio this mod works on<br/>
-        /// Only considers the major version
+        /// Only considers the major version, where version 1.0 is considered to be version 0.18 for compatibility reasons
         /// </summary>
         public AccurateVersion FactorioVersion { get; }
 
@@ -83,7 +83,7 @@ namespace ModMyFactory.Mods
         /// </summary>
         public bool Enabled
         {
-            get => CanDisable ? _enabled : true;
+            get => !CanDisable || _enabled;
             set
             {
                 if (value == _enabled) return;
@@ -121,7 +121,7 @@ namespace ModMyFactory.Mods
         protected Mod(string name, string displayName, AccurateVersion version, AccurateVersion factorioVersion,
             string author, string description, Dependency[] dependencies, Stream thumbnail = null)
             => (Name, DisplayName, Version, FactorioVersion, Author, Description, Dependencies, Thumbnail)
-               = (name, displayName, version, factorioVersion.ToMajor(), author, description, dependencies, thumbnail);
+               = (name, displayName, version, factorioVersion, author, description, dependencies, thumbnail);
 
         protected Mod(ModInfo info, Stream Thumbnail = null)
             : this(info.Name, info.DisplayName, info.Version, info.FactorioVersion,
