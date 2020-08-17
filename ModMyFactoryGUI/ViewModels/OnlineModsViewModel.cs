@@ -244,6 +244,8 @@ namespace ModMyFactoryGUI.ViewModels
                     this.RaisePropertyChanged(nameof(ErrorMessageKey));
                     Log.Error(ex, "An unknown server error occurred");
                 }
+
+                _onlineMods = new List<OnlineModViewModel>(0);
             }
 
             OnlineMods = new CollectionView<OnlineModViewModel>(_onlineMods, SelectedComparer, FilterMod);
