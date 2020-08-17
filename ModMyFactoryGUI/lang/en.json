@@ -432,6 +432,10 @@
     "type": "string",
     "value": "By download count"
   },
+  "AllVersionsDesc": {
+    "type": "string",
+    "value": "All versions"
+  },
 
   // --------- Export view ---------
   "ExportButton": {

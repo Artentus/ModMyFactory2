@@ -68,7 +68,7 @@ namespace ModMyFactoryGUI.ViewModels
             get => _selectedFactorioVersion;
             set
             {
-                var newVal = value.ToMajor();
+                var newVal = value.ToFactorioMajor();
                 if (newVal != _selectedFactorioVersion)
                 {
                     _selectedFactorioVersion = newVal;
@@ -127,12 +127,30 @@ namespace ModMyFactoryGUI.ViewModels
             _downloadQueue = downloadQueue;
             RefreshCommand = ReactiveCommand.CreateFromTask(RefreshOnlineModsAsync);
 
+            App.Current.Locales.UICultureChanged += (sender, e) =>
+            {
+                // This is overly complicated but required to force the UI to refresh
+                var tmpVs = FactorioVersions;
+                var tmpV = SelectedFactorioVersion;
+
+                FactorioVersions = null;
+                this.RaisePropertyChanged(nameof(FactorioVersions));
+                FactorioVersions = tmpVs;
+                this.RaisePropertyChanged(nameof(FactorioVersions));
+
+                _selectedFactorioVersion = tmpV;
+                this.RaisePropertyChanged(nameof(SelectedFactorioVersion));
+            };
+
             Comparers = new ModComparer[]
             {
                 new AlphabeticalModComparer(),
                 new DownloadCountModComparer()
             };
             SelectedComparer = Comparers[0];
+
+            FactorioVersions = new CollectionView<AccurateVersion>(new AccurateVersion[1] { default });
+            SelectedFactorioVersion = default;
 
             // This is fire-and-forget intentionally
             async void Refresh() => await RefreshOnlineModsAsync();
@@ -173,7 +191,7 @@ namespace ModMyFactoryGUI.ViewModels
             if (mod.DisplayName.Length == 1) return false;
 
             // Filter for selected Factorio version
-            if ((SelectedFactorioVersion != default) && (mod.FactorioVersion != SelectedFactorioVersion)) return false;
+            if ((SelectedFactorioVersion != default) && (mod.FactorioVersion.ToFactorioMajor() != SelectedFactorioVersion)) return false;
 
             // Filter based on fuzzy search
             return mod.MatchesSearch;
@@ -185,7 +203,7 @@ namespace ModMyFactoryGUI.ViewModels
 
             var factorioVersions = new HashSet<AccurateVersion> { default };
             foreach (var mod in _onlineMods)
-                factorioVersions.Add(mod.FactorioVersion);
+                factorioVersions.Add(mod.FactorioVersion.ToFactorioMajor());
 
             // Required since someone apparently thought it was a good idea to add a mod with Factorio version 0.99
             static bool Filter(AccurateVersion v) => v != (0, 99);
@@ -195,6 +213,7 @@ namespace ModMyFactoryGUI.ViewModels
             prev?.Dispose();
 
             this.RaisePropertyChanged(nameof(FactorioVersions));
+            this.RaisePropertyChanged(nameof(SelectedFactorioVersion));
         }
 
         private async Task RefreshOnlineModsAsync()
