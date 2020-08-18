@@ -176,12 +176,25 @@ namespace ModMyFactoryGUI
             {
                 Lifetime = lifetime;
 
-                Loaded?.Invoke(this, EventArgs.Empty);
-                lifetime.Exit += OnExit;
+                try
+                {
+                    Loaded?.Invoke(this, EventArgs.Empty);
+                    lifetime.Exit += OnExit;
 
-                var mainViewModel = new MainWindowViewModel();
-                var mainView = View.CreateAndAttach(mainViewModel);
-                lifetime.MainWindow = mainView;
+                    var mainViewModel = new MainWindowViewModel();
+                    var mainView = View.CreateAndAttach(mainViewModel);
+                    lifetime.MainWindow = mainView;
+                }
+                catch (Exception ex)
+                {
+                    Log.Error(ex, "Unable to initialize GUI framework");
+                }
+
+                Log.Verbose("GUI framework successfully initialized");
+            }
+            else
+            {
+                Log.Error("Unable to initialize GUI framework: expected desktop lifetime but found {0}", ApplicationLifetime);
             }
 
             base.OnFrameworkInitializationCompleted();

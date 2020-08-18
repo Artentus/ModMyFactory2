@@ -335,10 +335,14 @@ namespace ModMyFactoryGUI
 
                     try
                     {
-                        return (ErrorCode)BuildAvaloniaApp().StartWithClassicDesktopLifetime(args, ShutdownMode.OnMainWindowClose);
+                        var code = (ErrorCode)BuildAvaloniaApp().StartWithClassicDesktopLifetime(args, ShutdownMode.OnMainWindowClose);
+                        if (code != ErrorCode.NoError) Log.Warning("Application returned error code '{0}'", code);
+                        else Log.Debug("Application exited gracefully");
+                        return code;
                     }
-                    catch
+                    catch (Exception ex)
                     {
+                        Log.Error(ex, "Application crashed");
                         return ErrorCode.General;
                     }
                     finally
