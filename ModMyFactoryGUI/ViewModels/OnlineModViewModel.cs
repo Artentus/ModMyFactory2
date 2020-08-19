@@ -85,7 +85,19 @@ namespace ModMyFactoryGUI.ViewModels
         public int SearchScore { get; private set; } = 0;
 
 
+        public AccurateVersion? FactorioVersion
+        {
+            get
+            {
+                if (Info.TryGetLatestRelease(out var release))
+                    return release.Info.FactorioVersion.ToMajor();
+
+                return null;
+            }
+        }
+
         public string Changelog => Info.Changelog;
+
         public string Faq => Info.Faq;
 
         public string DisplayName => Info.DisplayName;
@@ -97,8 +109,6 @@ namespace ModMyFactoryGUI.ViewModels
         public string Summary => Info.Summary;
 
         public string Description => Info.Description;
-
-        public AccurateVersion FactorioVersion => Info.GetLatestReleaseSafe().Info.FactorioVersion.ToMajor();
 
         public OnlineModViewModel(ApiModInfo info, Manager manager, DownloadQueue downloadQueue)
             => (_info, _manager, _downloadQueue, Releases) = (info, manager, downloadQueue, _emptyReleases);
@@ -182,9 +192,9 @@ namespace ModMyFactoryGUI.ViewModels
                         Thumbnail = new Bitmap(stream);
                         this.RaisePropertyChanged(nameof(Thumbnail));
                     }
-                    catch (WebException)
+                    catch
                     {
-                        // This is only loading the thumbnail, so it's ok to just agressively catch all web exceptions.
+                        // This is only loading the thumbnail, so it's ok to just agressively catch all exceptions.
                     }
                 }
             }

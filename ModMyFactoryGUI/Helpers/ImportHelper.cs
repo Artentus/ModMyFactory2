@@ -57,7 +57,10 @@ namespace ModMyFactoryGUI.Helpers
         private async Task<AccurateVersion> GetLatestVersionAsync(ModDefinition modDef)
         {
             var info = await _infoCache.QueryAsync(modDef.Name);
-            return info.GetLatestReleaseSafe().Version;
+            if (info.TryGetLatestRelease(out var release))
+                return release.Version;
+
+            throw new InvalidOperationException($"The mod {modDef.Name} does not have any releases.");
         }
 
         private async Task<AccurateVersion> GetLatestVersionAsync(ModDefinition modDef, AccurateVersion factorioVersion)

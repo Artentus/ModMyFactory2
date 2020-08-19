@@ -127,8 +127,8 @@ namespace ModMyFactoryGUI.ViewModels
             App.ShuttingDown += (sender, e) => DownloadQueue.StopQueue();
 
             ManagerViewModel = new ManagerViewModel();
-            OnlineModsViewModel = new OnlineModsViewModel(Program.Manager, DownloadQueue);
             FactorioViewModel = new FactorioViewModel(DownloadQueue);
+            OnlineModsViewModel = new OnlineModsViewModel(Program.Manager, DownloadQueue);
             ExportViewModel = new ExportViewModel();
             SettingsViewModel = new SettingsViewModel(DownloadQueue);
             SelectedViewModel = ManagerViewModel;
@@ -154,11 +154,9 @@ namespace ModMyFactoryGUI.ViewModels
             if (_selectedFactorioInstance is null)
             {
                 _selectedFactorioInstance = FactorioViewModel.Instances.FirstOrDefault();
-                if (_selectedFactorioInstance is null)
-                {
-                    Program.Settings.Set(SettingName.SelectedInstance, _selectedFactorioInstance.GetUniqueKey());
-                    Program.Settings.Save();
-                }
+                if (_selectedFactorioInstance is null) Program.Settings.Remove(SettingName.SelectedInstance);
+                else Program.Settings.Set(SettingName.SelectedInstance, _selectedFactorioInstance.GetUniqueKey());
+                Program.Settings.Save();
             }
 
             GlobalContext.Current.MessageReceived += MessageReceivedHandler;

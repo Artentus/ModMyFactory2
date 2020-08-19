@@ -189,9 +189,10 @@ namespace ModMyFactoryGUI.ViewModels
             // Filter out all the removed mods
             if (string.IsNullOrWhiteSpace(mod.DisplayName)) return false;
             if (mod.DisplayName.Length == 1) return false;
+            if (!mod.FactorioVersion.HasValue) return false;
 
             // Filter for selected Factorio version
-            if ((SelectedFactorioVersion != default) && (mod.FactorioVersion.ToFactorioMajor() != SelectedFactorioVersion)) return false;
+            if ((SelectedFactorioVersion != default) && (mod.FactorioVersion.Value.ToFactorioMajor() != SelectedFactorioVersion)) return false;
 
             // Filter based on fuzzy search
             return mod.MatchesSearch;
@@ -203,7 +204,10 @@ namespace ModMyFactoryGUI.ViewModels
 
             var factorioVersions = new HashSet<AccurateVersion> { default };
             foreach (var mod in _onlineMods)
-                factorioVersions.Add(mod.FactorioVersion.ToFactorioMajor());
+            {
+                if (mod.FactorioVersion.HasValue)
+                    factorioVersions.Add(mod.FactorioVersion.Value.ToFactorioMajor());
+            }
 
             // Required since someone apparently thought it was a good idea to add a mod with Factorio version 0.99
             static bool Filter(AccurateVersion v) => v != (0, 99);

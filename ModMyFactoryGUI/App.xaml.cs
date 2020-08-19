@@ -184,13 +184,13 @@ namespace ModMyFactoryGUI
                     var mainViewModel = new MainWindowViewModel();
                     var mainView = View.CreateAndAttach(mainViewModel);
                     lifetime.MainWindow = mainView;
+
+                    Log.Verbose("GUI framework successfully initialized");
                 }
                 catch (Exception ex)
                 {
                     Log.Error(ex, "Unable to initialize GUI framework");
                 }
-
-                Log.Verbose("GUI framework successfully initialized");
             }
             else
             {
