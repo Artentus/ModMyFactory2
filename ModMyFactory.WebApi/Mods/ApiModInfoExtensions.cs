@@ -15,17 +15,28 @@ namespace ModMyFactory.WebApi.Mods
         /// <summary>
         /// Gets the latest release of the mod and properly resolves extended info
         /// </summary>
-        public static ModReleaseInfo GetLatestReleaseSafe(this ApiModInfo info)
+        public static bool TryGetLatestRelease(this ApiModInfo info, out ModReleaseInfo release)
         {
-            if (info.LatestRelease.HasValue) return info.LatestRelease.Value;
-
-            ModReleaseInfo max = default;
-            foreach (var release in info.Releases)
+            if (info.LatestRelease.HasValue)
             {
-                if (release.Version > max.Version)
-                    max = release;
+                release = info.LatestRelease.Value;
+                return true;
             }
-            return max;
+
+            if (!(info.Releases is null) && (info.Releases.Length > 0))
+            {
+                ModReleaseInfo max = default;
+                foreach (var r in info.Releases)
+                {
+                    if (r.Version > max.Version)
+                        max = r;
+                }
+                release = max;
+                return true;
+            }
+
+            release = default;
+            return false;
         }
 
         /// <summary>
@@ -34,10 +45,13 @@ namespace ModMyFactory.WebApi.Mods
         public static ModReleaseInfo? GetLatestRelease(this ApiModInfo info, AccurateVersion factorioVersion)
         {
             ModReleaseInfo? max = null;
-            foreach (var release in info.Releases.Where(r => r.Info.FactorioVersion == factorioVersion))
+            if (!(info.Releases is null))
             {
-                if ((max is null) || (release.Version > max.Value.Version))
-                    max = release;
+                foreach (var release in info.Releases.Where(r => r.Info.FactorioVersion == factorioVersion))
+                {
+                    if ((max is null) || (release.Version > max.Value.Version))
+                        max = release;
+                }
             }
             return max;
         }
