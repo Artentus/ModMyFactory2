@@ -74,7 +74,7 @@ namespace ModMyFactory.BaseTypes
             }
             if (string.IsNullOrWhiteSpace(value)) return false;
 
-            const string pattern = @"\A(?<name>[a-zA-Z0-9_\-\s]+)(?:\s*(?<op><=|>=|<|>|=)\s*(?<ver>\d+(?:\.\d+){0,3}))?\Z";
+            const string pattern = @"\A(?<name>[a-zA-Z0-9_\-\s\.]+)(?:\s*(?<op><=|>=|<|>|=)\s*(?<ver>\d+(?:\.\d+){0,3}))?\Z";
             var match = Regex.Match(value, pattern);
             if (!match.Success) return false;
 
