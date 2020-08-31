@@ -30,8 +30,10 @@ namespace ModMyFactory.WebApi
         /// <param name="password">The password to log in.</param>
         public async static Task<(string username, string token)> LogInAsync(string username, string password)
         {
-            string contentString = $"api_version=2&require_game_ownership=true&username={username}&password={password}";
-            var content = Encoding.UTF8.GetBytes(WebUtility.UrlEncode(contentString));
+            string username_enc = WebUtility.UrlEncode(username);
+            string password_enc = WebUtility.UrlEncode(password);
+            string contentString = $"api_version=2&require_game_ownership=true&username={username_enc}&password={password_enc}";
+            var content = Encoding.UTF8.GetBytes(contentString);
 
             try
             {
