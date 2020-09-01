@@ -328,8 +328,14 @@ namespace ModMyFactoryGUI.ViewModels
 
         private void CreateModpack()
         {
+            ModpackFilter = string.Empty; // Clear filter to avoid the new modpack getting hidden
+
             var modpack = Program.CreateModpack();
-            // ToDo: scroll into view and start renaming
+            if (TryGetViewModel(modpack, out var vm))
+            {
+                vm.IsRenaming = true;
+                AttachedView.ScrollModpackIntoView(vm);
+            }
         }
 
         public async Task ImportModAsync(string path)

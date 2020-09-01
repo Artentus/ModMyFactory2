@@ -5,11 +5,14 @@
 //  the Free Software Foundation, either version 3 of the License, or
 //  (at your option) any later version.
 
+using ModMyFactoryGUI.Views;
 using ReactiveUI;
 
 namespace ModMyFactoryGUI.ViewModels
 {
     internal interface IMainViewModel
         : IRoutableViewModel
-    { }
+    {
+        void AttachView(IMainView view);
+    }
 }

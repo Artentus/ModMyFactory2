@@ -146,6 +146,12 @@ namespace ModMyFactoryGUI
             var imported = await Importer.ImportAsync(file, TemporaryDirectory.FullName, false);
             var package = imported.Package; // Disregard extracted files since there aren't any
 
+            if ((package is null) || (package.Mods is null))
+            {
+                Log.Verbose("No mopacks to import");
+                return result;
+            }
+
             // We have to build a lookup table of mods before we can load any modpacks
             var modMappings = new Dictionary<int, Mod>();
             foreach (var modDef in package.Mods)

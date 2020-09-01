@@ -7,11 +7,18 @@
 
 using ModMyFactoryGUI.MVVM;
 using ModMyFactoryGUI.Views;
+using System;
 
 namespace ModMyFactoryGUI.ViewModels
 {
     internal abstract class MainViewModelBase<T>
         : RoutableViewModelBase<T>, IMainViewModel
         where T : class, IMainView
-    { }
+    {
+        void IMainViewModel.AttachView(IMainView view)
+        {
+            if (view is T v) AttachView(v);
+            else throw new ArgumentException("Invalid view type", nameof(view));
+        }
+    }
 }

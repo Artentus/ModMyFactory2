@@ -9,6 +9,7 @@ using Avalonia.Controls;
 using ModMyFactoryGUI.Controls;
 using ModMyFactoryGUI.MVVM;
 using ModMyFactoryGUI.ViewModels;
+using System;
 
 namespace ModMyFactoryGUI.Views
 {
@@ -21,6 +22,13 @@ namespace ModMyFactoryGUI.Views
         {
             get => ViewModel;
             set => ViewModel = (T)value;
+        }
+
+        protected override void OnDataContextChanged(EventArgs e)
+        {
+            base.OnDataContextChanged(e);
+
+            if (DataContext is IMainViewModel vm) vm.AttachView(this);
         }
     }
 }
