@@ -109,6 +109,19 @@
     "value": "Moving files..."
   },
 
+  "DeleteConfirm_Title": {
+    "type": "string",
+    "value": "Confirm Deletion"
+  },
+  "DeleteConfirm_Mod_Message": {
+    "type": "string",
+    "value": "Are you sure you want to delete the mod '{0}' version {1}?"
+  },
+  "DeleteConfirm_Modpack_Message": {
+    "type": "string",
+    "value": "Are you sure you want to delete the modpack '{0}'?"
+  },
+
   // --------- Dialog options ---------
   "OkButton": {
     "type": "string",

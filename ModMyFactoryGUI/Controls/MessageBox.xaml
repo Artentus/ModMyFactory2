@@ -15,7 +15,7 @@ the Free Software Foundation, either version 3 of the License, or
         xmlns:controls="clr-namespace:ModMyFactoryGUI.Controls"
         xmlns:largeicons="clr-namespace:ModMyFactoryGUI.Controls.Icons.Large"
         x:Class="ModMyFactoryGUI.Controls.MessageBox"
-        MaxWidth="500" MaxHeight="250">
+        Width="500" MaxHeight="250">
 
   <Grid RowDefinitions="*,Auto">
     <Grid Margin="4" Grid.Row="0" ColumnDefinitions="Auto,*">
@@ -26,7 +26,7 @@ the Free Software Foundation, either version 3 of the License, or
         <largeicons:ErrorMessageIcon x:Name="ErrorIcon" />
       </Panel>
 
-      <TextBlock Margin="4,4,12,4" x:Name="MessageBlock" Grid.Column="1" TextWrapping="Wrap" />
+      <TextBlock Width="380" Margin="4,4,12,4" x:Name="MessageBlock" Grid.Column="1" TextWrapping="Wrap" HorizontalAlignment="Left" />
     </Grid>
 
     <Border Grid.Row="1" Background="{DynamicResource ThemeBackgroundHighBrush}"

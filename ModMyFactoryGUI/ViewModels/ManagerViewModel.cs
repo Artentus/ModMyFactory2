@@ -10,6 +10,7 @@ using ModMyFactory;
 using ModMyFactory.Mods;
 using ModMyFactory.WebApi.Mods;
 using ModMyFactoryGUI.Caching.Web;
+using ModMyFactoryGUI.Controls;
 using ModMyFactoryGUI.Helpers;
 using ModMyFactoryGUI.Views;
 using ReactiveUI;
@@ -112,6 +113,8 @@ namespace ModMyFactoryGUI.ViewModels
 
         public ICommand CreateModpackCommand { get; }
 
+        public ICommand DeleteModpackCommand { get; }
+
         public ManagerViewModel()
         {
             _modVersionGroupings = new ObservableCollection<ModVersionGroupingViewModel>();
@@ -152,6 +155,7 @@ namespace ModMyFactoryGUI.ViewModels
             AddModsCommand = ReactiveCommand.CreateFromTask(AddModsAsync);
             UpdateModsCommand = ReactiveCommand.CreateFromTask(UpdateModsAsync);
             CreateModpackCommand = ReactiveCommand.Create(CreateModpack);
+            DeleteModpackCommand = ReactiveCommand.CreateFromTask<Modpack>(DeleteModpack);
         }
 
         private bool FilterModpack(ModpackViewModel modpack)
@@ -336,6 +340,14 @@ namespace ModMyFactoryGUI.ViewModels
                 vm.IsRenaming = true;
                 AttachedView.ScrollModpackIntoView(vm);
             }
+        }
+
+        private async Task DeleteModpack(Modpack modpack)
+        {
+            var title = (string)App.Current.Locales.GetResource("DeleteConfirm_Title");
+            var message = string.Format((string)App.Current.Locales.GetResource("DeleteConfirm_Modpack_Message"), modpack.DisplayName);
+            var result = await MessageBox.Show(title, message, MessageKind.Question, DialogOptions.YesNo);
+            if (result == DialogResult.Yes) Program.DeleteModpack(modpack);
         }
 
         public async Task ImportModAsync(string path)

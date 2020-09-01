@@ -9,6 +9,7 @@ using ModMyFactory;
 using ModMyFactory.BaseTypes;
 using ModMyFactory.Mods;
 using ModMyFactory.WebApi.Mods;
+using ModMyFactoryGUI.Controls;
 using ModMyFactoryGUI.Helpers;
 using ModMyFactoryGUI.Tasks;
 using ModMyFactoryGUI.Tasks.Web;
@@ -62,7 +63,7 @@ namespace ModMyFactoryGUI.ViewModels
             _downloadQueue = downloadQueue;
 
             DownloadCommand = ReactiveCommand.CreateFromTask(Download);
-            DeleteCommand = ReactiveCommand.Create(Delete);
+            DeleteCommand = ReactiveCommand.CreateFromTask(Delete);
 
             if (manager.TryGetModManager(FactorioVersion, out _modManager))
             {
@@ -172,16 +173,21 @@ namespace ModMyFactoryGUI.ViewModels
             }
         }
 
-        public void Delete()
+        public async Task Delete()
         {
             if (IsInstalled && !(_modManager is null))
             {
-                // ToDo: ask for confirmation
                 if (_modManager.Contains(_modName, Info.Version, out var mod))
                 {
-                    _modManager.Remove(mod);
-                    mod.Dispose();
-                    mod.File.Delete();
+                    var title = (string)App.Current.Locales.GetResource("DeleteConfirm_Title");
+                    var message = string.Format((string)App.Current.Locales.GetResource("DeleteConfirm_Mod_Message"), mod.DisplayName, mod.Version);
+                    var result = await MessageBox.Show(title, message, MessageKind.Question, DialogOptions.YesNo);
+                    if (result == DialogResult.Yes)
+                    {
+                        _modManager.Remove(mod);
+                        mod.Dispose();
+                        mod.File.Delete();
+                    }
                 }
             }
         }

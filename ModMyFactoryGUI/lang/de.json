@@ -109,6 +109,19 @@
     "value": "Dateien werden verschoben..."
   },
 
+  "DeleteConfirm_Title": {
+    "type": "string",
+    "value": "Löschen bestätigen"
+  },
+  "DeleteConfirm_Mod_Message": {
+    "type": "string",
+    "value": "Sind Sie sicher, dass Sie die Mod '{0}' Version {1} löschen möchten?"
+  },
+  "DeleteConfirm_Modpack_Message": {
+    "type": "string",
+    "value": "Sind Sie sicher, dass Sie das Modpack '{0}' löschen möchten?"
+  },
+
   // --------- Dialog options ---------
   "OkButton": {
     "type": "string",

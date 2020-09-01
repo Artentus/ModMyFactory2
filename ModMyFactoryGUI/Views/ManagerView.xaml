@@ -114,7 +114,7 @@ the Free Software Foundation, either version 3 of the License, or
             <Expander Background="Transparent">
 
               <Expander.Header>
-                <Grid ColumnDefinitions="Auto,Auto,Auto,*">
+                <Grid ColumnDefinitions="Auto,Auto,Auto,Auto,*">
                   <CheckBox Grid.Column="0" IsChecked="{Binding Enabled}" />
                   <TextBlock Grid.Column="1" Margin="13,4" Text="{Binding DisplayName}" IsHitTestVisible="False" />
 
@@ -128,6 +128,12 @@ the Free Software Foundation, either version 3 of the License, or
                                 HorizontalAlignment="Center" VerticalAlignment="Center" IsChecked="{Binding IsRenaming, Mode=TwoWay}">
                     <icons:EditIcon />
                   </ToggleButton>
+                  <Button Grid.Column="3" Margin="8,0" Padding="0" MinWidth="1" Width="26" Height="26"
+                          ToolTip.Tip="{l:LocalizedResource DeleteButton}" FontSize="{DynamicResource FontSizeNormal}"
+                          HorizontalAlignment="Center" VerticalAlignment="Center" CommandParameter="{Binding Modpack}"
+                          Command="{Binding, DataContext.DeleteModpackCommand, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}">
+                    <icons:RemoveIcon />
+                  </Button>
                 </Grid>
               </Expander.Header>
 
