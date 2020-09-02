@@ -159,7 +159,7 @@ namespace ModMyFactoryGUI.ViewModels
                 Program.Settings.Save();
             }
 
-            GlobalContext.Current.MessageReceived += MessageReceivedHandler;
+            Program.SyncContext.MessageReceived += MessageReceivedHandler;
         }
 
         private void OnDownloadQueueLengthChanged(object sender, EventArgs e)

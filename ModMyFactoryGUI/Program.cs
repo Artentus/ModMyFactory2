@@ -48,6 +48,8 @@ namespace ModMyFactoryGUI
 
         public static ObservableDictionary<int, Modpack>.ObservableValueCollection Modpacks => _modpacks.Values;
 
+        public static GlobalContext SyncContext { get; private set; }
+
         #region Utility Functions
 
         private static DirectoryInfo GetApplicationDataDirectory()
@@ -327,55 +329,57 @@ namespace ModMyFactoryGUI
         {
             SetDirectories(options);
 
-            var syncContext = GlobalContext.Current;
             try
             {
-                if (syncContext.IsFirst)
+                using (SyncContext = GlobalContext.Create())
                 {
-                    // First instance, start like normal
+                    if (SyncContext.IsFirst)
+                    {
+                        // First instance, start like normal
 
-                    InitLogger(options);
-                    await InitProgramAsync();
+                        InitLogger(options);
+                        await InitProgramAsync();
 
-                    syncContext.BeginListen();
+                        SyncContext.BeginListen();
 
-                    try
-                    {
-                        var code = (ErrorCode)BuildAvaloniaApp().StartWithClassicDesktopLifetime(args, ShutdownMode.OnMainWindowClose);
-                        if (code != ErrorCode.NoError) Log.Warning("Application returned error code '{0}'", code);
-                        else Log.Debug("Application exited gracefully");
-                        return code;
+                        try
+                        {
+                            var code = (ErrorCode)BuildAvaloniaApp().StartWithClassicDesktopLifetime(args, ShutdownMode.OnMainWindowClose);
+                            if (code != ErrorCode.NoError) Log.Warning("Application returned error code '{0}'", code);
+                            else Log.Debug("Application exited gracefully");
+                            return code;
+                        }
+                        catch (Exception ex)
+                        {
+                            Log.Error(ex, "Application crashed");
+                            return ErrorCode.General;
+                        }
+                        finally
+                        {
+                            SyncContext.EndListen();
+                            await UnloadProgramAsync();
+                        }
                     }
-                    catch (Exception ex)
+                    else
                     {
-                        Log.Error(ex, "Application crashed");
-                        return ErrorCode.General;
-                    }
-                    finally
-                    {
-                        syncContext.EndListen();
-                        await UnloadProgramAsync();
-                    }
-                }
-                else
-                {
-                    // App already running, pass arguments and exit
-                    try
-                    {
-                        var message = Parser.Default.FormatCommandLine(options);
-                        await syncContext.SendMessageAsync(message);
+                        // App already running, pass arguments and exit
+                        try
+                        {
+                            var message = Parser.Default.FormatCommandLine(options);
+                            await SyncContext.SendMessageAsync(message);
 
-                        return ErrorCode.NoError;
-                    }
-                    catch
-                    {
-                        return ErrorCode.General;
+                            return ErrorCode.NoError;
+                        }
+                        catch
+                        {
+                            return ErrorCode.General;
+                        }
                     }
                 }
             }
             finally
             {
-                syncContext.Dispose();
+                SyncContext = null;
             }
         }
 
