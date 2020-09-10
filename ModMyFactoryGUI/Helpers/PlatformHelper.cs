@@ -11,6 +11,7 @@ using Mono.Unix;
 using System;
 using System.Diagnostics;
 using System.IO;
+using System.Reflection;
 using System.Runtime.InteropServices;
 
 namespace ModMyFactoryGUI.Helpers
@@ -174,6 +175,18 @@ namespace ModMyFactoryGUI.Helpers
             {
                 throw new PlatformNotSupportedException();
             }
+#else
+            throw new PlatformNotSupportedException();
+#endif
+        }
+
+        public static string GetAssemblyPath()
+        {
+#if NETFULL
+            var path = Assembly.GetExecutingAssembly().Location;
+            return Path.GetFileNameWithoutExtension(path) + ".exe";
+#elif NETCORE
+            return Assembly.GetExecutingAssembly().Location;
 #else
             throw new PlatformNotSupportedException();
 #endif

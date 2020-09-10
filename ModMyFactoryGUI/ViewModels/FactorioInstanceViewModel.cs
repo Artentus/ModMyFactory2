@@ -230,7 +230,7 @@ namespace ModMyFactoryGUI.ViewModels
         private string GetTargetPath()
         {
 #if SELFCONTAINED
-            return Assembly.GetExecutingAssembly().Location;
+            PlatformHelper.GetAssemblyPath();
 #else
             return "dotnet";
 #endif
