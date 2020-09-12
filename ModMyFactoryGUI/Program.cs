@@ -254,7 +254,7 @@ namespace ModMyFactoryGUI
         {
             Log.Information("Saving settings...");
             Settings.Save();
-            await SaveModpacksAsync();
+            SaveModpacksAsync();
             Log.Information("Shutting down");
             Log.CloseAndFlush();
         }
