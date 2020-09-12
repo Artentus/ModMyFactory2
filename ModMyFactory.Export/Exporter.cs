@@ -43,9 +43,9 @@ namespace ModMyFactory.Export
         private async Task ExportPackageAsync(FileInfo file)
         {
             string json = JsonConvert.SerializeObject(Package, Formatting.Indented);
-            using var stream = file.Open(FileMode.Create, FileAccess.Write);
-            using var writer = new StreamWriter(stream);
-            await writer.WriteAsync(json);
+            using var stream = new FileStream(file.FullName, FileMode.Create, FileAccess.Write, FileShare.None, 8192, true);
+            var bytes = Encoding.UTF8.GetBytes(json);
+            await stream.WriteAsync(bytes, 0, bytes.Length);
         }
 
         private Task ExportArchiveAsync(FileInfo file)
