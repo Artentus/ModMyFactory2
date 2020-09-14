@@ -117,23 +117,26 @@ namespace ModMyFactoryGUI.Views
                     if (!(_modpackSourceItem is null)) // Only drag if mouse was over an item
                     {
                         var vms = source.SelectedItems.Cast<ModpackViewModel>().ToList();
-                        var sourceVM = (ModpackViewModel)_modpackSourceItem.DataContext;
-                        if (!sourceVM.IsRenaming) // Don't drag if the modpack is currently being renamed
+                        if ((vms.Count > 0) && !(vms[0] is null))
                         {
-                            _dragging = true;
+                            var sourceVM = (ModpackViewModel)_modpackSourceItem.DataContext;
+                            if (!sourceVM.IsRenaming) // Don't drag if the modpack is currently being renamed
+                            {
+                                _dragging = true;
 
-                            if (!vms.Contains(sourceVM)) vms.Add(sourceVM); // We need to check this in case the drag was initiated before the selection
-                            _modpackSourceItem = null;
+                                if (!vms.Contains(sourceVM)) vms.Add(sourceVM); // We need to check this in case the drag was initiated before the selection
+                                _modpackSourceItem = null;
 
-                            var list = new List<ICanEnable>(vms.Count);
-                            foreach (var vm in vms) list.Add(vm.Modpack);
+                                var list = new List<ICanEnable>(vms.Count);
+                                foreach (var vm in vms) list.Add(vm.Modpack);
 
-                            var data = new DataObject();
-                            data.Set(InternalFormat, list);
-                            _ = await DragDrop.DoDragDrop(e, data, DragDropEffects.Link);
+                                var data = new DataObject();
+                                data.Set(InternalFormat, list);
+                                _ = await DragDrop.DoDragDrop(e, data, DragDropEffects.Link);
 
-                            _dragStart = null;
-                            _dragging = false;
+                                _dragStart = null;
+                                _dragging = false;
+                            }
                         }
                     }
                 }
@@ -194,7 +197,7 @@ namespace ModMyFactoryGUI.Views
 
                 var list = e.Data.Get<IList<ICanEnable>>(InternalFormat);
                 modpack.AddRangeSafe(list);
-                Program.SaveModpacks();
+                _ = Task.Run(Program.SaveModpacksAsync);
             }
         }
 

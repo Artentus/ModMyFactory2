@@ -12,6 +12,7 @@ using ReactiveUI;
 using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
+using System.Threading.Tasks;
 using System.Windows.Input;
 
 namespace ModMyFactoryGUI.ViewModels
@@ -48,7 +49,7 @@ namespace ModMyFactoryGUI.ViewModels
             {
                 if (this.RaiseAndSetIfChanged(ref _isRenaming, value, nameof(IsRenaming)) && !value)
                 {
-                    Program.SaveModpacks();
+                    _ = Task.Run(Program.SaveModpacksAsync);
                 }
             }
         }

@@ -189,7 +189,32 @@ namespace ModMyFactoryGUI
             return result;
         }
 
-        private static Task SaveModpacksAsync()
+        private static async Task InitProgramAsync()
+        {
+            var factory = new GlobalSingletonFactory(ApplicationDirectory, ApplicationDataDirectory);
+            Settings = await factory.LoadSettingsAsync();
+            (Manager, Locations) = await factory.CreateManagerAsync(Settings);
+            Locations.ModsReloaded += async (s, e) =>
+            {
+                _modpacks = await LoadModpacksAsync();
+            };
+            _modpacks = await LoadModpacksAsync();
+        }
+
+        private static void UnloadProgram()
+        {
+            Log.Information("Saving settings...");
+            Settings.Save();
+            SaveModpacks();
+            Log.Information("Shutting down");
+            Log.CloseAndFlush();
+        }
+
+        #endregion Utility Functions
+
+        #region Internal Functions
+
+        private static Exporter CreateExporter()
         {
             var factory = new ExporterFactory();
 
@@ -233,35 +258,8 @@ namespace ModMyFactoryGUI
                 factory.ModpackDefinitions.Add(packDef);
             }
 
-            var exporter = factory.CreateExporter();
-            string path = Path.Combine(ApplicationDataDirectory.FullName, "modpacks.json");
-            return exporter.ExportAsync(path);
+            return factory.CreateExporter();
         }
-
-        private static async Task InitProgramAsync()
-        {
-            var factory = new GlobalSingletonFactory(ApplicationDirectory, ApplicationDataDirectory);
-            Settings = await factory.LoadSettingsAsync();
-            (Manager, Locations) = await factory.CreateManagerAsync(Settings);
-            Locations.ModsReloaded += async (s, e) =>
-            {
-                _modpacks = await LoadModpacksAsync();
-            };
-            _modpacks = await LoadModpacksAsync();
-        }
-
-        private static async Task UnloadProgramAsync()
-        {
-            Log.Information("Saving settings...");
-            Settings.Save();
-            await SaveModpacksAsync();
-            Log.Information("Shutting down");
-            Log.CloseAndFlush();
-        }
-
-        #endregion Utility Functions
-
-        #region Internal Functions
 
         private static int GetNextModpackId()
         {
@@ -283,20 +281,6 @@ namespace ModMyFactoryGUI
         public static bool DeleteModpack(Modpack modpack)
             => _modpacks.RemoveValue(modpack);
 
-        public static async void SaveModpacks()
-        {
-            await _syncSemaphore.WaitAsync();
-
-            try
-            {
-                await SaveModpacksAsync();
-            }
-            finally
-            {
-                _syncSemaphore.Release();
-            }
-        }
-
         public static int GetModpackId(Modpack modpack)
         {
             if (modpack is null) throw new ArgumentNullException(nameof(modpack));
@@ -308,6 +292,29 @@ namespace ModMyFactoryGUI
             }
 
             return -1;
+        }
+
+        public static void SaveModpacks()
+        {
+            var exporter = CreateExporter();
+            string path = Path.Combine(ApplicationDataDirectory.FullName, "modpacks.json");
+            exporter.Export(path);
+        }
+
+        public static async Task SaveModpacksAsync()
+        {
+            await _syncSemaphore.WaitAsync();
+
+            try
+            {
+                var exporter = CreateExporter();
+                string path = Path.Combine(ApplicationDataDirectory.FullName, "modpacks.json");
+                await exporter.ExportAsync(path);
+            }
+            finally
+            {
+                _syncSemaphore.Release();
+            }
         }
 
         #endregion Internal Functions
@@ -357,7 +364,7 @@ namespace ModMyFactoryGUI
                         finally
                         {
                             SyncContext.EndListen();
-                            await UnloadProgramAsync();
+                            UnloadProgram();
                         }
                     }
                     else
@@ -508,7 +515,7 @@ namespace ModMyFactoryGUI
                 code = ErrorCode.GameStart_General;
             }
 
-            await UnloadProgramAsync();
+            UnloadProgram();
             return code;
         }
 
