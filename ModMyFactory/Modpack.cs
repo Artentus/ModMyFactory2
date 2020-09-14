@@ -81,7 +81,7 @@ namespace ModMyFactory
 
         private void SetEnabledState(bool enabled)
         {
-            if (_enabled.Value != enabled)
+            if (!_enabled.HasValue || (_enabled.Value != enabled))
             {
                 _enabled = enabled;
                 _children.ForEach(m => m.Enabled = enabled);
