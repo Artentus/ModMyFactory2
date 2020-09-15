@@ -16,34 +16,21 @@ namespace ModMyFactoryGUI.Helpers
 {
     internal static class FileHelper
     {
-        public static
-#if NETFULL
-            async
-#endif
-            Task<string> ReadAllTextAsync(string path, Encoding encoding)
+        public static async Task<string> ReadAllTextAsync(string path)
         {
-#if NETFULL
-            using var stream = File.OpenRead(path);
-            using var reader = new StreamReader(stream, encoding);
-            return await reader.ReadToEndAsync();
-#elif NETCORE
-            return File.ReadAllTextAsync(path, encoding);
-#endif
+            using var stream = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.Read,
+                                              4096, FileOptions.Asynchronous | FileOptions.SequentialScan);
+            var buffer = new byte[(int)stream.Length];
+            await stream.ReadAsync(buffer, 0, buffer.Length);
+            return Encoding.UTF8.GetString(buffer);
         }
 
-        public static
-#if NETFULL
-            async
-#endif
-            Task WriteAllTextAsync(string path, string contents, Encoding encoding)
+        public static async Task WriteAllTextAsync(string path, string contents)
         {
-#if NETFULL
-            using var stream = File.Open(path, FileMode.Create, FileAccess.Write);
-            using var writer = new StreamWriter(stream, encoding);
-            await writer.WriteAsync(contents);
-#elif NETCORE
-            return File.WriteAllTextAsync(path, contents, encoding);
-#endif
+            using var stream = new FileStream(path, FileMode.Create, FileAccess.Write, FileShare.None,
+                                              4096, FileOptions.Asynchronous | FileOptions.SequentialScan);
+            var buffer = Encoding.UTF8.GetBytes(contents);
+            await stream.WriteAsync(buffer, 0, buffer.Length);
         }
 
         public static bool IsOnSameVolume(string path1, string path2)

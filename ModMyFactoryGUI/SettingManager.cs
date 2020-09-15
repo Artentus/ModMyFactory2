@@ -44,19 +44,23 @@ namespace ModMyFactoryGUI
             : this(filePath, new Dictionary<string, object>())
         { }
 
-        private static async Task<(bool, SettingManager)> TryLoad(string filePath)
+        private static bool TryLoad(string filePath, out SettingManager result)
         {
-            if (!File.Exists(filePath)) return (false, null);
-
-            var json = await FileHelper.ReadAllTextAsync(filePath, Encoding.UTF8);
+            result = null;
+            
             try
             {
+                if (!File.Exists(filePath)) return false;
+
+                var json = File.ReadAllText(filePath);
                 var table = JsonConvert.DeserializeObject<IDictionary<string, object>>(json, _settings);
-                return (true, new SettingManager(filePath, table));
+                result = new SettingManager(filePath, table);
+                return true;
             }
-            catch
+            catch (Exception ex)
             {
-                return (false, null);
+                Log.Warning(ex, "Error loading settings file");
+                return false;
             }
         }
 
@@ -93,19 +97,19 @@ namespace ModMyFactoryGUI
             return token.ToObject<T>();
         }
 
-        public static async Task<SettingManager> LoadSafeAsync(string filePath)
+        public static SettingManager LoadSafe(string filePath)
         {
-            var (success, manager) = await TryLoad(filePath);
-            if (!success)
-            {
-                manager = new SettingManager(filePath);
-                Log.Warning("Unable to load settings from '{0}', using defaults", filePath);
-            }
-            else
+            if (TryLoad(filePath, out var manager))
             {
                 Log.Debug("Settings loaded:\n\t{0}", string.Join("\n\t",
                     manager._table.Select(kvp => string.Format("{0}: {1}", kvp.Key, kvp.Value))));
             }
+            else
+            {
+                manager = new SettingManager(filePath);
+                Log.Warning("Unable to load settings from '{0}', using defaults", filePath);
+            }
+
             return manager;
         }
 
@@ -152,14 +156,14 @@ namespace ModMyFactoryGUI
         {
             var json = JsonConvert.SerializeObject(_table, Formatting.Indented, _settings);
             File.WriteAllText(_filePath, json, Encoding.UTF8);
-            Log.Debug("Settings saved to '{0}'.", _filePath);
+            Log.Debug("Settings saved to '{0}'", _filePath);
         }
 
         public async Task SaveAsync()
         {
             var json = JsonConvert.SerializeObject(_table, Formatting.Indented, _settings);
-            await FileHelper.WriteAllTextAsync(_filePath, json, Encoding.UTF8);
-            Log.Debug("Settings saved to '{0}'.", _filePath);
+            await FileHelper.WriteAllTextAsync(_filePath, json);
+            Log.Debug("Settings saved to '{0}'", _filePath);
         }
     }
 }

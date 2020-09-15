@@ -9,6 +9,7 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace ModMyFactory.Mods
@@ -48,19 +49,38 @@ namespace ModMyFactory.Mods
         /// <summary>
         /// Loads state information from a file
         /// </summary>
-        public static async Task<ModFamilyStateGrouping> FromFileAsync(FileInfo file)
+        public static ModFamilyStateGrouping FromFile(string path)
         {
-            using var fs = file.OpenRead();
-            using var reader = new StreamReader(fs);
-            string json = await reader.ReadToEndAsync();
+            string json = File.ReadAllText(path);
             return FromJson(json);
         }
 
         /// <summary>
         /// Loads state information from a file
         /// </summary>
-        public static async Task<ModFamilyStateGrouping> FromFileAsync(string fileName)
-            => await FromFileAsync(new FileInfo(fileName));
+        public static ModFamilyStateGrouping FromFile(FileInfo file)
+            => FromFile(file.FullName);
+
+        /// <summary>
+        /// Loads state information from a file
+        /// </summary>
+        public static async Task<ModFamilyStateGrouping> FromFileAsync(string path)
+        {
+            using var stream = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.Read,
+                                              4096, FileOptions.Asynchronous | FileOptions.SequentialScan);
+
+            var buffer = new byte[(int)stream.Length];
+            await stream.ReadAsync(buffer, 0, buffer.Length);
+            string json = Encoding.UTF8.GetString(buffer);
+
+            return FromJson(json);
+        }
+
+        /// <summary>
+        /// Loads state information from a file
+        /// </summary>
+        public static async Task<ModFamilyStateGrouping> FromFileAsync(FileInfo file)
+            => await FromFileAsync(file.FullName);
 
         /// <summary>
         /// Creates a JSON string from this state grouping
@@ -71,20 +91,50 @@ namespace ModMyFactory.Mods
         /// <summary>
         /// Saves all state information to a file
         /// </summary>
-        public async Task SaveToFileAsync(FileInfo file, Formatting formatting = Formatting.Indented, JsonSerializerSettings settings = null)
+        public void SaveToFile(string path, Formatting formatting = Formatting.Indented, JsonSerializerSettings settings = null)
         {
-            if (!file.Directory.Exists) file.Directory.Create();
-            using var fs = file.Open(FileMode.Create, FileAccess.Write);
-            using var writer = new StreamWriter(fs);
             string json = ToJson(formatting, settings);
-            await writer.WriteAsync(json);
+            File.WriteAllText(path, json);
         }
 
         /// <summary>
         /// Saves all state information to a file
         /// </summary>
-        public async Task SaveToFileAsync(string fileName, Formatting formatting = Formatting.Indented, JsonSerializerSettings settings = null)
-            => await SaveToFileAsync(new FileInfo(fileName), formatting, settings);
+        public void SaveToFile(FileInfo file, Formatting formatting = Formatting.Indented, JsonSerializerSettings settings = null)
+            => SaveToFile(file.FullName, formatting, settings);
+
+        /// <summary>
+        /// Saves all state information to a file
+        /// </summary>
+        public async Task SaveToFileAsync(string path, Formatting formatting = Formatting.Indented, JsonSerializerSettings settings = null)
+        {
+            string dir = Path.GetDirectoryName(path);
+            if (!Directory.Exists(dir)) Directory.CreateDirectory(dir);
+
+            using var stream = new FileStream(path, FileMode.Create, FileAccess.Write, FileShare.None,
+                                              4096, FileOptions.Asynchronous | FileOptions.SequentialScan);
+
+            string json = ToJson(formatting, settings);
+            var buffer = Encoding.UTF8.GetBytes(json);
+
+            await stream.WriteAsync(buffer, 0, buffer.Length);
+        }
+
+        /// <summary>
+        /// Saves all state information to a file
+        /// </summary>
+        public async Task SaveToFileAsync(FileInfo file, Formatting formatting = Formatting.Indented, JsonSerializerSettings settings = null)
+        {
+            if (!file.Directory.Exists) file.Directory.Create();
+
+            using var stream = new FileStream(file.FullName, FileMode.Create, FileAccess.Write, FileShare.None,
+                                              4096, FileOptions.Asynchronous | FileOptions.SequentialScan);
+
+            string json = ToJson(formatting, settings);
+            var buffer = Encoding.UTF8.GetBytes(json);
+
+            await stream.WriteAsync(buffer, 0, buffer.Length);
+        }
 
         /// <summary>
         /// Applies state information to a mod manager

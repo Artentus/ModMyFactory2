@@ -192,7 +192,7 @@ namespace ModMyFactoryGUI
         private static async Task InitProgramAsync()
         {
             var factory = new GlobalSingletonFactory(ApplicationDirectory, ApplicationDataDirectory);
-            Settings = await factory.LoadSettingsAsync();
+            Settings = factory.LoadSettings();
             (Manager, Locations) = await factory.CreateManagerAsync(Settings);
             Locations.ModsReloaded += async (s, e) =>
             {

@@ -18,10 +18,10 @@ namespace ModMyFactoryGUI
         public GlobalSingletonFactory(DirectoryInfo binDir, DirectoryInfo dataDir)
             => (_binDir, _dataDir) = (binDir, dataDir);
 
-        public Task<SettingManager> LoadSettingsAsync()
+        public SettingManager LoadSettings()
         {
             var settingsFile = Path.Combine(_dataDir.FullName, "settings.json");
-            return SettingManager.LoadSafeAsync(settingsFile);
+            return SettingManager.LoadSafe(settingsFile);
         }
 
         public async Task<(Manager, LocationManager)> CreateManagerAsync(SettingManager settings)
