@@ -24,14 +24,16 @@ namespace ModMyFactoryGUI
             return SettingManager.LoadSafe(settingsFile);
         }
 
-        public async Task<(Manager, LocationManager)> CreateManagerAsync(SettingManager settings)
+        public async Task<(Manager, LocationManager, ModStateManager)> CreateManagerAsync(SettingManager settings)
         {
             var manager = new Manager();
             var locations = new LocationManager(manager, settings, _binDir, _dataDir);
 
             await locations.InitializeAsync();
 
-            return (manager, locations);
+            var modStateManager = new ModStateManager(locations, manager);
+
+            return (manager, locations, modStateManager);
         }
     }
 }

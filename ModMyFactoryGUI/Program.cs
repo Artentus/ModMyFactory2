@@ -23,6 +23,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
+using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -45,6 +46,8 @@ namespace ModMyFactoryGUI
         public static Manager Manager { get; private set; }
 
         public static LocationManager Locations { get; private set; }
+
+        public static ModStateManager ModStateManager { get; private set; }
 
         public static ObservableDictionary<int, Modpack>.ObservableValueCollection Modpacks => _modpacks.Values;
 
@@ -125,6 +128,9 @@ namespace ModMyFactoryGUI
 
             Log.Logger = config.CreateLogger();
 
+            Log.Information("Operating system: {0}", RuntimeInformation.OSDescription);
+            Log.Information("Runtime: {0}", RuntimeInformation.FrameworkDescription);
+
             Log.Information("GUI version: {0}", VersionStatistics.AppVersion);
             foreach (var kvp in VersionStatistics.LoadedAssemblyVersions)
                 Log.Information("Using {0} v{1}", kvp.Key.GetName().Name, kvp.Value);
@@ -193,7 +199,7 @@ namespace ModMyFactoryGUI
         {
             var factory = new GlobalSingletonFactory(ApplicationDirectory, ApplicationDataDirectory);
             Settings = factory.LoadSettings();
-            (Manager, Locations) = await factory.CreateManagerAsync(Settings);
+            (Manager, Locations, ModStateManager) = await factory.CreateManagerAsync(Settings);
             Locations.ModsReloaded += async (s, e) =>
             {
                 _modpacks = await LoadModpacksAsync();
@@ -487,6 +493,8 @@ namespace ModMyFactoryGUI
                         modpack.Enabled = true;
                     }
 
+                    ModStateManager.SaveModList(instance.Version);
+
                     FileInfo savegameFile = null;
                     if (!string.IsNullOrWhiteSpace(options.SavegameFile))
                     {
@@ -527,8 +535,8 @@ namespace ModMyFactoryGUI
         {
             if (result is Parsed<object> parsed)
             {
-                if (parsed.Value is T1) return parsedFunc1((T1)parsed.Value);
-                if (parsed.Value is T2) return parsedFunc2((T2)parsed.Value);
+                if (parsed.Value is T1 t1) return parsedFunc1(t1);
+                if (parsed.Value is T2 t2) return parsedFunc2(t2);
                 throw new InvalidOperationException();
             }
             return notParsedFunc(((NotParsed<object>)result).Errors);

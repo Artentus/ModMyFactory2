@@ -77,17 +77,18 @@ namespace ModMyFactoryGUI.ViewModels
             get => _allModsEnabled;
             set
             {
-                if (!value.HasValue) throw new ArgumentNullException();
-
-                this.RaiseAndSetIfChanged(ref _allModsEnabled, value, nameof(AllModsEnabled));
-
-                _isUpdating = true;
-                foreach (var grouping in _modVersionGroupings)
+                if (value.HasValue)
                 {
-                    foreach (var family in grouping.FamilyViewModels)
-                        family.IsEnabled = value.Value;
+                    this.RaiseAndSetIfChanged(ref _allModsEnabled, value, nameof(AllModsEnabled));
+
+                    _isUpdating = true;
+                    foreach (var grouping in _modVersionGroupings)
+                    {
+                        foreach (var family in grouping.FamilyViewModels)
+                            family.IsEnabled = value.Value;
+                    }
+                    _isUpdating = false;
                 }
-                _isUpdating = false;
             }
         }
 
@@ -96,14 +97,15 @@ namespace ModMyFactoryGUI.ViewModels
             get => _allModpacksEnabled;
             set
             {
-                if (!value.HasValue) throw new ArgumentNullException();
+                if (value.HasValue)
+                {
+                    this.RaiseAndSetIfChanged(ref _allModpacksEnabled, value, nameof(AllModpacksEnabled));
 
-                this.RaiseAndSetIfChanged(ref _allModpacksEnabled, value, nameof(AllModpacksEnabled));
-
-                _isUpdating = true;
-                foreach (var pack in _modpacks)
-                    pack.Enabled = value.Value;
-                _isUpdating = false;
+                    _isUpdating = true;
+                    foreach (var pack in _modpacks)
+                        pack.Enabled = value.Value;
+                    _isUpdating = false;
+                }
             }
         }
 

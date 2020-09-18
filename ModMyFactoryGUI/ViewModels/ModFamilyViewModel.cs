@@ -155,12 +155,7 @@ namespace ModMyFactoryGUI.ViewModels
             this.RaisePropertyChanged(nameof(IsEnabled));
 
             // Save the entire manager state
-            var modDir = Program.Locations.GetModDir(_manager.FactorioVersion);
-            if (!modDir.Exists) modDir.Create();
-
-            var state = ModFamilyStateGrouping.FromManager(_manager);
-            var file = new FileInfo(Path.Combine(modDir.FullName, "mod-list.json"));
-            await state.SaveToFileAsync(file);
+            await Program.ModStateManager.SaveModListAsync(_manager.FactorioVersion);
         }
 
         public void ApplyFuzzyFilter(in string filter)
