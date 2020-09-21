@@ -13,6 +13,7 @@ using ModMyFactory.ModSettings;
 using ModMyFactory.WebApi;
 using ModMyFactory.Win32;
 using ModMyFactoryGUI.Helpers;
+using ModMyFactoryGUI.Update;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -23,13 +24,13 @@ namespace ModMyFactoryGUI
 {
     internal static class VersionStatistics
     {
-        private class AssemblyVersionDictionary : IReadOnlyDictionary<Assembly, string>
+        private class AssemblyVersionDictionary : IReadOnlyDictionary<Assembly, TagVersion>
         {
-            public string this[Assembly key]
+            public TagVersion this[Assembly key]
             {
                 get
                 {
-                    if (TryGetValue(key, out string value))
+                    if (TryGetValue(key, out TagVersion value))
                         return value;
                     else
                         throw new KeyNotFoundException();
@@ -38,7 +39,7 @@ namespace ModMyFactoryGUI
 
             public IEnumerable<Assembly> Keys { get; }
 
-            public IEnumerable<string> Values => Keys.Select(a => a.ProductVersion());
+            public IEnumerable<TagVersion> Values => Keys.Select(a => TagVersion.Parse(a.ProductVersion()));
 
             public int Count => Keys.Count();
 
@@ -53,7 +54,7 @@ namespace ModMyFactoryGUI
 
             public bool ContainsKey(Assembly key) => Keys.Contains(key);
 
-            public bool TryGetValue(Assembly key, out string value)
+            public bool TryGetValue(Assembly key, out TagVersion value)
             {
                 if (key is null)
                     throw new ArgumentNullException(nameof(key));
@@ -64,28 +65,54 @@ namespace ModMyFactoryGUI
                     return false;
                 }
 
-                value = key.ProductVersion();
+                value = TagVersion.Parse(key.ProductVersion());
                 return true;
             }
 
-            public IEnumerator<KeyValuePair<Assembly, string>> GetEnumerator()
+            public IEnumerator<KeyValuePair<Assembly, TagVersion>> GetEnumerator()
             {
                 foreach (var assembly in Keys)
-                    yield return new KeyValuePair<Assembly, string>(assembly, assembly.ProductVersion());
+                    yield return new KeyValuePair<Assembly, TagVersion>(assembly, TagVersion.Parse(assembly.ProductVersion()));
             }
 
             IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
         }
 
+        public static AppPlatform AppPlatform { get; }
 
-        public static string AppVersion { get; }
+        public static TagVersion AppVersion { get; }
 
-        public static IReadOnlyDictionary<Assembly, string> LoadedAssemblyVersions { get; }
+        public static IReadOnlyDictionary<Assembly, TagVersion> LoadedAssemblyVersions { get; }
 
         static VersionStatistics()
         {
-            AppVersion = Assembly.GetExecutingAssembly().ProductVersion();
-            // Just using some arbitrary types to find the assemblies.
+#if NETFULL
+            AppPlatform = AppPlatform.Windows;
+#elif NETCORE
+
+#if SELFCONTAINED
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+            {
+                AppPlatform = AppPlatform.Linux64;
+            }
+            else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+            {
+                AppPlatform = AppPlatform.OsX;
+            }
+            else
+            {
+                throw new PlatformNotSupportedException();
+            }
+#else
+            AppPlatform = AppPlatform.Universal;
+#endif
+
+#else
+            throw new PlatformNotSupportedException();
+#endif
+
+            AppVersion = TagVersion.Parse(Assembly.GetExecutingAssembly().ProductVersion());
+            // Just using some arbitrary types to find the assemblies
             LoadedAssemblyVersions = new AssemblyVersionDictionary(
                 Assembly.GetAssembly(typeof(Manager)),
                 Assembly.GetAssembly(typeof(AccurateVersion)),

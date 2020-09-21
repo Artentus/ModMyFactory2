@@ -178,7 +178,7 @@ the Free Software Foundation, either version 3 of the License, or
         <Separator />
 
         <!-- ToDo: add hotkeys -->
-        <controls:ToolbarItem>
+        <controls:ToolbarItem Command="{Binding UpdateCommand}">
           <controls:ToolbarItem.Header>
             <DockPanel>
               <TextBlock DockPanel.Dock="Left" Text="{l:LocalizedResource CheckUpdateMenuItem}" HorizontalAlignment="Left" Margin="0,0,4,0" />

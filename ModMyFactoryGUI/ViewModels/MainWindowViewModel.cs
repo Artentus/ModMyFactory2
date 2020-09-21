@@ -10,11 +10,13 @@ using Avalonia.Threading;
 using CommandLine;
 using ModMyFactory.Game;
 using ModMyFactoryGUI.CommandLine;
+using ModMyFactoryGUI.Controls;
 using ModMyFactoryGUI.Helpers;
 using ModMyFactoryGUI.MVVM;
 using ModMyFactoryGUI.Synchronization;
 using ModMyFactoryGUI.Tasks;
 using ModMyFactoryGUI.Tasks.Web;
+using ModMyFactoryGUI.Update;
 using ModMyFactoryGUI.Views;
 using ReactiveUI;
 using System;
@@ -42,6 +44,8 @@ namespace ModMyFactoryGUI.ViewModels
         public ICommand NavigateToUrlCommand { get; }
 
         public ICommand OpenAboutWindowCommand { get; }
+
+        public ICommand UpdateCommand { get; }
 
         public DownloadQueue DownloadQueue { get; }
 
@@ -118,6 +122,7 @@ namespace ModMyFactoryGUI.ViewModels
             OpenModDirCommand = ReactiveCommand.Create(OpenModDir);
             NavigateToUrlCommand = ReactiveCommand.Create<string>(NavigateToUrl);
             OpenAboutWindowCommand = ReactiveCommand.CreateFromTask(OpenAboutWindow);
+            UpdateCommand = ReactiveCommand.CreateFromTask(Update);
 
             _downloadProgress = new Progress<(DownloadJob, double)>(OnDownloadProgressChanged);
             DownloadQueue = new DownloadQueue(_downloadProgress);
@@ -198,6 +203,16 @@ namespace ModMyFactoryGUI.ViewModels
         {
             var window = View.CreateAndAttach(_aboutWindowViewModel);
             await window.ShowDialog(AttachedView);
+        }
+
+        private async Task Update()
+        {
+            // ToDo: create proper GUI
+            // ToDo: only update if no downloads in queue
+            //var updateTask = UpdateApi.CheckForUpdateAsync(true);
+            //var changelogTask = UpdateApi.RequestChangelogAsync();
+            //await ProgressDialog.Show("Searching for update", "", Task.WhenAll(updateTask, changelogTask), AttachedView);
+            //await MessageBox.Show("Update found", updateTask.Result.Item2);
         }
 
         private void OnDownloadProgressChanged((DownloadJob, double) progress)

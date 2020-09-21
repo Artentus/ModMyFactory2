@@ -22,7 +22,7 @@ namespace ModMyFactoryGUI.ViewModels
     {
         public string Author => "Mathis Rech";
 
-        public string GUIVersion => VersionStatistics.AppVersion;
+        public string GUIVersion => VersionStatistics.AppVersion.ToString();
 
         public IEnumerable<AssemblyVersionViewModel> AssemblyVersions { get; }
 
@@ -35,7 +35,7 @@ namespace ModMyFactoryGUI.ViewModels
         public AboutWindowViewModel()
         {
             WeakSubscriptionManager.Subscribe(App.Current.Locales, nameof(LocaleManager.UICultureChanged), this);
-            AssemblyVersions = VersionStatistics.LoadedAssemblyVersions.Select(kvp => new AssemblyVersionViewModel(kvp.Key, kvp.Value));
+            AssemblyVersions = VersionStatistics.LoadedAssemblyVersions.Select(kvp => new AssemblyVersionViewModel(kvp.Key, kvp.Value.ToString()));
             CloseCommand = ReactiveCommand.Create(() => AttachedView.Close());
 
             var changelogFile = new FileInfo(Path.Combine(Program.ApplicationDirectory.FullName, "Changelog.md"));
