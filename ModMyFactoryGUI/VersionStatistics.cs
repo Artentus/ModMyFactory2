@@ -20,6 +20,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 
+#if NETCORE && SELFCONTAINED
+using System.Runtime.InteropServices;
+#endif
+
 namespace ModMyFactoryGUI
 {
     internal static class VersionStatistics
