@@ -10,7 +10,7 @@ using Avalonia.Markup.Xaml;
 
 namespace ModMyFactoryGUI.Controls.Icons.Large
 {
-    public class QuestionMessageIcon : UserControl
+    internal class QuestionMessageIcon : UserControl
     {
         public QuestionMessageIcon()
         {

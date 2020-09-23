@@ -5,16 +5,20 @@
 //  the Free Software Foundation, either version 3 of the License, or
 //  (at your option) any later version.
 
-using Avalonia.Controls;
+using Avalonia;
 using Avalonia.Markup.Xaml;
+using ModMyFactoryGUI.Controls;
 
-namespace ModMyFactoryGUI.Controls.Icons.Large
+namespace ModMyFactoryGUI.Views
 {
-    internal class SettingsIcon : UserControl
+    partial class UpdateWindow : ModalWindowBase
     {
-        public SettingsIcon()
+        public UpdateWindow()
         {
             InitializeComponent();
+#if DEBUG
+            this.AttachDevTools();
+#endif
         }
 
         private void InitializeComponent()

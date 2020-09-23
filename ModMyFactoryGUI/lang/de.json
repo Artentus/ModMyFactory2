@@ -72,7 +72,7 @@
   },
   "InvalidModFile_Message": {
     "type": "string",
-    "value": "Die zu ladende Datei war keine gültige Mod"
+    "value": "Die zu ladende Datei war keine gültige Mod."
   },
 
   "LogInRequired_Title": {
@@ -120,6 +120,35 @@
   "DeleteConfirm_Modpack_Message": {
     "type": "string",
     "value": "Sind Sie sicher, dass Sie das Modpack '{0}' löschen möchten?"
+  },
+
+  "UpdateWhileDownloading_Title": {
+    "type": "string",
+    "value": "Aktualisierung nicht möglich"
+  },
+  "UpdateWhileDownloading_Message": {
+    "type": "string",
+    "value": "Die Aktualisierung kann nicht durchgeführt werden während sich Downloads in der Warteschlange befinden.\nWarten Sie bis alle Downloads abgeschlossen wurden und versuchen Sie es dann erneut."
+  },
+  "NoUpdateFound_Title": {
+    "type": "string",
+    "value": "Keine Aktualisierungen verfügbar"
+  },
+  "NoUpdateFound_Message": {
+    "type": "string",
+    "value": "Die neuste Version von ModMyFactory ist bereits installiert."
+  },
+  "Update_Title": {
+    "type": "string",
+    "value": "Aktualisieren"
+  },
+  "UpdateSearch_Message": {
+    "type": "string",
+    "value": "Nach Aktualisierungen suche..."
+  },
+  "UpdateDownload_Message": {
+    "type": "string",
+    "value": "Aktualisierung wird heruntergeladen"
   },
 
   // --------- Dialog options ---------
@@ -505,6 +534,18 @@
     "type": "string",
     "value": "Passwort"
   },
+  "UpdateHeader": {
+    "type": "string",
+    "value": "Aktualisierung"
+  },
+  "UpdateOnStartupOption": {
+    "type": "string",
+    "value": "Beim Start automatisch nach Aktualisierungen suchen"
+  },
+  "UpdatePrereleaseOption": {
+    "type": "string",
+    "value": "Vorabversionen bei der Suche nach Aktualisierungen miteinbeziehen"
+  },
   "FactorioLocationHeader": {
     "type": "string",
     "value": "Speicherort für Factorio-Instanzen"
@@ -554,6 +595,24 @@
   "ThirdPartySoftwareHeader": {
     "type": "string",
     "value": "Software von Drittanbietern"
+  },
+
+  // --------- Update window ---------
+  "UpdateWindowTitle": {
+    "type": "string",
+    "value": "Aktualisierung verfügbar"
+  },
+  "UpdateButton": {
+    "type": "string",
+    "value": "Aktualisieren"
+  },
+  "CurrentVersionFormat": {
+    "type": "string",
+    "value": "Aktuelle Version: {0}"
+  },
+  "UpdateVersionFormat": {
+    "type": "string",
+    "value": "Neuste Version: {0}"
   },
 
   // --------- Shortcut properties window ---------

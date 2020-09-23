@@ -18,6 +18,8 @@ namespace ModMyFactoryGUI.Update
         public readonly uint Build;
         public readonly TagBranch Branch;
 
+        public bool IsPrerelease => Branch == TagBranch.Prerelease;
+
         public TagVersion(uint major, uint minor, uint revision, uint build, TagBranch branch)
             => (Major, Minor, Revision, Build, Branch) = (major, minor, revision, build, branch);
 

@@ -32,7 +32,9 @@ namespace ModMyFactoryGUI.ViewModels
                 new WebLinkViewModel("Avalonia.ThemeManager", "https://github.com/wieslawsoltes/Avalonia.ThemeManager"),
                 new WebLinkViewModel("SharpCompress", "https://github.com/adamhathcock/sharpcompress"),
                 new WebLinkViewModel("Mono.Posix", "https://github.com/mono/mono/tree/master/mcs/class/Mono.Posix"),
-                new WebLinkViewModel("SharpDX", "http://sharpdx.org/")
+                new WebLinkViewModel("SharpDX", "http://sharpdx.org/"),
+                new WebLinkViewModel("Octokit", "https://github.com/octokit/octokit.net"),
+                new WebLinkViewModel("Onova", "https://github.com/Tyrrrz/Onova"),
             };
         }
     }

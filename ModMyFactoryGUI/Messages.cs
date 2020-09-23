@@ -1,3 +1,10 @@
+//  Copyright (C) 2020 Mathis Rech
+//
+//  This program is free software: you can redistribute it and/or modify
+//  it under the terms of the GNU General Public License as published by
+//  the Free Software Foundation, either version 3 of the License, or
+//  (at your option) any later version.
+
 using ModMyFactory.BaseTypes;
 using ModMyFactoryGUI.Controls;
 using Serilog;
@@ -84,12 +91,16 @@ namespace ModMyFactoryGUI
 
         public static readonly IMessage MovingLocationsWhileDownloading
             = new Message("LocationMoveWhileDownload", MessageKind.Information, DialogOptions.Ok);
-
         public static readonly IMessage ConfirmLocationMove
             = new Message("ConfirmLocationMoveOverwrite", MessageKind.Question, DialogOptions.YesNo);
 
+        public static readonly IMessage UpdateWhileDownloading
+            = new Message("UpdateWhileDownloading", MessageKind.Information, DialogOptions.Ok);
+        public static readonly IMessage NoUpdateFound
+            = new Message("NoUpdateFound", MessageKind.Information, DialogOptions.Ok);
+
         public static IErrorMessage FileIntegrityError(FileInfo file, SHA1Hash expected, SHA1Hash actual)
-                    => new ErrorMessage("FileIntegrityError", $"Checksum mismatch for file {file.Name}, expected {expected} but got {actual}");
+            => new ErrorMessage("FileIntegrityError", $"Checksum mismatch for file {file.Name}, expected {expected} but got {actual}");
 
         public static IMessage InvalidModFile(FileInfo file)
             => new WarningMessage("InvalidModFile", $"File {file.Name} is not a valid mod");

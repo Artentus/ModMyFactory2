@@ -1,0 +1,57 @@
+<!--
+Copyright (C) 2020 Mathis Rech
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+-->
+
+<Window x:Class="ModMyFactoryGUI.Views.UpdateWindow"
+        xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:l="clr-namespace:ModMyFactoryGUI.Localization"
+        xmlns:vm="clr-namespace:ModMyFactoryGUI.ViewModels"
+        xmlns:controls="clr-namespace:ModMyFactoryGUI.Controls"
+        xmlns:views="clr-namespace:ModMyFactoryGUI.Views"
+        Icon="/Assets/MMF_Icon.ico"
+        Title="{l:LocalizedResource UpdateWindowTitle}"
+        Width="450" Height="550">
+
+    <Window.Resources>
+        <l:LocalizedFormatter x:Key="LocalizedFormatter" />
+    </Window.Resources>
+
+    <Grid Margin="8">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="Auto" />
+        </Grid.ColumnDefinitions>
+
+        <TextBlock Margin="4,0" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" FontSize="{DynamicResource FontSizeMedium}"
+                   Text="{Binding CurrentVersion, Converter={StaticResource LocalizedFormatter}, ConverterParameter=CurrentVersionFormat}" />
+        <TextBlock Margin="4" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" FontSize="{DynamicResource FontSizeMedium}"
+                   Text="{Binding UpdateVersion, Converter={StaticResource LocalizedFormatter}, ConverterParameter=UpdateVersionFormat}" />
+
+        <Border Margin="4" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="3" Background="{DynamicResource ThemeAccentBrush2}">
+            <TextBlock Margin="4,3,4,2" Text="{l:LocalizedResource ChangelogHeader}" Classes="h3" />
+        </Border>
+        <Border Margin="4" Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="3"
+                BorderThickness="1" BorderBrush="{DynamicResource ThemeBorderMidBrush}" Background="{DynamicResource ThemeBackgroundLowBrush}">
+            <ScrollViewer HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Visible">
+                <controls:FormattingTextBlock Margin="8,0" MarkdownText="{Binding Changelog}" />
+            </ScrollViewer>
+        </Border>
+
+        <Button Margin="4" Grid.Row="4" Grid.Column="0" Content="{l:LocalizedResource CancelButton}" Command="{Binding CancelCommand}" />
+        <Button Margin="4" Grid.Row="4" Grid.Column="2" Content="{l:LocalizedResource UpdateButton}" Command="{Binding UpdateCommand}" />
+    </Grid>
+</Window>

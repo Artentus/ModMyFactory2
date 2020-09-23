@@ -18,10 +18,17 @@ using ModMyFactoryGUI.Tasks;
 using ModMyFactoryGUI.Tasks.Web;
 using ModMyFactoryGUI.Update;
 using ModMyFactoryGUI.Views;
+using Onova;
+using Onova.Models;
+using Onova.Services;
 using ReactiveUI;
+using Serilog;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Net;
+using System.Reflection;
 using System.Threading.Tasks;
 using System.Windows.Input;
 
@@ -122,7 +129,7 @@ namespace ModMyFactoryGUI.ViewModels
             OpenModDirCommand = ReactiveCommand.Create(OpenModDir);
             NavigateToUrlCommand = ReactiveCommand.Create<string>(NavigateToUrl);
             OpenAboutWindowCommand = ReactiveCommand.CreateFromTask(OpenAboutWindow);
-            UpdateCommand = ReactiveCommand.CreateFromTask(Update);
+            UpdateCommand = ReactiveCommand.CreateFromTask(async () => await Update(true));
 
             _downloadProgress = new Progress<(DownloadJob, double)>(OnDownloadProgressChanged);
             DownloadQueue = new DownloadQueue(_downloadProgress);
@@ -205,14 +212,92 @@ namespace ModMyFactoryGUI.ViewModels
             await window.ShowDialog(AttachedView);
         }
 
-        private async Task Update()
+        private async Task<(bool, TagVersion, string, string)> PrepareUpdateAsync(bool includePrerelease, bool showResultMessage)
         {
-            // ToDo: create proper GUI
-            // ToDo: only update if no downloads in queue
-            //var updateTask = UpdateApi.CheckForUpdateAsync(true);
-            //var changelogTask = UpdateApi.RequestChangelogAsync();
-            //await ProgressDialog.Show("Searching for update", "", Task.WhenAll(updateTask, changelogTask), AttachedView);
-            //await MessageBox.Show("Update found", updateTask.Result.Item2);
+            try
+            {
+                Log.Information("Searching for updates...");
+
+                var updateTask = UpdateApi.CheckForUpdateAsync(includePrerelease);
+                var changelogTask = UpdateApi.RequestChangelogAsync();
+
+                string title = (string)App.Current.Locales.GetResource("Update_Title");
+                string message = (string)App.Current.Locales.GetResource("UpdateSearch_Message");
+                await ProgressDialog.Show(title, message, Task.WhenAll(updateTask, changelogTask), AttachedView);
+
+                var (available, version, url) = updateTask.Result;
+                return (available, version, url, changelogTask.Result);
+            }
+            catch (WebException ex)
+            {
+                if (showResultMessage) await MessageHelper.ShowMessageForWebException(ex);
+                return (false, null, null, null);
+            }
+        }
+
+        private async Task<bool> DownloadUpdateAsync(string url, string fileName)
+        {
+            try
+            {
+                Log.Verbose("Downloading update package from '{0}' to '{1}'", url, fileName);
+
+                using var wc = new WebClient();
+                var downloadTask = wc.DownloadFileTaskAsync(url, fileName);
+
+                string title = (string)App.Current.Locales.GetResource("Update_Title");
+                string message = (string)App.Current.Locales.GetResource("UpdateDownload_Message");
+                await ProgressDialog.Show(title, message, downloadTask, AttachedView);
+                return true;
+            }
+            catch (WebException ex)
+            {
+                await MessageHelper.ShowMessageForWebException(ex);
+                return false;
+            }
+        }
+
+        private async Task Update(bool showResultMessage)
+        {
+            if (DownloadQueue.IsJobInProgress)
+            {
+                // Updating while downloads are in progress could result in invalid states
+                await Messages.UpdateWhileDownloading.Show();
+            }
+            else
+            {
+                bool includePrerelease = VersionStatistics.AppVersion.IsPrerelease || Program.Settings.Get(SettingName.UpdatePrerelease, false);
+                var (available, version, url, changelog) = await PrepareUpdateAsync(includePrerelease, showResultMessage);
+                if (available)
+                {
+                    Log.Information("Found update version {0}", version);
+
+                    var vm = new UpdateWindowViewModel(version, changelog);
+                    var window = View.CreateAndAttach(vm);
+                    await window.ShowDialog(AttachedView);
+
+                    string fileName = Path.Combine(Program.TemporaryDirectory.FullName, Path.GetFileName(url));
+                    if ((vm.DialogResult == DialogResult.Ok) && (await DownloadUpdateAsync(url, fileName)))
+                    {
+                        var metaData = AssemblyMetadata.FromAssembly(Assembly.GetAssembly(typeof(App)));
+                        var resolver = new ManualPackageResolver(fileName, version);
+                        var updateManager = new UpdateManager(metaData, resolver, new ZipPackageExtractor());
+
+                        var result = await updateManager.CheckForUpdatesAsync();
+                        await updateManager.PrepareUpdateAsync(result.LastVersion);
+                        string args = "--no-update";
+                        if (!string.IsNullOrEmpty(Program.RestartArgs)) args += " " + Program.RestartArgs;
+                        updateManager.LaunchUpdater(result.LastVersion, true, args);
+
+                        Log.Information("Shutting down for update");
+                        AttachedView.Close();
+                    }
+                }
+                else
+                {
+                    Log.Information("No updates available");
+                    if (showResultMessage) await Messages.NoUpdateFound.Show();
+                }
+            }
         }
 
         private void OnDownloadProgressChanged((DownloadJob, double) progress)
@@ -244,7 +329,7 @@ namespace ModMyFactoryGUI.ViewModels
             throw new ArgumentException("Tab does not contain a valid view", nameof(tab));
         }
 
-        private async void ImportPackagesAsync(IEnumerable<string> paths)
+        private async Task ImportPackagesAsync(IEnumerable<string> paths)
         {
             using var helper = new ImportHelper(paths);
             await helper.ImportPackagesAsync();
@@ -253,7 +338,10 @@ namespace ModMyFactoryGUI.ViewModels
         private async Task EvaluateOptions(RunOptions options)
         {
             if (!(options.ImportList is null))
-                await Dispatcher.UIThread.InvokeAsync(() => ImportPackagesAsync(options.ImportList));
+            {
+                if (Dispatcher.UIThread.CheckAccess()) await ImportPackagesAsync(options.ImportList);
+                else await Dispatcher.UIThread.InvokeAsync(async () => await ImportPackagesAsync(options.ImportList));
+            }
         }
 
         private async void MessageReceivedHandler(object sender, MessageReceivedEventArgs e)
@@ -268,6 +356,23 @@ namespace ModMyFactoryGUI.ViewModels
             await parsedOptions.WithParsedAsync(EvaluateOptions);
         }
 
+#if !DEBUG
+        private async Task StartupUpdate()
+        {
+            if (Program.Settings.Get(SettingName.UpdateOnStartup, true))
+            {
+                if (Program.SkipUpdateCheck)
+                {
+                    Log.Verbose("Skipping startup update check due to command line");
+                }
+                else
+                {
+                    await Update(false);
+                }
+            }
+        }
+#endif
+
         private async void WindowOpenedHandler(object sender, EventArgs e)
         {
             var args = Environment.GetCommandLineArgs();
@@ -280,6 +385,10 @@ namespace ModMyFactoryGUI.ViewModels
             var parsedOptions = parser.ParseArguments<RunOptions>(args);
 
             await parsedOptions.WithParsedAsync(EvaluateOptions);
+
+#if !DEBUG
+            await StartupUpdate();
+#endif
         }
 
         protected override void OnViewChanged(EventArgs e)

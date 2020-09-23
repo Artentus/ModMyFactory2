@@ -15,6 +15,8 @@ namespace ModMyFactoryGUI
         public const string SelectedInstance = "selected_instance";
 
         public const string Credentials = "credentials";
+        public const string UpdateOnStartup = "update_on_startup";
+        public const string UpdatePrerelease = "update_prerelease";
         public const string FactorioLocation = "factorio_location";
         public const string ModLocation = "mod_location";
         public const string FactorioNameTable = "instance_names";

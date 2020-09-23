@@ -24,7 +24,7 @@ the Free Software Foundation, either version 3 of the License, or
     <ItemsControl Items="{Binding Links}">
       <ItemsControl.ItemsPanel>
         <ItemsPanelTemplate>
-          <WrapPanel Orientation="Vertical" MaxHeight="140" HorizontalAlignment="Center" />
+          <WrapPanel Orientation="Vertical" MaxHeight="160" HorizontalAlignment="Center" />
         </ItemsPanelTemplate>
       </ItemsControl.ItemsPanel>
 

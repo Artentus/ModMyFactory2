@@ -38,6 +38,19 @@ the Free Software Foundation, either version 3 of the License, or
                                   IndicateError="{Binding CredentialsError}" />
         </StackPanel>
 
+        <!-- Updating -->
+        <StackPanel Margin="6">
+          <Border Margin="4" Background="{DynamicResource ThemeAccentBrush2}">
+            <TextBlock Margin="4,3,4,2" Text="{l:LocalizedResource UpdateHeader}" Classes="h3" />
+          </Border>
+          <CheckBox Margin="8,2" IsChecked="{Binding UpdateOnStartup, Mode=TwoWay}">
+            <TextBlock Margin="4,2" Text="{l:LocalizedResource UpdateOnStartupOption}" />
+          </CheckBox>
+          <CheckBox Margin="8,2" IsChecked="{Binding UpdatePrerelease, Mode=TwoWay}" IsEnabled="{Binding !IsPrerelease}">
+            <TextBlock Margin="4,2" Text="{l:LocalizedResource UpdatePrereleaseOption}" />
+          </CheckBox>
+        </StackPanel>
+
         <!-- Factorio folder -->
         <StackPanel Margin="6">
           <Border Margin="4" Background="{DynamicResource ThemeAccentBrush2}">

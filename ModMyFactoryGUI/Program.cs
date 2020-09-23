@@ -24,6 +24,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using System.Runtime.InteropServices;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -52,6 +53,11 @@ namespace ModMyFactoryGUI
         public static ObservableDictionary<int, Modpack>.ObservableValueCollection Modpacks => _modpacks.Values;
 
         public static GlobalContext SyncContext { get; private set; }
+
+        // Ugly but it does the job since Avalonia doesn't allow passing arguments to the App class
+        public static bool SkipUpdateCheck { get; private set; }
+
+        public static string RestartArgs { get; private set; }
 
         #region Utility Functions
 
@@ -195,8 +201,14 @@ namespace ModMyFactoryGUI
             return result;
         }
 
-        private static async Task InitProgramAsync()
+        private static async Task InitProgramAsync(OptionsBase options)
         {
+            var restartArgs = new List<string>(3);
+            if (options.Verbose) restartArgs.Add("--verbose");
+            if (options.NoLog) restartArgs.Add("--no-log");
+            if (!string.IsNullOrWhiteSpace(options.AppDataPath)) restartArgs.Add($"--app-data=\"{options.AppDataPath}\"");
+            RestartArgs = string.Join(' ', restartArgs);
+
             var factory = new GlobalSingletonFactory(ApplicationDirectory, ApplicationDataDirectory);
             Settings = factory.LoadSettings();
             (Manager, Locations, ModStateManager) = await factory.CreateManagerAsync(Settings);
@@ -351,12 +363,14 @@ namespace ModMyFactoryGUI
                         // First instance, start like normal
 
                         InitLogger(options);
-                        await InitProgramAsync();
+                        await InitProgramAsync(options);
 
                         SyncContext.BeginListen();
 
                         try
                         {
+                            SkipUpdateCheck = options.NoAutoUpdate;
+
                             var code = (ErrorCode)BuildAvaloniaApp().StartWithClassicDesktopLifetime(args, ShutdownMode.OnMainWindowClose);
                             if (code != ErrorCode.NoError) Log.Warning("Application returned error code '{0}'", code);
                             else Log.Debug("Application exited gracefully");
@@ -473,7 +487,7 @@ namespace ModMyFactoryGUI
         {
             SetDirectories(options);
             InitLogger(options);
-            await InitProgramAsync();
+            await InitProgramAsync(options);
 
             var code = ErrorCode.NoError;
 

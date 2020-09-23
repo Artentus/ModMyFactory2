@@ -8,6 +8,7 @@
 using Avalonia.Utilities;
 using ModMyFactoryGUI.Localization;
 using ModMyFactoryGUI.MVVM;
+using ModMyFactoryGUI.Update;
 using ModMyFactoryGUI.Views;
 using ReactiveUI;
 using System;
@@ -22,7 +23,7 @@ namespace ModMyFactoryGUI.ViewModels
     {
         public string Author => "Mathis Rech";
 
-        public string GUIVersion => VersionStatistics.AppVersion.ToString();
+        public TagVersion GUIVersion => VersionStatistics.AppVersion;
 
         public IEnumerable<AssemblyVersionViewModel> AssemblyVersions { get; }
 

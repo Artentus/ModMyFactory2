@@ -53,21 +53,21 @@ namespace ModMyFactoryGUI.Update
             return false;
         }
 
-        public static async Task<(bool, string)> CheckForUpdateAsync(bool includePrereleases)
+        public static async Task<(bool, TagVersion, string)> CheckForUpdateAsync(bool includePrereleases)
         {
             var client = new ReleasesClient();
             var (success, releases) = await client.TryRequestReleasesAsync();
-            if (!success) return (false, null);
+            if (!success) return (false, null, null);
 
             var (latest, version) = GetLatestRelease(releases, includePrereleases);
             if (version > VersionStatistics.AppVersion)
             {
-                if (TryGetAsset(latest, out var asset)) return (true, asset.BrowserDownloadUrl);
-                else return (false, null);
+                if (TryGetAsset(latest, out var asset)) return (true, version, asset.BrowserDownloadUrl);
+                else return (false, null, null);
             }
             else
             {
-                return (false, null);
+                return (false, null, null);
             }
         }
 

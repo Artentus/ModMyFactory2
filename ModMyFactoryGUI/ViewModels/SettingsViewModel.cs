@@ -24,6 +24,7 @@ namespace ModMyFactoryGUI.ViewModels
         private bool _credentialsChanged;
         private bool _credentialsError;
 
+        private bool _updateOnStartup, _updatePrerelease;
         private bool _factorioLocationIsAppData, _factorioLocationIsBinDir, _factorioLocationIsCustom;
         private bool _modLocationIsAppData, _modLocationIsBinDir, _modLocationIsCustom;
         private string _customFactorioLocation, _customModLocation;
@@ -71,6 +72,28 @@ namespace ModMyFactoryGUI.ViewModels
             get => _credentialsError;
             set => this.RaiseAndSetIfChanged(ref _credentialsError, value, nameof(CredentialsError));
         }
+
+        public bool UpdateOnStartup
+        {
+            get => _updateOnStartup;
+            set
+            {
+                this.RaiseAndSetIfChanged(ref _updateOnStartup, value, nameof(UpdateOnStartup));
+                SettingsChanged = true;
+            }
+        }
+
+        public bool UpdatePrerelease
+        {
+            get => _updatePrerelease;
+            set
+            {
+                this.RaiseAndSetIfChanged(ref _updatePrerelease, value, nameof(UpdatePrerelease));
+                SettingsChanged = true;
+            }
+        }
+
+        public bool IsPrerelease => VersionStatistics.AppVersion.IsPrerelease;
 
         public bool FactorioLocationIsAppData
         {
@@ -243,6 +266,9 @@ namespace ModMyFactoryGUI.ViewModels
             await ApplyCredentialChangesAsync();
             await ApplyLocationChangesAsync();
 
+            Program.Settings.Set(SettingName.UpdateOnStartup, _updateOnStartup);
+            Program.Settings.Set(SettingName.UpdatePrerelease, _updatePrerelease);
+
             SettingsChanged = false;
             Program.Settings.Save();
             Reset(); // Reset because some of the changes may not have taken effect
@@ -257,6 +283,12 @@ namespace ModMyFactoryGUI.ViewModels
             this.RaisePropertyChanged(nameof(Password));
             _credentialsChanged = false;
             CredentialsError = false;
+
+            _updateOnStartup = Program.Settings.Get(SettingName.UpdateOnStartup, true);
+            this.RaisePropertyChanged(nameof(UpdateOnStartup));
+            if (VersionStatistics.AppVersion.IsPrerelease) _updatePrerelease = true;
+            else _updatePrerelease = Program.Settings.Get(SettingName.UpdatePrerelease, false);
+            this.RaisePropertyChanged(nameof(UpdatePrerelease));
 
             switch (Program.Locations.FactorioLocation)
             {

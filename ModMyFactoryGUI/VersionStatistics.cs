@@ -111,7 +111,7 @@ namespace ModMyFactoryGUI
             throw new PlatformNotSupportedException();
 #endif
 
-            AppVersion = TagVersion.Parse(Assembly.GetExecutingAssembly().ProductVersion());
+            AppVersion = TagVersion.Parse(Assembly.GetAssembly(typeof(App)).ProductVersion());
             // Just using some arbitrary types to find the assemblies
             LoadedAssemblyVersions = new AssemblyVersionDictionary(
                 Assembly.GetAssembly(typeof(Manager)),
