@@ -7,9 +7,9 @@
 
 using ModMyFactory.BaseTypes;
 using ModMyFactory.IO;
+using SharpCompress.Archives;
+using SharpCompress.Archives.Zip;
 using SharpCompress.Common;
-using SharpCompress.Readers;
-using SharpCompress.Readers.Zip;
 using System;
 using System.IO;
 using System.Text;
@@ -73,11 +73,9 @@ namespace ModMyFactory.Mods
                 Stream thumbnail = null;
                 try
                 {
-                    using var fs = file.OpenRead();
-                    using var reader = ZipReader.Open(fs);
-                    while (reader.MoveToNextEntry())
+                    using var archive = ZipArchive.Open(file);
+                    foreach (var entry in archive.Entries)
                     {
-                        var entry = reader.Entry;
                         if (!entry.IsDirectory)
                         {
                             string key = entry.Key.TrimStart('/');
@@ -85,7 +83,7 @@ namespace ModMyFactory.Mods
                             {
                                 if (key.EndsWith("info.json"))
                                 {
-                                    using var stream = reader.OpenEntryStream();
+                                    using var stream = entry.OpenEntryStream();
                                     using var sr = new StreamReader(stream, Encoding.UTF8);
                                     string json = sr.ReadToEnd();
 
@@ -95,7 +93,7 @@ namespace ModMyFactory.Mods
                                 else if (key.EndsWith("thumbnail.png"))
                                 {
                                     thumbnail = new MemoryStream();
-                                    reader.WriteEntryTo(thumbnail);
+                                    entry.WriteTo(thumbnail);
                                     thumbnail.Position = 0;
                                 }
                             }
@@ -181,12 +179,11 @@ namespace ModMyFactory.Mods
         {
             await Task.Run(() =>
             {
-                using var fs = _file.OpenRead();
-                using var reader = ZipReader.Open(fs);
-                while (reader.MoveToNextEntry())
+                using var archive = ZipArchive.Open(_file);
+                foreach (var entry in archive.Entries)
                 {
-                    if (!reader.Entry.IsDirectory)
-                        reader.WriteEntryToDirectory(destination, new ExtractionOptions() { ExtractFullPath = true });
+                    if (!entry.IsDirectory)
+                        entry.WriteToDirectory(destination, new ExtractionOptions() { ExtractFullPath = true });
                 }
             });
 

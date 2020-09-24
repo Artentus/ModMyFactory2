@@ -6,8 +6,8 @@
 //  (at your option) any later version.
 
 using ModMyFactory.Mods;
+using SharpCompress.Archives;
 using SharpCompress.Common;
-using SharpCompress.Readers;
 using System;
 using System.IO;
 using System.Linq;
@@ -178,19 +178,17 @@ namespace ModMyFactory.Game
 
             var (valid, extractName) = await Task.Run(() =>
             {
-                using var stream = archiveFile.OpenRead();
-                using var reader = ReaderFactory.Open(stream);
+                using var archive = ArchiveFactory.Open(archiveFile);
 
                 string topLevelDir = null;
-
-                while (reader.MoveToNextEntry())
+                foreach (var entry in archive.Entries)
                 {
                     // All files in a valid Factorio archive must reside
                     // in a top-level folder called 'Factorio_*'. If we
                     // find a file that doesn't we can stop immediately.
                     if (topLevelDir is null)
                     {
-                        topLevelDir = GetTopDirectory(reader.Entry.Key.TrimStart('/', '\\'));
+                        topLevelDir = GetTopDirectory(entry.Key.TrimStart('/', '\\'));
                         topLevelDir = topLevelDir.TrimEnd('/', '\\');
 
                         if (!topLevelDir.StartsWith("factorio", StringComparison.OrdinalIgnoreCase))
@@ -198,15 +196,16 @@ namespace ModMyFactory.Game
                     }
                     else
                     {
-                        string dir = GetTopDirectory(reader.Entry.Key.TrimStart('/', '\\'));
+                        string dir = GetTopDirectory(entry.Key.TrimStart('/', '\\'));
                         dir = dir.TrimEnd('/', '\\');
                         if (!string.Equals(dir, topLevelDir, StringComparison.OrdinalIgnoreCase))
                             return (false, topLevelDir);
                     }
 
-                    if (!reader.Entry.IsDirectory)
-                        reader.WriteEntryToDirectory(destination, new ExtractionOptions() { ExtractFullPath = true });
+                    if (!entry.IsDirectory)
+                        entry.WriteToDirectory(destination, new ExtractionOptions() { ExtractFullPath = true });
                 }
+
                 return (true, topLevelDir);
             });
 
