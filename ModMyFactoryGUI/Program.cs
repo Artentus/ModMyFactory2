@@ -207,7 +207,7 @@ namespace ModMyFactoryGUI
             if (options.Verbose) restartArgs.Add("--verbose");
             if (options.NoLog) restartArgs.Add("--no-log");
             if (!string.IsNullOrWhiteSpace(options.AppDataPath)) restartArgs.Add($"--app-data=\"{options.AppDataPath}\"");
-            RestartArgs = string.Join(' ', restartArgs);
+            RestartArgs = string.Join(" ", restartArgs);
 
             var factory = new GlobalSingletonFactory(ApplicationDirectory, ApplicationDataDirectory);
             Settings = factory.LoadSettings();
