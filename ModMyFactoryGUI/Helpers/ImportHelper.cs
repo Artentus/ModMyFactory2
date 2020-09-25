@@ -45,28 +45,35 @@ namespace ModMyFactoryGUI.Helpers
         {
             var info = await _infoCache.QueryAsync(modDef.Name);
 
-            foreach (var release in info.Releases)
+            if (info.HasValue)
             {
-                if (release.Version == version)
-                    return release;
+                foreach (var release in info.Value.Releases)
+                {
+                    if (release.Version == version)
+                        return release;
+                }
             }
-
+            
             return null;
         }
 
         private async Task<AccurateVersion> GetLatestVersionAsync(ModDefinition modDef)
         {
             var info = await _infoCache.QueryAsync(modDef.Name);
-            if (info.TryGetLatestRelease(out var release))
-                return release.Version;
 
+            if (info.HasValue)
+            {
+                if (info.Value.TryGetLatestRelease(out var release))
+                    return release.Version;
+            }
+            
             throw new InvalidOperationException($"The mod {modDef.Name} does not have any releases.");
         }
 
         private async Task<AccurateVersion> GetLatestVersionAsync(ModDefinition modDef, AccurateVersion factorioVersion)
         {
             var info = await _infoCache.QueryAsync(modDef.Name);
-            var latest = info.GetLatestRelease(factorioVersion);
+            var latest = info?.GetLatestRelease(factorioVersion);
             if (latest is null) throw new InvalidOperationException($"The mod {modDef.Name} does not have any releases targeting Factorio version {factorioVersion}.");
             else return latest.Value.Version;
         }

@@ -72,7 +72,7 @@
   },
   "InvalidModFile_Message": {
     "type": "string",
-    "value": "The file to be loaded was not a valid mod file´."
+    "value": "The file to be loaded was not a valid mod file."
   },
 
   "LogInRequired_Title": {

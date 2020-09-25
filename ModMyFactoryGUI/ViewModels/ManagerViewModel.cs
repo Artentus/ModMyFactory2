@@ -8,6 +8,7 @@
 using Avalonia.Controls;
 using ModMyFactory;
 using ModMyFactory.Mods;
+using ModMyFactory.WebApi;
 using ModMyFactory.WebApi.Mods;
 using ModMyFactoryGUI.Caching.Web;
 using ModMyFactoryGUI.Controls;
@@ -313,22 +314,29 @@ namespace ModMyFactoryGUI.ViewModels
 
         private async Task UpdateModsAsync()
         {
-            using var infoCache = new ModInfoCache();
-            foreach (var modManager in Program.Manager.ModManagers)
+            try
             {
-                foreach (var family in modManager.Families)
+                using var infoCache = new ModInfoCache();
+                foreach (var modManager in Program.Manager.ModManagers)
                 {
-                    var info = await infoCache.QueryAsync(family.FamilyName);
-                    var latest = info.GetLatestRelease(modManager.FactorioVersion);
-                    if (latest is null) continue; // Silently skip in case the local version of a mod does not exist on the portal
-
-                    // The default mod is also always the one with the highest version
-                    if (latest.Value.Version > family.GetDefaultMod().Version)
+                    foreach (var family in modManager.Families)
                     {
-                        // Update available
-                        // ToDo: collect all available updates, then display update dialog
+                        var info = await infoCache.QueryAsync(family.FamilyName);
+                        var latest = info?.GetLatestRelease(modManager.FactorioVersion);
+                        if (latest is null) continue; // Silently skip in case the local version of a mod does not exist on the portal
+
+                        // The default mod is also always the one with the highest version
+                        if (latest.Value.Version > family.GetDefaultMod().Version)
+                        {
+                            // Update available
+                            // ToDo: collect all available updates, then display update dialog
+                        }
                     }
                 }
+            }
+            catch (ApiException ex)
+            {
+                await MessageHelper.ShowMessageForApiException(ex);
             }
         }
 
