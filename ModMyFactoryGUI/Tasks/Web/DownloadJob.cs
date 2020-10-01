@@ -6,10 +6,12 @@
 //  (at your option) any later version.
 
 using ModMyFactory.BaseTypes;
+using ModMyFactory.Mods;
 using ModMyFactory.WebApi;
 using ModMyFactory.WebApi.Factorio;
 using ModMyFactory.WebApi.Mods;
 using ModMyFactoryGUI.Helpers;
+using ModMyFactoryGUI.ViewModels;
 using System;
 using System.IO;
 using System.Threading;
@@ -51,7 +53,7 @@ namespace ModMyFactoryGUI.Tasks.Web
         }
     }
 
-    internal sealed class DownloadModReleaseJob : DownloadJob
+    internal class DownloadModReleaseJob : DownloadJob
     {
         private readonly string _username, _token;
 
@@ -68,6 +70,15 @@ namespace ModMyFactoryGUI.Tasks.Web
             string fileName = Path.Combine(dir.FullName, Release.FileName);
             return ModApi.DownloadModReleaseAsync(Release, _username, _token, fileName, cancellationToken, progress);
         }
+    }
+
+    internal sealed class UpdateModJob : DownloadModReleaseJob
+    {
+        public ModUpdateInfo Info { get; }
+
+        public UpdateModJob(ModUpdateInfo info, string username, string token)
+            : base(info.Release, info.Family.DisplayName, username, token)
+            => Info = info;
     }
 
     internal sealed class DownloadFactorioJob : DownloadJob

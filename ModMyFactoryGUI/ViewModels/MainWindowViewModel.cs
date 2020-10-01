@@ -129,7 +129,7 @@ namespace ModMyFactoryGUI.ViewModels
             OpenModDirCommand = ReactiveCommand.Create(OpenModDir);
             NavigateToUrlCommand = ReactiveCommand.Create<string>(NavigateToUrl);
             OpenAboutWindowCommand = ReactiveCommand.CreateFromTask(OpenAboutWindow);
-            UpdateCommand = ReactiveCommand.CreateFromTask(async () => await Update(true));
+            UpdateCommand = ReactiveCommand.CreateFromTask(async () => await UpdateAsync(true));
 
             _downloadProgress = new Progress<(DownloadJob, double)>(OnDownloadProgressChanged);
             DownloadQueue = new DownloadQueue(_downloadProgress);
@@ -138,7 +138,7 @@ namespace ModMyFactoryGUI.ViewModels
             DownloadQueue.StartQueue();
             App.ShuttingDown += (sender, e) => DownloadQueue.StopQueue();
 
-            ManagerViewModel = new ManagerViewModel();
+            ManagerViewModel = new ManagerViewModel(DownloadQueue);
             FactorioViewModel = new FactorioViewModel(DownloadQueue);
             OnlineModsViewModel = new OnlineModsViewModel(Program.Manager, DownloadQueue);
             ExportViewModel = new ExportViewModel();
@@ -256,7 +256,7 @@ namespace ModMyFactoryGUI.ViewModels
             }
         }
 
-        private async Task Update(bool showResultMessage)
+        private async Task UpdateAsync(bool showResultMessage)
         {
             if (DownloadQueue.IsJobInProgress)
             {
@@ -367,7 +367,7 @@ namespace ModMyFactoryGUI.ViewModels
                 }
                 else
                 {
-                    await Update(false);
+                    await UpdateAsync(false);
                 }
             }
         }

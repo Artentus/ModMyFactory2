@@ -98,6 +98,8 @@ namespace ModMyFactoryGUI
             = new Message("UpdateWhileDownloading", MessageKind.Information, DialogOptions.Ok);
         public static readonly IMessage NoUpdateFound
             = new Message("NoUpdateFound", MessageKind.Information, DialogOptions.Ok);
+        public static readonly IMessage NoModUpdates
+            = new Message("NoModUpdates", MessageKind.Information, DialogOptions.Ok);
 
         public static IErrorMessage FileIntegrityError(FileInfo file, SHA1Hash expected, SHA1Hash actual)
             => new ErrorMessage("FileIntegrityError", $"Checksum mismatch for file {file.Name}, expected {expected} but got {actual}");

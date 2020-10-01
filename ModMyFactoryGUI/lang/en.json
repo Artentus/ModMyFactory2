@@ -151,6 +151,23 @@
     "value": "Downloading update package..."
   },
 
+  "ModUpdateSearch_Title": {
+    "type": "string",
+    "value": "Updating mods"
+  },
+  "ModUpdateSearch_Message": {
+    "type": "string",
+    "value": "Searching for mod updates..."
+  },
+  "NoModUpdates_Title": {
+    "type": "string",
+    "value": "No mod updates available"
+  },
+  "NoModUpdates_Message": {
+    "type": "string",
+    "value": "All of your mods are up-to-date."
+  },
+
   // --------- Dialog options ---------
   "OkButton": {
     "type": "string",
@@ -641,6 +658,16 @@
   "UpdateVersionFormat": {
     "type": "string",
     "value": "Latest version: {0}"
+  },
+
+  // --------- Mod update window ---------
+  "ModUpdateWindowTitle": {
+    "type": "string",
+    "value": "Mod updates available"
+  },
+  "ModUpdateButton": {
+    "type": "string",
+    "value": "Update mods"
   },
 
   // --------- Shortcut properties window ---------

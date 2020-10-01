@@ -142,5 +142,14 @@ namespace ModMyFactoryGUI.Helpers
         public static T? SelectFromAll<T>(this IEnumerable<T?> source, IEqualityComparer<T?> comparer = null)
             where T : struct
             => source.SelectFromAll(item => item, comparer);
+
+        public static IEnumerable<T> Flatten<T>(this IEnumerable<IEnumerable<T>> source)
+        {
+            foreach (var sub in source)
+            {
+                foreach (var item in sub)
+                    yield return item;
+            }
+        }
     }
 }

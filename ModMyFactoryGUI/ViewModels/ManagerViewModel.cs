@@ -7,20 +7,26 @@
 
 using Avalonia.Controls;
 using ModMyFactory;
+using ModMyFactory.BaseTypes;
 using ModMyFactory.Mods;
 using ModMyFactory.WebApi;
 using ModMyFactory.WebApi.Mods;
 using ModMyFactoryGUI.Caching.Web;
 using ModMyFactoryGUI.Controls;
 using ModMyFactoryGUI.Helpers;
+using ModMyFactoryGUI.MVVM;
+using ModMyFactoryGUI.Tasks.Web;
 using ModMyFactoryGUI.Views;
 using ReactiveUI;
+using Serilog;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Input;
 
@@ -28,6 +34,7 @@ namespace ModMyFactoryGUI.ViewModels
 {
     internal sealed class ManagerViewModel : MainViewModelBase<ManagerView>
     {
+        private readonly DownloadQueue _downloadQueue;
         private readonly ObservableCollection<ModVersionGroupingViewModel> _modVersionGroupings;
         private readonly ObservableCollection<ModpackViewModel> _modpacks;
         private string _modFilter, _modpackFilter;
@@ -118,8 +125,9 @@ namespace ModMyFactoryGUI.ViewModels
 
         public ICommand DeleteModpackCommand { get; }
 
-        public ManagerViewModel()
+        public ManagerViewModel(DownloadQueue downloadQueue)
         {
+            _downloadQueue = downloadQueue;
             _modVersionGroupings = new ObservableCollection<ModVersionGroupingViewModel>();
             _modpacks = new ObservableCollection<ModpackViewModel>();
 
@@ -312,26 +320,87 @@ namespace ModMyFactoryGUI.ViewModels
             }
         }
 
+        private async Task<IReadOnlyDictionary<AccurateVersion, List<ModUpdateInfo>>> SearchModUpdatesAsync(
+            IProgress<double> progress, CancellationToken cancellationToken)
+        {
+            var result = new Dictionary<AccurateVersion, List<ModUpdateInfo>>();
+
+            int familyCount = Program.Manager.ModManagers.Select(m => m.Families.Count).Sum();
+            int familyIndex = 0;
+
+            using var infoCache = new ModInfoCache();
+            foreach (var modManager in Program.Manager.ModManagers)
+            {
+                var list = new List<ModUpdateInfo>();
+                result.Add(modManager.FactorioVersion, list);
+
+                foreach (var family in modManager.Families)
+                {
+                    if (cancellationToken.IsCancellationRequested) return null;
+                    progress.Report((double)familyIndex / (double)familyCount);
+                    familyIndex++;
+
+                    var info = await infoCache.QueryAsync(family.FamilyName);
+                    var latest = info?.GetLatestRelease(modManager.FactorioVersion);
+                    if (!latest.HasValue) continue; // Silently skip in case the local version of a mod does not exist on the portal
+
+                    // The default mod is also always the one with the highest version
+                    if (latest.Value.Version > family.GetDefaultMod().Version)
+                    {
+                        // Update available
+                        list.Add(new ModUpdateInfo(family, latest.Value));
+                        Log.Debug("Update to version {0} found for mod family '{1}', Factorio version {2}", latest.Value.Version, family.FamilyName, modManager.FactorioVersion);
+                    }
+                }
+            }
+
+            progress.Report(1.0);
+
+            return result;
+        }
+
         private async Task UpdateModsAsync()
         {
             try
             {
-                using var infoCache = new ModInfoCache();
-                foreach (var modManager in Program.Manager.ModManagers)
-                {
-                    foreach (var family in modManager.Families)
-                    {
-                        var info = await infoCache.QueryAsync(family.FamilyName);
-                        var latest = info?.GetLatestRelease(modManager.FactorioVersion);
-                        if (latest is null) continue; // Silently skip in case the local version of a mod does not exist on the portal
+                string title = (string)App.Current.Locales.GetResource("ModUpdateSearch_Title");
+                string message = (string)App.Current.Locales.GetResource("ModUpdateSearch_Message");
 
-                        // The default mod is also always the one with the highest version
-                        if (latest.Value.Version > family.GetDefaultMod().Version)
+                var progress = new Progress<double>();
+                var cancellationSource = new CancellationTokenSource();
+                var searchTask = SearchModUpdatesAsync(progress, cancellationSource.Token);
+                await ProgressDialog.Show(title, message, searchTask, progress, 0.0, 1.0, cancellationSource, App.Current.MainWindow);
+
+                var updates = searchTask.Result;
+                int updateCount = updates.Values.Select(l => l.Count()).Sum();
+                if (updateCount > 0)
+                {
+                    // Some updates are available
+
+                    var vm = new ModUpdateWindowViewModel(updates);
+                    var window = View.CreateAndAttach(vm);
+                    await window.ShowDialog(App.Current.MainWindow);
+
+                    if (vm.DialogResult == DialogResult.Ok)
+                    {
+                        var (success, username, token) = await App.Current.Credentials.TryLogInAsync();
+                        if (success.IsTrue())
                         {
-                            // Update available
-                            // ToDo: collect all available updates, then display update dialog
+                            foreach (var update in updates.Values.Flatten())
+                            {
+                                if (update.Selected)
+                                {
+                                    var job = new UpdateModJob(update, username, token);
+                                    _downloadQueue.AddJob(job);
+                                }
+                            }
                         }
                     }
+                }
+                else
+                {
+                    // No updates available
+                    await Messages.NoModUpdates.Show();
                 }
             }
             catch (ApiException ex)

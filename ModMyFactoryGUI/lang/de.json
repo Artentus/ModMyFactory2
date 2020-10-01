@@ -144,11 +144,28 @@
   },
   "UpdateSearch_Message": {
     "type": "string",
-    "value": "Nach Aktualisierungen suche..."
+    "value": "Nach Aktualisierungen suchen..."
   },
   "UpdateDownload_Message": {
     "type": "string",
     "value": "Aktualisierung wird heruntergeladen"
+  },
+
+  "ModUpdateSearch_Title": {
+    "type": "string",
+    "value": "Mods aktualisieren"
+  },
+  "ModUpdateSearch_Message": {
+    "type": "string",
+    "value": "Nach Aktualisierungen für Mods suchen..."
+  },
+  "NoModUpdates_Title": {
+    "type": "string",
+    "value": "Keine Aktualisierungen verfügbar"
+  },
+  "NoModUpdates_Message": {
+    "type": "string",
+    "value": "Alle Ihre Mods sind auf dem neusten Stand."
   },
 
   // --------- Dialog options ---------
@@ -613,6 +630,16 @@
   "UpdateVersionFormat": {
     "type": "string",
     "value": "Neuste Version: {0}"
+  },
+
+  // --------- Mod update window ---------
+  "ModUpdateWindowTitle": {
+    "type": "string",
+    "value": "Aktualisierungen verfügbar"
+  },
+  "ModUpdateButton": {
+    "type": "string",
+    "value": "Mods aktualisieren"
   },
 
   // --------- Shortcut properties window ---------
