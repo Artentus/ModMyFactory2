@@ -2,7 +2,7 @@ image: Visual Studio 2019
 shallow_clone: true
 skip_tags: true
 
-version: 1.0.2.{build}-alpha
+version: 1.0.2.{build}
 
 branches:
   only:
