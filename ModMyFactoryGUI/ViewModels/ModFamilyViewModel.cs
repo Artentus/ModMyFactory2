@@ -121,6 +121,9 @@ namespace ModMyFactoryGUI.ViewModels
                             vm.Dispose();
                             this.RaisePropertyChanged(nameof(Authors));
 
+                            if (object.ReferenceEquals(_selectedModViewModel, vm))
+                                SelectedModViewModel = _modViewModels.FirstOrDefault();
+
                             Thumbnail = _modViewModels.MaxBy(m => m.Version)?.Thumbnail;
                             this.RaisePropertyChanged(nameof(Thumbnail));
                             this.RaisePropertyChanged(nameof(HasThumbnail));

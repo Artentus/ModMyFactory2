@@ -9,6 +9,7 @@ using Avalonia.Controls;
 using Avalonia.Threading;
 using CommandLine;
 using ModMyFactory.Game;
+using ModMyFactory.Mods;
 using ModMyFactoryGUI.CommandLine;
 using ModMyFactoryGUI.Controls;
 using ModMyFactoryGUI.Helpers;
@@ -314,12 +315,64 @@ namespace ModMyFactoryGUI.ViewModels
             this.RaisePropertyChanged(nameof(DownloadProgress));
         }
 
-        private void OnDownloadJobCompleted(object sender, JobCompletedEventArgs<DownloadJob> e)
+        private async Task AddModUpdateAsync(UpdateModJob job)
         {
-            if ((e.Job is UpdateModJob job) && job.Replace)
+            var fileHash = await job.File.ComputeSHA1Async();
+            var targetHash = job.Release.Checksum;
+            if (fileHash == targetHash)
             {
-                // ToDo
+                var (success, mod) = await Mod.TryLoadAsync(job.File);
+                if (success)
+                {
+                    // Mod successfully downloaded
+                    Program.Manager.AddMod(mod);
+                    Log.Information($"Mod {mod.Name} version {mod.Version} successfully loaded from mod portal");
+
+                    if (job.Replace)
+                    {
+                        // We have to find all older versions of the updated mod and replace them
+                        foreach (var modpack in Program.Modpacks)
+                        {
+                            foreach (var old in modpack.Mods)
+                            {
+                                if (string.Equals(old.Name, job.Info.Family.FamilyName, StringComparison.InvariantCulture))
+                                {
+                                    modpack.Remove(old); // Ok because we break
+                                    modpack.Add(mod);
+                                    break;
+                                }
+                            }
+                        }
+
+                        if (job.RemoveOld)
+                        {
+                            if (mod.Family is null) throw new InvalidOperationException(); // Should not happen
+
+                            var others = mod.Family.Where(m => !object.ReferenceEquals(m, mod)).ToArray();
+                            foreach (var other in others)
+                            {
+                                Program.Manager.RemoveMod(other);
+                                other.Dispose();
+                                other.File.Delete();
+                            }
+                        }
+                    }
+                }
+                else
+                {
+                    await Messages.InvalidModFile(job.File).Show();
+                }
             }
+            else
+            {
+                await Messages.FileIntegrityError(job.File, targetHash, fileHash).Show();
+            }
+        }
+
+        private async void OnDownloadJobCompleted(object sender, JobCompletedEventArgs<DownloadJob> e)
+        {
+            if (e.Job is UpdateModJob job)
+                await AddModUpdateAsync(job);
 
             IsDownloading = false;
             this.RaisePropertyChanged(nameof(IsDownloading));
