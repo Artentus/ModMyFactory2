@@ -5,6 +5,7 @@
 //  the Free Software Foundation, either version 3 of the License, or
 //  (at your option) any later version.
 
+using ModMyFactory.BaseTypes;
 using ModMyFactory.Mods;
 using ModMyFactory.WebApi.Mods;
 using ReactiveUI;
@@ -25,10 +26,17 @@ namespace ModMyFactoryGUI.ViewModels
 
         public ModReleaseInfo Release { get; }
 
+        public AccurateVersion CurrentVersion { get; }
+
+        public AccurateVersion UpdateVersion { get; }
+
         public ModUpdateInfo(ModFamily family, ModReleaseInfo release)
         {
             _selected = true;
             (Family, Release) = (family, release);
+
+            CurrentVersion = family.GetDefaultMod().Version;
+            UpdateVersion = release.Version;
         }
     }
 }

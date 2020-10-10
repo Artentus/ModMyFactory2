@@ -316,6 +316,11 @@ namespace ModMyFactoryGUI.ViewModels
 
         private void OnDownloadJobCompleted(object sender, JobCompletedEventArgs<DownloadJob> e)
         {
+            if ((e.Job is UpdateModJob job) && job.Replace)
+            {
+                // ToDo
+            }
+
             IsDownloading = false;
             this.RaisePropertyChanged(nameof(IsDownloading));
         }

@@ -76,9 +76,13 @@ namespace ModMyFactoryGUI.Tasks.Web
     {
         public ModUpdateInfo Info { get; }
 
-        public UpdateModJob(ModUpdateInfo info, string username, string token)
+        public bool Replace { get; }
+
+        public bool RemoveOld { get; }
+
+        public UpdateModJob(ModUpdateInfo info, bool replace, bool removeOld, string username, string token)
             : base(info.Release, info.Family.DisplayName, username, token)
-            => Info = info;
+            => (Info, Replace, RemoveOld) = (info, replace, removeOld);
     }
 
     internal sealed class DownloadFactorioJob : DownloadJob

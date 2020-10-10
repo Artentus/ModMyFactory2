@@ -17,7 +17,7 @@ namespace ModMyFactoryGUI.ViewModels
 {
     internal sealed class ModUpdateWindowViewModel : ScreenBase<ModUpdateWindow>
     {
-        public IReadOnlyDictionary<AccurateVersion, List<ModUpdateInfo>> Updates { get; }
+        public CollectionView<ModUpdateViewModel> Updates { get; }
 
         public ICommand UpdateCommand { get; }
 
@@ -25,12 +25,43 @@ namespace ModMyFactoryGUI.ViewModels
 
         public DialogResult DialogResult { get; private set; }
 
+        public bool ReplaceUpdates
+        {
+            get => Program.Settings.Get(SettingName.ReplaceUpdates, true);
+            set
+            {
+                Program.Settings.Set(SettingName.ReplaceUpdates, value);
+                Program.Settings.Save();
+
+                this.RaisePropertyChanged(nameof(ReplaceUpdates));
+            }
+        }
+
+        public bool RemoveOldMods
+        {
+            get => Program.Settings.Get(SettingName.RemoveOldMods, true);
+            set
+            {
+                Program.Settings.Set(SettingName.RemoveOldMods, value);
+                Program.Settings.Save();
+
+                this.RaisePropertyChanged(nameof(RemoveOldMods));
+            }
+        }
+
         public ModUpdateWindowViewModel(IReadOnlyDictionary<AccurateVersion, List<ModUpdateInfo>> updates)
         {
-            Updates = updates;
             DialogResult = DialogResult.None;
             UpdateCommand = ReactiveCommand.Create(Update);
             CancelCommand = ReactiveCommand.Create(Cancel);
+
+            var updateVMs = new List<ModUpdateViewModel>(updates.Count);
+            foreach (var kvp in updates)
+                updateVMs.Add(new ModUpdateViewModel(kvp.Key, kvp.Value));
+
+            static int CompareVersions(ModUpdateViewModel first, ModUpdateViewModel second)
+                => second.FactorioVersion.CompareTo(first.FactorioVersion);
+            Updates = new CollectionView<ModUpdateViewModel>(updateVMs, CompareVersions);
         }
 
         private void Update()

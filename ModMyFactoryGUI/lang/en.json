@@ -665,6 +665,18 @@
     "type": "string",
     "value": "Mod updates available"
   },
+  "ModUpdatesHeader": {
+    "type": "string",
+    "value": "Available updates"
+  },
+  "ReplaceUpdatesOption": {
+    "type": "string",
+    "value": "Update mods in modpacks"
+  },
+  "RemoveOldModsOption": {
+    "type": "string",
+    "value": "Delete old mod versions"
+  },
   "ModUpdateButton": {
     "type": "string",
     "value": "Update mods"

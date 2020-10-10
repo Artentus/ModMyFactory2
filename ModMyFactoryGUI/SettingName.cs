@@ -25,6 +25,9 @@ namespace ModMyFactoryGUI
         public const string MainWindowRestoreState = "window_restore_state";
         public const string MainWindowMaximized = "window_maximized";
 
+        public const string ReplaceUpdates = "replace_updates";
+        public const string RemoveOldMods = "remove_old_mods";
+
         public const string ManagerGridLength1 = "manager_grid_length_1";
         public const string ManagerGridLength2 = "manager_grid_length_2";
         public const string OnlineGridLength1 = "online_grid_length_1";
