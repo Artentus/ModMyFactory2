@@ -374,8 +374,11 @@ namespace ModMyFactoryGUI.ViewModels
             if (e.Job is UpdateModJob job)
                 await AddModUpdateAsync(job);
 
-            IsDownloading = false;
-            this.RaisePropertyChanged(nameof(IsDownloading));
+            if (!DownloadQueue.IsJobInProgress)
+            {
+                IsDownloading = false;
+                this.RaisePropertyChanged(nameof(IsDownloading));
+            }
         }
 
         private IMainViewModel GetViewModel(TabItem tab)

@@ -139,30 +139,33 @@ namespace ModMyFactoryGUI.ViewModels
 
                     async void JobCompletedHandler(object sender, JobCompletedEventArgs<DownloadJob> e)
                     {
-                        if (object.ReferenceEquals(e.Job, job)) IsInstalled = e.Success;
-                        _downloadQueue.JobCompleted -= JobCompletedHandler;
-
-                        if (e.Success)
+                        if (object.ReferenceEquals(e.Job, job))
                         {
-                            var fileHash = await job.File.ComputeSHA1Async();
-                            var targetHash = job.Release.Checksum;
-                            if (fileHash == targetHash)
+                            IsInstalled = e.Success;
+                            _downloadQueue.JobCompleted -= JobCompletedHandler;
+
+                            if (e.Success)
                             {
-                                var (success, mod) = await Mod.TryLoadAsync(job.File);
-                                if (success)
+                                var fileHash = await job.File.ComputeSHA1Async();
+                                var targetHash = job.Release.Checksum;
+                                if (fileHash == targetHash)
                                 {
-                                    // Mod successfully downloaded
-                                    _modManager.Add(mod);
-                                    Log.Information($"Mod {mod.Name} version {mod.Version} successfully loaded from mod portal");
+                                    var (success, mod) = await Mod.TryLoadAsync(job.File);
+                                    if (success)
+                                    {
+                                        // Mod successfully downloaded
+                                        _modManager.Add(mod);
+                                        Log.Information($"Mod {mod.Name} version {mod.Version} successfully loaded from mod portal");
+                                    }
+                                    else
+                                    {
+                                        await Messages.InvalidModFile(job.File).Show();
+                                    }
                                 }
                                 else
                                 {
-                                    await Messages.InvalidModFile(job.File).Show();
+                                    await Messages.FileIntegrityError(job.File, targetHash, fileHash).Show();
                                 }
-                            }
-                            else
-                            {
-                                await Messages.FileIntegrityError(job.File, targetHash, fileHash).Show();
                             }
                         }
                     }
