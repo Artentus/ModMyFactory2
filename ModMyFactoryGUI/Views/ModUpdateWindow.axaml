@@ -47,7 +47,7 @@ the Free Software Foundation, either version 3 of the License, or
 
             <TabControl.ContentTemplate>
                 <DataTemplate DataType="{x:Type models:ModUpdateViewModel}">
-                    <Border BorderThickness="1" BorderBrush="{DynamicResource ThemeBorderMidBrush}" Background="{DynamicResource ThemeBackgroundLowBrush}">
+                    <Border BorderThickness="1" BorderBrush="{DynamicResource ThemeBorderMidBrush}" Background="{DynamicResource ThemeBackgroundLowBrush}" MaxHeight="370">
                         <ScrollViewer>
                             <ItemsControl Margin="2" Items="{Binding Updates}">
                                 <ItemsControl.ItemTemplate>
