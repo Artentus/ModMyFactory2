@@ -231,7 +231,7 @@ the Free Software Foundation, either version 3 of the License, or
         <TextBlock Margin="8,0" IsVisible="{Binding IsDownloading}"
                    Text="{Binding DownloadDescription, Converter={StaticResource LocalizedFormatter}, ConverterParameter=DownloadingFormat}" />
         <TextBlock IsVisible="{Binding ShowDownloadQueueLength}" Classes="muted"
-                   Text="{Binding DownloadQueueLength, Converter={StaticResource LocalizedFormatter}, ConverterParameter=ueueFormat}" />
+                   Text="{Binding DownloadQueueLength, Converter={StaticResource LocalizedFormatter}, ConverterParameter=QueueFormat}" />
       </StackPanel>
     </Border>
 
