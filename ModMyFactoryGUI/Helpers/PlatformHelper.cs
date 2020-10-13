@@ -180,18 +180,6 @@ namespace ModMyFactoryGUI.Helpers
 #endif
         }
 
-        public static string GetAssemblyPath()
-        {
-#if NETFULL
-            var path = Assembly.GetExecutingAssembly().Location;
-            return Path.GetFileNameWithoutExtension(path) + ".exe";
-#elif NETCORE
-            return Assembly.GetExecutingAssembly().Location;
-#else
-            throw new PlatformNotSupportedException();
-#endif
-        }
-
 #if NETCORE
 
         private static void CreateUnixSymbolicLink(string linkPath, string targetPath, string arguments)

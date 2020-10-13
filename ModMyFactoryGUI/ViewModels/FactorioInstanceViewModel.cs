@@ -230,7 +230,7 @@ namespace ModMyFactoryGUI.ViewModels
         private string GetTargetPath()
         {
 #if SELFCONTAINED
-            return PlatformHelper.GetAssemblyPath();
+            return Assembly.GetExecutingAssembly().Location;
 #else
             return "dotnet";
 #endif
@@ -260,7 +260,7 @@ namespace ModMyFactoryGUI.ViewModels
                 var path = await sfd.ShowAsync(App.Current.MainWindow);
                 if (!string.IsNullOrEmpty(path))
                 {
-                    // We need to check this because in Lunix the default extension is not automatically appended
+                    // We need to check this because in Linux the default extension is not automatically appended
                     if (string.IsNullOrEmpty(Path.GetExtension(path))) path += "." + extensions[0];
 
                     var args = BuildArguments(vm);
