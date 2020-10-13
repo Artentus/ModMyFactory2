@@ -109,11 +109,17 @@ namespace ModMyFactoryGUI
 
         public void Refresh()
         {
-            var copy = _evaluated.ToArray();
+            var old = _evaluated.ToArray();
             _evaluated = Evaluate(_baseCollection);
-            OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Remove, (IList)copy));
-            OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add, (IList)_evaluated.ToArray()));
-            OnPropertyChanged(new PropertyChangedEventArgs(nameof(Count)));
+
+            var removed = old.Except(_evaluated).ToArray();
+            if (removed.Length > 0) OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Remove, removed));
+
+            var added = _evaluated.Except(old).ToArray();
+            if (added.Length > 0) OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add, added));
+
+            if (old.Length != _evaluated.Count)
+                OnPropertyChanged(new PropertyChangedEventArgs(nameof(Count)));
         }
 
         public void Add(T item) => throw new NotSupportedException();
