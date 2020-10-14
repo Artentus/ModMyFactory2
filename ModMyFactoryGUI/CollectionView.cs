@@ -113,10 +113,10 @@ namespace ModMyFactoryGUI
             _evaluated = Evaluate(_baseCollection);
 
             var removed = old.Except(_evaluated).ToArray();
-            if (removed.Length > 0) OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Remove, removed));
+            if (removed.Length > 0) OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Remove, removed, 0));
 
             var added = _evaluated.Except(old).ToArray();
-            if (added.Length > 0) OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add, added));
+            if (added.Length > 0) OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add, added, 0));
 
             if (old.Length != _evaluated.Count)
                 OnPropertyChanged(new PropertyChangedEventArgs(nameof(Count)));

@@ -40,6 +40,7 @@ namespace ModMyFactoryGUI.ViewModels
         private string _modFilter, _modpackFilter;
         private bool? _allModsEnabled, _allModpacksEnabled;
         private bool _isUpdating;
+        private volatile bool _isAdding, _isRemoving;
 
         public CollectionView<ModVersionGroupingViewModel> ModVersionGroupings { get; }
 
@@ -252,35 +253,47 @@ namespace ModMyFactoryGUI.ViewModels
             }
         }
 
+        private void OnModpackAdded(Modpack modpack, out ModpackViewModel vm)
+        {
+            vm = new ModpackViewModel(modpack);
+            vm.PropertyChanged += OnModpackPropertyChanged;
+            _modpacks.Add(vm);
+
+            EvaluateModpackEnabledStates();
+        }
+
+        private void OnModpackRemoved(Modpack modpack)
+        {
+            if (TryGetViewModel(modpack, out var vm))
+            {
+                vm.PropertyChanged -= OnModpackPropertyChanged;
+                _modpacks.Remove(vm);
+                vm.Dispose();
+
+                EvaluateModpackEnabledStates();
+            }
+        }
+
         private void OnModpackCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
             switch (e.Action)
             {
                 case NotifyCollectionChangedAction.Add:
-                    foreach (Modpack modpack in e.NewItems)
+                    if (!_isAdding)
                     {
-                        var vm = new ModpackViewModel(modpack);
-                        vm.PropertyChanged += OnModpackPropertyChanged;
-                        _modpacks.Add(vm);
+                        foreach (Modpack modpack in e.NewItems)
+                            OnModpackAdded(modpack, out _);
                     }
-                    this.RaisePropertyChanged(nameof(Modpacks));
                     break;
 
                 case NotifyCollectionChangedAction.Remove:
-                    foreach (Modpack modpack in e.OldItems)
+                    if (!_isRemoving)
                     {
-                        if (TryGetViewModel(modpack, out var vm))
-                        {
-                            vm.PropertyChanged -= OnModpackPropertyChanged;
-                            _modpacks.Remove(vm);
-                            vm.Dispose();
-                        }
+                        foreach (Modpack modpack in e.OldItems)
+                            OnModpackRemoved(modpack);
                     }
-                    this.RaisePropertyChanged(nameof(Modpacks));
                     break;
             }
-
-            EvaluateModpackEnabledStates();
         }
 
         private async Task AddModsAsync()
@@ -411,14 +424,16 @@ namespace ModMyFactoryGUI.ViewModels
 
         private void CreateModpack()
         {
+            _isAdding = true;
             ModpackFilter = string.Empty; // Clear filter to avoid the new modpack getting hidden
 
             var modpack = Program.CreateModpack();
-            if (TryGetViewModel(modpack, out var vm))
-            {
-                vm.IsRenaming = true;
-                AttachedView.ScrollModpackIntoView(vm);
-            }
+            OnModpackAdded(modpack, out var vm);
+
+            vm.IsRenaming = true;
+            AttachedView.ScrollModpackIntoView(vm);
+
+            _isAdding = false;
         }
 
         private async Task DeleteModpack(Modpack modpack)
@@ -426,7 +441,15 @@ namespace ModMyFactoryGUI.ViewModels
             var title = (string)App.Current.Locales.GetResource("DeleteConfirm_Title");
             var message = string.Format((string)App.Current.Locales.GetResource("DeleteConfirm_Modpack_Message"), modpack.DisplayName);
             var result = await MessageBox.Show(title, message, MessageKind.Question, DialogOptions.YesNo);
-            if (result == DialogResult.Yes) Program.DeleteModpack(modpack);
+            if (result == DialogResult.Yes)
+            {
+                _isRemoving = true;
+
+                Program.DeleteModpack(modpack);
+                OnModpackRemoved(modpack);
+
+                _isRemoving = false;
+            }
         }
 
         public async Task ImportModAsync(string path)
