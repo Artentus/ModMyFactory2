@@ -1,3 +1,8 @@
+### Beta 4.0.3
+
+- Fix mod and modpack enabled checkboxes not updating properly in some cases
+
+
 ### Beta 4.0.2
 
 - Fix an issue that caused links created by MMF to point to an incorrect location

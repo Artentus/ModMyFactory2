@@ -91,11 +91,15 @@ namespace ModMyFactoryGUI.ViewModels
                     this.RaiseAndSetIfChanged(ref _allModsEnabled, value, nameof(AllModsEnabled));
 
                     _isUpdating = true;
+
                     foreach (var grouping in _modVersionGroupings)
                     {
                         foreach (var family in grouping.FamilyViewModels)
                             family.IsEnabled = value.Value;
                     }
+
+                    EvaluateModpackEnabledStates();
+
                     _isUpdating = false;
                 }
             }
@@ -111,8 +115,12 @@ namespace ModMyFactoryGUI.ViewModels
                     this.RaiseAndSetIfChanged(ref _allModpacksEnabled, value, nameof(AllModpacksEnabled));
 
                     _isUpdating = true;
+
                     foreach (var pack in _modpacks)
                         pack.Enabled = value.Value;
+
+                    EvaluateModEnabledStates();
+
                     _isUpdating = false;
                 }
             }
