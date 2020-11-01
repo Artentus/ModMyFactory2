@@ -29,6 +29,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Net.Http;
 using System.Reflection;
 using System.Threading.Tasks;
 using System.Windows.Input;
@@ -232,6 +233,11 @@ namespace ModMyFactoryGUI.ViewModels
             catch (WebException ex)
             {
                 if (showResultMessage) await MessageHelper.ShowMessageForWebException(ex);
+                return (false, null, null, null);
+            }
+            catch (HttpRequestException ex)
+            {
+                if (showResultMessage) await MessageHelper.ShowMessageForHttpException(ex);
                 return (false, null, null, null);
             }
         }
