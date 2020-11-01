@@ -2,10 +2,6 @@
 
 - Add functionality to delete mods from the manager tab
 - Fix potential crash when searching for updates
-
-
-### Beta 4.0.3
-
 - Fix mod and modpack enabled checkboxes not updating properly in some cases
 
 
