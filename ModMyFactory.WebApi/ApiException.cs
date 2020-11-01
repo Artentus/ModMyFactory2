@@ -26,6 +26,7 @@ namespace ModMyFactory.WebApi
                     (WebExceptionStatus.ProtocolError, HttpStatusCode.Unauthorized) => new AuthenticationFailureException(ex),
                     (WebExceptionStatus.Timeout, _) => new TimeoutException(ex),
                     (WebExceptionStatus.ConnectFailure, _) => new ConnectFailureException(ex),
+                    (WebExceptionStatus.SecureChannelFailure, _) => new ConnectFailureException(ex),
                     _ => new ApiException("General API exception") // No matching exception found
                 };
             }
