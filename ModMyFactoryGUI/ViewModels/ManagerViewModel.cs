@@ -130,6 +130,8 @@ namespace ModMyFactoryGUI.ViewModels
 
         public ICommand UpdateModsCommand { get; }
 
+        public ICommand DeleteModFamilyCommand { get; }
+
         public ICommand CreateModpackCommand { get; }
 
         public ICommand DeleteModpackCommand { get; }
@@ -174,6 +176,7 @@ namespace ModMyFactoryGUI.ViewModels
 
             AddModsCommand = ReactiveCommand.CreateFromTask(AddModsAsync);
             UpdateModsCommand = ReactiveCommand.CreateFromTask(UpdateModsAsync);
+            DeleteModFamilyCommand = ReactiveCommand.CreateFromTask<ModFamily>(DeleteModFamily);
             CreateModpackCommand = ReactiveCommand.Create(CreateModpack);
             DeleteModpackCommand = ReactiveCommand.CreateFromTask<Modpack>(DeleteModpack);
         }
@@ -427,6 +430,20 @@ namespace ModMyFactoryGUI.ViewModels
             catch (ApiException ex)
             {
                 await MessageHelper.ShowMessageForApiException(ex);
+            }
+        }
+
+        private async Task DeleteModFamily(ModFamily family)
+        {
+            var title = (string)App.Current.Locales.GetResource("DeleteConfirm_Title");
+            var message = string.Format((string)App.Current.Locales.GetResource("DeleteConfirm_Mod_Message"), family.DisplayName, family.EnabledMod.Version);
+            var result = await MessageBox.Show(title, message, MessageKind.Question, DialogOptions.YesNo);
+            if (result == DialogResult.Yes)
+            {
+                var mod = family.EnabledMod;
+                Program.Manager.RemoveMod(mod);
+                mod.Dispose();
+                mod.File.Delete();
             }
         }
 
