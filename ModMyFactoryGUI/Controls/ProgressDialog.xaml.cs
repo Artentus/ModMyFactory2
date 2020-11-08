@@ -107,16 +107,21 @@ namespace ModMyFactoryGUI.Controls
             // Show dialog but don't wait yet
             var dialogTask = dialog.ShowDialog(owner);
 
-            // Await the operation
-            await operation;
+            try
+            {
+                // Await the operation
+                await operation;
+            }
+            finally
+            {
+                // Unsubscribe
+                progress.ProgressChanged -= OnProgressChanged;
 
-            // Unsubscribe
-            progress.ProgressChanged -= OnProgressChanged;
-
-            // Close dialog and wait for it to finish
-            dialog.Close();
-            await dialogTask;
-
+                // Close dialog and wait for it to finish
+                dialog.Close();
+                await dialogTask;
+            }
+            
             if (cancellationSource.IsCancellationRequested) return DialogResult.Cancel;
             else return DialogResult.None;
         }
@@ -134,16 +139,21 @@ namespace ModMyFactoryGUI.Controls
             // Show dialog but don't wait yet
             var dialogTask = dialog.ShowDialog(owner);
 
-            // Await the operation
-            await operation;
+            try
+            {
+                // Await the operation
+                await operation;
+            }
+            finally
+            {
+                // Unsubscribe
+                progress.ProgressChanged -= OnProgressChanged;
 
-            // Unsubscribe
-            progress.ProgressChanged -= OnProgressChanged;
-
-            // Close dialog and wait for it to finish
-            dialog.Close();
-            await dialogTask;
-
+                // Close dialog and wait for it to finish
+                dialog.Close();
+                await dialogTask;
+            }
+            
             return DialogResult.None;
         }
 
@@ -157,12 +167,17 @@ namespace ModMyFactoryGUI.Controls
             // Show dialog but don't wait yet
             var dialogTask = dialog.ShowDialog(owner);
 
-            // Await the operation
-            await operation;
-
-            // Close dialog and wait for it to finish
-            dialog.Close();
-            await dialogTask;
+            try
+            {
+                // Await the operation
+                await operation;
+            }
+            finally
+            {
+                // Close dialog and wait for it to finish
+                dialog.Close();
+                await dialogTask;
+            }
 
             if (cancellationSource.IsCancellationRequested) return DialogResult.Cancel;
             else return DialogResult.None;
@@ -177,13 +192,18 @@ namespace ModMyFactoryGUI.Controls
             // Show dialog but don't wait yet
             var dialogTask = dialog.ShowDialog(owner);
 
-            // Await the operation
-            await operation;
-
-            // Close dialog and wait for it to finish
-            dialog.Close();
-            await dialogTask;
-
+            try
+            {
+                // Await the operation
+                await operation;
+            }
+            finally
+            {
+                // Close dialog and wait for it to finish
+                dialog.Close();
+                await dialogTask;
+            }
+            
             return DialogResult.None;
         }
     }
