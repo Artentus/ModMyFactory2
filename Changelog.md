@@ -1,3 +1,13 @@
+### Beta 4.1.2
+
+- Add Brazilian Portuguese translation (thanks Mobius One)
+
+
+### Beta 4.1.1
+
+- Fix progress dialogs staying open under certain circumstances
+
+
 ### Beta 4.1
 
 - Add functionality to delete mods from the manager tab
