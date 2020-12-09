@@ -1,11 +1,11 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
   <Import Project="..\package.targets" />
   <Import Project="..\constants.targets" />
   <Import Project="..\references.targets" />
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <TargetFrameworks>netcoreapp3.0;net472</TargetFrameworks>
+    <TargetFrameworks>net5.0</TargetFrameworks>
     <RootNamespace>ModMyFactoryGUI</RootNamespace>
     <AssemblyName>ModMyFactoryGUI</AssemblyName>
     <ApplicationIcon>Assets\MMF_Icon.ico</ApplicationIcon>
@@ -20,10 +20,6 @@
 
     <!-- Uncomment this if you want to build a self-contained binary (or specify Standalone=true in MSBuild) -->
     <!--<DefineConstants>$(DefineConstants);SELFCONTAINED</DefineConstants>-->
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(TargetFramework)' == 'net472'">
-    <DefineConstants>$(DefineConstants);SELFCONTAINED</DefineConstants>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Standalone)' == 'true'">
@@ -91,6 +87,7 @@
     <PackageReference Include="Serilog.Sinks.Console" Version="3.1.1" />
     <PackageReference Include="Serilog.Sinks.Debug" Version="1.0.1" />
     <PackageReference Include="Serilog.Sinks.File" Version="4.1.0" />
+    <PackageReference Include="System.Reactive" Version="4.4.1" />
     <PackageReference Include="System.Threading.Tasks.Dataflow" Version="4.11.1" />
     <ProjectReference Include="..\Avalonia.ThemeManager\Avalonia.ThemeManager.csproj" />
   </ItemGroup>
@@ -119,14 +116,6 @@
     <Reference Include="Avalonia.HtmlRenderer">
       <HintPath>lib\netstandard2.0\Avalonia.HtmlRenderer.dll</HintPath>
     </Reference>
-  </ItemGroup>
-
-  <ItemGroup Condition="'$(TargetFramework)' == 'netcoreapp3.0'">
-    <PackageReference Include="System.Reactive" Version="4.4.1" />
-  </ItemGroup>
-
-  <ItemGroup Condition="'$(TargetFramework)' == 'net472'">
-    <PackageReference Include="System.Interactive.Async" Version="4.1.1" />
   </ItemGroup>
 
 </Project>

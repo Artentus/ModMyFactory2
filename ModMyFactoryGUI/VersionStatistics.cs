@@ -20,7 +20,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 
-#if NETCORE && SELFCONTAINED
+#if SELFCONTAINED
 using System.Runtime.InteropServices;
 #endif
 
@@ -90,10 +90,6 @@ namespace ModMyFactoryGUI
 
         static VersionStatistics()
         {
-#if NETFULL
-            AppPlatform = AppPlatform.Windows;
-#elif NETCORE
-
 #if SELFCONTAINED
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
             {
@@ -109,10 +105,6 @@ namespace ModMyFactoryGUI
             }
 #else
             AppPlatform = AppPlatform.Universal;
-#endif
-
-#else
-            throw new PlatformNotSupportedException();
 #endif
 
             AppVersion = TagVersion.Parse(Assembly.GetAssembly(typeof(App)).ProductVersion());

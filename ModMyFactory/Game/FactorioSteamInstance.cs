@@ -9,12 +9,7 @@ using ModMyFactory.Mods;
 using System;
 using System.Diagnostics;
 using System.IO;
-
-#if NETCORE
-
 using System.Runtime.InteropServices;
-
-#endif
 
 namespace ModMyFactory.Game
 {
@@ -26,9 +21,6 @@ namespace ModMyFactory.Game
 
         static FactorioSteamInstance()
         {
-#if NETFULL
-            string appDataPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Factorio");
-#elif NETCORE
             string appDataPath;
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
@@ -43,7 +35,7 @@ namespace ModMyFactory.Game
             {
                 throw new PlatformNotSupportedException();
             }
-#endif
+
             SavegamePath = Path.Combine(appDataPath, "saves");
             ScenarioPath = Path.Combine(appDataPath, "scenarios");
             ModPath = Path.Combine(appDataPath, "mods");

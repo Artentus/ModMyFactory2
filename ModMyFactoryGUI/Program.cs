@@ -64,10 +64,6 @@ namespace ModMyFactoryGUI
         private static DirectoryInfo GetApplicationDataDirectory()
         {
             string path = null;
-#if NETFULL
-            path = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
-            path = Path.Combine(path, "ModMyFactoryGUI");
-#elif NETCORE
             var os = Environment.OSVersion;
             if (os.Platform == PlatformID.Win32NT)
             {
@@ -79,7 +75,6 @@ namespace ModMyFactoryGUI
                 path = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
                 path = Path.Combine(path, ".modmyfactorygui");
             }
-#endif
             return new DirectoryInfo(path);
         }
 

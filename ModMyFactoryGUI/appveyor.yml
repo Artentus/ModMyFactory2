@@ -13,20 +13,16 @@ install:
   - ps: '& $env:temp\dotnet-install.ps1 -Architecture x64 -InstallDir "$env:ProgramFiles\dotnet"'
 
 build_script:
-  - dotnet publish ModMyFactoryGUI\ -o ModMyFactoryGUI\bin\publish\linux-x64\ -c Release -f netcoreapp3.0 -r linux-x64 -p:PublishTrimmed=true -p:Standalone=true --version-suffix %APPVEYOR_BUILD_VERSION%
-  - dotnet publish ModMyFactoryGUI\ -o ModMyFactoryGUI\bin\publish\osx-x64\ -c Release -f netcoreapp3.0 -r osx-x64 -p:PublishTrimmed=true -p:Standalone=true --version-suffix %APPVEYOR_BUILD_VERSION%
-  - dotnet publish ModMyFactoryGUI\ -o ModMyFactoryGUI\bin\publish\net472\ -c Release -f net472 --version-suffix %APPVEYOR_BUILD_VERSION%
-  - dotnet publish ModMyFactoryGUI\ -o ModMyFactoryGUI\bin\publish\netcoreapp3.0\ -c Release -f netcoreapp3.0 --version-suffix %APPVEYOR_BUILD_VERSION%
-
+  - dotnet publish ModMyFactoryGUI\ -o ModMyFactoryGUI\bin\publish\linux-x64\ -c Release -f net5.0 -r linux-x64 -p:PublishTrimmed=true -p:Standalone=true --version-suffix %APPVEYOR_BUILD_VERSION%
+  - dotnet publish ModMyFactoryGUI\ -o ModMyFactoryGUI\bin\publish\osx-x64\ -c Release -f net5.0 -r osx-x64 -p:PublishTrimmed=true -p:Standalone=true --version-suffix %APPVEYOR_BUILD_VERSION%
+  - dotnet publish ModMyFactoryGUI\ -o ModMyFactoryGUI\bin\publish\win-x64\ -c Release -f net5.0 -r win-x64 -p:PublishTrimmed=true -p:Standalone=true --version-suffix %APPVEYOR_BUILD_VERSION%
+  - dotnet publish ModMyFactoryGUI\ -o ModMyFactoryGUI\bin\publish\net5.0\ -c Release -f net5.0 --version-suffix %APPVEYOR_BUILD_VERSION%
+  
 after_build:
   - 7z a %APPVEYOR_BUILD_VERSION%_linux64.zip .\ModMyFactoryGUI\bin\publish\linux-x64\*
   - 7z a %APPVEYOR_BUILD_VERSION%_osx.zip .\ModMyFactoryGUI\bin\publish\osx-x64\*
-  - 7z a %APPVEYOR_BUILD_VERSION%_win64.zip .\ModMyFactoryGUI\bin\publish\net472\*
-  - 7z a %APPVEYOR_BUILD_VERSION%_universal.zip .\ModMyFactoryGUI\bin\publish\netcoreapp3.0\*
-
-cache:
-  - '%userprofile%\.nuget\packages'
-  - '%LocalAppData%\NuGet\v3-cache'
+  - 7z a %APPVEYOR_BUILD_VERSION%_win64.zip .\ModMyFactoryGUI\bin\publish\win-x64\*
+  - 7z a %APPVEYOR_BUILD_VERSION%_universal.zip .\ModMyFactoryGUI\bin\publish\net5.0\*
 
 artifacts:
   path: '%APPVEYOR_BUILD_VERSION%_*.zip'

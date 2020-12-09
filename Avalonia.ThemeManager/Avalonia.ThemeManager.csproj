@@ -2,7 +2,7 @@
   <Import Project="..\constants.targets" />
 
   <PropertyGroup>
-    <TargetFrameworks>netstandard2.0;netcoreapp3.0;net472</TargetFrameworks>
+    <TargetFrameworks>netstandard2.0</TargetFrameworks>
     <RootNamespace>Avalonia.ThemeManager</RootNamespace>
     <AssemblyName>Avalonia.ThemeManager</AssemblyName>
     <Authors>Wiesław Šoltés, Mathis Rech</Authors>

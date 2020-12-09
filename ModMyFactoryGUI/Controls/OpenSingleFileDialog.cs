@@ -15,8 +15,6 @@ namespace ModMyFactoryGUI.Controls
 {
     internal class OpenSingleFileDialog : FileSystemDialog
     {
-#if NETCORE
-
         private sealed class DefaultImpl : ISingleFileSystemDialogImpl
         {
             // This functionality only exists in Windows, so on Unix we fall back to a normal file dialog
@@ -40,7 +38,6 @@ namespace ModMyFactoryGUI.Controls
                     ? path : null;
             }
         }
-#endif
 
         private static readonly ISingleFileSystemDialogImpl dialogImpl;
 
@@ -50,9 +47,6 @@ namespace ModMyFactoryGUI.Controls
 
         static OpenSingleFileDialog()
         {
-#if NETFULL
-            dialogImpl = new Win32.SingleFileDialogImpl();
-#elif NETCORE
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
                 dialogImpl = new Win32.SingleFileDialogImpl();
@@ -61,9 +55,6 @@ namespace ModMyFactoryGUI.Controls
             {
                 dialogImpl = new DefaultImpl();
             }
-#else
-            throw new PlatformNotSupportedException();
-#endif
         }
 
         public Task<string> ShowAsync(Window parent)

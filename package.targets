@@ -10,8 +10,6 @@
         <RepositoryType>git</RepositoryType>
         <PackageProjectUrl>https://github.com/Artentus/ModMyFactory2</PackageProjectUrl>
         <NeutralLanguage>en</NeutralLanguage>
-
-        <LangVersion>8.0</LangVersion>
     </PropertyGroup>
 
     <ItemGroup>

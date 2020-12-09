@@ -8,12 +8,8 @@
 using ModMyFactory.IO.Win32;
 using System;
 
-#if NETCORE
-
 using System.Runtime.InteropServices;
 using ModMyFactory.IO.Unix;
-
-#endif
 
 namespace ModMyFactory.IO
 {
@@ -21,9 +17,6 @@ namespace ModMyFactory.IO
     {
         public static ISymlinkInfo FromPath(string path)
         {
-#if NETFULL
-            return new JunctionInfo(path);
-#elif NETCORE
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
                 return new JunctionInfo(path);
@@ -37,9 +30,6 @@ namespace ModMyFactory.IO
             {
                 throw new PlatformNotSupportedException();
             }
-#else
-            throw new PlatformNotSupportedException();
-#endif
         }
     }
 }

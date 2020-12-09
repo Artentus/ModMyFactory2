@@ -423,7 +423,7 @@ namespace ModMyFactoryGUI.ViewModels
             await parsedOptions.WithParsedAsync(EvaluateOptions);
         }
 
-//#if !DEBUG
+#if !DEBUG
         private async Task StartupUpdate()
         {
             if (Program.Settings.Get(SettingName.UpdateOnStartup, true))
@@ -438,7 +438,7 @@ namespace ModMyFactoryGUI.ViewModels
                 }
             }
         }
-//#endif
+#endif
 
         private async void WindowOpenedHandler(object sender, EventArgs e)
         {
@@ -453,9 +453,9 @@ namespace ModMyFactoryGUI.ViewModels
 
             await parsedOptions.WithParsedAsync(EvaluateOptions);
 
-//#if !DEBUG
+#if !DEBUG
             await StartupUpdate();
-//#endif
+#endif
         }
 
         protected override void OnViewChanged(EventArgs e)

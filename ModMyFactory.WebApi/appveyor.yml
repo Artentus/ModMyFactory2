@@ -26,10 +26,6 @@ build_script:
 after_build:
   - dotnet pack ModMyFactory.WebApi\ -c Release --version-suffix %APPVEYOR_BUILD_VERSION% --no-build --include-symbols -p:SymbolPackageFormat=snupkg
 
-cache:
-  - '%userprofile%\.nuget\packages'
-  - '%LocalAppData%\NuGet\v3-cache'
-
 artifacts:
   - path: '**\*.nupkg'
     name: Packages

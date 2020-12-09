@@ -4,7 +4,7 @@
   <Import Project="..\references.targets" />
 
   <PropertyGroup>
-    <TargetFrameworks>netstandard2.0;netcoreapp3.0;net472</TargetFrameworks>
+    <TargetFrameworks>netstandard2.0</TargetFrameworks>
     <RootNamespace>ModMyFactory</RootNamespace>
     <AssemblyName>ModMyFactory</AssemblyName>
     <Description>Feature-rich mod manager API for the game Factorio.</Description>
@@ -18,6 +18,8 @@
   <ItemGroup>
     <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
     <PackageReference Include="sharpcompress" Version="0.26.0" />
+    <PackageReference Include="Mono.Posix.NETStandard" Version="1.0.0" />
+    <PackageReference Include="Microsoft.Win32.Registry" Version="4.7.0" />
   </ItemGroup>
   
   <ItemGroup Condition="'$(Configuration)' == 'Debug'">
@@ -34,14 +36,4 @@
     <PackageReference Include="ModMyFactory.Win32" Version="1.*-*" />
   </ItemGroup>
 
-  <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0' OR '$(TargetFramework)' == 'netcoreapp3.0'">
-    <PackageReference Include="Mono.Posix.NETStandard" Version="1.0.0" />
-    <PackageReference Include="Microsoft.Win32.Registry" Version="4.7.0" />
-  </ItemGroup>
-  
-  <ItemGroup Condition="'$(TargetFramework)' == 'net472'">
-    <Compile Remove="IO\Unix\SymlinkInfo.cs" />
-    <None Include="IO\Unix\SymlinkInfo.cs" />
-  </ItemGroup>
-  
 </Project>

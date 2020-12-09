@@ -181,14 +181,14 @@ namespace ModMyFactoryGUI
 
         public bool Remove(TKey key)
         {
-            bool result = _dictionary.RemoveEx(key, out var value);
+            bool result = _dictionary.Remove(key, out var value);
             if (result) OnRemove(new KeyValuePair<TKey, TValue>(key, value));
             return result;
         }
 
         public bool Remove(TKey key, out TValue value)
         {
-            bool result = _dictionary.RemoveEx(key, out value);
+            bool result = _dictionary.Remove(key, out value);
             if (result) OnRemove(new KeyValuePair<TKey, TValue>(key, value));
             return result;
         }

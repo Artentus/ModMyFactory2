@@ -59,7 +59,7 @@ namespace ModMyFactoryGUI
             else
             {
                 string key = instance.GetUniqueKey();
-                return NameTable.GetValue(key, "Factorio");
+                return NameTable.GetValueOrDefault(key, "Factorio");
             }
         }
 

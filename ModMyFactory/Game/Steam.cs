@@ -12,12 +12,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-
-#if NETCORE
-
 using System.Runtime.InteropServices;
-
-#endif
 
 namespace ModMyFactory.Game
 {
@@ -56,9 +51,6 @@ namespace ModMyFactory.Game
 
         private static bool TryGetSteamPath(out string path)
         {
-#if NETFULL
-            return TryGetSteamPathWin32(out path);
-#elif NETCORE
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
                 return TryGetSteamPathWin32(out path);
@@ -77,9 +69,6 @@ namespace ModMyFactory.Game
             {
                 throw new PlatformNotSupportedException();
             }
-#else
-            throw new PlatformNotSupportedException();
-#endif
         }
 
         private static DirectoryInfo GetLibrary(string basePath)
@@ -154,9 +143,6 @@ namespace ModMyFactory.Game
         /// <param name="arguments">Optional arguments</param>
         public Process StartApp(SteamApp app, string arguments)
         {
-#if NETFULL
-            var startInfo = new ProcessStartInfo(Path.Combine(_path, "Steam.exe"));
-#elif NETCORE
             ProcessStartInfo startInfo;
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
@@ -170,9 +156,6 @@ namespace ModMyFactory.Game
             {
                 throw new PlatformNotSupportedException();
             }
-#else
-            throw new PlatformNotSupportedException();
-#endif
             var builder = new ArgumentBuilder();
             builder.AppendArgument("-applaunch");
             builder.AppendArgument(((long)app).ToString());

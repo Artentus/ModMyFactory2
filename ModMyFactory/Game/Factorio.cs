@@ -12,12 +12,7 @@ using System;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-
-#if NETCORE
-
 using System.Runtime.InteropServices;
-
-#endif
 
 namespace ModMyFactory.Game
 {
@@ -39,10 +34,6 @@ namespace ModMyFactory.Game
 
         private static bool TryLoadExecutable(DirectoryInfo directory, out FileInfo executable)
         {
-#if NETFULL
-            executable = new FileInfo(Path.Combine(directory.FullName, "bin", "x64", "factorio.exe"));
-            return executable.Exists;
-#elif NETCORE
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
                 executable = new FileInfo(Path.Combine(directory.FullName, "bin", "x64", "factorio.exe"));
@@ -58,7 +49,6 @@ namespace ModMyFactory.Game
             }
 
             return executable.Exists;
-#endif
         }
 
         /// <summary>

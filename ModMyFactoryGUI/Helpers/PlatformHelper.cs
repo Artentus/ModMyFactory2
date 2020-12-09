@@ -20,18 +20,13 @@ namespace ModMyFactoryGUI.Helpers
     {
         private static readonly string[] WindowsArchiveExtensions = { "zip" };
         private static readonly string[] WindowsSymbolicLinkExtensions = { "lnk" };
-#if NETCORE
         private static readonly string[] LinuxArchiveExtensions = { "tar.gz", "tar.xz" };
         private static readonly string[] LinuxSymbolicLinkExtensions = { "sh" };
         private static readonly string[] MacArchiveExtensions = { "dmg" };
         private static readonly string[] EmptyExtensions = new string[0];
-#endif
 
         public static void OpenWebUrl(string url)
         {
-#if NETFULL
-            Process.Start(new ProcessStartInfo(url) { UseShellExecute = true });
-#elif NETCORE
             // Code according to Microsoft
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
@@ -49,25 +44,10 @@ namespace ModMyFactoryGUI.Helpers
             {
                 throw new PlatformNotSupportedException();
             }
-#else
-            throw new PlatformNotSupportedException();
-#endif
         }
 
         public static void OpenDirectory(DirectoryInfo directory)
         {
-#if NETFULL
-            string path = directory.FullName;
-            if (!path.EndsWith(Path.DirectorySeparatorChar.ToString()))
-                path += Path.DirectorySeparatorChar;
-
-            Process.Start(new ProcessStartInfo()
-            {
-                FileName = path,
-                UseShellExecute = true,
-                Verb = "open"
-            });
-#elif NETCORE
             string path = directory.FullName;
             if (!path.EndsWith(Path.DirectorySeparatorChar))
                 path += Path.DirectorySeparatorChar;
@@ -93,16 +73,10 @@ namespace ModMyFactoryGUI.Helpers
             {
                 throw new PlatformNotSupportedException();
             }
-#else
-            throw new PlatformNotSupportedException();
-#endif
         }
 
         public static Platform GetCurrentPlatform()
         {
-#if NETFULL
-            return Platform.Win64Manual;
-#elif NETCORE
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
                 return Platform.Win64Manual;
@@ -119,16 +93,10 @@ namespace ModMyFactoryGUI.Helpers
             {
                 throw new PlatformNotSupportedException();
             }
-#else
-            throw new PlatformNotSupportedException();
-#endif
         }
 
         public static string[] GetFactorioArchiveExtensions()
         {
-#if NETFULL
-            return WindowsArchiveExtensions;
-#elif NETCORE
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
                 return WindowsArchiveExtensions;
@@ -145,16 +113,10 @@ namespace ModMyFactoryGUI.Helpers
             {
                 throw new PlatformNotSupportedException();
             }
-#else
-            throw new PlatformNotSupportedException();
-#endif
         }
 
         public static string[] GetSymbolicLinkExtensions()
         {
-#if NETFULL
-            return WindowsSymbolicLinkExtensions;
-#elif NETCORE
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
                 return WindowsSymbolicLinkExtensions;
@@ -175,12 +137,7 @@ namespace ModMyFactoryGUI.Helpers
             {
                 throw new PlatformNotSupportedException();
             }
-#else
-            throw new PlatformNotSupportedException();
-#endif
         }
-
-#if NETCORE
 
         private static void CreateUnixSymbolicLink(string linkPath, string targetPath, string arguments)
         {
@@ -205,13 +162,8 @@ namespace ModMyFactoryGUI.Helpers
 
 #endif
 
-#endif
-
         public static void CreateSymbolicLink(string linkPath, string targetPath, string arguments, string iconLocation)
         {
-#if NETFULL
-            Shell.CreateSymbolicLink(linkPath, targetPath, arguments, iconLocation);
-#elif NETCORE
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
                 Shell.CreateSymbolicLink(linkPath, targetPath, arguments, iconLocation);
@@ -233,9 +185,6 @@ namespace ModMyFactoryGUI.Helpers
             {
                 throw new PlatformNotSupportedException();
             }
-#else
-            throw new PlatformNotSupportedException();
-#endif
         }
     }
 }

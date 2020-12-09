@@ -119,7 +119,7 @@ namespace ModMyFactoryGUI.ViewModels
                         {
                             if (!_manager.TryGetFamily(mod.Name, out var family) || family.Count == 0)
                             {
-                                if (_familyViewModels.RemoveEx(mod.Name, out var vm))
+                                if (_familyViewModels.Remove(mod.Name, out var vm))
                                     vm.Dispose();
                             }
                         }

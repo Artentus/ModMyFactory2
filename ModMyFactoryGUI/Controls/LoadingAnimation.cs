@@ -110,7 +110,7 @@ namespace ModMyFactoryGUI.Controls
                 Canvas.SetLeft(ellipse, y - offset);
                 Canvas.SetTop(ellipse, x - offset);
 
-                var delay = RevolutionDuration.DivideEx(DotCount).MultiplyEx(i);
+                var delay = RevolutionDuration.Divide(DotCount).Multiply(i);
                 var style = new Style(s => s.OfType(typeof(Ellipse)));
                 style.Animations.Add(CreateAnimation(delay));
                 ellipse.Styles.Add(style);

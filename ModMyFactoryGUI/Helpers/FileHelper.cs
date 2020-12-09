@@ -97,9 +97,6 @@ namespace ModMyFactoryGUI.Helpers
 
         private static string SanitizePath(string path)
         {
-#if NETFULL
-            path = path.Trim().ToLower();
-#else
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
                 // Windows is case insensitive and likes to mix capitalization
@@ -110,7 +107,7 @@ namespace ModMyFactoryGUI.Helpers
                 // On other OS we can be sure capitalization will be consistent
                 path = path.Trim();
             }
-#endif
+
             path = path.Replace('\\', '/');
             if (path.EndsWith("/")) path = path.Substring(0, path.Length - 1);
             return path;
