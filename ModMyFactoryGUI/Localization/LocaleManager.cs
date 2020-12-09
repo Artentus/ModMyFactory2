@@ -40,7 +40,7 @@ namespace ModMyFactoryGUI.Localization
             DefaultCulture = defaultCulture;
             _uiCulture = defaultCulture;
 
-            string defaultCode = defaultCulture.TwoLetterISOLanguageName;
+            string defaultCode = defaultCulture.Name;
             if (!localeProvider.TryGetValue(defaultCode, out _defaultLocale))
                 throw new LocaleException($"Default culture '{defaultCode}' not provided.");
         }
@@ -67,7 +67,7 @@ namespace ModMyFactoryGUI.Localization
 
         public object GetResource(string key)
         {
-            if (_localeProvider.TryGetValue(UICulture.TwoLetterISOLanguageName, out var locale))
+            if (_localeProvider.TryGetValue(UICulture.Name, out var locale))
                 return GetResource(locale, key);
             else
                 return GetDefaultResource(key);

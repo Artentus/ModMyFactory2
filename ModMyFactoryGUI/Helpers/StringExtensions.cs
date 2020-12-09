@@ -7,6 +7,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 
 namespace ModMyFactoryGUI.Helpers
 {
@@ -35,6 +36,14 @@ namespace ModMyFactoryGUI.Helpers
             }
 
             return result.ToArray();
+        }
+
+        // Ensures the first letter is capital
+        public static string Capitalize(this string s, CultureInfo culture)
+        {
+            if (string.IsNullOrWhiteSpace(s)) return s;
+            else if (s.Length == 1) return char.ToUpper(s[0], culture).ToString();
+            else return char.ToUpper(s[0], culture).ToString() + s.Substring(1);
         }
     }
 }

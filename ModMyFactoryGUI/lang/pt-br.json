@@ -2,19 +2,19 @@
   // --------- Misc ---------
   "CloseButton": {
     "type": "string",
-    "value": "Close"
+    "value": "Fechar"
   },
   "DownloadButton": {
     "type": "string",
-    "value": "Download"
+    "value": "Baixar"
   },
   "DeleteButton": {
     "type": "string",
-    "value": "Delete"
+    "value": "Excluir"
   },
   "ArchiveFileType": {
     "type": "string",
-    "value": "Archives"
+    "value": "Arquivos"
   },
   "SymlinkFileType": {
     "type": "string",
@@ -26,146 +26,146 @@
   },
   "FmpaFileType": {
     "type": "string",
-    "value": "Factorio modpack archives"
+    "value": "Arquivos Factorio modpack"
   },
   "DefaultModpackName": {
     "type": "string",
-    "value": "New Modpack"
+    "value": "Novo Modpack"
   },
 
   // --------- Messages ---------
   "ServerError_Title": {
     "type": "string",
-    "value": "Server Error"
+    "value": "Erro interno de Servidor"
   },
   "ConnectionError_Title": {
     "type": "string",
-    "value": "Connection Error"
+    "value": "Erro de Conexão"
   },
   "TimeoutError_Title": {
     "type": "string",
-    "value": "Connection Timeout"
+    "value": "Tempo de conexão esgotado"
   },
   "FileIntegrityError_Title": {
     "type": "string",
-    "value": "File integrity check failed"
+    "value": "Falha na validação de integridade de arquivos"
   },
   "InvalidModFile_Title": {
     "type": "string",
-    "value": "Failed to load mod"
+    "value": "Falha ao carregar mod"
   },
   "ServerError_Message": {
     "type": "string",
-    "value": "A server-side error occured,\nplease try again later."
+    "value": "Ocorreu um erro interno do servidor, \nPor favor tente novamente mais tarde."
   },
   "ConnectionError_Message": {
     "type": "string",
-    "value": "Unable to connect to the server.\nMake sure you have a stable connection to the internet,\nthen try again."
+    "value": "Incapaz de conectar ao servidor.\nGaranta que você possui uma conexão estável com a internet,\ne tente novamente."
   },
   "TimeoutError_Message": {
     "type": "string",
-    "value": "The connection to the server timed out.\nMake sure you have a stable connection to the internet,\nthen try again."
+    "value": "Esgotado o tempo de conexão com o servidor.\nGaranta que você possui uma conexão estável com a internet,\ne tente novamente."
   },
   "FileIntegrityError_Message": {
     "type": "string",
-    "value": "The downloaded file was corrupt and could not be loaded,\nplease try again."
+    "value": "O arquivo baixado estava corrompido e não pôde ser carregado, \npor favor, tente novamente."
   },
   "InvalidModFile_Message": {
     "type": "string",
-    "value": "The file to be loaded was not a valid mod file."
+    "value": "O arquivo a ser carregado não era um arquivo de mod válido."
   },
 
   "LogInRequired_Title": {
     "type": "string",
-    "value": "Login required"
+    "value": "Necessário fazer Login"
   },
   "LoginError_Message": {
     "type": "string",
-    "value": "Invalid username or password"
+    "value": "Nome de usuário ou senha inválidos"
   },
   "LocationMoveWhileDownload_Title": {
     "type": "string",
-    "value": "Moving locations not possible"
+    "value": "Não é possível mover"
   },
   "LocationMoveWhileDownload_Message": {
     "type": "string",
-    "value": "Locations cannot be moved while downloads are in progress.\nPlease wait until all downloads have completed, then apply the changes again."
+    "value": "Mudanças de diretório não são possíveis enquanto estiver baixando arquivos.\nPor favor aguarde até que todos os downloads tenham terminado, então aplique as modificações novamente."
   },
   "ConfirmLocationMoveOverwrite_Title": {
     "type": "string",
-    "value": "Confirm move"
+    "value": "Confirma movimentação"
   },
   "ConfirmLocationMoveOverwrite_Message": {
     "type": "string",
-    "value": "The target directory already exists, moving the location will cause all existing files in the target directory to be deleted.\nAre you sure you want to continue?"
+    "value": "A pasta destino já existe, mover para esse diretório irá excluir todos os arquivos existentes anteriormente.\nTem certeza que deseja continuar?"
   },
 
   "MovingLocation_Title": {
     "type": "string",
-    "value": "Moving location"
+    "value": "Movendo pastas"
   },
   "MovingFiles_Message": {
     "type": "string",
-    "value": "Moving files..."
+    "value": "Movendo arquivos..."
   },
 
   "DeleteConfirm_Title": {
     "type": "string",
-    "value": "Confirm Deletion"
+    "value": "Confirma Exclusão"
   },
   "DeleteConfirm_Mod_Message": {
     "type": "string",
-    "value": "Are you sure you want to delete the mod '{0}' version {1}?"
+    "value": "Tem certeza que deseja excluir o mod '{0}' versão {1}?"
   },
   "DeleteConfirm_Modpack_Message": {
     "type": "string",
-    "value": "Are you sure you want to delete the modpack '{0}'?"
+    "value": "Tem certeza que deseja excluir o modpack '{0}'?"
   },
 
   "UpdateWhileDownloading_Title": {
     "type": "string",
-    "value": "Update not possible"
+    "value": "Atualização não permitida"
   },
   "UpdateWhileDownloading_Message": {
     "type": "string",
-    "value": "An update cannot be performed while downloads are still in queue.\nWait for all downloads to be completed, then try again."
+    "value": "Não é possível atualizar enquanto existirem arquivos a serem baixados na fila.\nAguarde todos os arquivos terminarem de baixar e tente novamente."
   },
   "NoUpdateFound_Title": {
     "type": "string",
-    "value": "No update available"
+    "value": "Nenhuma atualização disponível"
   },
   "NoUpdateFound_Message": {
     "type": "string",
-    "value": "The latest version of ModMyFactory is already installed."
+    "value": "A última versão de ModMyFactory já está instalada."
   },
   "Update_Title": {
     "type": "string",
-    "value": "Updating"
+    "value": "Atualizando"
   },
   "UpdateSearch_Message": {
     "type": "string",
-    "value": "Searching for updates..."
+    "value": "Procurando atualizações..."
   },
   "UpdateDownload_Message": {
     "type": "string",
-    "value": "Downloading update package..."
+    "value": "Baixando pacote de atualização..."
   },
 
   "ModUpdateSearch_Title": {
     "type": "string",
-    "value": "Updating mods"
+    "value": "Atualizando mods"
   },
   "ModUpdateSearch_Message": {
     "type": "string",
-    "value": "Searching for mod updates..."
+    "value": "Buscando atualizações de mod..."
   },
   "NoModUpdates_Title": {
     "type": "string",
-    "value": "No mod updates available"
+    "value": "Nenhuma atualização de mod disponível"
   },
   "NoModUpdates_Message": {
     "type": "string",
-    "value": "All of your mods are up-to-date."
+    "value": "Todos os seus mods já estão atualizados."
   },
 
   // --------- Dialog options ---------
@@ -175,27 +175,27 @@
   },
   "CancelButton": {
     "type": "string",
-    "value": "Cancel"
+    "value": "Cancelar"
   },
   "YesButton": {
     "type": "string",
-    "value": "Yes"
+    "value": "Sim"
   },
   "NoButton": {
     "type": "string",
-    "value": "No"
+    "value": "Não"
   },
   "RetryButton": {
     "type": "string",
-    "value": "Retry"
+    "value": "Tentar Novamente"
   },
   "AbortButton": {
     "type": "string",
-    "value": "Abort"
+    "value": "Abortar"
   },
   "LogInButton": {
     "type": "string",
-    "value": "Log in"
+    "value": "Logar"
   },
 
   // --------- Main window ---------
@@ -205,17 +205,17 @@
   },
   "StartGameButton": {
     "type": "string",
-    "value": "Start game"
+    "value": "Iniciar Factorio"
   },
 
   // File menu
   "FileMenuItem": {
     "type": "string",
-    "value": "_File"
+    "value": "_Arquivo"
   },
   "AddModFilesMenuItem": {
     "type": "string",
-    "value": "Add mods"
+    "value": "Adicionar mods"
   },
   "AddModFilesHotkey": {
     "type": "string",
@@ -223,7 +223,7 @@
   },
   "NewModpackMenuItem": {
     "type": "string",
-    "value": "New modpack"
+    "value": "Novo modpack"
   },
   "NewModpackHotkey": {
     "type": "string",
@@ -231,7 +231,7 @@
   },
   "CreateLinkMenuItem": {
     "type": "string",
-    "value": "Create link"
+    "value": "Criar link"
   },
   "CreateLinkHotkey": {
     "type": "string",
@@ -239,7 +239,7 @@
   },
   "ExportModpacksMenuItem": {
     "type": "string",
-    "value": "Export modpacks"
+    "value": "Exportar modpacks"
   },
   "ExportModpacksHotkey": {
     "type": "string",
@@ -247,7 +247,7 @@
   },
   "ImportModpacksMenuItem": {
     "type": "string",
-    "value": "Import modpacks"
+    "value": "Importar modpacks"
   },
   "ImportModpacksHotkey": {
     "type": "string",
@@ -255,7 +255,7 @@
   },
   "StartGameMenuItem": {
     "type": "string",
-    "value": "Start game"
+    "value": "Iniciar Factorio"
   },
   "StartGameHotkey": {
     "type": "string",
@@ -263,7 +263,7 @@
   },
   "CloseMenuItem": {
     "type": "string",
-    "value": "Close"
+    "value": "Fechar"
   },
   "CloseHotkey": {
     "type": "string",
@@ -273,11 +273,11 @@
   // Edit menu
   "EditMenuItem": {
     "type": "string",
-    "value": "_Edit"
+    "value": "_Editar"
   },
   "UpdateModsMenuItem": {
     "type": "string",
-    "value": "Update mods"
+    "value": "Atualizar mods"
   },
   "UpdateModsHotkey": {
     "type": "string",
@@ -285,7 +285,7 @@
   },
   "DependenciesMenuItem": {
     "type": "string",
-    "value": "Mod dependencies"
+    "value": "Dependências Mod"
   },
   "DependenciesHotkey": {
     "type": "string",
@@ -295,35 +295,35 @@
   // View menu
   "ViewMenuItem": {
     "type": "string",
-    "value": "_View"
+    "value": "_Visualizar"
   },
   "OpenFactorioFolderMenuItem": {
     "type": "string",
-    "value": "Open Factorio folder"
+    "value": "Abrir pasta do Factorio"
   },
   "OpenModFolderMenuItem": {
     "type": "string",
-    "value": "Open mod folder"
+    "value": "Abrir pasta de mod"
   },
   "ThemeMenuItem": {
     "type": "string",
-    "value": "Visual theme"
+    "value": "Tema Visual"
   },
 
   // Language menu
   "LanguageMenuItem": {
     "type": "string",
-    "value": "Language"
+    "value": "Idioma"
   },
 
   // Info menu
   "InfoMenuItem": {
     "type": "string",
-    "value": "_Info"
+    "value": "_Informações"
   },
   "HelpMenuItem": {
     "type": "string",
-    "value": "Help"
+    "value": "Ajuda"
   },
   "HelpHotkey": {
     "type": "string",
@@ -331,7 +331,7 @@
   },
   "CheckUpdateMenuItem": {
     "type": "string",
-    "value": "Update"
+    "value": "Atualizar"
   },
   "CheckUpdateHotkey": {
     "type": "string",
@@ -339,11 +339,11 @@
   },
   "ThreadMenuItem": {
     "type": "string",
-    "value": "Forum thread"
+    "value": "Postagem do Forum"
   },
   "AboutMenuItem": {
     "type": "string",
-    "value": "About"
+    "value": "Sobre"
   },
   "AboutHotkey": {
     "type": "string",
@@ -353,11 +353,11 @@
   // Tab headers
   "ManagerTabHeader": {
     "type": "string",
-    "value": "Manager"
+    "value": "Gerenciador"
   },
   "OnlineModsTabHeader": {
     "type": "string",
-    "value": "Download\nMods"
+    "value": "Baixar\nMods"
   },
   "FactorioTabHeader": {
     "type": "string",
@@ -365,25 +365,25 @@
   },
   "ExportTabHeader": {
     "type": "string",
-    "value": "Modpack\nExport"
+    "value": "Exportar\nModpack"
   },
   "SettingsTabHeader": {
     "type": "string",
-    "value": "Settings"
+    "value": "Configurações"
   },
 
   // Download status
   "EmptyQueueText": {
     "type": "string",
-    "value": "No downloads in queue"
+    "value": "Nenhum download na fila"
   },
   "DownloadingFormat": {
     "type": "string",
-    "value": "Downloading {0}"
+    "value": "Baixando {0}"
   },
   "QueueFormat": {
     "type": "string",
-    "value": "In queue: {0}"
+    "value": "Na fila: {0}"
   },
 
   // --------- Manager view ---------
@@ -397,33 +397,33 @@
   },
   "RemoveFromPackButton": {
     "type": "string",
-    "value": "Remove from modpack"
+    "value": "Remover do modpack"
   },
 
   // --------- Factorio instance view ---------
   "InDownloadQueueText": {
     "type": "string",
-    "value": "In queue"
+    "value": "Na fila"
   },
   "DownloadingText": {
     "type": "string",
-    "value": "Downloading..."
+    "value": "Baixando..."
   },
   "ExtractingText": {
     "type": "string",
-    "value": "Extracting..."
+    "value": "Extraindo..."
   },
   "ImportInstallationButton": {
     "type": "string",
-    "value": "Import"
+    "value": "Importar"
   },
   "ImportArchiveButton": {
     "type": "string",
-    "value": "Archive"
+    "value": "Arquivo"
   },
   "DownloadStableButton": {
     "type": "string",
-    "value": "Download"
+    "value": "Baixar"
   },
   "DownloadExperimentalButton": {
     "type": "string",
@@ -431,33 +431,33 @@
   },
   "RenameButton": {
     "type": "string",
-    "value": "Rename"
+    "value": "Renomear"
   },
   "ShortcutButton": {
     "type": "string",
-    "value": "Create shortcut"
+    "value": "Criar Atalho"
   },
   "BrowseFilesButton": {
     "type": "string",
-    "value": "Browse files"
+    "value": "Consultar arquivos"
   },
   "RemoveButton": {
     "type": "string",
-    "value": "Remove from manager"
+    "value": "Remover do gerenciador"
   },
 
   // --------- Online mods view ---------
   "LoadingMessage": {
     "type": "string",
-    "value": "Fetching mods\nfrom server..."
+    "value": "Buscando mods\ndo servidor..."
   },
   "RefreshButton": {
     "type": "string",
-    "value": "Refresh"
+    "value": "Atualizar"
   },
   "HomepageHeader": {
     "type": "string",
-    "value": "Homepage:"
+    "value": "Página Inicial:"
   },
   "GitHubHeader": {
     "type": "string",
@@ -465,11 +465,11 @@
   },
   "LicenseHeader": {
     "type": "string",
-    "value": "License:"
+    "value": "Licensa:"
   },
   "DescriptionHeader": {
     "type": "string",
-    "value": "Description"
+    "value": "Descrição"
   },
   "ChangelogHeader": {
     "type": "string",
@@ -481,149 +481,149 @@
   },
   "ReleasesHeader": {
     "type": "string",
-    "value": "Releases"
+    "value": "Lançamentos"
   },
   "Compare_Alphabetical": {
     "type": "string",
-    "value": "Alphabetical"
+    "value": "Alfabético"
   },
   "Compare_DownloadCount": {
     "type": "string",
-    "value": "By download count"
+    "value": "Por total de downloads"
   },
   "AllVersionsDesc": {
     "type": "string",
-    "value": "All versions"
+    "value": "Todas as versões"
   },
 
   // --------- Export view ---------
   "ExportButton": {
     "type": "string",
-    "value": "Export"
+    "value": "Exportar"
   },
   "UseLatestOption": {
     "type": "string",
-    "value": "Use the latest version of the mod"
+    "value": "Usar a última versão do mod"
   },
   "UseFactorioOption": {
     "type": "string",
-    "value": "Use the latest version of the mod that is\ncompatible with its current Factorio version"
+    "value": "Usar a última versão do mod que é\ncompatível com essa versão atual do Factorio"
   },
   "UseSpecificOption": {
     "type": "string",
-    "value": "Use the currently installed version of the mod"
+    "value": "Usar a versão atualmente instalada do mod"
   },
   "IncludeOption": {
     "type": "string",
-    "value": "Include the mod file"
+    "value": "Incluir o arquivo do mod"
   },
   "DownloadNewerOption": {
     "type": "string",
-    "value": "Download later versions of the mod\neven if the file is included"
+    "value": "Baixar versões mais recentes do mod\nmesmo que o arquivo já esteja incluso"
   },
   "UseLatestOptionPack": {
     "type": "string",
-    "value": "Use the latest version of all mods in the pack"
+    "value": "Usar a última versão de todos os mods no pacote"
   },
   "UseFactorioOptionPack": {
     "type": "string",
-    "value": "Use the latest version of all mods in the pack that\nare compatible with their respective Factorio version"
+    "value": "Usar a última versão de todos os mods no pacote que\nsão compatíveis com suas respectivas versões do Factorio"
   },
   "UseSpecificOptionPack": {
     "type": "string",
-    "value": "Use the currently installed version\nof all mods in the pack"
+    "value": "Usar a versão atualmente instalada\nde todos os mods do pacote"
   },
   "IncludeOptionPack": {
     "type": "string",
-    "value": "Include the files of all mods in the pack"
+    "value": "Inlcuir os arquivos de todos os mods no pacote"
   },
   "DownloadNewerOptionPack": {
     "type": "string",
-    "value": "Download later versions of the mods in\nthe pack even if their file is included"
+    "value": "Baixar versões mais recentes dos mods\nno pacote mesmo que seus arquivos estejam inclusos"
   },
   "UseLatestOptionGlobal": {
     "type": "string",
-    "value": "Use the latest version of all mods"
+    "value": "Usar a última versão de todos os mods"
   },
   "UseFactorioOptionGlobal": {
     "type": "string",
-    "value": "Use the latest version of all mods that are\ncompatible with their respective Factorio version"
+    "value": "Usar a última versão de todos os mods que são\ncompatíveis com suas respectivas versões do Factorio"
   },
   "UseSpecificOptionGlobal": {
     "type": "string",
-    "value": "Use the currently installed version of all mods"
+    "value": "usar a versão atualmente instalada de todos os mods"
   },
   "IncludeOptionGlobal": {
     "type": "string",
-    "value": "Include the files of all mods"
+    "value": "Inlcuir os arquivos de todos os mods"
   },
   "DownloadNewerOptionGlobal": {
     "type": "string",
-    "value": "Download later versions of all mods even\nif their file is included in the package"
+    "value": "Baixar versões mais recentes dos mods mesmo que\nseus arquivos já estejam inclusos no pacote"
   },
 
   // --------- Settings view ---------
   "CredentialsHeader": {
     "type": "string",
-    "value": "Login Credentials"
+    "value": "Credenciais de Login"
   },
   "Username": {
     "type": "string",
-    "value": "Username or Email"
+    "value": "Nome de Usuário ou Email"
   },
   "Password": {
     "type": "string",
-    "value": "Password"
+    "value": "Senha"
   },
   "UpdateHeader": {
     "type": "string",
-    "value": "Updates"
+    "value": "Atualizações"
   },
   "UpdateOnStartupOption": {
     "type": "string",
-    "value": "Automatically search for updates on startup"
+    "value": "Buscar automaticamente por atualizações ao inicializar"
   },
   "UpdatePrereleaseOption": {
     "type": "string",
-    "value": "Include prerelease versions when searching for updates"
+    "value": "Incluir versões de pré-release enquanto busca por atualizações"
   },
   "FactorioLocationHeader": {
     "type": "string",
-    "value": "Location of Factorio instances"
+    "value": "Localização das instâncias do Factorio"
   },
   "ModLocationHeader": {
     "type": "string",
-    "value": "Location of mods"
+    "value": "Localização dos mods"
   },
   "AppDataOption": {
     "type": "string",
-    "value": "Default application data directory"
+    "value": "Diretório padrão dos dados de aplicações"
   },
   "BinDirOption": {
     "type": "string",
-    "value": "Installation directory"
+    "value": "Diretório de instalação"
   },
   "CustomOption": {
     "type": "string",
-    "value": "Custom directory"
+    "value": "Diretório personalizado"
   },
   "AcceptButton": {
     "type": "string",
-    "value": "Accept"
+    "value": "Confirmar"
   },
   "DiscardButton": {
     "type": "string",
-    "value": "Discard"
+    "value": "Descartar"
   },
 
   // --------- About window ---------
   "AboutWindowTitle": {
     "type": "string",
-    "value": "About ModMyFactory GUI"
+    "value": "Sobre ModMyFactory GUI"
   },
   "AuthorFormat": {
     "type": "string",
-    "value": "by {0}"
+    "value": "por {0}"
   },
   "VersionFormat": {
     "type": "string",
@@ -631,7 +631,7 @@
   },
   "AttributionsTabHeader": {
     "type": "string",
-    "value": "Attributions"
+    "value": "Atribuições"
   },
   "ChangelogTabHeader": {
     "type": "string",
@@ -639,90 +639,86 @@
   },
   "ThirdPartySoftwareHeader": {
     "type": "string",
-    "value": "Third party software"
-  },
-  "TranslatorsHeader": {
-    "type": "string",
-    "value": "Translators"
+    "value": "Software de terceiros"
   },
 
   // --------- Update window ---------
   "UpdateWindowTitle": {
     "type": "string",
-    "value": "Update available"
+    "value": "Atualização disponível"
   },
   "UpdateButton": {
     "type": "string",
-    "value": "Install update"
+    "value": "Instalar atualização"
   },
   "CurrentVersionFormat": {
     "type": "string",
-    "value": "Current version: {0}"
+    "value": "Versão atual: {0}"
   },
   "UpdateVersionFormat": {
     "type": "string",
-    "value": "Latest version: {0}"
+    "value": "Última versão: {0}"
   },
 
   // --------- Mod update window ---------
   "ModUpdateWindowTitle": {
     "type": "string",
-    "value": "Mod updates available"
+    "value": "Atualizações de mod disponíveis"
   },
   "ModUpdatesHeader": {
     "type": "string",
-    "value": "Available updates"
+    "value": "Atualizações disponíveis"
   },
   "ReplaceUpdatesOption": {
     "type": "string",
-    "value": "Update mods in modpacks"
+    "value": "Atualizar mods nos modpacks"
   },
   "RemoveOldModsOption": {
     "type": "string",
-    "value": "Delete old mod versions"
+    "value": "Excluir versões antigas dos mods"
   },
   "ModUpdateButton": {
     "type": "string",
-    "value": "Update mods"
+    "value": "Atualizar mods"
   },
 
   // --------- Shortcut properties window ---------
   "ShortcutPropertiesWindowTitle": {
     "type": "string",
-    "value": "Edit shortcut properties"
+    "value": "Editar propriedades de atalho"
   },
   "CreateShortcutButton": {
     "type": "string",
-    "value": "Create shortcut"
+    "value": "Criar atalho"
   },
   "UseModpackHeader": {
     "type": "string",
-    "value": "Start with modpack"
+    "value": "Iniciar com modpack"
   },
   "UseSavegameHeader": {
     "type": "string",
-    "value": "Load save file"
+    "value": "Abrir arquivo salvo"
   },
   "UseCustomArgsHeader": {
     "type": "string",
-    "value": "Pass custom arguments"
+    "value": "Fornecer argumentos personalizados"
   },
 
   // --------- Visual theme names ---------
   "__theme__.Light": {
     "type": "string",
-    "value": "Light"
+    "value": "Claro"
   },
   "__theme__.Dark": {
     "type": "string",
-    "value": "Dark"
+    "value": "Escuro"
   },
   "__theme__.BaseLight": {
     "type": "string",
-    "value": "Light"
+    "value": "Claro"
   },
   "__theme__.BaseDark": {
     "type": "string",
-    "value": "Dark"
+    "value": "Escuro"
   }
 }

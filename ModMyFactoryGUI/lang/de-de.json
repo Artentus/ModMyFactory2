@@ -613,6 +613,10 @@
     "type": "string",
     "value": "Software von Drittanbietern"
   },
+  "TranslatorsHeader": {
+    "type": "string",
+    "value": "Übersetzer"
+  },
 
   // --------- Update window ---------
   "UpdateWindowTitle": {

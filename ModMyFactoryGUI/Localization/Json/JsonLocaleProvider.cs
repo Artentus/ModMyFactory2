@@ -29,7 +29,7 @@ namespace ModMyFactoryGUI.Localization.Json
             {
                 if (IsValidCulture(Path.GetFileNameWithoutExtension(jsonFile.Name), out var culture))
                 {
-                    var locale = new JsonLocale(jsonFile, culture.TwoLetterISOLanguageName);
+                    var locale = new JsonLocale(jsonFile, culture.Name);
                     _locales.Add(locale.Culture, locale);
                 }
             }

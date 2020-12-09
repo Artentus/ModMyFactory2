@@ -6,6 +6,7 @@
 //  (at your option) any later version.
 
 using Avalonia.Media.Imaging;
+using ModMyFactoryGUI.Helpers;
 using ReactiveUI;
 using System;
 using System.Globalization;
@@ -19,22 +20,24 @@ namespace ModMyFactoryGUI.ViewModels
         private bool disposed = false;
         public CultureInfo Culture { get; }
 
-        public string DisplayName { get; }
+        public string NativeName { get; }
+
+        public string EnglishName { get; }
 
         public IBitmap Icon { get; }
 
         public ICommand SelectCommand { get; }
 
-        public bool Selected => string.Equals(App.Current.Locales.UICulture.TwoLetterISOLanguageName,
-            Culture.TwoLetterISOLanguageName, StringComparison.OrdinalIgnoreCase);
+        public bool Selected => string.Equals(App.Current.Locales.UICulture.Name, Culture.Name, StringComparison.OrdinalIgnoreCase);
 
         public CultureViewModel(CultureInfo culture)
         {
             Culture = culture;
-            DisplayName = $"{culture.NativeName} ({culture.EnglishName})";
-
+            NativeName = culture.NativeName.Capitalize(culture);
+            EnglishName = culture.EnglishName.Capitalize(culture);
+            
             string iconPath = Path.Combine(Program.ApplicationDirectory.FullName,
-                "lang", "assets", "icons", culture.TwoLetterISOLanguageName + ".png");
+                "lang", "assets", "icons", culture.Name + ".png");
             if (File.Exists(iconPath)) Icon = new Bitmap(iconPath);
 
             SelectCommand = ReactiveCommand.Create(Select);

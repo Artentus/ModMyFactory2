@@ -7,17 +7,48 @@
 
 using ModMyFactoryGUI.MVVM;
 using ModMyFactoryGUI.Views;
+using ReactiveUI;
 using System.Collections.Generic;
+using System.Globalization;
+using System.Linq;
 
 namespace ModMyFactoryGUI.ViewModels
 {
+    internal sealed class WebLinkViewModel : ReactiveObject
+    {
+        public string LinkText { get; }
+
+        public string Url { get; }
+
+        public WebLinkViewModel(string linkText, string url)
+            => (LinkText, Url) = (linkText, url);
+    }
+
+    internal sealed class TranslatorViewModel : ReactiveObject
+    {
+        public string Name { get; }
+
+        public string Url { get; }
+
+        public string Languages { get; }
+
+        public TranslatorViewModel(string name, string url, params CultureInfo[] cultures)
+        {
+            Name = name;
+            Url = url;
+            Languages = "[" + string.Join(", ", cultures.Select(c => c.EnglishName)) + "]";
+        }
+    }
+
     internal sealed class AttributionViewModel : RoutableViewModelBase<AttributionView>
     {
-        public IReadOnlyList<WebLinkViewModel> Links { get; }
+        public IReadOnlyList<WebLinkViewModel> ThirdPartySoftwareLinks { get; }
+
+        public IReadOnlyList<TranslatorViewModel> Translators { get; }
 
         public AttributionViewModel()
         {
-            Links = new List<WebLinkViewModel>
+            ThirdPartySoftwareLinks = new WebLinkViewModel[]
             {
                 new WebLinkViewModel("Avalonia UI", "https://avaloniaui.net/"),
                 new WebLinkViewModel("ReactiveUI", "https://reactiveui.net/"),
@@ -35,6 +66,11 @@ namespace ModMyFactoryGUI.ViewModels
                 new WebLinkViewModel("SharpDX", "http://sharpdx.org/"),
                 new WebLinkViewModel("Octokit", "https://github.com/octokit/octokit.net"),
                 new WebLinkViewModel("Onova", "https://github.com/Tyrrrz/Onova"),
+            };
+
+            Translators = new TranslatorViewModel[]
+            {
+                new TranslatorViewModel("Mobius One", "https://github.com/mobius1qwe", new CultureInfo("pt-br")),
             };
         }
     }

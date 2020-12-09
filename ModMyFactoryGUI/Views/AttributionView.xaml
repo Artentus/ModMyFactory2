@@ -13,7 +13,7 @@ the Free Software Foundation, either version 3 of the License, or
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:controls="clr-namespace:ModMyFactoryGUI.Controls"
              xmlns:l="clr-namespace:ModMyFactoryGUI.Localization"
-             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450" FontSize="14"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="500" FontSize="14"
              x:Class="ModMyFactoryGUI.Views.AttributionView">
 
   <StackPanel>
@@ -21,7 +21,7 @@ the Free Software Foundation, either version 3 of the License, or
     <TextBlock HorizontalAlignment="Center" Margin="0,0,0,4" Classes="h2"
                Text="{l:LocalizedResource ThirdPartySoftwareHeader}" />
 
-    <ItemsControl Items="{Binding Links}">
+    <ItemsControl Items="{Binding ThirdPartySoftwareLinks}">
       <ItemsControl.ItemsPanel>
         <ItemsPanelTemplate>
           <WrapPanel Orientation="Vertical" MaxHeight="160" HorizontalAlignment="Center" />
@@ -35,5 +35,27 @@ the Free Software Foundation, either version 3 of the License, or
         </DataTemplate>
       </ItemsControl.ItemTemplate>
     </ItemsControl>
+
+    <TextBlock HorizontalAlignment="Center" Margin="0,6,0,4" Classes="h2"
+               Text="{l:LocalizedResource TranslatorsHeader}" />
+
+    <ItemsControl Items="{Binding Translators}">
+      <ItemsControl.ItemsPanel>
+        <ItemsPanelTemplate>
+          <WrapPanel Orientation="Horizontal" />
+        </ItemsPanelTemplate>
+      </ItemsControl.ItemsPanel>
+
+      <ItemsControl.ItemTemplate>
+        <DataTemplate>
+          <StackPanel Orientation="Horizontal">
+            <controls:HyperLink HorizontalAlignment="Center"
+                              Text="{Binding Name}" Url="{Binding Url}" />
+            <TextBlock Classes="muted" Margin="4,0,0,0" Text="{Binding Languages}"/>
+          </StackPanel>
+        </DataTemplate>
+      </ItemsControl.ItemTemplate>
+    </ItemsControl>
+    
   </StackPanel>
 </UserControl>

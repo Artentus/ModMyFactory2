@@ -149,7 +149,7 @@ the Free Software Foundation, either version 3 of the License, or
           </controls:ToolbarItem.Styles>
         </controls:ToolbarItem>
 
-        <controls:ToolbarItem Name="LangParent" Header="{l:LocalizedResource LanguageMenuItem}" Items="{Binding AvailableCultures}">
+        <controls:ToolbarItem Name="LangParent" Header="{l:LocalizedResource LanguageMenuItem}" Items="{Binding AvailableCultures}" Grid.IsSharedSizeScope="True">
           <controls:ToolbarItem.Icon>
             <icons:LanguageIcon />
           </controls:ToolbarItem.Icon>
@@ -159,8 +159,17 @@ the Free Software Foundation, either version 3 of the License, or
               <Setter Property="Header">
                 <Setter.Value>
                   <Template>
-                    <CheckBox Margin="-7,0,0,0" BorderThickness="0" IsHitTestVisible="False"
-                              IsChecked="{Binding Selected}" Content="{Binding DisplayName}" />
+                    <Grid>
+                      <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" SharedSizeGroup="native_name" />
+                        <ColumnDefinition Width="Auto" SharedSizeGroup="english_name" />
+                      </Grid.ColumnDefinitions>
+                      
+                      <CheckBox Grid.Column="0" Margin="-7,0,0,0" BorderThickness="0" IsHitTestVisible="False"
+                                IsChecked="{Binding Selected}" Content="{Binding NativeName}" />
+                      <TextBlock Grid.Column="1" Classes="muted" Margin="4,0,0,0" IsHitTestVisible="False"
+                                 Text="{Binding EnglishName}" />
+                    </Grid>
                   </Template>
                 </Setter.Value>
               </Setter>
