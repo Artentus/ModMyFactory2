@@ -24,7 +24,7 @@ namespace ModMyFactory.Mods
 
         public ModInfo Info { get; }
 
-        public Stream Thumbnail { get; }
+        public Stream? Thumbnail { get; }
 
         public bool IsExtracted => true;
 
@@ -49,7 +49,7 @@ namespace ModMyFactory.Mods
             }
         }
 
-        internal ExtractedModFile(DirectoryInfo directory, ModInfo info, Stream thumbnail)
+        internal ExtractedModFile(DirectoryInfo directory, ModInfo info, Stream? thumbnail)
             => (_directory, Info, Thumbnail) = (directory, info, thumbnail);
 
         ~ExtractedModFile()
@@ -76,7 +76,7 @@ namespace ModMyFactory.Mods
         /// Tries to load a mod file
         /// </summary>
         /// <param name="directory">The directory to load</param>
-        public static async Task<(bool, ExtractedModFile)> TryLoadAsync(DirectoryInfo directory)
+        public static async Task<(bool, ExtractedModFile?)> TryLoadAsync(DirectoryInfo directory)
         {
             var infoFile = new FileInfo(Path.Combine(directory.FullName, "info.json"));
             if (!infoFile.Exists)
@@ -111,7 +111,7 @@ namespace ModMyFactory.Mods
         /// Tries to load a mod file
         /// </summary>
         /// <param name="path">The path to a directory to load</param>
-        public static async Task<(bool, ExtractedModFile)> TryLoadAsync(string path)
+        public static async Task<(bool, ExtractedModFile?)> TryLoadAsync(string path)
         {
             var dir = new DirectoryInfo(path);
             return await TryLoadAsync(dir);
@@ -127,7 +127,7 @@ namespace ModMyFactory.Mods
 
             (bool success, var result) = await TryLoadAsync(directory);
             if (!success) throw new InvalidModDataException("The specified directory is not a valid mod");
-            return result;
+            return result!;
         }
 
         /// <summary>

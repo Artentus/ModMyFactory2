@@ -18,16 +18,16 @@ namespace ModMyFactoryGUI
     internal class CollectionView<T> : NotifyPropertyChangedBase, ICollection<T>, IReadOnlyCollection<T>, INotifyCollectionChanged, IDisposable
     {
         private readonly ICollection<T> _baseCollection;
-        private readonly INotifyCollectionChanged _baseCollectionChanged;
-        private IComparer<T> _comparer;
-        private Func<T, bool> _filter;
+        private readonly INotifyCollectionChanged? _baseCollectionChanged;
+        private IComparer<T>? _comparer;
+        private Func<T, bool>? _filter;
         private ICollection<T> _evaluated;
 
-        public event NotifyCollectionChangedEventHandler CollectionChanged;
+        public event NotifyCollectionChangedEventHandler? CollectionChanged;
 
         public bool IsReadOnly => true;
 
-        public IComparer<T> Comparer
+        public IComparer<T>? Comparer
         {
             get => _comparer;
             set
@@ -42,7 +42,7 @@ namespace ModMyFactoryGUI
             }
         }
 
-        public Func<T, bool> Filter
+        public Func<T, bool>? Filter
         {
             get => _filter;
             set
@@ -59,7 +59,7 @@ namespace ModMyFactoryGUI
 
         public int Count => _evaluated.Count;
 
-        public CollectionView(ICollection<T> baseCollection, IComparer<T> comparer, Func<T, bool> filter)
+        public CollectionView(in ICollection<T> baseCollection, in IComparer<T>? comparer, in Func<T, bool>? filter)
         {
             if (baseCollection is null) throw new ArgumentNullException(nameof(baseCollection));
             (_baseCollection, _comparer, _filter) = (baseCollection, comparer, filter);
@@ -70,39 +70,39 @@ namespace ModMyFactoryGUI
             _evaluated = Evaluate(_baseCollection);
         }
 
-        public CollectionView(ICollection<T> baseCollection, IComparer<T> comparer)
+        public CollectionView(in ICollection<T> baseCollection, in IComparer<T>? comparer)
             : this(baseCollection, comparer, null)
         { }
 
-        public CollectionView(ICollection<T> baseCollection, Comparison<T> comparison, Func<T, bool> filter)
+        public CollectionView(in ICollection<T> baseCollection, in Comparison<T> comparison, in Func<T, bool>? filter)
             : this(baseCollection, Comparer<T>.Create(comparison), filter)
         { }
 
-        public CollectionView(ICollection<T> baseCollection, Comparison<T> comparison)
+        public CollectionView(in ICollection<T> baseCollection, in Comparison<T> comparison)
             : this(baseCollection, comparison, null)
         { }
 
-        public CollectionView(ICollection<T> baseCollection, Func<T, bool> filter)
-            : this(baseCollection, default(IComparer<T>), filter)
+        public CollectionView(in ICollection<T> baseCollection, in Func<T, bool>? filter)
+            : this(baseCollection, default(IComparer<T>?), filter)
         { }
 
-        public CollectionView(ICollection<T> baseCollection)
-            : this(baseCollection, default(IComparer<T>), null)
+        public CollectionView(in ICollection<T> baseCollection)
+            : this(baseCollection, default(IComparer<T>?), null)
         { }
 
-        private void BaseCollectionChangedHandler(object sender, NotifyCollectionChangedEventArgs e) => Refresh();
+        private void BaseCollectionChangedHandler(object? sender, NotifyCollectionChangedEventArgs e) => Refresh();
 
         protected virtual void OnCollectionChanged(NotifyCollectionChangedEventArgs e)
             => CollectionChanged?.Invoke(this, e);
 
         protected virtual ICollection<T> Evaluate(ICollection<T> baseCollection)
         {
-            IEnumerable<T> filtered = Filter is null
+            IEnumerable<T> filtered = _filter is null
                 ? baseCollection
-                : baseCollection.Where(item => Filter(item));
+                : baseCollection.Where(item => _filter(item));
 
             var sorted = new List<T>(filtered);
-            if (!(Comparer is null)) sorted.Sort(Comparer);
+            if (!(_comparer is null)) sorted.Sort(_comparer);
 
             return sorted;
         }

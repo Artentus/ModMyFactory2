@@ -80,12 +80,12 @@ namespace ModMyFactory.Mods
                 {
                     if (Version == default)
                     {
-                        family.GetDefaultMod().Enabled = true;
+                        family.GetDefaultMod()!.Enabled = true;
                     }
                     else
                     {
                         if (family.Contains(Version, out var mod)) mod.Enabled = true;
-                        else family.GetDefaultMod().Enabled = true;
+                        else family.GetDefaultMod()!.Enabled = true;
                     }
                 }
                 else

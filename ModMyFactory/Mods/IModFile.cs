@@ -28,7 +28,7 @@ namespace ModMyFactory.Mods
         /// A stream containing bitmap data of the mods thumbnail<br/>
         /// May be null
         /// </summary>
-        Stream Thumbnail { get; }
+        Stream? Thumbnail { get; }
 
         /// <summary>
         /// Determines whether this mod file is extracted

@@ -59,7 +59,7 @@ namespace ModMyFactory.Export
             var tempDir = new DirectoryInfo(tempPath);
             if (!tempDir.Exists) tempDir.Create();
 
-            Package package = null;
+            Package? package = null;
             var extractedFiles = new List<FileInfo>();
 
             using var stream = file.OpenRead();

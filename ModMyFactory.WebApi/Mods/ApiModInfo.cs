@@ -63,7 +63,7 @@ namespace ModMyFactory.WebApi.Mods
         /// The URL to this mods thumbnail
         /// </summary>
         [JsonProperty("thumbnail")]
-        readonly public string ThumbnailUrl;
+        readonly public string? ThumbnailUrl;
 
         /// <summary>
         /// The latest release of this mod
@@ -145,7 +145,7 @@ namespace ModMyFactory.WebApi.Mods
         [JsonConstructor]
         internal ApiModInfo(
             string displayName, int downloadCount, string name, string summary, string author,
-            double score, string category, string thumbnailUrl, ModReleaseInfo? latestRelease,
+            double score, string category, string? thumbnailUrl, ModReleaseInfo? latestRelease,
             string description, string changelog, string faq, string homepage, string gitHubUrl,
             License license, ModReleaseInfo[] releases, DateTime creationDate, DateTime lastUpdateDate)
         {

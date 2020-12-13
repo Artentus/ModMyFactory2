@@ -6,6 +6,7 @@
 //  (at your option) any later version.
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Text;
 
 namespace ModMyFactoryGUI.Update
@@ -61,7 +62,7 @@ namespace ModMyFactoryGUI.Update
             return sb.ToString();
         }
 
-        public static bool TryParse(in string value, out TagVersion result)
+        public static bool TryParse(in string value, [NotNullWhen(true)] out TagVersion? result)
         {
             result = null;
 
@@ -99,7 +100,7 @@ namespace ModMyFactoryGUI.Update
             else throw new FormatException();
         }
 
-        public bool Equals(TagVersion other)
+        public bool Equals(TagVersion? other)
         {
             if (other is null) return false;
             return (this.Major == other.Major)
@@ -109,7 +110,7 @@ namespace ModMyFactoryGUI.Update
                 && (this.Branch == other.Branch);
         }
 
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             if (obj is TagVersion other) return Equals(other);
             else return false;
@@ -134,37 +135,37 @@ namespace ModMyFactoryGUI.Update
             else return !first.Equals(second);
         }
 
-        public int CompareTo(TagVersion other)
+        public int CompareTo(TagVersion? other)
         {
             if (other is null) return int.MaxValue;
             else return this.Build.CompareTo(other.Build);
         }
 
-        public int CompareTo(object obj)
+        public int CompareTo(object? obj)
         {
             if (obj is TagVersion other) return CompareTo(other);
             else throw new ArgumentException("Object must be of type TagVersion", nameof(obj));
         }
 
-        public static bool operator >(TagVersion first, TagVersion second)
+        public static bool operator >(TagVersion? first, TagVersion? second)
         {
             if (first is null) return false;
             else return first.CompareTo(second) > 0;
         }
 
-        public static bool operator <(TagVersion first, TagVersion second)
+        public static bool operator <(TagVersion? first, TagVersion? second)
         {
             if (first is null) return !(second is null);
             else return first.CompareTo(second) < 0;
         }
 
-        public static bool operator >=(TagVersion first, TagVersion second)
+        public static bool operator >=(TagVersion? first, TagVersion? second)
         {
             if (first is null) return second is null;
             else return first.CompareTo(second) >= 0;
         }
 
-        public static bool operator <=(TagVersion first, TagVersion second)
+        public static bool operator <=(TagVersion? first, TagVersion? second)
         {
             if (first is null) return true;
             else return first.CompareTo(second) <= 0;

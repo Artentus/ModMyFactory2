@@ -20,7 +20,7 @@ namespace ModMyFactory.IO.Win32
 
         public string DestinationPath
         {
-            get => _destinationPath ?? string.Empty;
+            get => _destinationPath;
             set
             {
                 _destinationPath = value;
@@ -38,8 +38,8 @@ namespace ModMyFactory.IO.Win32
             FullName = Path.GetFullPath(path);
             Name = Path.GetFileName(FullName.TrimEnd(Path.DirectorySeparatorChar));
 
-            if (Junction.Exists(FullName))
-                _destinationPath = Junction.GetDestination(FullName);
+            if (Junction.Exists(FullName)) _destinationPath = Junction.GetDestination(FullName);
+            else _destinationPath = string.Empty;
         }
 
         public void Create(string destination)

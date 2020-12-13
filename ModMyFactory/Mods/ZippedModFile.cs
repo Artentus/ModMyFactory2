@@ -25,7 +25,7 @@ namespace ModMyFactory.Mods
 
         public ModInfo Info { get; }
 
-        public Stream Thumbnail { get; }
+        public Stream? Thumbnail { get; }
 
         public bool IsExtracted => false;
 
@@ -44,7 +44,7 @@ namespace ModMyFactory.Mods
             }
         }
 
-        internal ZippedModFile(FileInfo file, ModInfo info, Stream thumbnail)
+        internal ZippedModFile(FileInfo file, ModInfo info, Stream? thumbnail)
             => (_file, Info, Thumbnail) = (file, info, thumbnail);
 
         ~ZippedModFile()
@@ -62,7 +62,7 @@ namespace ModMyFactory.Mods
         /// Tries to load a mod file
         /// </summary>
         /// <param name="file">The archive file to load</param>
-        public static Task<(bool, ZippedModFile)> TryLoadAsync(FileInfo file)
+        public static Task<(bool, ZippedModFile?)> TryLoadAsync(FileInfo file)
         {
             return Task.Run(() =>
             {
@@ -70,7 +70,7 @@ namespace ModMyFactory.Mods
 
                 bool hasInfo = false;
                 ModInfo info = default;
-                Stream thumbnail = null;
+                Stream? thumbnail = null;
                 try
                 {
                     using var archive = ZipArchive.Open(file);
@@ -122,7 +122,7 @@ namespace ModMyFactory.Mods
         /// Tries to load a mod file
         /// </summary>
         /// <param name="path">The path to an archive file to load</param>
-        public static Task<(bool, ZippedModFile)> TryLoadAsync(string path)
+        public static Task<(bool, ZippedModFile?)> TryLoadAsync(string path)
         {
             var file = new FileInfo(path);
             return TryLoadAsync(file);
@@ -138,7 +138,7 @@ namespace ModMyFactory.Mods
 
             (bool success, var result) = await TryLoadAsync(file);
             if (!success) throw new InvalidModDataException("The specified file is not a valid mod");
-            return result;
+            return result!;
         }
 
         /// <summary>

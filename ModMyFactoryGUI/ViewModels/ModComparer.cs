@@ -26,44 +26,100 @@ namespace ModMyFactoryGUI.ViewModels
 
         protected abstract int SubCompare(OnlineModViewModel first, OnlineModViewModel second);
 
-        public int Compare(OnlineModViewModel first, OnlineModViewModel second)
+        public int Compare(OnlineModViewModel? first, OnlineModViewModel? second)
         {
-            // Search score always takes precendence over any other sorting
-            int result = second.SearchScore.CompareTo(first.SearchScore);
-            if (result == 0) result = SubCompare(first, second);
-            return result;
+            if (first is null)
+            {
+                if (second is null) return 0;
+                else return int.MinValue;
+            }
+            else if (second is null)
+            {
+                return int.MaxValue;
+            }
+            else
+            {
+                // Search score always takes precendence over any other sorting
+                int result = second.SearchScore.CompareTo(first.SearchScore);
+                if (result == 0) result = SubCompare(first, second);
+                return result;
+            }
         }
 
-        public abstract int Compare(Mod first, Mod second);
+        protected abstract int SubCompare(Mod first, Mod second);
 
-        public abstract int Compare(ModExportViewModel first, ModExportViewModel second);
+        public int Compare(Mod? first, Mod? second)
+        {
+            if (first is null)
+            {
+                if (second is null) return 0;
+                else return int.MinValue;
+            }
+            else if (second is null)
+            {
+                return int.MaxValue;
+            }
+            else
+            {
+                return SubCompare(first, second);
+            }
+        }
+
+        protected abstract int SubCompare(ModExportViewModel first, ModExportViewModel second);
+
+        public int Compare(ModExportViewModel? first, ModExportViewModel? second)
+        {
+            if (first is null)
+            {
+                if (second is null) return 0;
+                else return int.MinValue;
+            }
+            else if (second is null)
+            {
+                return int.MaxValue;
+            }
+            else
+            {
+                return SubCompare(first, second);
+            }
+        }
     }
 
     internal sealed class AlphabeticalModComparer : ModComparer
     {
+        public static readonly AlphabeticalModComparer Instance = new AlphabeticalModComparer();
+
         public override string DisplayNameKey => "Compare_Alphabetical";
+
+        private AlphabeticalModComparer()
+        { }
 
         protected override int SubCompare(OnlineModViewModel first, OnlineModViewModel second)
             => first.DisplayName.CompareTo(second.DisplayName);
 
-        public override int Compare(Mod first, Mod second)
-                    => first.DisplayName.CompareTo(second.DisplayName);
+        protected override int SubCompare(Mod first, Mod second)
+            => first.DisplayName.CompareTo(second.DisplayName);
 
-        public override int Compare(ModExportViewModel first, ModExportViewModel second)
+        protected override int SubCompare(ModExportViewModel first, ModExportViewModel second)
             => first.DisplayName.CompareTo(second.DisplayName);
     }
 
     internal sealed class DownloadCountModComparer : ModComparer
     {
+        public static readonly DownloadCountModComparer Instance = new DownloadCountModComparer();
+
         public override string DisplayNameKey => "Compare_DownloadCount";
+
+        private DownloadCountModComparer()
+        { }
 
         protected override int SubCompare(OnlineModViewModel first, OnlineModViewModel second)
             => second.DownloadCount.CompareTo(first.DownloadCount);
 
-        public override int Compare(Mod first, Mod second)
-                    => throw new NotSupportedException();
+        protected override int SubCompare(Mod first, Mod second)
+            => throw new NotSupportedException();
 
-        public override int Compare(ModExportViewModel first, ModExportViewModel second)
+        protected override int SubCompare(ModExportViewModel first, ModExportViewModel second)
             => throw new NotSupportedException();
     }
 }

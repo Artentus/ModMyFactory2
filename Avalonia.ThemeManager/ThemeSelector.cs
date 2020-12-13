@@ -8,6 +8,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Reactive.Linq;
@@ -21,12 +22,12 @@ namespace Avalonia.ThemeManager
     {
         private readonly IList<ITheme> _themes;
         private readonly IList<Window> _windows;
-        private ITheme _selectedTheme;
+        private ITheme? _selectedTheme;
 
         /// <summary>
         /// The currently selected theme.
         /// </summary>
-        public ITheme SelectedTheme
+        public ITheme? SelectedTheme
         {
             get => _selectedTheme;
             set
@@ -82,7 +83,7 @@ namespace Avalonia.ThemeManager
         /// <param name="directory">The directory to look for XAML theme files in.</param>
         /// <param name="selector">Out. The selector containing the loaded themes.</param>
         /// <returns>Returns true if a selector could be created, otherwise false.</returns>
-        public static bool TryLoad(DirectoryInfo directory, out IThemeSelector selector)
+        public static bool TryLoad(DirectoryInfo directory, [NotNullWhen(true)] out IThemeSelector? selector)
         {
             selector = default;
             if ((directory is null) || !directory.Exists) return false;
@@ -104,7 +105,7 @@ namespace Avalonia.ThemeManager
         /// <param name="directoryPath">Path to the directory to look for XAML theme files in.</param>
         /// <param name="selector">Out. The selector containing the loaded themes.</param>
         /// <returns>Returns true if a selector could be created, otherwise false.</returns>
-        public static bool TryLoad(string directoryPath, out IThemeSelector selector)
+        public static bool TryLoad(string directoryPath, [NotNullWhen(true)] out IThemeSelector? selector)
             => TryLoad(new DirectoryInfo(directoryPath), out selector);
 
         /// <summary>
@@ -209,7 +210,8 @@ namespace Avalonia.ThemeManager
         /// </summary>
         public bool DisableThemes(Window window)
         {
-            if (window is null) return false;
+            if (window is null)
+                throw new ArgumentNullException(nameof(window));
 
             bool result = _windows.Remove(window);
             if (result && !(SelectedTheme is null))

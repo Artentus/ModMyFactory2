@@ -17,6 +17,7 @@ using ModMyFactoryGUI.Update;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Reflection;
 
@@ -34,7 +35,7 @@ namespace ModMyFactoryGUI
             {
                 get
                 {
-                    if (TryGetValue(key, out TagVersion value))
+                    if (TryGetValue(key, out TagVersion? value))
                         return value;
                     else
                         throw new KeyNotFoundException();
@@ -43,7 +44,7 @@ namespace ModMyFactoryGUI
 
             public IEnumerable<Assembly> Keys { get; }
 
-            public IEnumerable<TagVersion> Values => Keys.Select(a => TagVersion.Parse(a.ProductVersion()));
+            public IEnumerable<TagVersion> Values => Keys.Select(a => TagVersion.Parse(a.ProductVersion()!));
 
             public int Count => Keys.Count();
 
@@ -58,7 +59,7 @@ namespace ModMyFactoryGUI
 
             public bool ContainsKey(Assembly key) => Keys.Contains(key);
 
-            public bool TryGetValue(Assembly key, out TagVersion value)
+            public bool TryGetValue(Assembly key, [NotNullWhen(true)] out TagVersion? value)
             {
                 if (key is null)
                     throw new ArgumentNullException(nameof(key));
@@ -69,14 +70,14 @@ namespace ModMyFactoryGUI
                     return false;
                 }
 
-                value = TagVersion.Parse(key.ProductVersion());
+                value = TagVersion.Parse(key.ProductVersion()!);
                 return true;
             }
 
             public IEnumerator<KeyValuePair<Assembly, TagVersion>> GetEnumerator()
             {
                 foreach (var assembly in Keys)
-                    yield return new KeyValuePair<Assembly, TagVersion>(assembly, TagVersion.Parse(assembly.ProductVersion()));
+                    yield return new KeyValuePair<Assembly, TagVersion>(assembly, TagVersion.Parse(assembly.ProductVersion()!));
             }
 
             IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
@@ -107,16 +108,16 @@ namespace ModMyFactoryGUI
             AppPlatform = AppPlatform.Universal;
 #endif
 
-            AppVersion = TagVersion.Parse(Assembly.GetAssembly(typeof(App)).ProductVersion());
+            AppVersion = TagVersion.Parse(Assembly.GetAssembly(typeof(App))!.ProductVersion()!);
             // Just using some arbitrary types to find the assemblies
             LoadedAssemblyVersions = new AssemblyVersionDictionary(
-                Assembly.GetAssembly(typeof(Manager)),
-                Assembly.GetAssembly(typeof(AccurateVersion)),
-                Assembly.GetAssembly(typeof(Package)),
-                Assembly.GetAssembly(typeof(Locale)),
-                Assembly.GetAssembly(typeof(ISetting)),
-                Assembly.GetAssembly(typeof(Authentication)),
-                Assembly.GetAssembly(typeof(Kernel32))
+                Assembly.GetAssembly(typeof(Manager))!,
+                Assembly.GetAssembly(typeof(AccurateVersion))!,
+                Assembly.GetAssembly(typeof(Package))!,
+                Assembly.GetAssembly(typeof(Locale))!,
+                Assembly.GetAssembly(typeof(ISetting))!,
+                Assembly.GetAssembly(typeof(Authentication))!,
+                Assembly.GetAssembly(typeof(Kernel32))!
                 );
         }
     }

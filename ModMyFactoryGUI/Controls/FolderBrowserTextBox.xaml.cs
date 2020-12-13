@@ -36,6 +36,7 @@ namespace ModMyFactoryGUI.Controls
         {
             InitializeComponent();
 
+            _text = string.Empty;
             _textBox = this.FindControl<TextBox>("TextBox");
             var button = this.FindControl<Button>("Button");
             button.Command = ReactiveCommand.CreateFromTask(BrowseAsync);

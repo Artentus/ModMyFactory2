@@ -29,7 +29,7 @@ namespace ModMyFactoryGUI.Controls
         private HtmlLabel _renderer;
 
         public static readonly StyledProperty<string> MarkdownTextProperty
-                    = AvaloniaProperty.Register<FormattingTextBlock, string>(nameof(MarkdownText));
+            = AvaloniaProperty.Register<FormattingTextBlock, string>(nameof(MarkdownText), string.Empty);
 
         public string MarkdownText
         {
@@ -45,9 +45,14 @@ namespace ModMyFactoryGUI.Controls
         public FormattingTextBlock()
         {
             InitializeComponent();
+
+            _renderer = this.FindControl<HtmlLabel>("Renderer");
+            _renderer.LinkClicked += (_, e) => PlatformHelper.OpenWebUrl(e.Event.Link);
+            _renderer.BaseStylesheet = ParseCss(_css);
+            ThemeViewModel.SubscribeWeak(this);
         }
 
-        private static string ParseMarkdownToHtml(string markdown)
+        private static string ParseMarkdownToHtml(string? markdown)
         {
             if (string.IsNullOrEmpty(markdown)) return string.Empty;
 
@@ -71,11 +76,6 @@ namespace ModMyFactoryGUI.Controls
         private void InitializeComponent()
         {
             AvaloniaXamlLoader.Load(this);
-
-            _renderer = this.FindControl<HtmlLabel>("Renderer");
-            _renderer.LinkClicked += (_, e) => PlatformHelper.OpenWebUrl(e.Event.Link);
-            _renderer.BaseStylesheet = ParseCss(_css);
-            ThemeViewModel.SubscribeWeak(this);
         }
 
         private string GetColorResource(string key)

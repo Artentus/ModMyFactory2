@@ -7,12 +7,19 @@
 
 using ModMyFactoryGUI.MVVM;
 using ModMyFactoryGUI.Views;
+using ReactiveUI;
 using System;
 
 namespace ModMyFactoryGUI.ViewModels
 {
-    internal abstract class MainViewModelBase<T>
-        : RoutableViewModelBase<T>, IMainViewModel
+    internal interface IMainViewModel : IReactiveObject
+    {
+        void AttachView(IMainView view);
+    }
+
+#pragma warning disable CS8612 // ReactiveObject doesn't implement PropertyChanged with nullable=enable
+    internal abstract class MainViewModelBase<T> : ViewModelBase<T>, IMainViewModel
+#pragma warning restore CS8612
         where T : class, IMainView
     {
         void IMainViewModel.AttachView(IMainView view)

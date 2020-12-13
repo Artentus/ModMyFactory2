@@ -11,7 +11,7 @@ namespace ModMyFactoryGUI
 {
     internal sealed class GridLengthConverter : StringJsonConverter<GridLength>
     {
-        protected override GridLength Create(string token)
+        protected override GridLength Create(string? token)
             => GridLength.Parse(token);
 
         protected override string Tokenize(GridLength value)

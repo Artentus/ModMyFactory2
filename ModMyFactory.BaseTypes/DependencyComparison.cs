@@ -23,6 +23,7 @@ namespace ModMyFactory.BaseTypes
 
         public DependencyComparison(string op)
         {
+            Operator = op;
             comparisonFunction = op switch
             {
                 DependencyOperator.None => (x, y) => true,
@@ -33,7 +34,6 @@ namespace ModMyFactory.BaseTypes
                 DependencyOperator.GreaterThanOrEqual => (x, y) => x.CompareTo(y) >= 0,
                 _ => throw new ArgumentException("Unknown operator", nameof(op)),
             };
-            Operator = op;
         }
 
         /// <summary>

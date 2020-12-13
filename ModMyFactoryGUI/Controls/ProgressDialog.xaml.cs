@@ -20,7 +20,7 @@ namespace ModMyFactoryGUI.Controls
     internal class ProgressDialog : DialogBase
     {
         private double _minimum, _maximum, _value;
-        private ICommand _cancelCommand;
+        private ICommand? _cancelCommand;
         private string _description;
 
         public static readonly DirectProperty<ProgressDialog, double> MinimumProperty
@@ -35,11 +35,11 @@ namespace ModMyFactoryGUI.Controls
         public static readonly StyledProperty<bool> IsIndeterminateProperty
             = ProgressBar.IsIndeterminateProperty.AddOwner<ProgressDialog>();
 
-        public static readonly DirectProperty<ProgressDialog, ICommand> CancelCommandProperty
-            = AvaloniaProperty.RegisterDirect<ProgressDialog, ICommand>(nameof(CancelCommand), d => d.CancelCommand, (d, v) => d.CancelCommand = v);
+        public static readonly DirectProperty<ProgressDialog, ICommand?> CancelCommandProperty
+            = AvaloniaProperty.RegisterDirect<ProgressDialog, ICommand?>(nameof(CancelCommand), d => d.CancelCommand, (d, v) => d.CancelCommand = v);
 
         public static readonly DirectProperty<ProgressDialog, string> DescriptionProperty
-            = AvaloniaProperty.RegisterDirect<ProgressDialog, string>(nameof(Description), d => d.Description, (d, v) => d.Description = v);
+            = AvaloniaProperty.RegisterDirect<ProgressDialog, string>(nameof(Description), d => d.Description, (d, v) => d.Description = v, string.Empty);
 
         public double Minimum
         {
@@ -65,7 +65,7 @@ namespace ModMyFactoryGUI.Controls
             set => SetValue(IsIndeterminateProperty, value);
         }
 
-        public ICommand CancelCommand
+        public ICommand? CancelCommand
         {
             get => _cancelCommand;
             set => SetAndRaise(CancelCommandProperty, ref _cancelCommand, value);
@@ -80,6 +80,7 @@ namespace ModMyFactoryGUI.Controls
         public ProgressDialog()
         {
             InitializeComponent();
+            _description = string.Empty;
 #if DEBUG
             this.AttachDevTools();
 #endif
@@ -101,7 +102,7 @@ namespace ModMyFactoryGUI.Controls
             dialog.CancelCommand = ReactiveCommand.Create(cancellationSource.Cancel);
 
             // Use inner function instead of lambda so we can unsubscribe
-            void OnProgressChanged(object _, double p) => dialog.Value = p;
+            void OnProgressChanged(object? _, double p) => dialog.Value = p;
             progress.ProgressChanged += OnProgressChanged;
 
             // Show dialog but don't wait yet
@@ -133,7 +134,7 @@ namespace ModMyFactoryGUI.Controls
             var dialog = new ProgressDialog { Title = title, Description = description, Minimum = min, Maximum = max };
 
             // Use inner function instead of lambda so we can unsubscribe
-            void OnProgressChanged(object _, double p) => dialog.Value = p;
+            void OnProgressChanged(object? _, double p) => dialog.Value = p;
             progress.ProgressChanged += OnProgressChanged;
 
             // Show dialog but don't wait yet

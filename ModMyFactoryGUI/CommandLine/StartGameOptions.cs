@@ -28,26 +28,26 @@ namespace ModMyFactoryGUI.CommandLine
         }
 
         [Option("id", Required = true, SetName = "_id", HelpText = "The unique ID of the Factorio instance to start")]
-        public string Uid { get; }
+        public string? Uid { get; }
 
         [Option("name", Required = true, SetName = "_name", HelpText = "Name of the Factorio instance to start (case sensitive)")]
-        public string Name { get; }
+        public string? Name { get; }
 
         [Option("pack-id", Default = null, HelpText = "Optional modpack ID")]
         public int? ModpackId { get; }
 
         [Option("pack-name", HelpText = "Optional modpack name (case sensitive)")]
-        public string ModpackName { get; }
+        public string? ModpackName { get; }
 
         [Option("load-save", HelpText = "Optional save file to load")]
-        public string SavegameFile { get; }
+        public string? SavegameFile { get; }
 
         [Option("custom", HelpText = "Optional custom command line arguments that are passed to Factorio")]
-        public string CustomArguments { get; }
+        public string? CustomArguments { get; }
 
         public StartGameOptions(
-            string uid, string name, int? modpackId, string modpackName, string savegameFile, string customArguments,
-            bool verbose, bool noLog, string appDataPath)
+            string? uid, string? name, int? modpackId, string? modpackName, string? savegameFile, string? customArguments,
+            bool verbose, bool noLog, string? appDataPath)
             : base(verbose, noLog, appDataPath)
             => (Uid, Name, ModpackId, ModpackName, SavegameFile, CustomArguments)
                 = (uid, name, modpackId, modpackName, savegameFile, customArguments);

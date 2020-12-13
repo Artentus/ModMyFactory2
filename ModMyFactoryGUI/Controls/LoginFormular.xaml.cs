@@ -61,6 +61,8 @@ namespace ModMyFactoryGUI.Controls
             InitializeComponent();
 
             PseudoClass<LoginFormular>(IndicateErrorProperty, ":error");
+            _username = string.Empty;
+            _password = string.Empty;
         }
 
         private void InitializeComponent()

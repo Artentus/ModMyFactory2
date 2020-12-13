@@ -15,7 +15,7 @@ namespace ModMyFactoryGUI.Helpers
         public static FileVersionInfo FileVersion(this Assembly assembly)
             => FileVersionInfo.GetVersionInfo(assembly.Location);
 
-        public static string ProductVersion(this Assembly assembly)
+        public static string? ProductVersion(this Assembly assembly)
             => assembly.FileVersion().ProductVersion;
     }
 }

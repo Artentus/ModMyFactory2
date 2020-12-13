@@ -11,11 +11,11 @@ namespace ModMyFactoryGUI.MVVM
 {
     internal interface IView
     {
-        object ViewModel { get; set; }
+        object? ViewModel { get; set; }
     }
 
-    internal interface IView<T> : IView where T : IRoutableViewModel
+    internal interface IView<T> : IView where T : IReactiveObject
     {
-        new T ViewModel { get; set; }
+        new T? ViewModel { get; set; }
     }
 }

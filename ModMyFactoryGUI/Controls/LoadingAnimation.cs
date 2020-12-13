@@ -25,7 +25,7 @@ namespace ModMyFactoryGUI.Controls
         private int _dotCount;
         private double _radius;
         private TimeSpan _revolutionDuration;
-        private Canvas _dotCanvas;
+        private Canvas? _dotCanvas;
 
         public static readonly DirectProperty<LoadingAnimation, double> DotSizeProperty
             = AvaloniaProperty.RegisterDirect<LoadingAnimation, double>(

@@ -17,12 +17,6 @@ namespace ModMyFactory.WebApi
         private const string BaseUrl = "https://auth.factorio.com";
         private const string LogInUrl = BaseUrl + "/api-login";
 
-        private static void DestroyByteArray(byte[] array)
-        {
-            for (int i = 0; i < array.Length; i++)
-                array[i] = 0;
-        }
-
         /// <summary>
         /// Logs into the API to receive a token. The token can be used to authenticate to other API endpoints.
         /// </summary>
@@ -38,16 +32,12 @@ namespace ModMyFactory.WebApi
             try
             {
                 string document = await WebHelper.RequestDocumentAsync(LogInUrl, content);
-                dynamic response = JsonConvert.DeserializeObject(document);
+                dynamic response = JsonConvert.DeserializeObject(document)!;
                 return (response.username, response.token);
             }
             catch (WebException ex)
             {
                 throw ApiException.FromWebException(ex);
-            }
-            finally
-            {
-                DestroyByteArray(content);
             }
         }
     }

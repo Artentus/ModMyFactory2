@@ -133,7 +133,7 @@ namespace ModMyFactory.BaseTypes
         /// <summary>
         /// Tries to interpret a string as a version
         /// </summary>
-        public static bool TryParse(string value, out AccurateVersion version)
+        public static bool TryParse(string? value, out AccurateVersion version)
         {
             version = default;
             if (string.IsNullOrWhiteSpace(value)) return false;
@@ -156,7 +156,7 @@ namespace ModMyFactory.BaseTypes
         /// <summary>
         /// Interprets a string as a version
         /// </summary>
-        public static AccurateVersion Parse(string value)
+        public static AccurateVersion Parse(string? value)
         {
             if (TryParse(value, out var result)) return result;
             else throw new FormatException();

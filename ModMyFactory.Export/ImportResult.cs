@@ -6,6 +6,7 @@
 //  (at your option) any later version.
 
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 
@@ -35,7 +36,7 @@ namespace ModMyFactory.Export
         /// <summary>
         /// Tries to get the extracted file corresponding to a mod definition in the imported package
         /// </summary>
-        public bool TryGetExtractedFile(ModDefinition mod, out FileInfo file)
+        public bool TryGetExtractedFile(ModDefinition mod, [NotNullWhen(true)] out FileInfo? file)
         {
             file = null;
             if (!mod.Included) return false;
@@ -52,7 +53,7 @@ namespace ModMyFactory.Export
                 }
             }
 
-            return true;
+            return false;
         }
 
         /// <summary>

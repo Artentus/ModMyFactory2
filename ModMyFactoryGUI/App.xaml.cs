@@ -17,6 +17,7 @@ using ModMyFactoryGUI.ViewModels;
 using ModMyFactoryGUI.Views;
 using Serilog;
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -25,11 +26,11 @@ namespace ModMyFactoryGUI
 {
     partial class App : Application
     {
-        public static event EventHandler Loaded;
+        public static event EventHandler? Loaded;
 
-        public static event EventHandler ShuttingDown;
+        public static event EventHandler? ShuttingDown;
 
-        public IClassicDesktopStyleApplicationLifetime Lifetime { get; private set; }
+        public IClassicDesktopStyleApplicationLifetime Lifetime => (IClassicDesktopStyleApplicationLifetime)ApplicationLifetime;
 
         public LayoutSettings LayoutSettings { get; }
 
@@ -39,9 +40,9 @@ namespace ModMyFactoryGUI
 
         public CredentialsManager Credentials { get; }
 
-        public static new App Current => Application.Current as App;
+        public static new App Current => (App)Application.Current;
 
-        public MainWindow MainWindow => Lifetime.MainWindow as MainWindow;
+        public MainWindow MainWindow => (MainWindow)Lifetime.MainWindow;
 
         public App()
         {
@@ -109,7 +110,7 @@ namespace ModMyFactoryGUI
             Log.Information("Themes successfully loaded; available themes: {0}",
                 string.Join(", ", themes.Select(t => t.Name)));
 
-            var themeName = Program.Settings.Get(SettingName.Theme, themes.First().Name);
+            var themeName = Program.Settings.Get(SettingName.Theme, themes.First().Name)!;
             if (!themes.SelectTheme(themeName))
             {
                 Log.Warning("Theme '{0}' not available, reverting to default", themeName);
@@ -125,7 +126,7 @@ namespace ModMyFactoryGUI
             {
                 if (e.PropertyName == nameof(ThemeSelector.SelectedTheme))
                 {
-                    Program.Settings.Set(SettingName.Theme, themes.SelectedTheme.Name);
+                    Program.Settings.Set(SettingName.Theme, themes.SelectedTheme!.Name);
                     Program.Settings.Save();
                 }
             };
@@ -142,17 +143,17 @@ namespace ModMyFactoryGUI
             else await uiDispatcher.InvokeAsync(Shutdown, DispatcherPriority.Send);
         }
 
-        private void OnExit(object sender, ControlledApplicationLifetimeExitEventArgs e)
+        private void OnExit(object? sender, ControlledApplicationLifetimeExitEventArgs e)
         {
             ShuttingDown?.Invoke(this, e);
         }
 
-        public bool TryGetThemeResource(string key, out object resource)
-            => Themes.SelectedTheme.Style.TryGetResource(key, out resource);
+        public bool TryGetThemeResource(string key, [NotNullWhen(true)] out object? resource)
+            => Themes.SelectedTheme!.Style.TryGetResource(key, out resource);
 
-        public bool TryGetThemeResource<T>(string key, out T resource)
+        public bool TryGetThemeResource<T>(string key, [NotNullWhen(true)] out T? resource)
         {
-            if (TryGetThemeResource(key, out object objRes))
+            if (TryGetThemeResource(key, out object? objRes))
             {
                 if (objRes is T tRes)
                 {
@@ -174,8 +175,6 @@ namespace ModMyFactoryGUI
         {
             if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime lifetime)
             {
-                Lifetime = lifetime;
-
                 try
                 {
                     Loaded?.Invoke(this, EventArgs.Empty);

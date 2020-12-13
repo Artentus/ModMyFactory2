@@ -12,15 +12,15 @@ namespace ModMyFactory.BaseTypes
 {
     internal sealed class DependencyConverter : JsonConverter<Dependency>
     {
-        public override Dependency ReadJson(JsonReader reader, Type objectType, Dependency existingValue, bool hasExistingValue, JsonSerializer serializer)
+        public override Dependency ReadJson(JsonReader reader, Type objectType, Dependency? existingValue, bool hasExistingValue, JsonSerializer serializer)
         {
-            var value = (string)reader.Value;
+            string? value = reader.Value as string;
             return Dependency.Parse(value);
         }
 
-        public override void WriteJson(JsonWriter writer, Dependency value, JsonSerializer serializer)
+        public override void WriteJson(JsonWriter writer, Dependency? value, JsonSerializer serializer)
         {
-            writer.WriteValue(value.ToString());
+            writer.WriteValue(value?.ToString() ?? "null");
         }
     }
 }

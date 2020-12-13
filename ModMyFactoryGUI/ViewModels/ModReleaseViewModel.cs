@@ -17,7 +17,6 @@ using ReactiveUI;
 using Serilog;
 using System;
 using System.Collections.Specialized;
-using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
 
@@ -27,7 +26,7 @@ namespace ModMyFactoryGUI.ViewModels
     {
         private readonly string _modName, _modDisplayName;
         private readonly DownloadQueue _downloadQueue;
-        private ModManager _modManager;
+        private ModManager? _modManager;
         private bool _isInstalled;
 
         private bool isDisposed = false;
@@ -75,7 +74,7 @@ namespace ModMyFactoryGUI.ViewModels
                 _modManager = null;
                 _isInstalled = false;
 
-                void ModManagerCreatedHandler(object sender, ModManagerCreatedEventArgs e)
+                void ModManagerCreatedHandler(object? sender, ModManagerCreatedEventArgs e)
                 {
                     if (e.ModManager.FactorioVersion == FactorioVersion)
                     {
@@ -94,25 +93,29 @@ namespace ModMyFactoryGUI.ViewModels
             Dispose(false);
         }
 
-        private void ModManagerCollectionChangedHandler(object sender, NotifyCollectionChangedEventArgs e)
+        private void ModManagerCollectionChangedHandler(object? sender, NotifyCollectionChangedEventArgs e)
         {
             switch (e.Action)
             {
                 case NotifyCollectionChangedAction.Add:
-                    var newMods = e.NewItems.Cast<Mod>();
-                    foreach (var mod in newMods)
+                    if (!(e.NewItems is null))
                     {
-                        if (mod.Name == _modName && mod.Version == Version)
-                            IsInstalled = true;
+                        foreach (Mod mod in e.NewItems)
+                        {
+                            if (mod.Name == _modName && mod.Version == Version)
+                                IsInstalled = true;
+                        }
                     }
                     break;
 
                 case NotifyCollectionChangedAction.Remove:
-                    var oldMods = e.OldItems.Cast<Mod>();
-                    foreach (var mod in oldMods)
+                    if (!(e.OldItems is null))
                     {
-                        if (mod.Name == _modName && mod.Version == Version)
-                            IsInstalled = false;
+                        foreach (Mod mod in e.OldItems)
+                        {
+                            if (mod.Name == _modName && mod.Version == Version)
+                                IsInstalled = false;
+                        }
                     }
                     break;
             }
@@ -137,7 +140,7 @@ namespace ModMyFactoryGUI.ViewModels
                     IsInstalled = true;
                     var job = new DownloadModReleaseJob(Info, _modDisplayName, username, token);
 
-                    async void JobCompletedHandler(object sender, JobCompletedEventArgs<DownloadJob> e)
+                    async void JobCompletedHandler(object? sender, JobCompletedEventArgs<DownloadJob> e)
                     {
                         if (object.ReferenceEquals(e.Job, job))
                         {
@@ -146,16 +149,16 @@ namespace ModMyFactoryGUI.ViewModels
 
                             if (e.Success)
                             {
-                                var fileHash = await job.File.ComputeSHA1Async();
+                                var fileHash = await job.File!.ComputeSHA1Async();
                                 var targetHash = job.Release.Checksum;
                                 if (fileHash == targetHash)
                                 {
-                                    var (success, mod) = await Mod.TryLoadAsync(job.File);
+                                    var (success, mod) = await Mod.TryLoadAsync(job.File!);
                                     if (success)
                                     {
                                         // Mod successfully downloaded
-                                        _modManager.Add(mod);
-                                        Log.Information($"Mod {mod.Name} version {mod.Version} successfully loaded from mod portal");
+                                        _modManager!.Add(mod!);
+                                        Log.Information($"Mod {mod!.Name} version {mod!.Version} successfully loaded from mod portal");
                                     }
                                     else
                                     {
@@ -164,7 +167,7 @@ namespace ModMyFactoryGUI.ViewModels
                                 }
                                 else
                                 {
-                                    await Messages.FileIntegrityError(job.File, targetHash, fileHash).Show();
+                                    await Messages.FileIntegrityError(job.File!, targetHash, fileHash).Show();
                                 }
                             }
                         }
@@ -189,7 +192,7 @@ namespace ModMyFactoryGUI.ViewModels
                     {
                         _modManager.Remove(mod);
                         mod.Dispose();
-                        mod.File.Delete();
+                        mod.File?.Delete();
                     }
                 }
             }

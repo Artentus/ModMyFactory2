@@ -37,9 +37,9 @@ namespace ModMyFactoryGUI
         private readonly Random _rnd;
 
         private Location _factorioLocation, _modLocation;
-        private string _customFactorioPath, _customModPath;
+        private string? _customFactorioPath, _customModPath;
 
-        public event EventHandler ModsReloaded;
+        public event EventHandler? ModsReloaded;
 
         public Location FactorioLocation
         {
@@ -67,7 +67,7 @@ namespace ModMyFactoryGUI
             }
         }
 
-        public string CustomFactorioPath
+        public string? CustomFactorioPath
         {
             get => _customFactorioPath;
             private set
@@ -80,7 +80,7 @@ namespace ModMyFactoryGUI
             }
         }
 
-        public string CustomModPath
+        public string? CustomModPath
         {
             get => _customModPath;
             private set
@@ -93,14 +93,14 @@ namespace ModMyFactoryGUI
             }
         }
 
-        public LocationManager(Manager manager, SettingManager settingManager, DirectoryInfo binDir, DirectoryInfo dataDir)
+        public LocationManager(in Manager manager, in SettingManager settingManager, in DirectoryInfo binDir, in DirectoryInfo dataDir)
         {
             _manager = manager;
             _settingManager = settingManager;
             (_binDir, _dataDir) = (binDir, dataDir);
             _rnd = new Random();
 
-            string factorioLocationString = settingManager.Get(SettingName.FactorioLocation, AppDataValue);
+            string factorioLocationString = settingManager.Get(SettingName.FactorioLocation, AppDataValue)!;
             _factorioLocation = factorioLocationString switch
             {
                 AppDataValue => Location.AppData,
@@ -109,7 +109,7 @@ namespace ModMyFactoryGUI
             };
             if (_factorioLocation == Location.Custom) _customFactorioPath = factorioLocationString;
 
-            string modLocationString = settingManager.Get(SettingName.ModLocation, AppDataValue);
+            string modLocationString = settingManager.Get(SettingName.ModLocation, AppDataValue)!;
             _modLocation = modLocationString switch
             {
                 AppDataValue => Location.AppData,
@@ -122,35 +122,35 @@ namespace ModMyFactoryGUI
         private void OnModsReloaded(EventArgs e)
             => ModsReloaded?.Invoke(this, e);
 
-        private DirectoryInfo GetLocationDir(Location location, string dirName, string customPath)
+        private DirectoryInfo GetLocationDir(Location location, string dirName, string? customPath)
         {
             return location switch
             {
                 Location.AppData => _dataDir.CreateSubdirectory(dirName),
                 Location.BinDir => _binDir.CreateSubdirectory(dirName),
-                Location.Custom => Directory.CreateDirectory(customPath),
+                Location.Custom => Directory.CreateDirectory(customPath!),
                 _ => throw new InvalidOperationException() // Shouldn't happen
             };
         }
 
-        private DirectoryInfo GetFactorioDir(Location location, string customPath)
+        private DirectoryInfo GetFactorioDir(Location location, string? customPath)
             => GetLocationDir(location, "Factorio", customPath);
 
-        private DirectoryInfo GetModDir(Location location, string customPath)
+        private DirectoryInfo GetModDir(Location location, string? customPath)
             => GetLocationDir(location, "mods", customPath);
 
-        private string GetLocationString(Location location, string customPath)
+        private static string GetLocationString(Location location, string? customPath)
         {
             return location switch
             {
                 Location.AppData => AppDataValue,
                 Location.BinDir => BinDirValue,
-                Location.Custom => customPath,
+                Location.Custom => customPath!,
                 _ => throw new InvalidOperationException() // Shouldn't happen
             };
         }
 
-        private async Task<bool> TryMoveFactorioLocationInternalAsync(DirectoryInfo source, DirectoryInfo dest)
+        private static async Task<bool> TryMoveFactorioLocationInternalAsync(DirectoryInfo source, DirectoryInfo dest)
         {
             // We overwrite to avoid any nasty errors that could corrupt the entire manager state.
             // However since we do this we need to warn the user if they try to move to a location that already exists.
@@ -163,7 +163,7 @@ namespace ModMyFactoryGUI
             return false;
         }
 
-        private async Task<bool> TryMoveModLocationInternalAsync(DirectoryInfo source, DirectoryInfo dest)
+        private static async Task<bool> TryMoveModLocationInternalAsync(DirectoryInfo source, DirectoryInfo dest)
         {
             // We overwrite to avoid any nasty errors that could corrupt the entire manager state.
             // However since we do this we need to warn the user if they try to move to a location that already exists.

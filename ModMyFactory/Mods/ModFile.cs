@@ -6,6 +6,7 @@
 //  (at your option) any later version.
 
 using ModMyFactory.BaseTypes;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Threading.Tasks;
 
@@ -13,9 +14,9 @@ namespace ModMyFactory.Mods
 {
     public static class ModFile
     {
-        internal static async Task<Stream> LoadThumbnail(DirectoryInfo directory)
+        internal static async Task<Stream?> LoadThumbnail(DirectoryInfo directory)
         {
-            Stream thumbnail = null;
+            Stream? thumbnail = null;
             var thumbnailFile = new FileInfo(Path.Combine(directory.FullName, "thumbnail.png"));
             if (thumbnailFile.Exists)
             {
@@ -27,7 +28,7 @@ namespace ModMyFactory.Mods
             return thumbnail;
         }
 
-        internal static async Task<Stream> CopyThumbnailAsync(Stream thumbnail)
+        internal static async Task<Stream?> CopyThumbnailAsync(Stream? thumbnail)
         {
             if (thumbnail is null) return null;
 
@@ -38,7 +39,7 @@ namespace ModMyFactory.Mods
             return newStream;
         }
 
-        internal static bool TryParseFileName(string fileName, out string name, out AccurateVersion version)
+        internal static bool TryParseFileName(string fileName, [NotNullWhen(true)] out string? name, out AccurateVersion version)
         {
             (name, version) = (null, default);
 
@@ -56,7 +57,7 @@ namespace ModMyFactory.Mods
         /// Tries to load a mod file
         /// </summary>
         /// <param name="path">The path to load the mod from</param>
-        public static async Task<(bool, IModFile)> TryLoadAsync(string path)
+        public static async Task<(bool, IModFile?)> TryLoadAsync(string path)
         {
             var file = new FileInfo(path);
             if (file.Exists) return await ZippedModFile.TryLoadAsync(file);
@@ -71,7 +72,7 @@ namespace ModMyFactory.Mods
         /// Tries to load a mod file
         /// </summary>
         /// <param name="fileSystemInfo">The path to load the mod from</param>
-        public static async Task<(bool, IModFile)> TryLoadAsync(FileSystemInfo fileSystemInfo) => await TryLoadAsync(fileSystemInfo.FullName);
+        public static async Task<(bool, IModFile?)> TryLoadAsync(FileSystemInfo fileSystemInfo) => await TryLoadAsync(fileSystemInfo.FullName);
 
         /// <summary>
         /// Loads a mod file

@@ -21,7 +21,7 @@ namespace ModMyFactoryGUI.ViewModels
 
         public AssemblyVersionViewModel(Assembly assembly, string version)
         {
-            AssemblyName = assembly.GetName().Name;
+            AssemblyName = assembly.GetName()!.Name!;
             AssemblyVersion = version;
             WeakSubscriptionManager.Subscribe(App.Current.Locales, nameof(LocaleManager.UICultureChanged), this);
         }

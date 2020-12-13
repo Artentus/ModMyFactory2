@@ -32,11 +32,11 @@ namespace ModMyFactoryGUI.ViewModels
     internal sealed class FactorioInstanceViewModel : ReactiveObject
     {
         private readonly Manager _manager;
-        private readonly LocationManager _locations;
+        private readonly LocationManager? _locations;
         private bool _isInDownloadQueue, _isDownloading, _isExtracting, _isInstalled, _isRenaming;
-        private ManagedFactorioInstance _instance;
+        private ManagedFactorioInstance? _instance;
 
-        public event EventHandler InstanceRemoved;
+        public event EventHandler? InstanceRemoved;
 
         public bool IsInDownloadQueue
         {
@@ -81,7 +81,7 @@ namespace ModMyFactoryGUI.ViewModels
         // True if the instance does not reside inside the managed directory
         public bool IsExternal { get; }
 
-        public ManagedFactorioInstance Instance
+        public ManagedFactorioInstance? Instance
         {
             get => _instance;
             private set
@@ -103,7 +103,7 @@ namespace ModMyFactoryGUI.ViewModels
             set => SetName(value);
         }
 
-        public IBitmap Icon { get; private set; }
+        public IBitmap? Icon { get; private set; }
 
         public bool CanEditName { get; }
         public bool CanRemove { get; }
@@ -214,10 +214,10 @@ namespace ModMyFactoryGUI.ViewModels
 
         private string BuildArguments(ShortcutPropertiesViewModel vm)
         {
-            int? modpackId = vm.UseModpack ? (int?)Program.GetModpackId(vm.SelectedModpack) : null;
+            int? modpackId = (vm.UseModpack && !(vm.SelectedModpack is null)) ? (int?)Program.GetModpackId(vm.SelectedModpack) : null;
             var savegamePath = vm.UseSavegame ? vm.SavegamePath : null;
             var customArgs = vm.UseCustomArgs ? vm.CustomArgs.Replace('"', '\'') : null;
-            var opts = new StartGameOptions(Instance.GetUniqueKey(), null, modpackId, null, savegamePath, customArgs, false, false, null);
+            var opts = new StartGameOptions(Instance!.GetUniqueKey(), null, modpackId, null, savegamePath, customArgs, false, false, null);
 
             var args = Parser.Default.FormatCommandLine(opts);
 #if !SELFCONTAINED
@@ -236,7 +236,7 @@ namespace ModMyFactoryGUI.ViewModels
 #endif
         }
 
-        public string GetUniqueKey() => Instance.GetUniqueKey();
+        public string? GetUniqueKey() => Instance?.GetUniqueKey();
 
         public async Task CreateShortcutAsync()
         {
@@ -274,25 +274,28 @@ namespace ModMyFactoryGUI.ViewModels
         public void BrowseFiles()
         {
             if (IsInstalled)
-                PlatformHelper.OpenDirectory(Instance.Directory);
+                PlatformHelper.OpenDirectory(Instance!.Directory);
         }
 
         public void Remove()
         {
-            if (_instance.IsSteamInstance()) throw new InvalidOperationException("Cannot remove the Steam instance");
+            if (_instance!.IsSteamInstance()) throw new InvalidOperationException("Cannot remove the Steam instance");
             if (!IsExternal) throw new InvalidOperationException("Cannot remove an internal instance");
 
             // ToDo: ask user
             OnInstanceRemoved(EventArgs.Empty);
-            if (Program.Settings.TryGet(SettingName.ExternalInstances, out List<string> paths))
+            if (Program.Settings.TryGet(SettingName.ExternalInstances, out List<string>? paths))
             {
-                for (int i = paths.Count - 1; i >= 0; i--)
+                if (!(paths is null))
                 {
-                    if (FileHelper.PathsEqual(paths[i], _instance.Directory.FullName))
+                    for (int i = paths.Count - 1; i >= 0; i--)
                     {
-                        paths.RemoveAt(i);
-                        Program.Settings.Set(SettingName.ExternalInstances, paths);
-                        break;
+                        if (FileHelper.PathsEqual(paths[i], _instance.Directory.FullName))
+                        {
+                            paths.RemoveAt(i);
+                            Program.Settings.Set(SettingName.ExternalInstances, paths);
+                            break;
+                        }
                     }
                 }
             }
@@ -301,7 +304,7 @@ namespace ModMyFactoryGUI.ViewModels
 
         public void Delete()
         {
-            if (_instance.IsSteamInstance()) throw new InvalidOperationException("Cannot delete the Steam instance");
+            if (_instance!.IsSteamInstance()) throw new InvalidOperationException("Cannot delete the Steam instance");
             if (IsExternal) throw new InvalidOperationException("Cannot delete an external instance");
 
             // ToDo: ask user
@@ -334,7 +337,7 @@ namespace ModMyFactoryGUI.ViewModels
 
                     // Use an actual function instead of a lambda
                     // because we need to unsubscribe it again
-                    void OnProgressChanged(object sender, double progress)
+                    void OnProgressChanged(object? sender, double progress)
                     {
                         IsInDownloadQueue = false;
                         IsDownloading = true;
@@ -358,9 +361,9 @@ namespace ModMyFactoryGUI.ViewModels
                         var prevIcon = Icon;
                         Icon = LoadIcon("Package_Icon.png");
                         this.RaisePropertyChanged(nameof(Icon));
-                        prevIcon.Dispose();
+                        prevIcon?.Dispose();
 
-                        return await TryCreateExtractAsync(job.File, true);
+                        return await TryCreateExtractAsync(job.File!, true);
                     }
                     else
                     {
@@ -375,20 +378,20 @@ namespace ModMyFactoryGUI.ViewModels
         public async Task<bool> TryCreateExtractAsync(FileInfo file, bool deleteOnError = false)
         {
             IsExtracting = true;
-            string dirName = _locations.GenerateNewFactorioDirectoryName();
+            string dirName = _locations!.GenerateNewFactorioDirectoryName();
             var (success, instance) = await Factorio.TryExtract(file, _locations.GetFactorioDir().FullName, dirName);
             IsExtracting = false;
 
             if (success)
             {
                 IsInstalled = true;
-                Instance = _manager.AddInstance(instance);
+                Instance = _manager.AddInstance(instance!);
 
                 // Update to final icon
                 var prevIcon = Icon;
                 Icon = LoadIcon("Factorio_Icon.png");
                 this.RaisePropertyChanged(nameof(Icon));
-                prevIcon.Dispose();
+                prevIcon?.Dispose();
 
                 return true;
             }

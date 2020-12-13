@@ -28,7 +28,7 @@ namespace ModMyFactoryGUI
             var (success, instance) = await Factorio.TryLoadSteamAsync();
             if (success)
             {
-                manager.AddInstance(instance);
+                manager.AddInstance(instance!);
                 Log.Verbose("Successfully loaded Factorio Steam instance");
             }
             else
@@ -43,7 +43,7 @@ namespace ModMyFactoryGUI
                 (success, instance) = await Factorio.TryLoadAsync(subDir);
                 if (success)
                 {
-                    _ = manager.AddInstance(instance);
+                    _ = manager.AddInstance(instance!);
                     Log.Verbose($"Successfully loaded managed Factorio instance from '{subDir.Name}'");
                 }
                 else
@@ -53,14 +53,14 @@ namespace ModMyFactoryGUI
             }
 
             // Load external instances
-            if (settings.TryGet(SettingName.ExternalInstances, out List<string> paths))
+            if (settings.TryGet(SettingName.ExternalInstances, out List<string>? paths) && !(paths is null))
             {
                 foreach (var path in paths)
                 {
                     (success, instance) = await Factorio.TryLoadAsync(path);
                     if (success)
                     {
-                        _ = manager.AddInstance(instance);
+                        _ = manager.AddInstance(instance!);
                         Log.Verbose($"Successfully loaded external Factorio instance from '{path}'");
                     }
                     else
@@ -90,8 +90,8 @@ namespace ModMyFactoryGUI
                         var (success, mod) = await Mod.TryLoadAsync(fsi);
                         if (success)
                         {
-                            modManager.Add(mod);
-                            Log.Verbose($"Successfully loaded mod {mod.Name} version {mod.Version}");
+                            modManager.Add(mod!);
+                            Log.Verbose($"Successfully loaded mod {mod!.Name} version {mod!.Version}");
                         }
                     }
 

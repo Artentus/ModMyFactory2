@@ -5,41 +5,44 @@
 //  the Free Software Foundation, either version 3 of the License, or
 //  (at your option) any later version.
 
-using ModMyFactoryGUI.Helpers;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
 
 namespace ModMyFactoryGUI
 {
-    internal class ObservableDictionary<TKey, TValue> : NotifyPropertyChangedBase, IDictionary<TKey, TValue>, INotifyCollectionChanged
+    internal class ObservableDictionary<TKey, TValue> : NotifyPropertyChangedBase, IDictionary<TKey, TValue>, INotifyCollectionChanged where TKey : notnull
     {
         public abstract class ObservableDictionaryCollection<T> : NotifyPropertyChangedBase, ICollection<T>, IReadOnlyCollection<T>, INotifyCollectionChanged
         {
             private readonly ObservableDictionary<TKey, TValue> _parent;
             private readonly ICollection<T> _baseCollection;
 
-            public event NotifyCollectionChangedEventHandler CollectionChanged;
+            public event NotifyCollectionChangedEventHandler? CollectionChanged;
 
             public bool IsReadOnly => _baseCollection.IsReadOnly;
             public int Count => _baseCollection.Count;
 
-            protected ObservableDictionaryCollection(ObservableDictionary<TKey, TValue> parent, ICollection<T> baseCollection)
+            protected ObservableDictionaryCollection(in ObservableDictionary<TKey, TValue> parent, in ICollection<T> baseCollection)
             {
                 (_parent, _baseCollection) = (parent, baseCollection);
                 _parent.CollectionChanged += OnParentCollectionChanged;
             }
 
-            private IList MapList(IList list)
+            private IList MapList(in IList? list)
             {
+                if (list is null) return Array.Empty<object>();
+
                 var result = new List<T>(list.Count);
                 foreach (KeyValuePair<TKey, TValue> kvp in list)
                     result.Add(Map(kvp));
                 return result;
             }
 
-            private void OnParentCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+            private void OnParentCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
             {
                 IList newItems, oldItems;
 
@@ -88,7 +91,7 @@ namespace ModMyFactoryGUI
 
         public sealed class ObservableKeyCollection : ObservableDictionaryCollection<TKey>
         {
-            public ObservableKeyCollection(ObservableDictionary<TKey, TValue> parent, ICollection<TKey> baseCollection)
+            public ObservableKeyCollection(in ObservableDictionary<TKey, TValue> parent, in ICollection<TKey> baseCollection)
                 : base(parent, baseCollection)
             { }
 
@@ -97,7 +100,7 @@ namespace ModMyFactoryGUI
 
         public sealed class ObservableValueCollection : ObservableDictionaryCollection<TValue>
         {
-            public ObservableValueCollection(ObservableDictionary<TKey, TValue> parent, ICollection<TValue> baseCollection)
+            public ObservableValueCollection(in ObservableDictionary<TKey, TValue> parent, in ICollection<TValue> baseCollection)
                 : base(parent, baseCollection)
             { }
 
@@ -107,7 +110,7 @@ namespace ModMyFactoryGUI
 
         private readonly Dictionary<TKey, TValue> _dictionary;
 
-        public event NotifyCollectionChangedEventHandler CollectionChanged;
+        public event NotifyCollectionChangedEventHandler? CollectionChanged;
 
         public TValue this[TKey key]
         {
@@ -182,14 +185,14 @@ namespace ModMyFactoryGUI
         public bool Remove(TKey key)
         {
             bool result = _dictionary.Remove(key, out var value);
-            if (result) OnRemove(new KeyValuePair<TKey, TValue>(key, value));
+            if (result) OnRemove(new KeyValuePair<TKey, TValue>(key, value!));
             return result;
         }
 
-        public bool Remove(TKey key, out TValue value)
+        public bool Remove(TKey key, [NotNullWhen(true)] out TValue? value)
         {
             bool result = _dictionary.Remove(key, out value);
-            if (result) OnRemove(new KeyValuePair<TKey, TValue>(key, value));
+            if (result) OnRemove(new KeyValuePair<TKey, TValue>(key, value!));
             return result;
         }
 
@@ -207,7 +210,7 @@ namespace ModMyFactoryGUI
 
         public IEnumerator<KeyValuePair<TKey, TValue>> GetEnumerator() => _dictionary.GetEnumerator();
 
-        public bool TryGetValue(TKey key, out TValue value) => _dictionary.TryGetValue(key, out value);
+        public bool TryGetValue(TKey key, [MaybeNullWhen(false)] out TValue value) => _dictionary.TryGetValue(key, out value);
 
         void ICollection<KeyValuePair<TKey, TValue>>.Add(KeyValuePair<TKey, TValue> item)
         {

@@ -15,7 +15,7 @@ namespace ModMyFactoryGUI.Controls
     {
         private string _username, _password;
         private bool _indicateError;
-        private ICommand _acceptCommand, _cancelCommand;
+        private ICommand? _acceptCommand, _cancelCommand;
 
         public static readonly DirectProperty<LoginDialog, string> UsernameProperty
             = LoginFormular.UsernameProperty.AddOwner<LoginDialog>(
@@ -29,12 +29,12 @@ namespace ModMyFactoryGUI.Controls
             = LoginFormular.IndicateErrorProperty.AddOwner<LoginDialog>(
                 d => d.IndicateError, (d, v) => d.IndicateError = v, false);
 
-        public static readonly DirectProperty<LoginDialog, ICommand> AcceptCommandProperty
-            = AvaloniaProperty.RegisterDirect<LoginDialog, ICommand>(
+        public static readonly DirectProperty<LoginDialog, ICommand?> AcceptCommandProperty
+            = AvaloniaProperty.RegisterDirect<LoginDialog, ICommand?>(
                 nameof(AcceptCommand), d => d.AcceptCommand, (d, v) => d.AcceptCommand = v);
 
-        public static readonly DirectProperty<LoginDialog, ICommand> CancelCommandProperty
-            = AvaloniaProperty.RegisterDirect<LoginDialog, ICommand>(
+        public static readonly DirectProperty<LoginDialog, ICommand?> CancelCommandProperty
+            = AvaloniaProperty.RegisterDirect<LoginDialog, ICommand?>(
                 nameof(CancelCommand), d => d.CancelCommand, (d, v) => d.CancelCommand = v);
 
         public string Username
@@ -55,13 +55,13 @@ namespace ModMyFactoryGUI.Controls
             set => SetAndRaise(IndicateErrorProperty, ref _indicateError, value);
         }
 
-        public ICommand AcceptCommand
+        public ICommand? AcceptCommand
         {
             get => _acceptCommand;
             set => SetAndRaise(AcceptCommandProperty, ref _acceptCommand, value);
         }
 
-        public ICommand CancelCommand
+        public ICommand? CancelCommand
         {
             get => _cancelCommand;
             set => SetAndRaise(CancelCommandProperty, ref _cancelCommand, value);
@@ -70,6 +70,9 @@ namespace ModMyFactoryGUI.Controls
         public LoginDialog()
         {
             InitializeComponent();
+
+            _username = string.Empty;
+            _password = string.Empty;
         }
 
         private void InitializeComponent()

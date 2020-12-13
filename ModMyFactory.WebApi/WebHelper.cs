@@ -19,7 +19,7 @@ namespace ModMyFactory.WebApi
         private const string UserAgent = "ModMyFactory_2";
         private const int BufferSize = 65536;
 
-        private static async Task<HttpWebRequest> CreateHttpRequestAsync(Uri uri, byte[] content = null)
+        private static async Task<HttpWebRequest> CreateHttpRequestAsync(Uri uri, byte[]? content = null)
         {
             var request = WebRequest.CreateHttp(uri);
             request.KeepAlive = true;
@@ -42,12 +42,12 @@ namespace ModMyFactory.WebApi
             return request;
         }
 
-        public async static Task<string> RequestDocumentAsync(Uri uri, byte[] content = null)
+        public async static Task<string> RequestDocumentAsync(Uri uri, byte[]? content = null)
         {
             var request = await CreateHttpRequestAsync(uri, content);
 
-            WebResponse response = null;
-            Stream responseStream = null;
+            WebResponse? response = null;
+            Stream? responseStream = null;
             try
             {
                 response = await request.GetResponseAsync();
@@ -63,18 +63,18 @@ namespace ModMyFactory.WebApi
             }
         }
 
-        public async static Task<string> RequestDocumentAsync(string url, byte[] content = null)
-            => await RequestDocumentAsync(new Uri(url, UriKind.Absolute), content);
+        public static Task<string> RequestDocumentAsync(string url, byte[]? content = null)
+            => RequestDocumentAsync(new Uri(url, UriKind.Absolute), content);
 
         public async static Task DownloadFileAsync(
             Uri uri, FileInfo file,
             CancellationToken cancellationToken,
-            IProgress<double> progress = null)
+            IProgress<double>? progress = null)
         {
             var request = await CreateHttpRequestAsync(uri);
 
-            WebResponse response = null;
-            Stream responseStream = null;
+            WebResponse? response = null;
+            Stream? responseStream = null;
             try
             {
                 response = await request.GetResponseAsync();
@@ -117,7 +117,7 @@ namespace ModMyFactory.WebApi
         public static Task DownloadFileAsync(
             string url, FileInfo file,
             CancellationToken cancellationToken,
-            IProgress<double> progress = null)
+            IProgress<double>? progress = null)
             => DownloadFileAsync(new Uri(url, UriKind.Absolute), file, cancellationToken, progress);
     }
 }

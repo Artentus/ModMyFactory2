@@ -59,7 +59,7 @@ namespace ModMyFactory.ModSettings
         public StringSetting(RuntimeType runtimeType, string name, string localisedName, string localisedDescription, string order,
             string defaultValue, bool allowBlank = false)
             : base(runtimeType, name, localisedName, localisedDescription, order, defaultValue)
-            => (AllowBlank, AllowedValues, _value) = (allowBlank, null, defaultValue);
+            => (AllowBlank, AllowedValues, _value) = (allowBlank, Array.Empty<string>(), defaultValue);
 
         public StringSetting(RuntimeType runtimeType, string name, string localisedName, string localisedDescription, string order,
             string defaultValue, IList<string> allowedValues)

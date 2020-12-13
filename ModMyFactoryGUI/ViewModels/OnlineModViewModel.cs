@@ -28,8 +28,8 @@ namespace ModMyFactoryGUI.ViewModels
         private readonly DownloadQueue _downloadQueue;
         private ApiModInfo _info;
         private volatile bool _isExtended;
-        private ModReleaseViewModel[] _releases;
-        private ModReleaseViewModel _selectedRelease;
+        private ModReleaseViewModel[]? _releases;
+        private ModReleaseViewModel? _selectedRelease;
 
         private bool isDisposed = false;
 
@@ -54,25 +54,25 @@ namespace ModMyFactoryGUI.ViewModels
         }
 
         public bool HasThumbnail { get; private set; }
-        public IBitmap Thumbnail { get; private set; }
+        public IBitmap? Thumbnail { get; private set; }
 
         public bool HasHomepage { get; private set; }
-        public Uri Homepage { get; private set; }
+        public Uri? Homepage { get; private set; }
 
         public bool HasGitHub { get; private set; }
-        public Uri GitHubUrl { get; private set; }
+        public Uri? GitHubUrl { get; private set; }
 
         public bool HasLicense { get; private set; }
-        public string LicenseName { get; private set; }
+        public string? LicenseName { get; private set; }
         public bool HasLicenseUrl { get; private set; }
-        public Uri LicenseUrl { get; private set; }
+        public Uri? LicenseUrl { get; private set; }
 
         public bool HasChangelog => !string.IsNullOrWhiteSpace(Changelog);
         public bool HasFaq => !string.IsNullOrWhiteSpace(Faq);
 
         public CollectionView<ModReleaseViewModel> Releases { get; private set; }
 
-        public ModReleaseViewModel SelectedRelease
+        public ModReleaseViewModel? SelectedRelease
         {
             get => _selectedRelease;
             set => this.RaiseAndSetIfChanged(ref _selectedRelease, value, nameof(SelectedRelease));
@@ -124,7 +124,7 @@ namespace ModMyFactoryGUI.ViewModels
             this.RaisePropertyChanged(nameof(HasHomepage));
             if (HasHomepage)
             {
-                Homepage = homepage;
+                Homepage = homepage!;
                 this.RaisePropertyChanged(nameof(Homepage));
             }
         }
@@ -135,7 +135,7 @@ namespace ModMyFactoryGUI.ViewModels
             this.RaisePropertyChanged(nameof(HasGitHub));
             if (HasGitHub)
             {
-                GitHubUrl = gitHubUrl;
+                GitHubUrl = gitHubUrl!;
                 this.RaisePropertyChanged(nameof(GitHubUrl));
             }
         }
@@ -152,7 +152,7 @@ namespace ModMyFactoryGUI.ViewModels
                 this.RaisePropertyChanged(nameof(HasLicenseUrl));
                 if (HasLicenseUrl)
                 {
-                    LicenseUrl = licenseUrl;
+                    LicenseUrl = licenseUrl!;
                     this.RaisePropertyChanged(nameof(LicenseUrl));
                 }
             }
@@ -182,7 +182,7 @@ namespace ModMyFactoryGUI.ViewModels
             this.RaisePropertyChanged(nameof(HasThumbnail));
             if (HasThumbnail)
             {
-                if (Uri.TryCreate(Info.ThumbnailUrl, UriKind.Absolute, out Uri url))
+                if (Uri.TryCreate(Info.ThumbnailUrl, UriKind.Absolute, out var url))
                 {
                     using var wc = new WebClient();
                     try

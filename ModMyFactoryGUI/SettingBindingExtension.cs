@@ -19,15 +19,15 @@ namespace ModMyFactoryGUI
 {
     internal class SettingBindingExtension
     {
-        public IValueConverter Converter { get; set; }
+        public IValueConverter? Converter { get; set; }
 
-        public object ConverterParameter { get; set; }
+        public object? ConverterParameter { get; set; }
 
         public BindingMode Mode { get; set; }
 
         public BindingPriority Priority { get; set; } = BindingPriority.LocalValue;
 
-        public string StringFormat { get; set; }
+        public string? StringFormat { get; set; }
 
         public object TargetNullValue { get; set; } = AvaloniaProperty.UnsetValue;
 
@@ -37,9 +37,9 @@ namespace ModMyFactoryGUI
         public SettingBindingExtension(string key)
             => Key = key;
 
-        private static object GetDefaultAnchor(IServiceProvider context)
+        private static object? GetDefaultAnchor(in IServiceProvider context)
         {
-            object anchor = context.GetFirstParent<IControl>();
+            object? anchor = context.GetFirstParent<IControl>();
             anchor ??= context.GetFirstParent<IDataContextProvider>();
 
             return anchor
@@ -61,7 +61,7 @@ namespace ModMyFactoryGUI
                 Source = App.Current.LayoutSettings,
                 StringFormat = StringFormat,
                 DefaultAnchor = new WeakReference(GetDefaultAnchor(descriptorContext)),
-                NameScope = new WeakReference<INameScope>(serviceProvider.GetService<INameScope>())
+                NameScope = new WeakReference<INameScope>(serviceProvider.GetService<INameScope>()!)
             };
         }
     }

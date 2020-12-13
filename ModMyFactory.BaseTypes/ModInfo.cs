@@ -100,13 +100,13 @@ namespace ModMyFactory.BaseTypes
         /// <summary>
         /// Creates a json string from this mod info
         /// </summary>
-        public string ToJson(Formatting formatting = Formatting.Indented, JsonSerializerSettings settings = null)
+        public string ToJson(Formatting formatting = Formatting.Indented, JsonSerializerSettings? settings = null)
             => JsonConvert.SerializeObject(this, formatting, settings);
 
         /// <summary>
         /// Saves a mod info file
         /// </summary>
-        public async Task SaveToFileAsync(FileInfo file, Formatting formatting = Formatting.Indented, JsonSerializerSettings settings = null)
+        public async Task SaveToFileAsync(FileInfo file, Formatting formatting = Formatting.Indented, JsonSerializerSettings? settings = null)
         {
             if (!file.Directory.Exists) file.Directory.Create();
             using var fs = file.Open(FileMode.Create, FileAccess.Write);
@@ -118,7 +118,7 @@ namespace ModMyFactory.BaseTypes
         /// <summary>
         /// Saves a mod info file
         /// </summary>
-        public Task SaveToFileAsync(string fileName, Formatting formatting = Formatting.Indented, JsonSerializerSettings settings = null)
+        public Task SaveToFileAsync(string fileName, Formatting formatting = Formatting.Indented, JsonSerializerSettings? settings = null)
             => SaveToFileAsync(new FileInfo(fileName), formatting, settings);
     }
 }

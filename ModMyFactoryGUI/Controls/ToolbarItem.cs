@@ -22,6 +22,11 @@ using System.Windows.Input;
 
 namespace ModMyFactoryGUI.Controls
 {
+    internal interface IToolbarItem : IToolbarElement, IMenuItem
+    {
+        new IToolbarElement Parent { get; }
+    }
+
     internal class ToolbarItem : HeaderedSelectingItemsControl, IToolbarItem, ISelectable
     {
         private class DependencyResolver : IAvaloniaDependencyResolver
@@ -49,14 +54,14 @@ namespace ModMyFactoryGUI.Controls
         private static readonly ITemplate<IPanel> DefaultPanel =
             new FuncTemplate<IPanel>(() => new StackPanel());
 
-        private ICommand _command;
+        private ICommand? _command;
 
         private bool _commandCanExecute = true;
 
-        private Popup _popup;
+        private Popup? _popup;
 
-        public static readonly DirectProperty<ToolbarItem, ICommand> CommandProperty =
-                                            Button.CommandProperty.AddOwner<ToolbarItem>(
+        public static readonly DirectProperty<ToolbarItem, ICommand?> CommandProperty =
+            Button.CommandProperty.AddOwner<ToolbarItem>(
                 toolbarItem => toolbarItem.Command,
                 (toolbarItem, command) => toolbarItem.Command = command,
                 enableDataValidation: true);
@@ -109,7 +114,7 @@ namespace ModMyFactoryGUI.Controls
             remove => RemoveHandler(SubmenuOpenedEvent, value);
         }
 
-        public ICommand Command
+        public ICommand? Command
         {
             get => _command;
             set => SetAndRaise(CommandProperty, ref _command, value);
@@ -145,13 +150,13 @@ namespace ModMyFactoryGUI.Controls
 
         bool IMenuItem.IsPointerOverSubMenu => _popup?.IsPointerOverPopup ?? false;
 
-        IMenuElement IMenuItem.Parent => Parent as IMenuElement;
+        IMenuElement? IMenuItem.Parent => Parent as IMenuElement;
 
-        IToolbarElement IToolbarItem.Parent => Parent as IToolbarElement;
+        IToolbarElement IToolbarItem.Parent => (IToolbarElement)Parent;
 
         protected override bool IsEnabledCore => base.IsEnabledCore && _commandCanExecute;
 
-        IMenuItem IMenuElement.SelectedItem
+        IMenuItem? IMenuElement.SelectedItem
         {
             get
             {
@@ -163,7 +168,7 @@ namespace ModMyFactoryGUI.Controls
             set => SelectedIndex = ItemContainerGenerator.IndexFromContainer(value);
         }
 
-        IToolbarItem IToolbarElement.SelectedItem
+        IToolbarItem? IToolbarElement.SelectedItem
         {
             get
             {
@@ -218,7 +223,7 @@ namespace ModMyFactoryGUI.Controls
                 child.IsSubMenuOpen = false;
         }
 
-        private void CanExecuteChanged(object sender, EventArgs e)
+        private void CanExecuteChanged(object? sender, EventArgs e)
         {
             var canExecute = Command is null || Command.CanExecute(CommandParameter);
 
@@ -274,7 +279,7 @@ namespace ModMyFactoryGUI.Controls
             }
         }
 
-        private void PopupOpened(object sender, EventArgs e)
+        private void PopupOpened(object? sender, EventArgs e)
         {
             var selected = SelectedIndex;
 
@@ -285,7 +290,7 @@ namespace ModMyFactoryGUI.Controls
             }
         }
 
-        private void PopupClosed(object sender, EventArgs e)
+        private void PopupClosed(object? sender, EventArgs e)
             => SelectedItem = null;
 
         protected override IItemContainerGenerator CreateItemContainerGenerator()

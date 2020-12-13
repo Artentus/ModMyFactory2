@@ -16,15 +16,15 @@ namespace ModMyFactoryGUI.Controls
     {
         private static readonly TimeSpan MinDuration = TimeSpan.FromMilliseconds(100);
 
-        private string _text;
+        private string? _text;
         private double _dotSize;
         private int _dotCount;
         private double _radius;
         private double _animationSize;
         private TimeSpan _revolutionDuration;
 
-        public static readonly DirectProperty<LoadingIndicator, string> TextProperty
-            = AvaloniaProperty.RegisterDirect<LoadingIndicator, string>(
+        public static readonly DirectProperty<LoadingIndicator, string?> TextProperty
+            = AvaloniaProperty.RegisterDirect<LoadingIndicator, string?>(
                 nameof(Text), c => c.Text, (c, v) => c.Text = v);
 
         public static readonly DirectProperty<LoadingIndicator, double> DotSizeProperty
@@ -47,7 +47,7 @@ namespace ModMyFactoryGUI.Controls
             = AvaloniaProperty.RegisterDirect<LoadingIndicator, TimeSpan>(
                 nameof(RevolutionDuration), c => c.RevolutionDuration, (c, v) => c.RevolutionDuration = v, TimeSpan.FromSeconds(1));
 
-        public string Text
+        public string? Text
         {
             get => _text;
             set => SetAndRaise(TextProperty, ref _text, value);

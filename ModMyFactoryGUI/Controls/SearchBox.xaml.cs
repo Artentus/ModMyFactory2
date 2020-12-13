@@ -27,6 +27,7 @@ namespace ModMyFactoryGUI.Controls
         public SearchBox()
         {
             InitializeComponent();
+            _text = string.Empty;
         }
 
         private static string GetText(SearchBox box)

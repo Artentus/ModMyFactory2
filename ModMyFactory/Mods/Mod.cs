@@ -17,18 +17,18 @@ namespace ModMyFactory.Mods
     /// </summary>
     public class Mod : ICanEnable, IDisposable
     {
-        private readonly IModFile _file;
+        private readonly IModFile? _file;
         private bool _enabled;
 
         /// <summary>
         /// Is raised if the enabled state of this mod changes
         /// </summary>
-        public event EventHandler EnabledChanged;
+        public event EventHandler? EnabledChanged;
 
         /// <summary>
         /// The mod file
         /// </summary>
-        public IModFile File => _file;
+        public IModFile? File => _file;
 
         /// <summary>
         /// The unique name of the mod
@@ -70,7 +70,7 @@ namespace ModMyFactory.Mods
         /// A stream containing bitmap data of the mods thumbnail<br/>
         /// May be null
         /// </summary>
-        public Stream Thumbnail { get; }
+        public Stream? Thumbnail { get; }
 
         /// <summary>
         /// Specifies whether this mod can be disabled
@@ -106,7 +106,7 @@ namespace ModMyFactory.Mods
         /// The family this mod is part of<br/>
         /// Null if the mod has not been added to a family
         /// </summary>
-        public ModFamily Family { get; internal set; }
+        public ModFamily? Family { get; internal set; }
 
         bool? ICanEnable.Enabled
         {
@@ -119,11 +119,11 @@ namespace ModMyFactory.Mods
         }
 
         protected Mod(string name, string displayName, AccurateVersion version, AccurateVersion factorioVersion,
-            string author, string description, Dependency[] dependencies, Stream thumbnail = null)
+            string author, string description, Dependency[] dependencies, Stream? thumbnail = null)
             => (Name, DisplayName, Version, FactorioVersion, Author, Description, Dependencies, Thumbnail)
                = (name, displayName, version, factorioVersion, author, description, dependencies, thumbnail);
 
-        protected Mod(ModInfo info, Stream Thumbnail = null)
+        protected Mod(ModInfo info, Stream? Thumbnail = null)
             : this(info.Name, info.DisplayName, info.Version, info.FactorioVersion,
                   info.Author, info.Description, info.Dependencies, Thumbnail)
         { }
@@ -142,12 +142,6 @@ namespace ModMyFactory.Mods
             Dispose(false);
         }
 
-        private static Mod FromFile(IModFile file)
-        {
-            if (file is null) return null;
-            return new Mod(file);
-        }
-
         protected virtual void Dispose(bool disposing)
         {
             if (disposing) _file?.Dispose();
@@ -157,20 +151,22 @@ namespace ModMyFactory.Mods
         /// Tries to load a mod
         /// </summary>
         /// <param name="path">The path to load the mod from</param>
-        public static async Task<(bool, Mod)> TryLoadAsync(string path)
+        public static async Task<(bool, Mod?)> TryLoadAsync(string path)
         {
             (bool success, var file) = await ModFile.TryLoadAsync(path);
-            return (success, FromFile(file));
+            if (success) return (true, new Mod(file!));
+            else return (false, null);
         }
 
         /// <summary>
         /// Tries to load a mod
         /// </summary>
         /// <param name="fileSystemInfo">The path to load the mod from</param>
-        public static async Task<(bool, Mod)> TryLoadAsync(FileSystemInfo fileSystemInfo)
+        public static async Task<(bool, Mod?)> TryLoadAsync(FileSystemInfo fileSystemInfo)
         {
             (bool success, var file) = await ModFile.TryLoadAsync(fileSystemInfo);
-            return (success, FromFile(file));
+            if (success) return (true, new Mod(file!));
+            else return (false, null);
         }
 
         /// <summary>
@@ -180,7 +176,7 @@ namespace ModMyFactory.Mods
         public static async Task<Mod> LoadAsync(string path)
         {
             var file = await ModFile.LoadAsync(path);
-            return FromFile(file);
+            return new Mod(file);
         }
 
         /// <summary>
@@ -190,7 +186,7 @@ namespace ModMyFactory.Mods
         public static async Task<Mod> LoadAsync(FileSystemInfo fileSystemInfo)
         {
             var file = await ModFile.LoadAsync(fileSystemInfo);
-            return FromFile(file);
+            return new Mod(file);
         }
 
         public void Dispose()

@@ -20,23 +20,23 @@ namespace ModMyFactoryGUI.Localization
     internal class LocalizedResourceExtension
     {
         private readonly LocalizedResource _resource;
-        private Control _anchor;
+        private Control? _anchor;
 
-        public IValueConverter Converter { get; set; }
+        public IValueConverter? Converter { get; set; }
 
-        public object ConverterParameter { get; set; }
+        public object? ConverterParameter { get; set; }
 
-        public string ElementName { get; set; }
+        public string? ElementName { get; set; }
 
-        public object FallbackValue { get; set; } = AvaloniaProperty.UnsetValue;
+        public object? FallbackValue { get; set; } = AvaloniaProperty.UnsetValue;
 
         public BindingMode Mode { get; set; }
 
         public BindingPriority Priority { get; set; } = BindingPriority.LocalValue;
 
-        public string StringFormat { get; set; }
+        public string? StringFormat { get; set; }
 
-        public RelativeSource RelativeSource { get; set; }
+        public RelativeSource? RelativeSource { get; set; }
 
         public object TargetNullValue { get; set; } = AvaloniaProperty.UnsetValue;
 
@@ -48,10 +48,13 @@ namespace ModMyFactoryGUI.Localization
             _resource = new LocalizedResource(key);
         }
 
-        private void DisconnectAnchor(object sender, EventArgs e)
+        private void DisconnectAnchor(object? sender, EventArgs e)
         {
-            _anchor.Tag = null;
-            _anchor = null;
+            if (!(_anchor is null))
+            {
+                _anchor.Tag = null;
+                _anchor = null;
+            }
         }
 
         private void Subscribe(Window window)
@@ -59,9 +62,10 @@ namespace ModMyFactoryGUI.Localization
             WeakEventHandlerManager.Subscribe<Window, EventArgs, LocalizedResourceExtension>(window, nameof(Window.Closed), DisconnectAnchor);
         }
 
-        private void DelayedSubscribe(object sender, EventArgs e)
+        private void DelayedSubscribe(object? sender, EventArgs e)
         {
-            var userControl = (UserControl)sender;
+            var userControl = sender as UserControl;
+            if (userControl is null) throw new InvalidOperationException("Sender is not a UserControl");
 
             IControl control = userControl;
             while (!(control is null))
@@ -77,8 +81,11 @@ namespace ModMyFactoryGUI.Localization
             }
             catch
             {
-                _anchor.Tag = null;
-                _anchor = null;
+                if (!(_anchor is null))
+                {
+                    _anchor.Tag = null;
+                    _anchor = null;
+                }
                 throw;
             }
             finally
@@ -90,12 +97,13 @@ namespace ModMyFactoryGUI.Localization
         private void ConnectAnchor(ITypeDescriptorContext context)
         {
             // This is a horrible hack to have the control keep the binding alive.
-            _anchor.Tag = this;
+            _anchor!.Tag = this;
+
             var window = context.GetFirstParent<Window>();
             if (window is null)
             {
                 var userControl = context.GetFirstParent<UserControl>();
-                userControl.AttachedToLogicalTree += DelayedSubscribe;
+                if (!(userControl is null)) userControl.AttachedToLogicalTree += DelayedSubscribe;
             }
             else
             {
@@ -124,7 +132,7 @@ namespace ModMyFactoryGUI.Localization
                 StringFormat = StringFormat,
                 RelativeSource = RelativeSource,
                 DefaultAnchor = new WeakReference(_anchor),
-                NameScope = new WeakReference<INameScope>(serviceProvider.GetService<INameScope>())
+                NameScope = new WeakReference<INameScope>(serviceProvider.GetService<INameScope>()!)
             };
         }
     }

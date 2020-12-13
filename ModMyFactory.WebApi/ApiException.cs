@@ -12,7 +12,7 @@ namespace ModMyFactory.WebApi
 {
     public class ApiException : Exception
     {
-        protected ApiException(string message, Exception innerException = null)
+        protected ApiException(string message, Exception? innerException = null)
             : base(message, innerException)
         { }
 
@@ -27,12 +27,12 @@ namespace ModMyFactory.WebApi
                     (WebExceptionStatus.Timeout, _) => new TimeoutException(ex),
                     (WebExceptionStatus.ConnectFailure, _) => new ConnectFailureException(ex),
                     (WebExceptionStatus.SecureChannelFailure, _) => new ConnectFailureException(ex),
-                    _ => new ApiException("General API exception") // No matching exception found
+                    _ => new ApiException("General API exception", ex) // No matching exception found
                 };
             }
             else
             {
-                return new ApiException("Unknown web exception"); // Exception is not related to the actual API
+                return new ApiException("Unknown web exception", ex); // Exception is not related to the actual API
             }
         }
     }

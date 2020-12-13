@@ -43,9 +43,9 @@ namespace ModMyFactory.Win32
 
         [DllImport("advapi32.dll", EntryPoint = "LookupPrivilegeValueW",
             CharSet = CharSet.Unicode, ExactSpelling = true, SetLastError = true)]
-        private static extern bool LookupPrivilegeValueNative(string systemName, string name, out Luid luid);
+        private static extern bool LookupPrivilegeValueNative(string? systemName, string name, out Luid luid);
 
-        private static Luid LookupPrivilegeValueInternal(string name, string systemName)
+        private static Luid LookupPrivilegeValueInternal(string name, string? systemName)
         {
             if (!LookupPrivilegeValueNative(systemName, name, out Luid luid))
             {
@@ -62,7 +62,7 @@ namespace ModMyFactory.Win32
         /// <param name="name">A  string that specifies the name of the privilege.</param>
         /// <param name="systemName">A string that specifies the name of the system on which the privilege name is retrieved.</param>
         /// <returns>Returns the LUID by which the privilege is known on the system specified by the systemName parameter.</returns>
-        public static Luid LookupPrivilegeValue(string name, string systemName)
+        public static Luid LookupPrivilegeValue(string name, string? systemName)
         {
             return LookupPrivilegeValueInternal(name, systemName);
         }

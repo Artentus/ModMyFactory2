@@ -74,7 +74,7 @@ namespace ModMyFactory.WebApi.Mods
             string username, string token,
             FileInfo file,
             CancellationToken cancellationToken,
-            IProgress<double> progress = null)
+            IProgress<double>? progress = null)
         {
             try
             {
@@ -112,7 +112,7 @@ namespace ModMyFactory.WebApi.Mods
             string username, string token,
             string fileName,
             CancellationToken cancellationToken,
-            IProgress<double> progress = null)
+            IProgress<double>? progress = null)
         {
             var file = new FileInfo(fileName);
             await DownloadModReleaseAsync(release, username, token, file, cancellationToken, progress);

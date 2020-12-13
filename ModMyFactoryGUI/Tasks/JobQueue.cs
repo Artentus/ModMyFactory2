@@ -28,15 +28,15 @@ namespace ModMyFactoryGUI.Tasks
     {
         private readonly AsyncQueue<T> _jobQueue = new AsyncQueue<T>();
         private readonly IProgress<(T, double)> _progress;
-        private CancellationTokenSource _cancellationSource;
+        private CancellationTokenSource? _cancellationSource;
         private volatile bool _queueRunning = false;
-        private T _currentJob;
+        private T? _currentJob;
         private volatile int _length;
         private volatile int _lengthInclusive;
 
-        public event EventHandler<JobCompletedEventArgs<T>> JobCompleted;
+        public event EventHandler<JobCompletedEventArgs<T>>? JobCompleted;
 
-        public event EventHandler LengthChanged;
+        public event EventHandler? LengthChanged;
 
         public int Length => _length;
 
@@ -49,12 +49,12 @@ namespace ModMyFactoryGUI.Tasks
             : this(new Progress<(T, double)>())
         { }
 
-        private void OnJobProgress(object sender, double progress)
-            => _progress.Report((_currentJob, progress));
+        private void OnJobProgress(object? sender, double progress)
+            => _progress.Report((_currentJob!, progress));
 
         private async Task RunQueueAsync()
         {
-            var token = _cancellationSource.Token;
+            var token = _cancellationSource!.Token;
 
             while (!token.IsCancellationRequested)
             {
@@ -129,7 +129,7 @@ namespace ModMyFactoryGUI.Tasks
         {
             var source = new TaskCompletionSource<object>();
 
-            void OnCompleted(object sender, EventArgs e)
+            void OnCompleted(object? sender, EventArgs e)
             {
                 if (ReferenceEquals(sender, job))
                 {

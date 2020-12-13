@@ -78,7 +78,7 @@ namespace ModMyFactoryGUI.Helpers
             else return latest.Value.Version;
         }
 
-        private async Task<IModFile> DownloadAsync(ModDefinition modDef, AccurateVersion version, IProgress<double> progress)
+        private async Task<IModFile?> DownloadAsync(ModDefinition modDef, AccurateVersion version, IProgress<double> progress)
         {
             // We do not need to download using the queue because while importing we block the app and display progress separately
 
@@ -113,9 +113,9 @@ namespace ModMyFactoryGUI.Helpers
             };
         }
 
-        private async Task<Mod> ImportModAsync(ImportResult result, ModDefinition modDef, AccurateVersion versionToDownload, IProgress<double> progress)
+        private async Task<Mod?> ImportModAsync(ImportResult result, ModDefinition modDef, AccurateVersion versionToDownload, IProgress<double> progress)
         {
-            IModFile modFile;
+            IModFile? modFile;
             if (result.TryGetExtractedFile(modDef, out var file))
             {
                 // We need to restore the original file name (without the ID) or it will not be recognized as a valid mod file
@@ -126,7 +126,7 @@ namespace ModMyFactoryGUI.Helpers
                 (success, modFile) = await ModFile.TryLoadAsync(file);
                 if (success)
                 {
-                    if ((modFile.Info.Version < versionToDownload) && modDef.DownloadNewer)
+                    if ((modFile!.Info.Version < versionToDownload) && modDef.DownloadNewer)
                     {
                         // File was in the package but we have to download a newer version
                         modFile.Delete();

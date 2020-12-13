@@ -21,10 +21,10 @@ using Serilog;
 using Serilog.Events;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Reflection;
 using System.Runtime.InteropServices;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -32,10 +32,13 @@ namespace ModMyFactoryGUI
 {
     internal static class Program
     {
-        private static ObservableDictionary<int, Modpack> _modpacks;
         private static readonly SemaphoreSlim _syncSemaphore = new SemaphoreSlim(1, 1);
 
         // These objects are global to the entire app, even before any GUI is loaded
+        // It is ensured these are never null if the app has actually been started, so we stop the compiler from complaining
+#pragma warning disable CS8618
+        private static ObservableDictionary<int, Modpack> _modpacks;
+
         public static DirectoryInfo ApplicationDirectory { get; private set; }
 
         public static DirectoryInfo ApplicationDataDirectory { get; private set; }
@@ -49,21 +52,22 @@ namespace ModMyFactoryGUI
         public static LocationManager Locations { get; private set; }
 
         public static ModStateManager ModStateManager { get; private set; }
+#pragma warning restore CS8618
 
         public static ObservableDictionary<int, Modpack>.ObservableValueCollection Modpacks => _modpacks.Values;
 
-        public static GlobalContext SyncContext { get; private set; }
+        public static GlobalContext? SyncContext { get; private set; }
 
         // Ugly but it does the job since Avalonia doesn't allow passing arguments to the App class
         public static bool SkipUpdateCheck { get; private set; }
 
-        public static string RestartArgs { get; private set; }
+        public static string? RestartArgs { get; private set; }
 
         #region Utility Functions
 
         private static DirectoryInfo GetApplicationDataDirectory()
         {
-            string path = null;
+            string path = string.Empty;
             var os = Environment.OSVersion;
             if (os.Platform == PlatformID.Win32NT)
             {
@@ -82,7 +86,7 @@ namespace ModMyFactoryGUI
         {
             // Application directory
             var assembly = Assembly.GetEntryAssembly();
-            ApplicationDirectory = new DirectoryInfo(Path.GetDirectoryName(assembly.Location));
+            ApplicationDirectory = new DirectoryInfo(Path.GetDirectoryName(assembly!.Location)!);
 
             // Data directory
             if (string.IsNullOrWhiteSpace(options.AppDataPath))
@@ -168,7 +172,7 @@ namespace ModMyFactoryGUI
                 // Usually we'd have to take a whole lot of options into account.
                 // However since the package we are loading is created very specifically
                 // we can skip most of it and read name and version straight away.
-                if (Manager.ContainsMod(modDef.Name, modDef.Version, out Mod mod))
+                if (Manager.ContainsMod(modDef.Name, modDef.Version, out Mod? mod))
                     modMappings.Add(modDef.Uid, mod);
             }
 
@@ -180,7 +184,7 @@ namespace ModMyFactoryGUI
                 // This way people are free to delete mods from within Factorio or even manually without causing a crash.
                 foreach (int modId in modpackDef.ModIds)
                 {
-                    if (modMappings.TryGetValue(modId, out Mod mod))
+                    if (modMappings.TryGetValue(modId, out Mod? mod))
                         modpack.Add(mod);
                 }
                 foreach (int modpackId in modpackDef.ModpackIds)
@@ -296,8 +300,6 @@ namespace ModMyFactoryGUI
 
         public static int GetModpackId(Modpack modpack)
         {
-            if (modpack is null) throw new ArgumentNullException(nameof(modpack));
-
             foreach (var kvp in _modpacks)
             {
                 if (kvp.Value == modpack)
@@ -405,7 +407,7 @@ namespace ModMyFactoryGUI
             }
         }
 
-        private static bool TryGetInstance(StartGameOptions options, out IFactorioInstance instance)
+        private static bool TryGetInstance(StartGameOptions options, [NotNullWhen(true)] out IFactorioInstance? instance)
         {
             if (!string.IsNullOrEmpty(options.Uid))
             {
@@ -443,7 +445,7 @@ namespace ModMyFactoryGUI
             return false;
         }
 
-        private static bool TryGetModpack(StartGameOptions options, out Modpack modpack)
+        private static bool TryGetModpack(StartGameOptions options, [NotNullWhen(true)] out Modpack? modpack)
         {
             if (options.ModpackId.HasValue)
             {
@@ -504,7 +506,7 @@ namespace ModMyFactoryGUI
 
                     ModStateManager.SaveModList(instance.Version);
 
-                    FileInfo savegameFile = null;
+                    FileInfo? savegameFile = null;
                     if (!string.IsNullOrWhiteSpace(options.SavegameFile))
                     {
                         try

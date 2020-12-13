@@ -22,7 +22,7 @@ namespace ModMyFactoryGUI.Update
         public ManualPackageResolver(string updateFile, TagVersion updateVersion)
             => (_updateFile, _updateVersion) = (updateFile, updateVersion);
 
-        public Task DownloadPackageAsync(Version version, string destFilePath, IProgress<double> progress = null, CancellationToken cancellationToken = default)
+        public Task DownloadPackageAsync(Version version, string destFilePath, IProgress<double>? progress = null, CancellationToken cancellationToken = default)
             => Task.Run(() => File.Move(_updateFile, destFilePath));
 
         public Task<IReadOnlyList<Version>> GetPackageVersionsAsync(CancellationToken cancellationToken = default)

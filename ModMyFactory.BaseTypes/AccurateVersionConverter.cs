@@ -14,7 +14,7 @@ namespace ModMyFactory.BaseTypes
     {
         public override AccurateVersion ReadJson(JsonReader reader, Type objectType, AccurateVersion existingValue, bool hasExistingValue, JsonSerializer serializer)
         {
-            var value = (string)reader.Value;
+            var value = reader.Value as string;
             return AccurateVersion.Parse(value);
         }
 

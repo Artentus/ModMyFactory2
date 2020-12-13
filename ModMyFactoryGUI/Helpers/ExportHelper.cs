@@ -55,7 +55,7 @@ namespace ModMyFactoryGUI.Helpers
                 return !first.Equals(second);
             }
 
-            public bool Equals(ModDefinitionIdentifier other)
+            public bool Equals(ModDefinitionIdentifier? other)
             {
                 if (other is null) return false;
 
@@ -64,7 +64,7 @@ namespace ModMyFactoryGUI.Helpers
                     && Version == other.Version;
             }
 
-            public override bool Equals(object obj)
+            public override bool Equals(object? obj)
             {
                 if (obj is ModDefinitionIdentifier other)
                     return Equals(other);
@@ -84,7 +84,7 @@ namespace ModMyFactoryGUI.Helpers
         public ExportHelper(ICollection<ModpackExportViewModel> modpacksToExport)
             => _modpacksToExport = modpacksToExport;
 
-        private AccurateVersion GetExportVersion(ModExportViewModel vm, ExportMode mode)
+        private static AccurateVersion GetExportVersion(ModExportViewModel vm, ExportMode mode)
         {
             var maskedMode = mode & ExportMode.Mask;
             return maskedMode switch
@@ -96,9 +96,10 @@ namespace ModMyFactoryGUI.Helpers
             };
         }
 
-        private async Task<FileInfo> GetExportFileAsync(ModExportViewModel vm, int id)
+        private static async Task<FileInfo?> GetExportFileAsync(ModExportViewModel vm, int id)
         {
             var modFile = vm.Mod.File;
+            if (modFile is null) return null;
 
             // If the mod is extracted we have to re-pack it first
             if (modFile.IsExtracted)
@@ -135,7 +136,10 @@ namespace ModMyFactoryGUI.Helpers
 
                     // Include file if we need to
                     if (mode.HasFlag(ExportMode.Included))
-                        factory.FilesToPack.Add(await GetExportFileAsync(modVm, _modId));
+                    {
+                        var file = await GetExportFileAsync(modVm, _modId);
+                        if (!(file is null)) factory.FilesToPack.Add(file);
+                    }
 
                     _modId++;
                 }
@@ -166,7 +170,7 @@ namespace ModMyFactoryGUI.Helpers
             return templates;
         }
 
-        private IReadOnlyList<int> GetPackReferenceIds(Modpack pack, IReadOnlyDictionary<Modpack, ModpackDefinitionTemplate> templates)
+        private static IReadOnlyList<int> GetPackReferenceIds(Modpack pack, IReadOnlyDictionary<Modpack, ModpackDefinitionTemplate> templates)
         {
             var ids = new List<int>();
 

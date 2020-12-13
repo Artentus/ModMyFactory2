@@ -26,7 +26,7 @@ namespace ModMyFactoryGUI.Controls
 
     internal sealed class MessageBox : DialogBase
     {
-        private readonly ICommand _buttonCommand;
+        private readonly ICommand? _buttonCommand;
 
         private MessageBox(string title, string message, MessageKind messageKind, DialogOptions options)
         {

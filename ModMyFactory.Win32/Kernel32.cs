@@ -190,7 +190,7 @@ namespace ModMyFactory.Win32
             [MarshalAs(UnmanagedType.LPWStr)] string path,
             [MarshalAs(UnmanagedType.U4)] uint access,
             [MarshalAs(UnmanagedType.U4)] FileShare share,
-            [MarshalAs(UnmanagedType.Struct), In] ref SecurityAttributes securityAttributes,
+            [In] ref SecurityAttributes securityAttributes,
             [MarshalAs(UnmanagedType.U4)] FileMode mode,
             [MarshalAs(UnmanagedType.U4)] uint attributes,
             IntPtr templateFile);

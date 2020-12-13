@@ -25,7 +25,7 @@ namespace ModMyFactoryGUI.Views
         private const string InternalFormat = "MMF_ICanEnableList";
         private const double MinDragDist = 8;
 
-        private ListBoxItem _modSourceItem, _modpackSourceItem;
+        private ListBoxItem? _modSourceItem, _modpackSourceItem;
         private Point? _dragStart;
         private volatile bool _dragging;
 
@@ -39,7 +39,7 @@ namespace ModMyFactoryGUI.Views
             AvaloniaXamlLoader.Load(this);
         }
 
-        private ListBoxItem GetPointerItem(ListBox listBox)
+        private ListBoxItem? GetPointerItem(ListBox listBox)
         {
             var children = listBox.GetVisualDescendants();
             foreach (var child in children)
@@ -91,7 +91,7 @@ namespace ModMyFactoryGUI.Views
                         foreach (var vm in vms)
                         {
                             // This should never fail
-                            if (vm.Family.Contains(vm.SelectedModViewModel.Version, out var mod)) list.Add(mod);
+                            if (!(vm.SelectedModViewModel is null) && vm.Family.Contains(vm.SelectedModViewModel.Version, out var mod)) list.Add(mod);
                         }
 
                         var data = new DataObject();
@@ -183,7 +183,7 @@ namespace ModMyFactoryGUI.Views
                 foreach (var path in paths)
                 {
                     if (FileHelper.PathExists(path))
-                        await ViewModel.ImportModAsync(path);
+                        await ViewModel!.ImportModAsync(path);
                 }
             }
         }

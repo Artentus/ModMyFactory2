@@ -66,7 +66,7 @@ namespace ModMyFactoryGUI.Helpers
                 if (advanced || patternRepeat)
                 {
                     score += bestLetterScore;
-                    matchedIndices.Add((int)bestLetterIdx);
+                    matchedIndices.Add(bestLetterIdx!.Value);
                     bestLetter = null;
                     bestLower = null;
                     bestLetterIdx = null;
@@ -128,7 +128,7 @@ namespace ModMyFactoryGUI.Helpers
             if (bestLetter != null)
             {
                 score += bestLetterScore;
-                matchedIndices.Add((int)bestLetterIdx);
+                matchedIndices.Add(bestLetterIdx!.Value);
             }
 
             return patternIdx == pattern.Length;

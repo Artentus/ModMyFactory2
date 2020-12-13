@@ -6,7 +6,6 @@
 //  (at your option) any later version.
 
 using ModMyFactory.BaseTypes;
-using ModMyFactory.Mods;
 using ModMyFactory.WebApi;
 using ModMyFactory.WebApi.Factorio;
 using ModMyFactory.WebApi.Mods;
@@ -21,9 +20,9 @@ namespace ModMyFactoryGUI.Tasks.Web
 {
     internal abstract class DownloadJob : IJob
     {
-        public event EventHandler Completed;
+        public event EventHandler? Completed;
 
-        public FileInfo File { get; private set; }
+        public FileInfo? File { get; private set; }
 
         public abstract string Description { get; }
 

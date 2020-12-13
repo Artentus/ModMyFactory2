@@ -17,7 +17,7 @@ using System.Windows.Input;
 
 namespace ModMyFactoryGUI.ViewModels
 {
-    internal sealed class UpdateWindowViewModel : ScreenBase<UpdateWindow>, IWeakSubscriber<EventArgs>
+    internal sealed class UpdateWindowViewModel : ViewModelBase<UpdateWindow>, IWeakSubscriber<EventArgs>
     {
         public TagVersion CurrentVersion => VersionStatistics.AppVersion;
 
@@ -45,13 +45,13 @@ namespace ModMyFactoryGUI.ViewModels
         private void Update()
         {
             DialogResult = DialogResult.Ok;
-            AttachedView.Close();
+            AttachedView!.Close();
         }
 
         private void Cancel()
         {
             DialogResult = DialogResult.Cancel;
-            AttachedView.Close();
+            AttachedView!.Close();
         }
 
         private void UICultureChangedHandler(object sender, EventArgs e)

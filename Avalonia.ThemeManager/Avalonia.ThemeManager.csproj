@@ -2,15 +2,15 @@
   <Import Project="..\constants.targets" />
 
   <PropertyGroup>
-    <TargetFrameworks>netstandard2.0</TargetFrameworks>
+    <TargetFrameworks>netstandard2.1</TargetFrameworks>
     <RootNamespace>Avalonia.ThemeManager</RootNamespace>
     <AssemblyName>Avalonia.ThemeManager</AssemblyName>
     <Authors>Wiesław Šoltés, Mathis Rech</Authors>
     <Product>Avalonia.ThemeManager for ModMyFactory</Product>
     <Copyright>Copyright (C) Wiesław Šoltés 2019</Copyright>
     <NeutralLanguage>en</NeutralLanguage>
-    <AssemblyVersion>0.10.0</AssemblyVersion>
-    <FileVersion>0.10.0</FileVersion>
+    <AssemblyVersion>0.11.0</AssemblyVersion>
+    <FileVersion>0.11.0</FileVersion>
   </PropertyGroup>
 
   <ItemGroup>

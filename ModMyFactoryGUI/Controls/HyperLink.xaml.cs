@@ -48,6 +48,8 @@ namespace ModMyFactoryGUI.Controls
             InitializeComponent();
 
             _linkText = this.FindControl<TextBlock>("LinkText");
+            _text = string.Empty;
+            _url = string.Empty;
         }
 
         private static string GetText(HyperLink hyperLink)
@@ -62,7 +64,7 @@ namespace ModMyFactoryGUI.Controls
         private static void SetUrl(HyperLink hyperLink, string value)
             => hyperLink.Url = value;
 
-        private static bool IsValidUrl(string url)
+        private static bool IsValidUrl(string? url)
         {
             if (string.IsNullOrWhiteSpace(url)) return false;
             if (!Uri.IsWellFormedUriString(url, UriKind.Absolute)) return false;

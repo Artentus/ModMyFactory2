@@ -19,7 +19,7 @@ namespace ModMyFactoryGUI.MVVM
             return view;
         }
 
-        public static TViewModel ViewModel<TViewModel>(this IView view)
+        public static TViewModel? ViewModel<TViewModel>(this IView view)
             where TViewModel : ReactiveObject
         {
             return view.ViewModel as TViewModel;

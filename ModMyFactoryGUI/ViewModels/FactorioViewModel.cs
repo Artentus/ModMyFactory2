@@ -55,9 +55,9 @@ namespace ModMyFactoryGUI.ViewModels
             }
         }
 
-        private void OnInstanceRemoved(object sender, EventArgs e)
+        private void OnInstanceRemoved(object? sender, EventArgs e)
         {
-            var vm = (FactorioInstanceViewModel)sender;
+            var vm = (FactorioInstanceViewModel)sender!;
             vm.InstanceRemoved -= OnInstanceRemoved;
             _instances.Remove(vm);
         }
@@ -113,9 +113,9 @@ namespace ModMyFactoryGUI.ViewModels
                         var (success, instance) = await Factorio.TryLoadAsync(dir);
                         if (success)
                         {
-                            var managed = Program.Manager.AddInstance(instance);
+                            var managed = Program.Manager.AddInstance(instance!);
 
-                            if (!Program.Settings.TryGet(SettingName.ExternalInstances, out List<string> instPaths))
+                            if (!Program.Settings.TryGet(SettingName.ExternalInstances, out List<string>? instPaths) || (instPaths is null))
                                 instPaths = new List<string>();
                             instPaths.Add(dir.FullName);
                             Program.Settings.Set(SettingName.ExternalInstances, instPaths);

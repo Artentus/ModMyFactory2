@@ -6,6 +6,7 @@
 //  (at your option) any later version.
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 
 namespace ModMyFactoryGUI.Update
 {
@@ -38,7 +39,7 @@ namespace ModMyFactoryGUI.Update
 
         public override string ToString() => _name;
 
-        public static bool TryParse(in string value, out TagBranch result)
+        public static bool TryParse(in string value, [NotNullWhen(true)] out TagBranch? result)
         {
             if (string.Equals(value, Alpha._name, StringComparison.OrdinalIgnoreCase))
             {
@@ -73,13 +74,13 @@ namespace ModMyFactoryGUI.Update
             else throw new FormatException();
         }
 
-        public bool Equals(TagBranch other)
+        public bool Equals(TagBranch? other)
         {
             if (other is null) return false;
             return string.Equals(this._name, other._name, StringComparison.Ordinal);
         }
 
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             if (obj is TagBranch other) return Equals(other);
             else return false;

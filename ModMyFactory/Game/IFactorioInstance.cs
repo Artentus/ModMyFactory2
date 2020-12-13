@@ -75,7 +75,7 @@ namespace ModMyFactory.Game
         /// <param name="arguments">
         /// Optional command line arguments
         /// </param>
-        public static Process Start(this IFactorioInstance instance, DirectoryInfo modDirectory = null, FileInfo savegameFile = null, params string[] arguments)
+        public static Process Start(this IFactorioInstance instance, in DirectoryInfo? modDirectory = null, in FileInfo? savegameFile = null, params string[] arguments)
         {
             var builder = new ArgumentBuilder();
 
@@ -112,7 +112,7 @@ namespace ModMyFactory.Game
         /// <param name="arguments">
         /// Optional command line arguments
         /// </param>
-        public static Process Start(this IFactorioInstance instance, DirectoryInfo modDirectory = null, FileInfo savegameFile = null, string arguments = null)
+        public static Process Start(this IFactorioInstance instance, in DirectoryInfo? modDirectory = null, in FileInfo? savegameFile = null, string? arguments = null)
         {
             var builder = new ArgumentBuilder();
 

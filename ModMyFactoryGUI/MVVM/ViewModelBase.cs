@@ -12,9 +12,9 @@ namespace ModMyFactoryGUI.MVVM
 {
     internal abstract class ViewModelBase<T> : ReactiveObject where T : class, IView
     {
-        public event EventHandler ViewChanged;
+        public event EventHandler? ViewChanged;
 
-        public T AttachedView { get; private set; }
+        public T? AttachedView { get; private set; }
 
         protected ViewModelBase()
         { }

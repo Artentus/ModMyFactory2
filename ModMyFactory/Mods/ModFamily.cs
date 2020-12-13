@@ -22,20 +22,21 @@ namespace ModMyFactory.Mods
     public sealed class ModFamily : ICollection<Mod>, IReadOnlyCollection<Mod>, INotifyCollectionChanged, INotifyPropertyChanged
     {
         private readonly List<Mod> _mods;
-        private Mod _enabledMod;
+        private Mod? _enabledMod;
         private volatile bool _raiseEvent = true;
 
         /// <summary>
         /// Is raised if the enabled states of the mods in the family change
         /// </summary>
-        public event EventHandler ModsEnabledChanged;
+        public event EventHandler? ModsEnabledChanged;
 
         /// <summary>
         /// Occurs when the mods in the family change
         /// </summary>
-        public event NotifyCollectionChangedEventHandler CollectionChanged;
+        public event NotifyCollectionChangedEventHandler? CollectionChanged;
 
-        public event PropertyChangedEventHandler PropertyChanged;
+        ///<inheritdoc/>
+        public event PropertyChangedEventHandler? PropertyChanged;
 
         /// <summary>
         /// The shared name of this mod family
@@ -45,7 +46,7 @@ namespace ModMyFactory.Mods
         /// <summary>
         /// The currently enabled mod of this family, or null if no mod is enabled
         /// </summary>
-        public Mod EnabledMod => _enabledMod;
+        public Mod? EnabledMod => _enabledMod;
 
         /// <summary>
         /// The authors of the mods in the family
@@ -72,7 +73,7 @@ namespace ModMyFactory.Mods
         }
 
         public ModFamily(Mod mod)
-            : this(mod?.Name)
+            : this(mod.Name)
         {
             if (mod is null) throw new ArgumentNullException();
             Add(mod);

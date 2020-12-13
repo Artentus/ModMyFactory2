@@ -79,10 +79,10 @@ namespace ModMyFactoryGUI.ViewModels
             RemoveModCommand = ReactiveCommand.Create<ICanEnable>(RemoveMod);
         }
 
-        private void ModpackEnabledChangedHandler(object sender, EventArgs e)
+        private void ModpackEnabledChangedHandler(object? sender, EventArgs e)
             => this.RaisePropertyChanged(nameof(Enabled));
 
-        private void ModpackCollectionChangedHandler(object sender, NotifyCollectionChangedEventArgs e)
+        private void ModpackCollectionChangedHandler(object? sender, NotifyCollectionChangedEventArgs e)
         {
             this.RaisePropertyChanged(nameof(Mods));
             this.RaisePropertyChanged(nameof(Modpacks));

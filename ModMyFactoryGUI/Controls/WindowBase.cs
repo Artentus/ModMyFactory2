@@ -64,31 +64,19 @@ namespace ModMyFactoryGUI.Controls
         #endregion Win32
 
 
-        private Grid _bottomHorizontalGrip;
-
-        private Grid _bottomLeftGrip;
-
-        private Grid _bottomRightGrip;
-
-        private Button _closeButton;
-
-        private Image _icon;
-
-        private Grid _leftVerticalGrip;
-
-        private Button _minimiseButton;
-
-        private Button _restoreButton;
-
-        private Grid _rightVerticalGrip;
-
-        private DockPanel _titleBar;
-
-        private Grid _topHorizontalGrip;
-
-        private Grid _topLeftGrip;
-
-        private Grid _topRightGrip;
+        private Grid? _bottomHorizontalGrip;
+        private Grid? _bottomLeftGrip;
+        private Grid? _bottomRightGrip;
+        private Button? _closeButton;
+        private Image? _icon;
+        private Grid? _leftVerticalGrip;
+        private Button? _minimiseButton;
+        private Button? _restoreButton;
+        private Grid? _rightVerticalGrip;
+        private DockPanel? _titleBar;
+        private Grid? _topHorizontalGrip;
+        private Grid? _topLeftGrip;
+        private Grid? _topRightGrip;
 
         public static readonly StyledProperty<Control> TitleBarContentProperty =
             AvaloniaProperty.Register<WindowBase, Control>(nameof(TitleBarContent));
@@ -108,7 +96,7 @@ namespace ModMyFactoryGUI.Controls
             set => SetValue(TitleBarContentProperty, value);
         }
 
-        object IView.ViewModel
+        object? IView.ViewModel
         {
             get => DataContext;
             set => DataContext = value;
@@ -161,39 +149,39 @@ namespace ModMyFactoryGUI.Controls
 
         protected override void OnPointerPressed(PointerPressedEventArgs e)
         {
-            if (_topHorizontalGrip.IsPointerOver)
+            if (_topHorizontalGrip?.IsPointerOver ?? false)
             {
                 BeginResizeDrag(WindowEdge.North, e);
             }
-            else if (_bottomHorizontalGrip.IsPointerOver)
+            else if (_bottomHorizontalGrip?.IsPointerOver ?? false)
             {
                 BeginResizeDrag(WindowEdge.South, e);
             }
-            else if (_leftVerticalGrip.IsPointerOver)
+            else if (_leftVerticalGrip?.IsPointerOver ?? false)
             {
                 BeginResizeDrag(WindowEdge.West, e);
             }
-            else if (_rightVerticalGrip.IsPointerOver)
+            else if (_rightVerticalGrip?.IsPointerOver ?? false)
             {
                 BeginResizeDrag(WindowEdge.East, e);
             }
-            else if (_topLeftGrip.IsPointerOver)
+            else if (_topLeftGrip?.IsPointerOver ?? false)
             {
                 BeginResizeDrag(WindowEdge.NorthWest, e);
             }
-            else if (_bottomLeftGrip.IsPointerOver)
+            else if (_bottomLeftGrip?.IsPointerOver ?? false)
             {
                 BeginResizeDrag(WindowEdge.SouthWest, e);
             }
-            else if (_topRightGrip.IsPointerOver)
+            else if (_topRightGrip?.IsPointerOver ?? false)
             {
                 BeginResizeDrag(WindowEdge.NorthEast, e);
             }
-            else if (_bottomRightGrip.IsPointerOver)
+            else if (_bottomRightGrip?.IsPointerOver ?? false)
             {
                 BeginResizeDrag(WindowEdge.SouthEast, e);
             }
-            else if (_titleBar.IsPointerOver)
+            else if (_titleBar?.IsPointerOver ?? false)
             {
                 if (e.GetCurrentPoint(this).Properties.IsLeftButtonPressed)
                 {
@@ -229,15 +217,12 @@ namespace ModMyFactoryGUI.Controls
             _topRightGrip = e.NameScope.Find<Grid>("topRightGrip");
             _bottomRightGrip = e.NameScope.Find<Grid>("bottomRightGrip");
 
-            _minimiseButton.Click += (sender, ee) => { WindowState = WindowState.Minimized; };
-
-            _restoreButton.Click += (sender, ee) => { ToggleWindowState(); };
-
-            _titleBar.DoubleTapped += (sender, ee) => { ToggleWindowState(); };
-
-            _closeButton.Click += (sender, ee) => { Close(); };
-
-            _icon.DoubleTapped += (sender, ee) => { Close(); };
+            // This is only happening once in our case so we don't have to unsubscribe
+            _minimiseButton.Click  += (sender, ee) => WindowState = WindowState.Minimized;
+            _restoreButton.Click   += (sender, ee) => ToggleWindowState();
+            _titleBar.DoubleTapped += (sender, ee) => ToggleWindowState();
+            _closeButton.Click     += (sender, ee) => Close();
+            _icon.DoubleTapped     += (sender, ee) => Close();
 
             if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
             {

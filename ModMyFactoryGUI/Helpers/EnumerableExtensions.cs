@@ -25,7 +25,7 @@ namespace ModMyFactoryGUI.Helpers
                 yield return item;
         }
 
-        public static TSource MaxBy<TSource, TKey>(this IEnumerable<TSource> source, Func<TSource, TKey> selector, IComparer<TKey> comparer = null)
+        public static TSource? MaxBy<TSource, TKey>(this IEnumerable<TSource> source, in Func<TSource, TKey> selector, IComparer<TKey>? comparer = null)
         {
             if (source is null) throw new ArgumentNullException(nameof(source));
             if (selector is null) throw new ArgumentNullException(nameof(selector));
@@ -33,7 +33,7 @@ namespace ModMyFactoryGUI.Helpers
             if (comparer is null) comparer = Comparer<TKey>.Default;
 
             using var enumerator = source.GetEnumerator();
-            if (!enumerator.MoveNext()) return default(TSource);
+            if (!enumerator.MoveNext()) return default;
 
             TSource maxElement = enumerator.Current;
             TKey maxKey = selector.Invoke(maxElement);
@@ -53,7 +53,7 @@ namespace ModMyFactoryGUI.Helpers
             return maxElement;
         }
 
-        public static TSource MinBy<TSource, TKey>(this IEnumerable<TSource> source, Func<TSource, TKey> selector, IComparer<TKey> comparer = null)
+        public static TSource? MinBy<TSource, TKey>(this IEnumerable<TSource> source, in Func<TSource, TKey> selector, IComparer<TKey>? comparer = null)
         {
             if (source is null) throw new ArgumentNullException(nameof(source));
             if (selector is null) throw new ArgumentNullException(nameof(selector));
@@ -61,7 +61,7 @@ namespace ModMyFactoryGUI.Helpers
             if (comparer is null) comparer = Comparer<TKey>.Default;
 
             using var enumerator = source.GetEnumerator();
-            if (!enumerator.MoveNext()) return default(TSource);
+            if (!enumerator.MoveNext()) return default;
 
             TSource maxElement = enumerator.Current;
             TKey maxKey = selector.Invoke(maxElement);
@@ -90,8 +90,7 @@ namespace ModMyFactoryGUI.Helpers
             }
         }
 
-        public static TResult? SelectFromAll<TSource, TResult>(this IEnumerable<TSource> source, Func<TSource, TResult> selector, IEqualityComparer<TResult> comparer = null)
-            where TResult : struct
+        public static TResult? SelectFromAll<TSource, TResult>(this IEnumerable<TSource> source, in Func<TSource, TResult> selector, IEqualityComparer<TResult>? comparer = null)
         {
             if (source is null) throw new ArgumentNullException(nameof(source));
             if (selector is null) throw new ArgumentNullException(nameof(selector));
@@ -99,48 +98,20 @@ namespace ModMyFactoryGUI.Helpers
             if (comparer is null) comparer = EqualityComparer<TResult>.Default;
 
             using var enumerator = source.GetEnumerator();
-            if (!enumerator.MoveNext()) return null;
+            if (!enumerator.MoveNext()) return default;
 
             TResult result = selector(enumerator.Current);
 
             while (enumerator.MoveNext())
             {
                 TResult current = selector(enumerator.Current);
-                if (!comparer.Equals(result, current)) return null;
+                if (!comparer.Equals(result, current)) return default;
             }
 
             return result;
         }
 
-        public static T? SelectFromAll<T>(this IEnumerable<T> source, IEqualityComparer<T> comparer = null)
-            where T : struct
-            => source.SelectFromAll(item => item, comparer);
-
-        public static TResult? SelectFromAll<TSource, TResult>(this IEnumerable<TSource> source, Func<TSource, TResult?> selector, IEqualityComparer<TResult?> comparer = null)
-            where TResult : struct
-        {
-            if (source is null) throw new ArgumentNullException(nameof(source));
-            if (selector is null) throw new ArgumentNullException(nameof(selector));
-
-            if (comparer is null) comparer = EqualityComparer<TResult?>.Default;
-
-            using var enumerator = source.GetEnumerator();
-            if (!enumerator.MoveNext()) return null;
-
-            TResult? result = selector(enumerator.Current);
-            if (result is null) return null;
-
-            while (enumerator.MoveNext())
-            {
-                TResult? current = selector(enumerator.Current);
-                if (!comparer.Equals(result, current)) return null;
-            }
-
-            return result;
-        }
-
-        public static T? SelectFromAll<T>(this IEnumerable<T?> source, IEqualityComparer<T?> comparer = null)
-            where T : struct
+        public static T? SelectFromAll<T>(this IEnumerable<T> source, IEqualityComparer<T>? comparer = null)
             => source.SelectFromAll(item => item, comparer);
 
         public static IEnumerable<T> Flatten<T>(this IEnumerable<IEnumerable<T>> source)

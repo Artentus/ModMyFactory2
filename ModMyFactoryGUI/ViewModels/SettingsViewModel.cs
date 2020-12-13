@@ -182,6 +182,10 @@ namespace ModMyFactoryGUI.ViewModels
         public SettingsViewModel(DownloadQueue downloadQueue)
         {
             _downloadQueue = downloadQueue;
+            _username = string.Empty;
+            _password = string.Empty;
+            _customFactorioLocation = string.Empty;
+            _customModLocation = string.Empty;
 
             Reset();
 
@@ -202,7 +206,7 @@ namespace ModMyFactoryGUI.ViewModels
                     {
                         // Success
                         // Don't call the property directly since the name hasn't really changed
-                        _username = actualName;
+                        _username = actualName!;
                         this.RaisePropertyChanged(nameof(Username));
                         CredentialsError = false;
                     }
@@ -219,7 +223,7 @@ namespace ModMyFactoryGUI.ViewModels
                 else
                 {
                     // Error
-                    _username = actualName;
+                    _username = actualName!;
                     _password = string.Empty;
                     this.RaisePropertyChanged(nameof(Username));
                     this.RaisePropertyChanged(nameof(Password));
@@ -302,7 +306,7 @@ namespace ModMyFactoryGUI.ViewModels
 
                 case Location.Custom:
                     FactorioLocationIsCustom = true;
-                    CustomFactorioLocation = Program.Locations.CustomFactorioPath;
+                    CustomFactorioLocation = Program.Locations.CustomFactorioPath!;
                     break;
             }
 
@@ -318,7 +322,7 @@ namespace ModMyFactoryGUI.ViewModels
 
                 case Location.Custom:
                     ModLocationIsCustom = true;
-                    CustomFactorioLocation = Program.Locations.CustomModPath;
+                    CustomFactorioLocation = Program.Locations.CustomModPath!;
                     break;
             }
 

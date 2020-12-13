@@ -17,7 +17,7 @@ namespace ModMyFactoryGUI.Synchronization
         public static bool WaitForConnectionEx(this NamedPipeServerStream server, string pipeName, CancellationToken cancellationToken)
         {
             var callbackEvent = new AutoResetEvent(false);
-            Exception innerEx = null;
+            Exception? innerEx = null;
             void callback(IAsyncResult result)
             {
                 try

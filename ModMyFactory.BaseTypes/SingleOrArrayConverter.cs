@@ -17,20 +17,20 @@ namespace ModMyFactory.BaseTypes
             return typeof(T).IsAssignableFrom(objectType) || typeof(T[]).IsAssignableFrom(objectType);
         }
 
-        public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
+        public override object ReadJson(JsonReader reader, Type objectType, object? existingValue, JsonSerializer serializer)
         {
             if (reader.TokenType == JsonToken.StartArray)
             {
-                return serializer.Deserialize<T[]>(reader);
+                return serializer.Deserialize<T[]>(reader)!;
             }
             else
             {
                 T obj = serializer.Deserialize<T>(reader);
-                return new T[] { obj };
+                return new T[] { obj! };
             }
         }
 
-        public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
+        public override void WriteJson(JsonWriter writer, object? value, JsonSerializer serializer)
         {
             serializer.Serialize(writer, value);
         }

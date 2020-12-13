@@ -10,6 +10,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Specialized;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 
 namespace ModMyFactory.Mods
@@ -25,12 +26,12 @@ namespace ModMyFactory.Mods
         /// <summary>
         /// Is raised if mods in a family change their enabled state
         /// </summary>
-        public event EventHandler<ModFamilyEnabledChangedEventArgs> FamilyEnabledChanged;
+        public event EventHandler<ModFamilyEnabledChangedEventArgs>? FamilyEnabledChanged;
 
         /// <summary>
         /// Occurs when the mod collection changes
         /// </summary>
-        public event NotifyCollectionChangedEventHandler CollectionChanged;
+        public event NotifyCollectionChangedEventHandler? CollectionChanged;
 
         /// <summary>
         /// The version of Factorio being managed
@@ -88,7 +89,7 @@ namespace ModMyFactory.Mods
         /// <summary>
         /// Tries to get the mod family with the specified name
         /// </summary>
-        public bool TryGetFamily(string name, out ModFamily result) => _families.TryGetValue(name, out result);
+        public bool TryGetFamily(string name, [NotNullWhen(true)] out ModFamily? result) => _families.TryGetValue(name, out result);
 
         /// <summary>
         /// Adds a mod to be managed
@@ -162,7 +163,7 @@ namespace ModMyFactory.Mods
         /// <summary>
         /// Checks if a mod with the specified name and version is managed by this manager
         /// </summary>
-        public bool Contains(string name, AccurateVersion version, out Mod mod)
+        public bool Contains(string name, AccurateVersion version, [NotNullWhen(true)] out Mod? mod)
         {
             if (TryGetFamily(name, out var family))
                 return family.Contains(version, out mod);
@@ -180,7 +181,7 @@ namespace ModMyFactory.Mods
         /// <summary>
         /// Checks if a family with the specified name is managed by this manager
         /// </summary>
-        public bool Contains(string name, out ModFamily family)
+        public bool Contains(string name, [NotNullWhen(true)] out ModFamily? family)
             => TryGetFamily(name, out family);
 
         public IEnumerator<Mod> GetEnumerator()

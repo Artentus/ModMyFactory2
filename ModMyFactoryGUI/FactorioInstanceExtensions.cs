@@ -17,13 +17,15 @@ namespace ModMyFactoryGUI
 
         static FactorioInstanceExtensions()
         {
-            if (!Program.Settings.TryGet(SettingName.FactorioNameTable, out NameTable))
-                NameTable = new Dictionary<string, string>();
+            if (!Program.Settings.TryGet<Dictionary<string, string>>(SettingName.FactorioNameTable, out var nameTable) || (nameTable is null))
+                nameTable = new Dictionary<string, string>();
+            NameTable = nameTable;
         }
 
         public static bool IsExternal(this IFactorioInstance instance)
         {
             var instDir = instance.Directory.Parent;
+            if (instDir is null) return true;
             var managedDir = Program.Locations.GetFactorioDir();
             return !FileHelper.DirectoriesEqual(instDir, managedDir);
         }
@@ -38,7 +40,7 @@ namespace ModMyFactoryGUI
                 // We have to sanitize the path to make sure it's a proper unique key
                 result = result.Replace('/', '_');
                 result = result.Replace('\\', '_');
-                if (result.EndsWith("_")) result = result.Substring(0, result.Length - 1);
+                if (result.EndsWith("_")) result = result[0..^1];
 
                 return result;
             }

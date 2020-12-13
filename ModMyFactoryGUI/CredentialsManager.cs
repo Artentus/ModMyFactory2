@@ -40,6 +40,8 @@ namespace ModMyFactoryGUI
         public CredentialsManager(SettingManager settings)
         {
             _settings = settings;
+            _username = string.Empty;
+            _token = string.Empty;
 
             if (_settings.TryGet<Credentials>(SettingName.Credentials, out var credentials))
             {
@@ -99,7 +101,7 @@ namespace ModMyFactoryGUI
             else return await TryLogInWithDialogAsync();
         }
 
-        public async Task<(bool? success, string actualName, string token)> TryLogInAsync(string username, string password)
+        public async Task<(bool? success, string? actualName, string? token)> TryLogInAsync(string username, string password)
         {
             try
             {

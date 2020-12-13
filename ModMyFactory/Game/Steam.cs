@@ -13,14 +13,15 @@ using System.IO;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Runtime.InteropServices;
+using System.Diagnostics.CodeAnalysis;
 
 namespace ModMyFactory.Game
 {
     internal class Steam
     {
-        private static bool TryGetSteamPathWin32(out string path)
+        private static bool TryGetSteamPathWin32([NotNullWhen(true)] out string? path)
         {
-            RegistryKey softwareKey = null;
+            RegistryKey? softwareKey = null;
             try
             {
                 string softwarePath = Environment.Is64BitProcess ? @"SOFTWARE\WOW6432Node" : "SOFTWARE";
@@ -42,14 +43,14 @@ namespace ModMyFactory.Game
             }
         }
 
-        private static bool TryGetSteamPathLinux(out string path)
+        private static bool TryGetSteamPathLinux([NotNullWhen(true)] out string? path)
         {
             // Default path when installing through packet manager. Custom paths not supported.
             path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), ".steam", "steam");
             return Directory.Exists(path);
         }
 
-        private static bool TryGetSteamPath(out string path)
+        private static bool TryGetSteamPath([NotNullWhen(true)] out string? path)
         {
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
@@ -78,7 +79,7 @@ namespace ModMyFactory.Game
         /// Tries to load Steam
         /// </summary>
         /// <param name="steam">Out<br/>The instance of Steam on this system</param>
-        public static bool TryLoad(out Steam steam)
+        public static bool TryLoad([NotNullWhen(true)] out Steam? steam)
         {
             steam = null;
             if (!TryGetSteamPath(out var path)) return false;

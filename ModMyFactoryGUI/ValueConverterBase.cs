@@ -17,10 +17,10 @@ namespace ModMyFactoryGUI
 
         protected abstract TSource ConvertBack(TTarget value, TParameter parameter, CultureInfo culture);
 
-        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        public object? Convert(object value, Type targetType, object parameter, CultureInfo culture)
             => Convert((TSource)value, (TParameter)parameter, culture);
 
-        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        public object? ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
             => ConvertBack((TTarget)value, (TParameter)parameter, culture);
     }
 
@@ -30,10 +30,10 @@ namespace ModMyFactoryGUI
 
         protected abstract TSource ConvertBack(TTarget value, CultureInfo culture);
 
-        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        public object? Convert(object value, Type targetType, object parameter, CultureInfo culture)
             => Convert((TSource)value, culture);
 
-        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        public object? ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
             => ConvertBack((TTarget)value, culture);
     }
 }

@@ -85,13 +85,13 @@ namespace ModMyFactory.Mods
         /// <summary>
         /// Creates a JSON string from this state grouping
         /// </summary>
-        public string ToJson(Formatting formatting = Formatting.Indented, JsonSerializerSettings settings = null)
+        public string ToJson(Formatting formatting = Formatting.Indented, JsonSerializerSettings? settings = null)
             => JsonConvert.SerializeObject(this, formatting, settings);
 
         /// <summary>
         /// Saves all state information to a file
         /// </summary>
-        public void SaveToFile(string path, Formatting formatting = Formatting.Indented, JsonSerializerSettings settings = null)
+        public void SaveToFile(string path, Formatting formatting = Formatting.Indented, JsonSerializerSettings? settings = null)
         {
             string json = ToJson(formatting, settings);
             File.WriteAllText(path, json);
@@ -100,13 +100,13 @@ namespace ModMyFactory.Mods
         /// <summary>
         /// Saves all state information to a file
         /// </summary>
-        public void SaveToFile(FileInfo file, Formatting formatting = Formatting.Indented, JsonSerializerSettings settings = null)
+        public void SaveToFile(FileInfo file, Formatting formatting = Formatting.Indented, JsonSerializerSettings? settings = null)
             => SaveToFile(file.FullName, formatting, settings);
 
         /// <summary>
         /// Saves all state information to a file
         /// </summary>
-        public async Task SaveToFileAsync(string path, Formatting formatting = Formatting.Indented, JsonSerializerSettings settings = null)
+        public async Task SaveToFileAsync(string path, Formatting formatting = Formatting.Indented, JsonSerializerSettings? settings = null)
         {
             string dir = Path.GetDirectoryName(path);
             if (!Directory.Exists(dir)) Directory.CreateDirectory(dir);
@@ -123,7 +123,7 @@ namespace ModMyFactory.Mods
         /// <summary>
         /// Saves all state information to a file
         /// </summary>
-        public async Task SaveToFileAsync(FileInfo file, Formatting formatting = Formatting.Indented, JsonSerializerSettings settings = null)
+        public async Task SaveToFileAsync(FileInfo file, Formatting formatting = Formatting.Indented, JsonSerializerSettings? settings = null)
         {
             if (!file.Directory.Exists) file.Directory.Create();
 

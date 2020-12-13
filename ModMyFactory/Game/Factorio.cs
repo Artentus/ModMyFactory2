@@ -18,15 +18,15 @@ namespace ModMyFactory.Game
 {
     public static class Factorio
     {
-        private static Steam _steam = null;
+        private static Steam? _steam = null;
 
-        private static async Task<(bool, IModFile)> TryLoadCoreModAsync(DirectoryInfo directory)
+        private static async Task<(bool, IModFile?)> TryLoadCoreModAsync(DirectoryInfo directory)
         {
             var coreModPath = Path.Combine(directory.FullName, "data", "core");
             return await ExtractedModFile.TryLoadAsync(coreModPath);
         }
 
-        private static async Task<(bool, IModFile)> TryLoadBaseModAsync(DirectoryInfo directory)
+        private static async Task<(bool, IModFile?)> TryLoadBaseModAsync(DirectoryInfo directory)
         {
             var baseModPath = Path.Combine(directory.FullName, "data", "base");
             return await ExtractedModFile.TryLoadAsync(baseModPath);
@@ -55,7 +55,7 @@ namespace ModMyFactory.Game
         /// Tries to load a Factorio instance
         /// </summary>
         /// <param name="directory">The directory the instance is stored in</param>
-        public static async Task<(bool, IFactorioInstance)> TryLoadAsync(DirectoryInfo directory)
+        public static async Task<(bool, IFactorioInstance?)> TryLoadAsync(DirectoryInfo directory)
         {
             if (!directory.Exists) return (false, null);
             if (!TryLoadExecutable(directory, out var executable)) return (false, null);
@@ -66,14 +66,14 @@ namespace ModMyFactory.Game
             (bool s2, var baseMod) = await TryLoadBaseModAsync(directory);
             if (!s2) return (false, null);
 
-            return (true, new FactorioStandaloneInstance(directory, coreMod, baseMod, executable));
+            return (true, new FactorioStandaloneInstance(directory, coreMod!, baseMod!, executable));
         }
 
         /// <summary>
         /// Tries to load a Factorio instance
         /// </summary>
         /// <param name="directory">The path the instance is stored at</param>
-        public static async Task<(bool, IFactorioInstance)> TryLoadAsync(string path)
+        public static async Task<(bool, IFactorioInstance?)> TryLoadAsync(string path)
         {
             var dir = new DirectoryInfo(path);
             return await TryLoadAsync(dir);
@@ -89,7 +89,7 @@ namespace ModMyFactory.Game
 
             (bool success, var result) = await TryLoadAsync(directory);
             if (!success) throw new InvalidFactorioDataException("The directory does not contain a valid Factorio instance");
-            return result;
+            return result!;
         }
 
         /// <summary>
@@ -102,7 +102,7 @@ namespace ModMyFactory.Game
             return await LoadAsync(dir);
         }
 
-        private static async Task<(bool, DirectoryInfo)> TryGetSteamDirectoryAsync(Steam steam)
+        private static async Task<(bool, DirectoryInfo?)> TryGetSteamDirectoryAsync(Steam steam)
         {
             var libraries = await steam.GetLibrariesAsync();
             foreach (var library in libraries)
@@ -116,19 +116,19 @@ namespace ModMyFactory.Game
         /// <summary>
         /// Tries to load the Factorio Steam instance
         /// </summary>
-        public static async Task<(bool, IFactorioInstance)> TryLoadSteamAsync()
+        public static async Task<(bool, IFactorioInstance?)> TryLoadSteamAsync()
         {
             if ((_steam is null) && !Steam.TryLoad(out _steam)) return (false, null); // Use same steam instance at all times
             (bool s0, var directory) = await TryGetSteamDirectoryAsync(_steam);
             if (!s0) return (false, null);
 
-            (bool s1, var coreMod) = await TryLoadCoreModAsync(directory);
+            (bool s1, var coreMod) = await TryLoadCoreModAsync(directory!);
             if (!s1) return (false, null);
 
-            (bool s2, var baseMod) = await TryLoadBaseModAsync(directory);
+            (bool s2, var baseMod) = await TryLoadBaseModAsync(directory!);
             if (!s2) return (false, null);
 
-            return (true, new FactorioSteamInstance(directory, coreMod, baseMod, _steam));
+            return (true, new FactorioSteamInstance(directory!, coreMod!, baseMod!, _steam));
         }
 
         /// <summary>
@@ -138,7 +138,7 @@ namespace ModMyFactory.Game
         {
             (bool success, var result) = await TryLoadSteamAsync();
             if (!success) throw new SteamInstanceNotFoundException("Factorio Steam version not found");
-            return result;
+            return result!;
         }
 
         private static string GetTopDirectory(string path)
@@ -161,7 +161,7 @@ namespace ModMyFactory.Game
         /// <param name="archiveFile">The file to extract</param>
         /// <param name="destination">Where to extract to</param>
         /// <param name="dirName">Optional<br/>The name of the top level directory of the resulting instance, if successfull</param>
-        public static async Task<(bool, IFactorioInstance)> TryExtract(FileInfo archiveFile, string destination, string dirName = default)
+        public static async Task<(bool, IFactorioInstance?)> TryExtract(FileInfo archiveFile, string destination, string? dirName = null)
         {
             var destinationDir = new DirectoryInfo(destination);
             if (!destinationDir.Exists) destinationDir.Create();
@@ -170,7 +170,7 @@ namespace ModMyFactory.Game
             {
                 using var archive = ArchiveFactory.Open(archiveFile);
 
-                string topLevelDir = null;
+                string? topLevelDir = null;
                 foreach (var entry in archive.Entries)
                 {
                     // All files in a valid Factorio archive must reside

@@ -22,16 +22,16 @@ namespace ModMyFactory
     {
         private readonly List<ICanEnable> _children = new List<ICanEnable>();
         private bool? _enabled;
-        private string _displayName;
+        private string _displayName = string.Empty;
 
         /// <summary>
         /// Raised when the enabled state of the modpack changes
         /// </summary>
-        public event EventHandler EnabledChanged;
+        public event EventHandler? EnabledChanged;
 
-        public event NotifyCollectionChangedEventHandler CollectionChanged;
+        public event NotifyCollectionChangedEventHandler? CollectionChanged;
 
-        public event PropertyChangedEventHandler PropertyChanged;
+        public event PropertyChangedEventHandler? PropertyChanged;
 
         /// <summary>
         /// Whether the modpack is enabled<br/>

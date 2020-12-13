@@ -11,6 +11,7 @@ using ModMyFactory.Mods;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics.CodeAnalysis;
 
 namespace ModMyFactory
 {
@@ -33,7 +34,7 @@ namespace ModMyFactory
         /// <summary>
         /// Raised when a new mod manager is created
         /// </summary>
-        public event EventHandler<ModManagerCreatedEventArgs> ModManagerCreated;
+        public event EventHandler<ModManagerCreatedEventArgs>? ModManagerCreated;
 
         /// <summary>
         /// The list of instances being managed
@@ -59,7 +60,7 @@ namespace ModMyFactory
         /// Tries to gets the mod manager associated with a specific version of Factorio<br/>
         /// Fails if no mod manager has been created for the specified version yet
         /// </summary>
-        public bool TryGetModManager(AccurateVersion factorioVersion, out ModManager result)
+        public bool TryGetModManager(AccurateVersion factorioVersion, [NotNullWhen(true)] out ModManager? result)
         {
             factorioVersion = factorioVersion.ToFactorioMajor();
             return _modManagers.TryGetValue(factorioVersion, out result);
@@ -170,7 +171,7 @@ namespace ModMyFactory
         /// <summary>
         /// Checks if a mod with the specified name and version is managed by this manager
         /// </summary>
-        public bool ContainsMod(string modName, AccurateVersion version, out Mod mod)
+        public bool ContainsMod(string modName, AccurateVersion version, [NotNullWhen(true)] out Mod? mod)
         {
             foreach (var modManager in ModManagers)
             {

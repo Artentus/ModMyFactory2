@@ -12,7 +12,7 @@ namespace ModMyFactoryGUI
 {
     internal interface IExtendedJsonConverter
     {
-        object CreateFromToken(object token);
+        object? CreateFromToken(object token);
 
         bool CanConvertFrom(Type type);
     }
@@ -25,7 +25,7 @@ namespace ModMyFactoryGUI
 
         public abstract bool CanConvertFrom(Type type);
 
-        object IExtendedJsonConverter.CreateFromToken(object token)
-                    => CreateFromToken(token);
+        object? IExtendedJsonConverter.CreateFromToken(object token)
+            => CreateFromToken(token);
     }
 }

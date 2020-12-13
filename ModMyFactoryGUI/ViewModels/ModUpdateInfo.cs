@@ -35,7 +35,7 @@ namespace ModMyFactoryGUI.ViewModels
             _selected = true;
             (Family, Release) = (family, release);
 
-            CurrentVersion = family.GetDefaultMod().Version;
+            CurrentVersion = family.GetDefaultMod()!.Version;
             UpdateVersion = release.Version;
         }
     }

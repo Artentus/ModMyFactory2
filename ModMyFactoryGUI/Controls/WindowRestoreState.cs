@@ -33,12 +33,12 @@ namespace ModMyFactoryGUI.Controls
         public static bool operator !=(WindowRestoreState first, WindowRestoreState second)
             => !first.Equals(second);
 
-        public static bool TryParse(string s, out WindowRestoreState result)
+        public static bool TryParse(string? s, out WindowRestoreState result)
         {
             result = Undefined;
 
-            if (string.Equals(s, nameof(Undefined), StringComparison.OrdinalIgnoreCase))
-                return true;
+            if (string.IsNullOrEmpty(s)) return false;
+            if (string.Equals(s, nameof(Undefined), StringComparison.OrdinalIgnoreCase)) return true;
 
             var parts = s.Split(';');
             if (parts.Length != 4) return false;
@@ -58,7 +58,7 @@ namespace ModMyFactoryGUI.Controls
             return true;
         }
 
-        public static WindowRestoreState Parse(string s)
+        public static WindowRestoreState Parse(string? s)
         {
             if (TryParse(s, out var result)) return result;
             else throw new FormatException();
@@ -79,7 +79,7 @@ namespace ModMyFactoryGUI.Controls
             return (this.Position == other.Position) && (this.Size == other.Size);
         }
 
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             if (obj is WindowRestoreState other) return Equals(other);
             else return false;
@@ -103,7 +103,7 @@ namespace ModMyFactoryGUI.Controls
 
     internal sealed class WindowRestoreStateConverter : StringJsonConverter<WindowRestoreState>
     {
-        protected override WindowRestoreState Create(string token)
+        protected override WindowRestoreState Create(string? token)
             => WindowRestoreState.Parse(token);
 
         protected override string Tokenize(WindowRestoreState value)

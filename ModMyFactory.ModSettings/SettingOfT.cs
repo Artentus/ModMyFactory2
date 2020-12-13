@@ -10,7 +10,7 @@ namespace ModMyFactory.ModSettings
     /// <summary>
     /// BAse class for all mod settings.
     /// </summary>
-    public abstract class Setting<T> : ISetting<T>
+    public abstract class Setting<T> : ISetting<T> where T : notnull
     {
         /// <summary>
         /// The settings type.

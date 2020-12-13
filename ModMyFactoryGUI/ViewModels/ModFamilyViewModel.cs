@@ -12,7 +12,6 @@ using ReactiveUI;
 using System;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
-using System.IO;
 using System.Linq;
 
 namespace ModMyFactoryGUI.ViewModels
@@ -23,7 +22,7 @@ namespace ModMyFactoryGUI.ViewModels
         private readonly ModFamily _family;
         private readonly ObservableCollection<ModViewModel> _modViewModels;
         private bool _isEnabled;
-        private ModViewModel _selectedModViewModel;
+        private ModViewModel? _selectedModViewModel;
 
         public ReadOnlyObservableCollection<ModViewModel> ModViewModels { get; }
 
@@ -50,13 +49,13 @@ namespace ModMyFactoryGUI.ViewModels
             }
         }
 
-        public ModViewModel SelectedModViewModel
+        public ModViewModel? SelectedModViewModel
         {
             get => _selectedModViewModel;
             set => this.RaiseAndSetIfChanged(ref _selectedModViewModel, value, nameof(SelectedModViewModel));
         }
 
-        public IBitmap Thumbnail { get; private set; }
+        public IBitmap? Thumbnail { get; private set; }
 
         public bool HasThumbnail => !(Thumbnail is null);
 
@@ -67,11 +66,11 @@ namespace ModMyFactoryGUI.ViewModels
 
         public ModFamily Family => _family;
 
-        public string DisplayName => _family?.DisplayName;
+        public string DisplayName => _family?.DisplayName ?? string.Empty;
 
-        public string FamilyName => _family?.FamilyName;
+        public string FamilyName => _family?.FamilyName ?? string.Empty;
 
-        public string Authors => string.Join(", ", _family?.Authors ?? new string[0]);
+        public string Authors => string.Join(", ", _family?.Authors ?? Array.Empty<string>());
 
         public ModFamilyViewModel(ModManager manager, ModFamily family)
         {
@@ -93,40 +92,46 @@ namespace ModMyFactoryGUI.ViewModels
             RefreshEnabledState();
         }
 
-        private void OnModCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        private void OnModCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
         {
             switch (e.Action)
             {
                 case NotifyCollectionChangedAction.Add:
-                    foreach (Mod mod in e.NewItems)
+                    if (!(e.NewItems is null))
                     {
-                        var vm = new ModViewModel(mod);
-                        _modViewModels.Add(vm);
-                        this.RaisePropertyChanged(nameof(Authors));
-
-                        Thumbnail = _modViewModels.MaxBy(m => m.Version)?.Thumbnail;
-                        this.RaisePropertyChanged(nameof(Thumbnail));
-                        this.RaisePropertyChanged(nameof(HasThumbnail));
-                    }
-                    break;
-
-                case NotifyCollectionChangedAction.Remove:
-                    foreach (Mod mod in e.OldItems)
-                    {
-                        // A bit inefficient but since there will only be a small amount of mods in a single family it shouldn't matter
-                        var vm = _modViewModels.Where(item => item.Mod == mod).FirstOrDefault();
-                        if (!(vm is null))
+                        foreach (Mod mod in e.NewItems)
                         {
-                            _modViewModels.Remove(vm);
-                            vm.Dispose();
+                            var vm = new ModViewModel(mod);
+                            _modViewModels.Add(vm);
                             this.RaisePropertyChanged(nameof(Authors));
-
-                            if (object.ReferenceEquals(_selectedModViewModel, vm))
-                                SelectedModViewModel = _modViewModels.FirstOrDefault();
 
                             Thumbnail = _modViewModels.MaxBy(m => m.Version)?.Thumbnail;
                             this.RaisePropertyChanged(nameof(Thumbnail));
                             this.RaisePropertyChanged(nameof(HasThumbnail));
+                        }
+                    }
+                    break;
+
+                case NotifyCollectionChangedAction.Remove:
+                    if (!(e.OldItems is null))
+                    {
+                        foreach (Mod mod in e.OldItems)
+                        {
+                            // A bit inefficient but since there will only be a small amount of mods in a single family it shouldn't matter
+                            var vm = _modViewModels.Where(item => item.Mod == mod).FirstOrDefault();
+                            if (!(vm is null))
+                            {
+                                _modViewModels.Remove(vm);
+                                vm.Dispose();
+                                this.RaisePropertyChanged(nameof(Authors));
+
+                                if (object.ReferenceEquals(_selectedModViewModel, vm))
+                                    SelectedModViewModel = _modViewModels.FirstOrDefault();
+
+                                Thumbnail = _modViewModels.MaxBy(m => m.Version)?.Thumbnail;
+                                this.RaisePropertyChanged(nameof(Thumbnail));
+                                this.RaisePropertyChanged(nameof(HasThumbnail));
+                            }
                         }
                     }
                     break;
@@ -152,7 +157,7 @@ namespace ModMyFactoryGUI.ViewModels
             }
         }
 
-        private async void OnModsEnabledChanged(object sender, EventArgs e)
+        private async void OnModsEnabledChanged(object? sender, EventArgs e)
         {
             RefreshEnabledState();
             this.RaisePropertyChanged(nameof(IsEnabled));

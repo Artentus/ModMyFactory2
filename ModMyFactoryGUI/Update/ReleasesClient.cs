@@ -39,7 +39,7 @@ namespace ModMyFactoryGUI.Update
             return (limit.Remaining > 0) || (limit.Reset < DateTimeOffset.UtcNow);
         }
 
-        public async Task<(bool, IReadOnlyList<Release>)> TryRequestReleasesAsync()
+        public async Task<(bool, IReadOnlyList<Release>?)> TryRequestReleasesAsync()
         {
             if (!CheckRateLimit()) return (false, null);
 

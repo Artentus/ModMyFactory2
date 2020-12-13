@@ -24,10 +24,10 @@ namespace ModMyFactoryGUI.ViewModels
     {
         private readonly Manager _manager;
         private readonly DownloadQueue _downloadQueue;
-        private ICollection<OnlineModViewModel> _onlineMods;
+        private ICollection<OnlineModViewModel>? _onlineMods;
         private ModComparer _selectedComparer;
         private AccurateVersion _selectedFactorioVersion;
-        private OnlineModViewModel _selectedMod;
+        private OnlineModViewModel? _selectedMod;
         private string _filter;
 
         public bool ModsLoaded { get; private set; }
@@ -36,7 +36,7 @@ namespace ModMyFactoryGUI.ViewModels
 
         public string ErrorMessageKey { get; private set; }
 
-        public CollectionView<OnlineModViewModel> OnlineMods { get; private set; }
+        public CollectionView<OnlineModViewModel>? OnlineMods { get; private set; }
 
         public ICommand RefreshCommand { get; }
 
@@ -61,7 +61,7 @@ namespace ModMyFactoryGUI.ViewModels
             }
         }
 
-        public CollectionView<AccurateVersion> FactorioVersions { get; private set; }
+        public CollectionView<AccurateVersion>? FactorioVersions { get; private set; }
 
         public AccurateVersion SelectedFactorioVersion
         {
@@ -83,7 +83,7 @@ namespace ModMyFactoryGUI.ViewModels
             }
         }
 
-        public OnlineModViewModel SelectedMod
+        public OnlineModViewModel? SelectedMod
         {
             get => _selectedMod;
             set
@@ -125,6 +125,8 @@ namespace ModMyFactoryGUI.ViewModels
         {
             _manager = manager;
             _downloadQueue = downloadQueue;
+            _filter = string.Empty;
+            ErrorMessageKey = string.Empty;
             RefreshCommand = ReactiveCommand.CreateFromTask(RefreshOnlineModsAsync);
 
             App.Current.Locales.UICultureChanged += (sender, e) =>
@@ -144,10 +146,10 @@ namespace ModMyFactoryGUI.ViewModels
 
             Comparers = new ModComparer[]
             {
-                new AlphabeticalModComparer(),
-                new DownloadCountModComparer()
+                AlphabeticalModComparer.Instance,
+                DownloadCountModComparer.Instance
             };
-            SelectedComparer = Comparers[0];
+            _selectedComparer = Comparers[0];
 
             FactorioVersions = new CollectionView<AccurateVersion>(new AccurateVersion[1] { default });
             SelectedFactorioVersion = default;
@@ -159,7 +161,7 @@ namespace ModMyFactoryGUI.ViewModels
             PropertyChanged += async (s, e) => await OnPropertyChanged(s, e);
         }
 
-        private async Task OnPropertyChanged(object sender, PropertyChangedEventArgs e)
+        private async Task OnPropertyChanged(object? sender, PropertyChangedEventArgs e)
         {
             if ((e.PropertyName == nameof(SelectedMod)) && !(SelectedMod is null))
                 await SelectedMod.LoadExtendedInfoAsync();
@@ -203,7 +205,7 @@ namespace ModMyFactoryGUI.ViewModels
             SelectedFactorioVersion = default;
 
             var factorioVersions = new HashSet<AccurateVersion> { default };
-            foreach (var mod in _onlineMods)
+            foreach (var mod in _onlineMods!)
             {
                 if (mod.FactorioVersion.HasValue)
                     factorioVersions.Add(mod.FactorioVersion.Value.ToFactorioMajor());

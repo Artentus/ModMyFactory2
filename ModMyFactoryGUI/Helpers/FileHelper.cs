@@ -35,8 +35,10 @@ namespace ModMyFactoryGUI.Helpers
 
         public static bool IsOnSameVolume(string path1, string path2)
         {
-            string root1 = Path.GetPathRoot(path1);
-            string root2 = Path.GetPathRoot(path2);
+            string? root1 = Path.GetPathRoot(path1);
+            string? root2 = Path.GetPathRoot(path2);
+
+            if (string.IsNullOrEmpty(root1) || string.IsNullOrEmpty(root2)) return false;
 
             var info1 = new DriveInfo(root1);
             var info2 = new DriveInfo(root2);
@@ -61,8 +63,8 @@ namespace ModMyFactoryGUI.Helpers
                     var op = directory.MoveToByCopyAsync(destination);
 
                     // Get localized strings
-                    string title = (string)App.Current.Locales.GetResource("MovingLocation_Title");
-                    string description = (string)App.Current.Locales.GetResource("MovingFiles_Message");
+                    string title = (string)App.Current!.Locales.GetResource("MovingLocation_Title");
+                    string description = (string)App.Current!.Locales.GetResource("MovingFiles_Message");
 
                     // We don't need to evaluate this since we don't allow cancellation
                     await ProgressDialog.Show(title, description, op, mainWindow);

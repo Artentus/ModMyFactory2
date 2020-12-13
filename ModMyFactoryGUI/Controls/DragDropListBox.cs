@@ -15,15 +15,15 @@ namespace ModMyFactoryGUI.Controls
 {
     internal class DragDropListBox : ListBox, IStyleable
     {
-        public event EventHandler<PointerPressedEventArgs> PreviewPointerPressed;
+        public event EventHandler<PointerPressedEventArgs>? PreviewPointerPressed;
 
-        public event EventHandler<PointerReleasedEventArgs> PreviewPointerReleased;
+        public event EventHandler<PointerReleasedEventArgs>? PreviewPointerReleased;
 
-        public event EventHandler<PointerEventArgs> PreviewPointerMoved;
+        public event EventHandler<PointerEventArgs>? PreviewPointerMoved;
 
-        public event EventHandler<DragEventArgs> DragOver;
+        public event EventHandler<DragEventArgs>? DragOver;
 
-        public event EventHandler<DragEventArgs> Drop;
+        public event EventHandler<DragEventArgs>? Drop;
 
         Type IStyleable.StyleKey => typeof(ListBox);
 
@@ -36,19 +36,19 @@ namespace ModMyFactoryGUI.Controls
             AddHandler(DragDrop.DropEvent, OnDrop);
         }
 
-        protected virtual void OnPreviewPointerPressed(object sender, PointerPressedEventArgs e)
+        protected virtual void OnPreviewPointerPressed(object? sender, PointerPressedEventArgs e)
             => PreviewPointerPressed?.Invoke(sender, e);
 
-        protected virtual void OnPreviewPointerReleased(object sender, PointerReleasedEventArgs e)
+        protected virtual void OnPreviewPointerReleased(object? sender, PointerReleasedEventArgs e)
             => PreviewPointerReleased?.Invoke(sender, e);
 
-        protected virtual void OnPreviewPointerMoved(object sender, PointerEventArgs e)
+        protected virtual void OnPreviewPointerMoved(object? sender, PointerEventArgs e)
             => PreviewPointerMoved?.Invoke(sender, e);
 
-        protected virtual void OnDragOver(object sender, DragEventArgs e)
+        protected virtual void OnDragOver(object? sender, DragEventArgs e)
             => DragOver?.Invoke(sender, e);
 
-        protected virtual void OnDrop(object sender, DragEventArgs e)
+        protected virtual void OnDrop(object? sender, DragEventArgs e)
             => Drop?.Invoke(sender, e);
     }
 }

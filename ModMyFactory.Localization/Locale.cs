@@ -5,6 +5,7 @@
 //  the Free Software Foundation, either version 3 of the License, or
 //  (at your option) any later version.
 
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Text.RegularExpressions;
 
@@ -33,7 +34,7 @@ namespace ModMyFactory.Localization
         /// </summary>
         /// <param name="key">The key to resolve.</param>
         /// <param name="args">Optional. Arguments to be substituted into the string.</param>
-        public bool TryResolve(string key, out string result, params object[] args)
+        public bool TryResolve(string key, [NotNullWhen(true)] out string? result, params object[] args)
         {
             var parts = key.Split(new[] { '.' }, 2);
             string section;

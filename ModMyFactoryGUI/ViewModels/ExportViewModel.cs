@@ -15,6 +15,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Threading.Tasks;
 using System.Windows.Input;
@@ -24,7 +25,7 @@ namespace ModMyFactoryGUI.ViewModels
     internal sealed class ExportViewModel : MainViewModelBase<ExportView>
     {
         private readonly ObservableCollection<ModpackExportViewModel> _modpacks;
-        private string _filter;
+        private string? _filter;
         private int _exportCount;
         private bool _isUpdating;
         private bool _useLatestVersion, _useFactorioVersion, _useSpecificVersion;
@@ -36,7 +37,7 @@ namespace ModMyFactoryGUI.ViewModels
 
         public bool CanExport { get; private set; }
 
-        public string Filter
+        public string? Filter
         {
             get => _filter;
             set
@@ -182,7 +183,7 @@ namespace ModMyFactoryGUI.ViewModels
             this.RaisePropertyChanged(nameof(UseSpecificVersion));
         }
 
-        private void OnModpackPropertyChanged(object sender, PropertyChangedEventArgs e)
+        private void OnModpackPropertyChanged(object? sender, PropertyChangedEventArgs e)
         {
             switch (e.PropertyName)
             {
@@ -192,7 +193,7 @@ namespace ModMyFactoryGUI.ViewModels
 
                 case nameof(ModpackExportViewModel.IsSelected):
                     // Counting is more efficient than iterating the entire list every time
-                    var vm = (ModpackExportViewModel)sender;
+                    var vm = (ModpackExportViewModel)sender!;
                     if (vm.IsSelected) _exportCount++;
                     else _exportCount--;
 
@@ -224,7 +225,7 @@ namespace ModMyFactoryGUI.ViewModels
             }
         }
 
-        private bool TryGetViewModel(Modpack modpack, out ModpackExportViewModel result)
+        private bool TryGetViewModel(Modpack modpack, [NotNullWhen(true)] out ModpackExportViewModel? result)
         {
             foreach (var vm in _modpacks)
             {
@@ -239,28 +240,34 @@ namespace ModMyFactoryGUI.ViewModels
             return false;
         }
 
-        private void OnModpackCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        private void OnModpackCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
         {
             switch (e.Action)
             {
                 case NotifyCollectionChangedAction.Add:
-                    foreach (Modpack modpack in e.NewItems)
+                    if (!(e.NewItems is null))
                     {
-                        var vm = new ModpackExportViewModel(modpack);
-                        vm.PropertyChanged += OnModpackPropertyChanged;
-                        _modpacks.Add(vm);
+                        foreach (Modpack modpack in e.NewItems)
+                        {
+                            var vm = new ModpackExportViewModel(modpack);
+                            vm.PropertyChanged += OnModpackPropertyChanged;
+                            _modpacks.Add(vm);
+                        }
                     }
                     this.RaisePropertyChanged(nameof(Modpacks));
                     break;
 
                 case NotifyCollectionChangedAction.Remove:
-                    foreach (Modpack modpack in e.OldItems)
+                    if (!(e.OldItems is null))
                     {
-                        if (TryGetViewModel(modpack, out var vm))
+                        foreach (Modpack modpack in e.OldItems)
                         {
-                            _modpacks.Remove(vm);
-                            vm.PropertyChanged -= OnModpackPropertyChanged;
-                            vm.Dispose();
+                            if (TryGetViewModel(modpack, out var vm))
+                            {
+                                _modpacks.Remove(vm);
+                                vm.PropertyChanged -= OnModpackPropertyChanged;
+                                vm.Dispose();
+                            }
                         }
                     }
                     this.RaisePropertyChanged(nameof(Modpacks));

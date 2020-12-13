@@ -7,7 +7,6 @@
 
 using System;
 using System.IO;
-using ModMyFactoryGUI;
 
 namespace ModMyFactoryGUI.Synchronization.Unix
 {
@@ -15,7 +14,7 @@ namespace ModMyFactoryGUI.Synchronization.Unix
     {
         private readonly FileInfo _lockFile;
         private bool _hasLock;
-        private Stream _openStream;
+        private Stream? _openStream;
 
         public Mutex()
         {
@@ -51,7 +50,7 @@ namespace ModMyFactoryGUI.Synchronization.Unix
             if (!_hasLock) throw new InvalidOperationException("Cannot release a mutex that has not been aquired");
 
             _hasLock = false;
-            _openStream.Dispose();
+            _openStream?.Dispose();
             _openStream = null;
             _lockFile.Delete();
         }

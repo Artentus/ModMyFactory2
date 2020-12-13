@@ -10,6 +10,7 @@ using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Threading.Tasks;
+using System;
 
 namespace ModMyFactoryGUI.Helpers
 {
@@ -25,7 +26,7 @@ namespace ModMyFactoryGUI.Helpers
             byte[] buffer = new byte[BufferSize];
             while (true)
             {
-                int bytesRead = await stream.ReadAsync(buffer, 0, BufferSize);
+                int bytesRead = await stream.ReadAsync(buffer.AsMemory());
                 if (stream.Position >= stream.Length)
                 {
                     sha1.TransformFinalBlock(buffer, 0, bytesRead);
@@ -37,7 +38,7 @@ namespace ModMyFactoryGUI.Helpers
                 }
             }
 
-            return sha1.Hash;
+            return sha1.Hash!;
         }
 
         public static async Task<SHA1Hash> ComputeSHA1Async(this FileInfo file)
@@ -64,7 +65,7 @@ namespace ModMyFactoryGUI.Helpers
         }
 
         public static void Rename(this FileInfo file, string newName)
-            => file.MoveTo(Path.Combine(file.Directory.FullName, newName));
+            => file.MoveTo(Path.Combine(file.Directory!.FullName, newName));
     }
 
     internal static class DirectoryInfoExtensions

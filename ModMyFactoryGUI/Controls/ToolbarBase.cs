@@ -19,6 +19,16 @@ using System.Linq;
 
 namespace ModMyFactoryGUI.Controls
 {
+    internal interface IToolbarElement : IControl, IMenuElement
+    {
+        new IToolbarItem? SelectedItem { get; set; }
+
+        new IEnumerable<IToolbarItem> SubItems { get; }
+    }
+
+    internal interface IToolbar : IToolbarElement, IMenu
+    { }
+
     internal abstract class ToolbarBase : SelectingItemsControl, IFocusScope, IToolbar
     {
         private bool _isOpen;
@@ -74,7 +84,7 @@ namespace ModMyFactoryGUI.Controls
             protected set { SetAndRaise(IsOpenProperty, ref _isOpen, value); }
         }
 
-        IToolbarItem IToolbarElement.SelectedItem
+        IToolbarItem? IToolbarElement.SelectedItem
         {
             get
             {
@@ -87,10 +97,10 @@ namespace ModMyFactoryGUI.Controls
         }
 
         /// <inheritdoc/>
-        IMenuItem IMenuElement.SelectedItem
+        IMenuItem? IMenuElement.SelectedItem
         {
             get => ((IToolbar)this).SelectedItem;
-            set => ((IToolbar)this).SelectedItem = (IToolbarItem)value;
+            set => ((IToolbar)this).SelectedItem = value as IToolbarItem;
         }
 
         IEnumerable<IToolbarItem> IToolbarElement.SubItems
@@ -125,8 +135,6 @@ namespace ModMyFactoryGUI.Controls
         /// <param name="interactionHandler">The menu interaction handler.</param>
         public ToolbarBase(IMenuInteractionHandler interactionHandler)
         {
-            Contract.Requires<ArgumentNullException>(interactionHandler != null);
-
             InteractionHandler = interactionHandler;
         }
 

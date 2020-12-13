@@ -13,13 +13,18 @@ using System.Threading.Tasks;
 
 namespace ModMyFactoryGUI.Controls
 {
+    internal interface ISingleFileSystemDialogImpl
+    {
+        Task<string?> ShowDialogAsync(OpenSingleFileDialog dialog, Window parent);
+    }
+
     internal class OpenSingleFileDialog : FileSystemDialog
     {
         private sealed class DefaultImpl : ISingleFileSystemDialogImpl
         {
             // This functionality only exists in Windows, so on Unix we fall back to a normal file dialog
 
-            public async Task<string> ShowDialogAsync(OpenSingleFileDialog dialog, Window parent)
+            public async Task<string?> ShowDialogAsync(OpenSingleFileDialog dialog, Window parent)
             {
                 var d = new OpenFileDialog
                 {
@@ -41,9 +46,9 @@ namespace ModMyFactoryGUI.Controls
 
         private static readonly ISingleFileSystemDialogImpl dialogImpl;
 
-        public string FileName { get; set; }
+        public string? FileName { get; set; }
 
-        public string FilterName { get; set; }
+        public string? FilterName { get; set; }
 
         static OpenSingleFileDialog()
         {
@@ -57,7 +62,7 @@ namespace ModMyFactoryGUI.Controls
             }
         }
 
-        public Task<string> ShowAsync(Window parent)
+        public Task<string?> ShowAsync(Window parent)
         {
             if (parent == null) throw new ArgumentNullException(nameof(parent));
             return dialogImpl.ShowDialogAsync(this, parent);

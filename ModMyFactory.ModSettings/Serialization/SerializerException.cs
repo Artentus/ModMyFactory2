@@ -11,7 +11,7 @@ namespace ModMyFactory.ModSettings.Serialization
 {
     public class SerializerException : Exception
     {
-        protected internal SerializerException(string message, Exception innerException = null)
+        protected internal SerializerException(string message, Exception? innerException = null)
             : base(message, innerException)
         { }
     }

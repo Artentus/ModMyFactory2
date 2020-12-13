@@ -14,10 +14,10 @@ using System.Windows.Input;
 
 namespace ModMyFactoryGUI.ViewModels
 {
-    internal class ShortcutPropertiesViewModel : ScreenBase<ShortcutPropertiesWindow>
+    internal class ShortcutPropertiesViewModel : ViewModelBase<ShortcutPropertiesWindow>
     {
         private bool _useModpack, _useSavegame, _useCustomArgs;
-        private Modpack _selectedModpack;
+        private Modpack? _selectedModpack;
         private string _savegamePath, _customArgs;
 
         public ICommand CreateCommand { get; }
@@ -54,7 +54,7 @@ namespace ModMyFactoryGUI.ViewModels
             }
         }
 
-        public Modpack SelectedModpack
+        public Modpack? SelectedModpack
         {
             get => _selectedModpack;
             set
@@ -101,12 +101,15 @@ namespace ModMyFactoryGUI.ViewModels
         {
             Modpacks = new CollectionView<Modpack>(Program.Modpacks, new ModpackComparer());
 
+            _savegamePath = string.Empty;
+            _customArgs = string.Empty;
+
             CreateCommand = ReactiveCommand.Create(Create);
             CancelCommand = ReactiveCommand.Create(Cancel);
         }
 
-        private void Create() => AttachedView.Close(DialogResult.Ok);
+        private void Create() => AttachedView!.Close(DialogResult.Ok);
 
-        private void Cancel() => AttachedView.Close(DialogResult.Cancel);
+        private void Cancel() => AttachedView!.Close(DialogResult.Cancel);
     }
 }

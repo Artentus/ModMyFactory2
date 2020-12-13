@@ -13,11 +13,11 @@ using System.IO;
 
 namespace ModMyFactoryGUI.Controls
 {
-    internal class IconImageConverter : ValueConverterBase<WindowIcon, IBitmap>
+    internal class IconImageConverter : ValueConverterBase<WindowIcon, IBitmap?>
     {
         public static IconImageConverter Converter { get; } = new IconImageConverter();
 
-        protected override IBitmap Convert(WindowIcon value, CultureInfo culture)
+        protected override IBitmap? Convert(WindowIcon? value, CultureInfo culture)
         {
             if (value is null) return null;
 
@@ -28,7 +28,7 @@ namespace ModMyFactoryGUI.Controls
             return new Bitmap(stream);
         }
 
-        protected override WindowIcon ConvertBack(IBitmap value, CultureInfo culture)
+        protected override WindowIcon ConvertBack(IBitmap? value, CultureInfo culture)
             => throw new NotSupportedException();
     }
 }

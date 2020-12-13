@@ -40,7 +40,7 @@ namespace ModMyFactoryGUI.ViewModels
         }
     }
 
-    internal sealed class AttributionViewModel : RoutableViewModelBase<AttributionView>
+    internal sealed class AttributionViewModel : ViewModelBase<AttributionView>
     {
         public IReadOnlyList<WebLinkViewModel> ThirdPartySoftwareLinks { get; }
 

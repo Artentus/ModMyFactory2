@@ -13,6 +13,7 @@ using System;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
 
 namespace ModMyFactoryGUI.ViewModels
 {
@@ -132,7 +133,7 @@ namespace ModMyFactoryGUI.ViewModels
                 vm.PropertyChanged += ModPropertyChangedHandler;
                 _mods.Add(vm);
             }
-            Mods = new CollectionView<ModExportViewModel>(_mods, new AlphabeticalModComparer());
+            Mods = new CollectionView<ModExportViewModel>(_mods, AlphabeticalModComparer.Instance);
 
             EvaluateProperties();
             _includeFile = _mods.SelectFromAll(vm => vm.IncludeFile);
@@ -161,7 +162,7 @@ namespace ModMyFactoryGUI.ViewModels
             this.RaisePropertyChanged(nameof(UseSpecificVersion));
         }
 
-        private void ModPropertyChangedHandler(object sender, PropertyChangedEventArgs e)
+        private void ModPropertyChangedHandler(object? sender, PropertyChangedEventArgs e)
         {
             switch (e.PropertyName)
             {
@@ -190,7 +191,7 @@ namespace ModMyFactoryGUI.ViewModels
 
         }
 
-        private bool TryGetViewModel(Mod mod, out ModExportViewModel result)
+        private bool TryGetViewModel(Mod mod, [NotNullWhen(true)] out ModExportViewModel? result)
         {
             foreach (var vm in _mods)
             {
@@ -205,49 +206,55 @@ namespace ModMyFactoryGUI.ViewModels
             return false;
         }
 
-        private void ModpackCollectionChangedHandler(object sender, NotifyCollectionChangedEventArgs e)
+        private void ModpackCollectionChangedHandler(object? sender, NotifyCollectionChangedEventArgs e)
         {
             switch (e.Action)
             {
                 case NotifyCollectionChangedAction.Add:
-                    foreach (ICanEnable item in e.NewItems)
+                    if (!(e.NewItems is null))
                     {
-                        if (item is Mod mod)
+                        foreach (ICanEnable item in e.NewItems)
                         {
-                            var vm = new ModExportViewModel(mod);
-                            vm.PropertyChanged += ModPropertyChangedHandler;
-                            _mods.Add(vm);
+                            if (item is Mod mod)
+                            {
+                                var vm = new ModExportViewModel(mod);
+                                vm.PropertyChanged += ModPropertyChangedHandler;
+                                _mods.Add(vm);
+                            }
                         }
+                        this.RaisePropertyChanged(nameof(Mods));
                     }
-                    this.RaisePropertyChanged(nameof(Mods));
                     break;
 
                 case NotifyCollectionChangedAction.Remove:
-                    foreach (ICanEnable item in e.OldItems)
+                    if (!(e.OldItems is null))
                     {
-                        if (item is Mod mod)
+                        foreach (ICanEnable item in e.OldItems)
                         {
-                            if (TryGetViewModel(mod, out var vm))
+                            if (item is Mod mod)
                             {
-                                _mods.Remove(vm);
-                                vm.PropertyChanged -= ModPropertyChangedHandler;
+                                if (TryGetViewModel(mod, out var vm))
+                                {
+                                    _mods.Remove(vm);
+                                    vm.PropertyChanged -= ModPropertyChangedHandler;
+                                }
                             }
                         }
+                        this.RaisePropertyChanged(nameof(Mods));
                     }
-                    this.RaisePropertyChanged(nameof(Mods));
                     break;
             }
 
             EvaluateProperties();
         }
 
-        private void ModpackPropertyChangedHandler(object sender, PropertyChangedEventArgs e)
+        private void ModpackPropertyChangedHandler(object? sender, PropertyChangedEventArgs e)
         {
             if (e.PropertyName == nameof(ModMyFactory.Modpack.DisplayName))
                 this.RaisePropertyChanged(nameof(DisplayName));
         }
 
-        public void ApplyFuzzyFilter(in string filter)
+        public void ApplyFuzzyFilter(in string? filter)
         {
             if (string.IsNullOrWhiteSpace(filter))
             {

@@ -71,7 +71,7 @@ namespace ModMyFactory.WebApi.Factorio
         /// <param name="username">Username for authentication.</param>
         /// <param name="token">Login token for authentication.</param>
         public async static Task DownloadUpdatePackageAsync(Platform platform, AccurateVersion from, AccurateVersion to, FileInfo file, string username, string token,
-                                                            CancellationToken cancellationToken = default, IProgress<double> progress = null)
+                                                            CancellationToken cancellationToken = default, IProgress<double>? progress = null)
         {
             try
             {
@@ -93,7 +93,7 @@ namespace ModMyFactory.WebApi.Factorio
         /// <param name="username">Username for authentication.</param>
         /// <param name="token">Login token for authentication.</param>
         public async static Task DownloadUpdatePackageAsync(Platform platform, UpdatePackageInfo packageInfo, FileInfo file, string username, string token,
-                                                            CancellationToken cancellationToken = default, IProgress<double> progress = null)
+                                                            CancellationToken cancellationToken = default, IProgress<double>? progress = null)
             => await DownloadUpdatePackageAsync(platform, packageInfo.From, packageInfo.To, file, username, token, cancellationToken, progress);
 
         /// <summary>
@@ -106,7 +106,7 @@ namespace ModMyFactory.WebApi.Factorio
         /// <param name="username">Username for authentication.</param>
         /// <param name="token">Login token for authentication.</param>
         public async static Task<FileInfo> DownloadUpdatePackageAsync(Platform platform, AccurateVersion from, AccurateVersion to, string fileName, string username, string token,
-                                                            CancellationToken cancellationToken = default, IProgress<double> progress = null)
+                                                            CancellationToken cancellationToken = default, IProgress<double>? progress = null)
         {
             var file = new FileInfo(fileName);
             await DownloadUpdatePackageAsync(platform, from, to, file, username, token, cancellationToken, progress);
@@ -122,7 +122,7 @@ namespace ModMyFactory.WebApi.Factorio
         /// <param name="username">Username for authentication.</param>
         /// <param name="token">Login token for authentication.</param>
         public async static Task<FileInfo> DownloadUpdatePackageAsync(Platform platform, UpdatePackageInfo packageInfo, string fileName, string username, string token,
-                                                            CancellationToken cancellationToken = default, IProgress<double> progress = null)
+                                                            CancellationToken cancellationToken = default, IProgress<double>? progress = null)
             => await DownloadUpdatePackageAsync(platform, packageInfo.From, packageInfo.To, fileName, username, token, cancellationToken, progress);
     }
 }

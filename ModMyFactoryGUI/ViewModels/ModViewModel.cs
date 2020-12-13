@@ -17,7 +17,7 @@ namespace ModMyFactoryGUI.ViewModels
     {
         public Mod Mod { get; }
 
-        public IBitmap Thumbnail { get; }
+        public IBitmap? Thumbnail { get; }
 
         public AccurateVersion Version => Mod.Version;
 

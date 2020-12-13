@@ -32,9 +32,9 @@ namespace ModMyFactory.WebApi.Factorio
             {
                 string document = await WebHelper.RequestDocumentAsync(ReleasesUrl);
 
-                dynamic response = JsonConvert.DeserializeObject(document);
-                var stableDict = ((JToken)response.stable).ToObject<Dictionary<string, string>>();
-                var experimentalDict = ((JToken)response.experimental).ToObject<Dictionary<string, string>>();
+                dynamic response = JsonConvert.DeserializeObject(document)!;
+                var stableDict = ((JToken)response.stable).ToObject<Dictionary<string, string>>()!;
+                var experimentalDict = ((JToken)response.experimental).ToObject<Dictionary<string, string>>()!;
                 return (new ReleaseInfo(stableDict), new ReleaseInfo(experimentalDict));
             }
             catch (WebException ex)
@@ -53,7 +53,7 @@ namespace ModMyFactory.WebApi.Factorio
         /// <param name="token">Login token for authentication.</param>
         /// <param name="file">The destination file.</param>
         public async static Task DownloadReleaseAsync(AccurateVersion version, FactorioBuild build, Platform platform, string username, string token, FileInfo file,
-                                                      CancellationToken cancellationToken = default, IProgress<double> progress = null)
+                                                      CancellationToken cancellationToken = default, IProgress<double>? progress = null)
         {
             string versionStr = version.ToString(3);
             string buildStr = build.ToActualString();
@@ -80,7 +80,7 @@ namespace ModMyFactory.WebApi.Factorio
         /// <param name="token">Login token for authentication.</param>
         /// <param name="fileName">The destination file name.</param>
         public async static Task<FileInfo> DownloadReleaseAsync(AccurateVersion version, FactorioBuild build, Platform platform, string username, string token, string fileName,
-                                                      CancellationToken cancellationToken = default, IProgress<double> progress = null)
+                                                      CancellationToken cancellationToken = default, IProgress<double>? progress = null)
         {
             var file = new FileInfo(fileName);
             await DownloadReleaseAsync(version, build, platform, username, token, file, cancellationToken, progress);

@@ -34,7 +34,7 @@ namespace ModMyFactory.BaseTypes
         /// <summary>
         /// Tries to parse a string as a SHA1 hash
         /// </summary>
-        public static bool TryParse(string s, out SHA1Hash result)
+        public static bool TryParse(string? s, out SHA1Hash result)
         {
             result = default;
             if (string.IsNullOrWhiteSpace(s)) return false;
@@ -55,7 +55,7 @@ namespace ModMyFactory.BaseTypes
         /// <summary>
         /// Parses a string as a SHA1 hash
         /// </summary>
-        public static SHA1Hash Parse(string s)
+        public static SHA1Hash Parse(string? s)
         {
             if (TryParse(s, out var result)) return result;
             else throw new FormatException();

@@ -7,6 +7,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Net;
 using System.Threading.Tasks;
 using Octokit;
@@ -15,10 +16,10 @@ namespace ModMyFactoryGUI.Update
 {
     static class UpdateApi
     {
-        private static (Release, TagVersion) GetLatestRelease(IReadOnlyList<Release> releases, bool includePrereleases)
+        private static (Release?, TagVersion?) GetLatestRelease(IReadOnlyList<Release> releases, bool includePrereleases)
         {
-            Release latest = null;
-            TagVersion version = null;
+            Release? latest = null;
+            TagVersion? version = null;
 
             foreach (var release in releases)
             {
@@ -37,8 +38,11 @@ namespace ModMyFactoryGUI.Update
             return (latest, version);
         }
 
-        private static bool TryGetAsset(in Release release, out ReleaseAsset result)
+        private static bool TryGetAsset(in Release? release, [NotNullWhen(true)] out ReleaseAsset? result)
         {
+            result = null;
+            if (release is null) return false;
+
             string name = $"{release.TagName}_{VersionStatistics.AppPlatform.AssetSuffix()}.zip";
             foreach (var asset in release.Assets)
             {
@@ -53,13 +57,13 @@ namespace ModMyFactoryGUI.Update
             return false;
         }
 
-        public static async Task<(bool, TagVersion, string)> CheckForUpdateAsync(bool includePrereleases)
+        public static async Task<(bool, TagVersion?, string?)> CheckForUpdateAsync(bool includePrereleases)
         {
             var client = new ReleasesClient();
             var (success, releases) = await client.TryRequestReleasesAsync();
             if (!success) return (false, null, null);
 
-            var (latest, version) = GetLatestRelease(releases, includePrereleases);
+            var (latest, version) = GetLatestRelease(releases!, includePrereleases);
             if (version > VersionStatistics.AppVersion)
             {
                 if (TryGetAsset(latest, out var asset)) return (true, version, asset.BrowserDownloadUrl);

@@ -18,7 +18,7 @@ namespace ModMyFactoryGUI.Localization
         private readonly ILocale _defaultLocale;
         private CultureInfo _uiCulture;
 
-        public event EventHandler UICultureChanged;
+        public event EventHandler? UICultureChanged;
 
         public CultureInfo UICulture
         {
@@ -41,8 +41,8 @@ namespace ModMyFactoryGUI.Localization
             _uiCulture = defaultCulture;
 
             string defaultCode = defaultCulture.Name;
-            if (!localeProvider.TryGetValue(defaultCode, out _defaultLocale))
-                throw new LocaleException($"Default culture '{defaultCode}' not provided.");
+            if (localeProvider.TryGetValue(defaultCode, out var locale)) _defaultLocale = locale;
+            else throw new LocaleException($"Default culture '{defaultCode}' not provided.");
         }
 
         public LocaleManager(ILocaleProvider localeProvider)

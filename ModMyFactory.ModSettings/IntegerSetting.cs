@@ -65,7 +65,7 @@ namespace ModMyFactory.ModSettings
         public IntegerSetting(RuntimeType runtimeType, string name, string localisedName, string localisedDescription, string order,
             int defaultValue, int minValue = int.MinValue, int maxValue = int.MaxValue)
             : base(runtimeType, name, localisedName, localisedDescription, order, defaultValue)
-            => (MinValue, MaxValue, AllowedValues, _value) = (minValue, maxValue, null, defaultValue);
+            => (MinValue, MaxValue, AllowedValues, _value) = (minValue, maxValue, Array.Empty<int>(), defaultValue);
 
         public IntegerSetting(RuntimeType runtimeType, string name, string localisedName, string localisedDescription, string order,
             int defaultValue, IList<int> allowedValues)

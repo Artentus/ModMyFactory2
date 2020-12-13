@@ -16,7 +16,7 @@ namespace Avalonia.ThemeManager
         /// <summary>
         /// The currently selected theme.
         /// </summary>
-        ITheme SelectedTheme { get; set; }
+        ITheme? SelectedTheme { get; set; }
 
         /// <summary>
         /// The windows being managed.

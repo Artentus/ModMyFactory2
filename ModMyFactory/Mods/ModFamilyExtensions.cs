@@ -13,9 +13,9 @@ namespace ModMyFactory.Mods
         /// Gets the default mod in this family<br/>
         /// The default mod is the mod that will be selected by Factorio if no version is specified
         /// </summary>
-        public static Mod GetDefaultMod(this ModFamily family)
+        public static Mod? GetDefaultMod(this ModFamily family)
         {
-            Mod max = null;
+            Mod? max = null;
             foreach (var mod in family)
                 if ((max is null) || (mod.Version > max.Version)) max = mod;
             return max;

@@ -40,13 +40,13 @@ namespace ModMyFactory.Export
         internal Exporter(in Package package, in bool pack, in IReadOnlyList<FileInfo> filesToPack)
             => (Package, Pack, FilesToPack) = (package, pack, filesToPack);
 
-        private void ExportPackage(string path, Formatting formatting, JsonSerializerSettings settings)
+        private void ExportPackage(string path, Formatting formatting, JsonSerializerSettings? settings)
         {
             string json = JsonConvert.SerializeObject(Package, formatting, settings);
             File.WriteAllText(path, json);
         }
 
-        private async Task ExportPackageAsync(string path, Formatting formatting, JsonSerializerSettings settings)
+        private async Task ExportPackageAsync(string path, Formatting formatting, JsonSerializerSettings? settings)
         {
             string dir = Path.GetDirectoryName(path);
             if (!Directory.Exists(dir)) Directory.CreateDirectory(dir);
@@ -60,7 +60,7 @@ namespace ModMyFactory.Export
             await stream.WriteAsync(buffer, 0, buffer.Length);
         }
 
-        private void ExportArchive(FileInfo file, Formatting formatting, JsonSerializerSettings settings)
+        private void ExportArchive(FileInfo file, Formatting formatting, JsonSerializerSettings? settings)
         {
             if (!file.Directory.Exists) file.Directory.Create();
 
@@ -78,13 +78,13 @@ namespace ModMyFactory.Export
                 writer.Write(f.Name, f);
         }
 
-        private Task ExportArchiveAsync(FileInfo file, Formatting formatting, JsonSerializerSettings settings)
+        private Task ExportArchiveAsync(FileInfo file, Formatting formatting, JsonSerializerSettings? settings)
             => Task.Run(() => ExportArchive(file, formatting, settings));
 
         /// <summary>
         /// Exports the package to the specified file
         /// </summary>
-        public void Export(string path, Formatting formatting = Formatting.Indented, JsonSerializerSettings settings = null)
+        public void Export(string path, Formatting formatting = Formatting.Indented, in JsonSerializerSettings? settings = null)
         {
             if (Pack) ExportArchive(new FileInfo(path), formatting, settings);
             else ExportPackage(path, formatting, settings);
@@ -93,7 +93,7 @@ namespace ModMyFactory.Export
         /// <summary>
         /// Exports the package to the specified file
         /// </summary>
-        public void Export(FileInfo file, Formatting formatting = Formatting.Indented, JsonSerializerSettings settings = null)
+        public void Export(FileInfo file, Formatting formatting = Formatting.Indented, in JsonSerializerSettings? settings = null)
         {
             if (Pack) ExportArchive(file, formatting, settings);
             else ExportPackage(file.FullName, formatting, settings);
@@ -102,7 +102,7 @@ namespace ModMyFactory.Export
         /// <summary>
         /// Exports the package to the specified file
         /// </summary>
-        public Task ExportAsync(string path, Formatting formatting = Formatting.Indented, JsonSerializerSettings settings = null)
+        public Task ExportAsync(string path, Formatting formatting = Formatting.Indented, in JsonSerializerSettings? settings = null)
         {
             if (Pack) return ExportArchiveAsync(new FileInfo(path), formatting, settings);
             else return ExportPackageAsync(path, formatting, settings);
@@ -111,7 +111,7 @@ namespace ModMyFactory.Export
         /// <summary>
         /// Exports the package to the specified file
         /// </summary>
-        public Task ExportAsync(FileInfo file, Formatting formatting = Formatting.Indented, JsonSerializerSettings settings = null)
+        public Task ExportAsync(FileInfo file, Formatting formatting = Formatting.Indented, in JsonSerializerSettings? settings = null)
         {
             if (Pack) return ExportArchiveAsync(file, formatting, settings);
             else return ExportPackageAsync(file.FullName, formatting, settings);

@@ -7,6 +7,7 @@
 
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.IO;
 
@@ -35,7 +36,7 @@ namespace ModMyFactoryGUI.Localization.Json
             }
         }
 
-        private static bool IsValidCulture(string name, out CultureInfo culture)
+        private static bool IsValidCulture(string name, [NotNullWhen(true)] out CultureInfo? culture)
         {
             try
             {
@@ -52,7 +53,7 @@ namespace ModMyFactoryGUI.Localization.Json
 
         public bool ContainsKey(string key) => _locales.ContainsKey(key);
 
-        public bool TryGetValue(string key, out ILocale value) => _locales.TryGetValue(key, out value);
+        public bool TryGetValue(string key, [NotNullWhen(true)] out ILocale? value) => _locales.TryGetValue(key, out value);
 
         public IEnumerator<KeyValuePair<string, ILocale>> GetEnumerator() => _locales.GetEnumerator();
 

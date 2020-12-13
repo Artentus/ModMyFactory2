@@ -1,3 +1,10 @@
+//  Copyright (C) 2020 Mathis Rech
+//
+//  This program is free software: you can redistribute it and/or modify
+//  it under the terms of the GNU General Public License as published by
+//  the Free Software Foundation, either version 3 of the License, or
+//  (at your option) any later version.
+
 using Avalonia.Controls;
 using Avalonia.Win32.Interop;
 using System;
@@ -14,7 +21,7 @@ namespace ModMyFactoryGUI.Controls.Win32
             | UnmanagedMethods.FOS.FOS_NOTESTFILECREATE
             | UnmanagedMethods.FOS.FOS_DONTADDTORECENT;
 
-        private string GetAbsoluteFilePath(UnmanagedMethods.IShellItem shellItem)
+        private static string? GetAbsoluteFilePath(UnmanagedMethods.IShellItem shellItem)
         {
             if (shellItem.GetDisplayName(UnmanagedMethods.SIGDN_FILESYSPATH, out var pszString) == (uint)UnmanagedMethods.HRESULT.S_OK)
             {
@@ -31,10 +38,10 @@ namespace ModMyFactoryGUI.Controls.Win32
                 }
             }
 
-            return "";
+            return null;
         }
 
-        public unsafe Task<string> ShowDialogAsync(OpenSingleFileDialog dialog, Window parent)
+        public unsafe Task<string?> ShowDialogAsync(OpenSingleFileDialog dialog, Window parent)
         {
             var hWnd = parent?.PlatformImpl?.Handle?.Handle ?? IntPtr.Zero;
             return Task.Factory.StartNew(() =>
@@ -47,11 +54,11 @@ namespace ModMyFactoryGUI.Controls.Win32
                 frm.GetOptions(out uint options);
                 options |= (uint)DefaultDialogOptions;
                 frm.SetOptions(options);
-                frm.SetTitle(dialog.Title ?? "");
+                frm.SetTitle(dialog.Title ?? string.Empty);
 
                 var filters = new[]
                 {
-                    new UnmanagedMethods.COMDLG_FILTERSPEC { pszName = dialog.FilterName ?? "", pszSpec = dialog.FileName ?? "*.*" }
+                    new UnmanagedMethods.COMDLG_FILTERSPEC { pszName = dialog.FilterName ?? string.Empty, pszSpec = dialog.FileName ?? "*.*" }
                 };
                 frm.SetFileTypes((uint)filters.Length, filters);
                 frm.SetFileTypeIndex(0);

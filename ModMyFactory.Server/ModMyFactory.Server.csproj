@@ -4,7 +4,7 @@
   <Import Project="..\references.targets" />
 
   <PropertyGroup>
-    <TargetFrameworks>netstandard2.0</TargetFrameworks>
+    <TargetFrameworks>netstandard2.1</TargetFrameworks>
     <RootNamespace>ModMyFactory.Server</RootNamespace>
     <AssemblyName>ModMyFactory.Server</AssemblyName>
     <Description>Server-specific subset of ModMyFactory.</Description>

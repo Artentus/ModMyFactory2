@@ -7,6 +7,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -137,7 +138,7 @@ namespace ModMyFactory.Localization
         /// <summary>
         /// Tries to read a stream as INI data.
         /// </summary>
-        public static bool TryParse(Stream stream, out IniFile result)
+        public static bool TryParse(Stream stream, [NotNullWhen(true)] out IniFile? result)
         {
             if (TryParseData(stream, out var data))
             {
@@ -164,7 +165,7 @@ namespace ModMyFactory.Localization
         /// <summary>
         /// Tries to read a string as INI data.
         /// </summary>
-        public static bool TryParse(string iniString, out IniFile result)
+        public static bool TryParse(string iniString, [NotNullWhen(true)] out IniFile? result)
         {
             if (TryParseData(iniString, out var data))
             {
@@ -225,7 +226,7 @@ namespace ModMyFactory.Localization
         /// </summary>
         /// <param name="section">The section the value is in. Case insensitive.</param>
         /// <param name="key">The key of the value. Case insensitive.</param>
-        public bool TryGetValue(string section, string key, out string result)
+        public bool TryGetValue(string section, string key, [NotNullWhen(true)] out string? result)
         {
             result = null;
             if (!_data.TryGetValue(section.ToLowerInvariant(), out var sectionDict)) return false;

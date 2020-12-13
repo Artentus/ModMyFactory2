@@ -2,7 +2,7 @@ image: Visual Studio 2019
 shallow_clone: true
 skip_non_tags: true
 
-version: 4.1.2.{build}-beta
+version: 4.2.0.{build}-beta
 
 branches:
   only:
@@ -25,8 +25,8 @@ after_build:
   - 7z a %APPVEYOR_BUILD_VERSION%_universal.zip .\ModMyFactoryGUI\bin\publish\net5.0\*
 
 artifacts:
-  path: '%APPVEYOR_BUILD_VERSION%_*.zip'
-  name: Binaries
+  - path: '%APPVEYOR_BUILD_VERSION%_*.zip'
+    name: Binaries
 
 deploy:
 - provider: GitHub

@@ -24,7 +24,7 @@ namespace ModMyFactoryGUI.ViewModels
 
         public string EnglishName { get; }
 
-        public IBitmap Icon { get; }
+        public IBitmap? Icon { get; }
 
         public ICommand SelectCommand { get; }
 
@@ -49,14 +49,14 @@ namespace ModMyFactoryGUI.ViewModels
             Dispose(false);
         }
 
-        private void UICultureChangedHandler(object sender, EventArgs e) => this.RaisePropertyChanged(nameof(Selected));
+        private void UICultureChangedHandler(object? sender, EventArgs e) => this.RaisePropertyChanged(nameof(Selected));
 
         private void Dispose(bool disposing)
         {
             if (!disposed)
             {
                 disposed = true;
-                if (disposing) Icon.Dispose();
+                if (disposing) Icon?.Dispose();
                 App.Current.Locales.UICultureChanged -= UICultureChangedHandler;
             }
         }

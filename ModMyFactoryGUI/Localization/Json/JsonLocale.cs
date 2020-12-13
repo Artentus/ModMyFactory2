@@ -8,6 +8,7 @@
 using Newtonsoft.Json;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 
 namespace ModMyFactoryGUI.Localization.Json
@@ -35,7 +36,7 @@ namespace ModMyFactoryGUI.Localization.Json
 
         public bool ContainsKey(string key) => _values.ContainsKey(key);
 
-        public bool TryGetValue(string key, out object value)
+        public bool TryGetValue(string key, [NotNullWhen(true)] out object? value)
         {
             if (_values.TryGetValue(key, out var jsonValue))
             {

@@ -33,7 +33,7 @@ namespace ModMyFactoryGUI.CommandLine
         [Option('i', "import", Min = 1, Separator = ';', HelpText = "Optional list of package files to import")]
         public IEnumerable<string> ImportList { get; }
 
-        public RunOptions(bool noAutoUpdate, IEnumerable<string> importList, bool verbose, bool noLog, string appDataPath)
+        public RunOptions(bool noAutoUpdate, IEnumerable<string> importList, bool verbose, bool noLog, string? appDataPath)
             : base(verbose, noLog, appDataPath)
             => (NoAutoUpdate, ImportList) = (noAutoUpdate, importList);
     }

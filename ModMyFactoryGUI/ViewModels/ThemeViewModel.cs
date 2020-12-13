@@ -20,7 +20,7 @@ namespace ModMyFactoryGUI.ViewModels
     {
         private class EventManager
         {
-            public event EventHandler SelectedThemeChanged;
+            public event EventHandler? SelectedThemeChanged;
 
             public void RaiseEvent()
                 => SelectedThemeChanged?.Invoke(this, EventArgs.Empty);
@@ -34,7 +34,7 @@ namespace ModMyFactoryGUI.ViewModels
 
         public string DisplayName => (string)App.Current.Locales.GetResource(ResourcePrefix + Theme.Name);
 
-        public IBitmap Icon { get; }
+        public IBitmap? Icon { get; }
 
         public ICommand SelectCommand { get; }
 

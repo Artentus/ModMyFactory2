@@ -8,6 +8,7 @@
 using System;
 using System.IO.Pipes;
 using System.Net.Sockets;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -26,11 +27,11 @@ namespace ModMyFactoryGUI.Synchronization
     {
         private const string Uid = "ModMyFactoryGUI-uid(56F38E84-0DCD-475B-96F7-340ABBDEF8F1)";
         private readonly IUniversalMutex _globalMutex;
-        private CancellationTokenSource _cancellationSource;
-        private Task _listenTask;
+        private CancellationTokenSource? _cancellationSource;
+        private Task? _listenTask;
         private volatile bool _listening;
 
-        public event EventHandler<MessageReceivedEventArgs> MessageReceived;
+        public event EventHandler<MessageReceivedEventArgs>? MessageReceived;
 
         public bool IsFirst { get; }
 
@@ -102,10 +103,10 @@ namespace ModMyFactoryGUI.Synchronization
             {
                 if (_listening)
                 {
-                    _cancellationSource.Cancel();
+                    _cancellationSource!.Cancel();
 
                     // Wait until the thread has safely exited
-                    _listenTask.Wait();
+                    _listenTask!.Wait();
                     _listenTask = null;
 
                     _cancellationSource.Dispose();
@@ -141,7 +142,8 @@ namespace ModMyFactoryGUI.Synchronization
 
                     // Write message as UTF8 string
                     await pipe.WriteAsync(buffer, 0, length);
-                    pipe.WaitForPipeDrain();
+                    if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                        pipe.WaitForPipeDrain();
                 }
                 catch (TimeoutException)
                 {

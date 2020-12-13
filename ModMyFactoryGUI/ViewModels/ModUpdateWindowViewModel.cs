@@ -15,7 +15,7 @@ using System.Windows.Input;
 
 namespace ModMyFactoryGUI.ViewModels
 {
-    internal sealed class ModUpdateWindowViewModel : ScreenBase<ModUpdateWindow>
+    internal sealed class ModUpdateWindowViewModel : ViewModelBase<ModUpdateWindow>
     {
         public CollectionView<ModUpdateViewModel> Updates { get; }
 
@@ -67,13 +67,13 @@ namespace ModMyFactoryGUI.ViewModels
         private void Update()
         {
             DialogResult = DialogResult.Ok;
-            AttachedView.Close();
+            AttachedView!.Close();
         }
 
         private void Cancel()
         {
             DialogResult = DialogResult.Cancel;
-            AttachedView.Close();
+            AttachedView!.Close();
         }
     }
 }

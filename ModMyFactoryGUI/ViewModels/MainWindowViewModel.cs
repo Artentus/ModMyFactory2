@@ -26,6 +26,8 @@ using ReactiveUI;
 using Serilog;
 using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
+using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -36,13 +38,13 @@ using System.Windows.Input;
 
 namespace ModMyFactoryGUI.ViewModels
 {
-    internal sealed class MainWindowViewModel : ScreenBase<MainWindow>
+    internal sealed class MainWindowViewModel : ViewModelBase<MainWindow>
     {
         private readonly AboutWindowViewModel _aboutWindowViewModel = new AboutWindowViewModel();
         private readonly Progress<(DownloadJob, double)> _downloadProgress;
-        private TabItem _selectedTab;
-        private IMainViewModel _selectedViewModel;
-        private FactorioInstanceViewModel _selectedFactorioInstance;
+        private TabItem? _selectedTab;
+        private IMainViewModel? _selectedViewModel;
+        private FactorioInstanceViewModel? _selectedFactorioInstance;
 
         public ICommand StartGameCommand { get; }
 
@@ -81,7 +83,7 @@ namespace ModMyFactoryGUI.ViewModels
 
         public SettingsViewModel SettingsViewModel { get; }
 
-        public TabItem SelectedTab
+        public TabItem? SelectedTab
         {
             get => _selectedTab;
             set
@@ -95,7 +97,7 @@ namespace ModMyFactoryGUI.ViewModels
             }
         }
 
-        public IMainViewModel SelectedViewModel
+        public IMainViewModel? SelectedViewModel
         {
             get => _selectedViewModel;
             private set
@@ -108,7 +110,9 @@ namespace ModMyFactoryGUI.ViewModels
             }
         }
 
-        public FactorioInstanceViewModel SelectedFactorioInstance
+        public CollectionView<FactorioInstanceViewModel> FactorioInstances { get; }
+
+        public FactorioInstanceViewModel? SelectedFactorioInstance
         {
             get => _selectedFactorioInstance;
             set
@@ -116,7 +120,7 @@ namespace ModMyFactoryGUI.ViewModels
                 this.RaiseAndSetIfChanged(ref _selectedFactorioInstance, value, nameof(SelectedFactorioInstance));
 
                 if (value is null) Program.Settings.Remove(SettingName.SelectedInstance);
-                else Program.Settings.Set(SettingName.SelectedInstance, value.GetUniqueKey());
+                else Program.Settings.Set(SettingName.SelectedInstance, value.GetUniqueKey()!);
                 Program.Settings.Save();
             }
         }
@@ -134,6 +138,7 @@ namespace ModMyFactoryGUI.ViewModels
             UpdateCommand = ReactiveCommand.CreateFromTask(async () => await UpdateAsync(true));
 
             _downloadProgress = new Progress<(DownloadJob, double)>(OnDownloadProgressChanged);
+            DownloadDescription = string.Empty;
             DownloadQueue = new DownloadQueue(_downloadProgress);
             DownloadQueue.JobCompleted += OnDownloadJobCompleted;
             DownloadQueue.LengthChanged += OnDownloadQueueLengthChanged;
@@ -154,6 +159,24 @@ namespace ModMyFactoryGUI.ViewModels
                 this.RaisePropertyChanged(nameof(DownloadQueueLength));
             };
 
+            FactorioInstances = new CollectionView<FactorioInstanceViewModel>(FactorioViewModel.Instances, i => i.IsInstalled);
+            foreach (var instance in FactorioViewModel.Instances)
+            {
+                if (!instance.IsInstalled)
+                    instance.PropertyChanged += OnInstancePropertyChanged;
+            }
+            ((INotifyCollectionChanged)FactorioViewModel.Instances).CollectionChanged += (s, e) =>
+            {
+                if ((e.Action == NotifyCollectionChangedAction.Add) && !(e.NewItems is null))
+                {
+                    foreach (FactorioInstanceViewModel instance in e.NewItems)
+                    {
+                        if (!instance.IsInstalled)
+                            instance.PropertyChanged += OnInstancePropertyChanged;
+                    }
+                }
+            };
+
             if (Program.Settings.TryGet<string>(SettingName.SelectedInstance, out var key))
             {
                 foreach (var instance in FactorioViewModel.Instances)
@@ -169,14 +192,24 @@ namespace ModMyFactoryGUI.ViewModels
             {
                 _selectedFactorioInstance = FactorioViewModel.Instances.FirstOrDefault();
                 if (_selectedFactorioInstance is null) Program.Settings.Remove(SettingName.SelectedInstance);
-                else Program.Settings.Set(SettingName.SelectedInstance, _selectedFactorioInstance.GetUniqueKey());
+                else Program.Settings.Set(SettingName.SelectedInstance, _selectedFactorioInstance.GetUniqueKey()!);
                 Program.Settings.Save();
             }
 
-            Program.SyncContext.MessageReceived += MessageReceivedHandler;
+            Program.SyncContext!.MessageReceived += MessageReceivedHandler;
         }
 
-        private void OnDownloadQueueLengthChanged(object sender, EventArgs e)
+        private void OnInstancePropertyChanged(object? sender, PropertyChangedEventArgs e)
+        {
+            var instance = (FactorioInstanceViewModel)sender!;
+            if ((e.PropertyName == nameof(FactorioInstanceViewModel.IsInstalled)) && instance.IsInstalled)
+            {
+                instance.PropertyChanged -= OnInstancePropertyChanged;
+                FactorioInstances.Refresh();
+            }
+        }
+
+        private void OnDownloadQueueLengthChanged(object? sender, EventArgs e)
         {
             this.RaisePropertyChanged(nameof(DownloadQueueLength));
             this.RaisePropertyChanged(nameof(ShowDownloadQueueLength));
@@ -186,7 +219,7 @@ namespace ModMyFactoryGUI.ViewModels
         {
             if (!(SelectedFactorioInstance is null))
             {
-                var instance = SelectedFactorioInstance.Instance;
+                var instance = SelectedFactorioInstance.Instance!;
                 var modDir = Program.Locations.GetModDir(instance.Version);
                 if (!modDir.Exists) modDir.Create();
                 instance.Start(modDir);
@@ -214,7 +247,7 @@ namespace ModMyFactoryGUI.ViewModels
             await window.ShowDialog(AttachedView);
         }
 
-        private async Task<(bool, TagVersion, string, string)> PrepareUpdateAsync(bool includePrerelease, bool showResultMessage)
+        private async Task<(bool, TagVersion?, string?, string?)> PrepareUpdateAsync(bool includePrerelease, bool showResultMessage)
         {
             try
             {
@@ -225,7 +258,7 @@ namespace ModMyFactoryGUI.ViewModels
 
                 string title = (string)App.Current.Locales.GetResource("Update_Title");
                 string message = (string)App.Current.Locales.GetResource("UpdateSearch_Message");
-                await ProgressDialog.Show(title, message, Task.WhenAll(updateTask, changelogTask), AttachedView);
+                await ProgressDialog.Show(title, message, Task.WhenAll(updateTask, changelogTask), AttachedView!);
 
                 var (available, version, url) = updateTask.Result;
                 return (available, version, url, changelogTask.Result);
@@ -253,7 +286,7 @@ namespace ModMyFactoryGUI.ViewModels
 
                 string title = (string)App.Current.Locales.GetResource("Update_Title");
                 string message = (string)App.Current.Locales.GetResource("UpdateDownload_Message");
-                await ProgressDialog.Show(title, message, downloadTask, AttachedView);
+                await ProgressDialog.Show(title, message, downloadTask, AttachedView!);
                 return true;
             }
             catch (WebException ex)
@@ -278,25 +311,25 @@ namespace ModMyFactoryGUI.ViewModels
                 {
                     Log.Information("Found update version {0}", version);
 
-                    var vm = new UpdateWindowViewModel(version, changelog);
+                    var vm = new UpdateWindowViewModel(version!, changelog!);
                     var window = View.CreateAndAttach(vm);
                     await window.ShowDialog(AttachedView);
 
-                    string fileName = Path.Combine(Program.TemporaryDirectory.FullName, Path.GetFileName(url));
-                    if ((vm.DialogResult == DialogResult.Ok) && (await DownloadUpdateAsync(url, fileName)))
+                    string fileName = Path.Combine(Program.TemporaryDirectory.FullName, Path.GetFileName(url!));
+                    if ((vm.DialogResult == DialogResult.Ok) && (await DownloadUpdateAsync(url!, fileName)))
                     {
-                        var metaData = AssemblyMetadata.FromAssembly(Assembly.GetAssembly(typeof(App)));
-                        var resolver = new ManualPackageResolver(fileName, version);
+                        var metaData = AssemblyMetadata.FromAssembly(Assembly.GetAssembly(typeof(App))!);
+                        var resolver = new ManualPackageResolver(fileName, version!);
                         var updateManager = new UpdateManager(metaData, resolver, new ZipPackageExtractor());
 
                         var result = await updateManager.CheckForUpdatesAsync();
-                        await updateManager.PrepareUpdateAsync(result.LastVersion);
+                        await updateManager.PrepareUpdateAsync(result.LastVersion!);
                         string args = "--no-update";
                         if (!string.IsNullOrEmpty(Program.RestartArgs)) args += " " + Program.RestartArgs;
-                        updateManager.LaunchUpdater(result.LastVersion, true, args);
+                        updateManager.LaunchUpdater(result.LastVersion!, true, args);
 
                         Log.Information("Shutting down for update");
-                        AttachedView.Close();
+                        AttachedView!.Close();
                     }
                 }
                 else
@@ -323,16 +356,16 @@ namespace ModMyFactoryGUI.ViewModels
 
         private async Task AddModUpdateAsync(UpdateModJob job)
         {
-            var fileHash = await job.File.ComputeSHA1Async();
+            var fileHash = await job.File!.ComputeSHA1Async();
             var targetHash = job.Release.Checksum;
             if (fileHash == targetHash)
             {
-                var (success, mod) = await Mod.TryLoadAsync(job.File);
+                var (success, mod) = await Mod.TryLoadAsync(job.File!);
                 if (success)
                 {
                     // Mod successfully downloaded
-                    Program.Manager.AddMod(mod);
-                    Log.Information($"Mod {mod.Name} version {mod.Version} successfully loaded from mod portal");
+                    Program.Manager.AddMod(mod!);
+                    Log.Information($"Mod {mod!.Name} version {mod!.Version} successfully loaded from mod portal");
 
                     if (job.Replace)
                     {
@@ -359,7 +392,7 @@ namespace ModMyFactoryGUI.ViewModels
                             {
                                 Program.Manager.RemoveMod(other);
                                 other.Dispose();
-                                other.File.Delete();
+                                other.File?.Delete();
                             }
                         }
                     }
@@ -371,11 +404,11 @@ namespace ModMyFactoryGUI.ViewModels
             }
             else
             {
-                await Messages.FileIntegrityError(job.File, targetHash, fileHash).Show();
+                await Messages.FileIntegrityError(job.File!, targetHash, fileHash).Show();
             }
         }
 
-        private async void OnDownloadJobCompleted(object sender, JobCompletedEventArgs<DownloadJob> e)
+        private async void OnDownloadJobCompleted(object? sender, JobCompletedEventArgs<DownloadJob> e)
         {
             if (e.Job is UpdateModJob job)
                 await AddModUpdateAsync(job);
@@ -387,10 +420,12 @@ namespace ModMyFactoryGUI.ViewModels
             }
         }
 
-        private IMainViewModel GetViewModel(TabItem tab)
+        private IMainViewModel? GetViewModel(TabItem? tab)
         {
+            if (tab is null) return null;
+
             if (tab.Content is IMainView view)
-                return view.ViewModel;
+                return view.ViewModel!;
 
             // This shouldn't happen
             throw new ArgumentException("Tab does not contain a valid view", nameof(tab));
@@ -411,7 +446,7 @@ namespace ModMyFactoryGUI.ViewModels
             }
         }
 
-        private async void MessageReceivedHandler(object sender, MessageReceivedEventArgs e)
+        private async void MessageReceivedHandler(object? sender, MessageReceivedEventArgs e)
         {
             var parser = new Parser(config =>
             {
@@ -440,7 +475,7 @@ namespace ModMyFactoryGUI.ViewModels
         }
 #endif
 
-        private async void WindowOpenedHandler(object sender, EventArgs e)
+        private async void WindowOpenedHandler(object? sender, EventArgs e)
         {
             var args = Environment.GetCommandLineArgs();
 
@@ -461,7 +496,7 @@ namespace ModMyFactoryGUI.ViewModels
         protected override void OnViewChanged(EventArgs e)
         {
             base.OnViewChanged(e);
-            AttachedView.Opened += WindowOpenedHandler;
+            AttachedView!.Opened += WindowOpenedHandler;
         }
     }
 }

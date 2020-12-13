@@ -19,7 +19,7 @@ using System.Windows.Input;
 
 namespace ModMyFactoryGUI.ViewModels
 {
-    internal sealed class AboutWindowViewModel : ScreenBase<AboutWindow>, IWeakSubscriber<EventArgs>
+    internal sealed class AboutWindowViewModel : ViewModelBase<AboutWindow>, IWeakSubscriber<EventArgs>
     {
         public string Author => "Mathis Rech";
 
@@ -37,7 +37,7 @@ namespace ModMyFactoryGUI.ViewModels
         {
             WeakSubscriptionManager.Subscribe(App.Current.Locales, nameof(LocaleManager.UICultureChanged), this);
             AssemblyVersions = VersionStatistics.LoadedAssemblyVersions.Select(kvp => new AssemblyVersionViewModel(kvp.Key, kvp.Value.ToString()));
-            CloseCommand = ReactiveCommand.Create(() => AttachedView.Close());
+            CloseCommand = ReactiveCommand.Create(() => AttachedView!.Close());
 
             var changelogFile = new FileInfo(Path.Combine(Program.ApplicationDirectory.FullName, "Changelog.md"));
             Changelog = changelogFile.Exists ? File.ReadAllText(changelogFile.FullName) : string.Empty;

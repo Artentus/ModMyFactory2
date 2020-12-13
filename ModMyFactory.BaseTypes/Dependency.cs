@@ -7,6 +7,7 @@
 
 using Newtonsoft.Json;
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Text;
 using System.Text.RegularExpressions;
 
@@ -46,11 +47,11 @@ namespace ModMyFactory.BaseTypes
         /// </summary>
         protected virtual bool Matches(string modName, AccurateVersion modVersion)
         {
-            if (modName != ModName) return false;
+            if (string.Equals(modName, ModName, StringComparison.InvariantCulture)) return false;
             return Comparison.TestFor(modVersion, CompareVersion);
         }
 
-        public static bool TryParse(string value, out Dependency result)
+        public static bool TryParse(string? value, [NotNullWhen(true)] out Dependency? result)
         {
             result = null;
             if (string.IsNullOrWhiteSpace(value)) return false;
@@ -60,17 +61,17 @@ namespace ModMyFactory.BaseTypes
             if (value[0] == '!')
             {
                 type = DependencyType.Inverted;
-                value = value.Substring(1).TrimStart();
+                value = value[1..].TrimStart();
             }
             else if (value[0] == '?')
             {
                 type = DependencyType.Optional;
-                value = value.Substring(1).TrimStart();
+                value = value[1..].TrimStart();
             }
             else if (value.StartsWith("(?)"))
             {
                 type = DependencyType.Hidden;
-                value = value.Substring(3).TrimStart();
+                value = value[3..].TrimStart();
             }
             if (string.IsNullOrWhiteSpace(value)) return false;
 
@@ -94,7 +95,7 @@ namespace ModMyFactory.BaseTypes
             return true;
         }
 
-        public static Dependency Parse(string value)
+        public static Dependency Parse(string? value)
         {
             if (TryParse(value, out var result)) return result;
             else throw new FormatException();
@@ -139,7 +140,7 @@ namespace ModMyFactory.BaseTypes
             return sb.ToString();
         }
 
-        public bool Equals(Dependency other)
+        public bool Equals(Dependency? other)
         {
             if (other is null) return false;
 
@@ -149,7 +150,7 @@ namespace ModMyFactory.BaseTypes
                 && ((opA == DependencyOperator.None) || (this.CompareVersion == other.CompareVersion)); // If no comparison, version doesn't matter
         }
 
-        public override bool Equals(object obj) => Equals(obj as Dependency);
+        public override bool Equals(object? obj) => Equals(obj as Dependency);
 
         public override int GetHashCode()
         {

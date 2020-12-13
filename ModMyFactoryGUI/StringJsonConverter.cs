@@ -12,20 +12,20 @@ namespace ModMyFactoryGUI
 {
     internal abstract class StringJsonConverter<T> : ExtendedJsonConverter<T>
     {
-        protected abstract T Create(string token);
+        protected abstract T Create(string? token);
 
-        protected abstract string Tokenize(T value);
+        protected abstract string Tokenize(T? value);
 
         public override T CreateFromToken(object token)
             => Create((string)token);
 
-        public override T ReadJson(JsonReader reader, Type objectType, T existingValue, bool hasExistingValue, JsonSerializer serializer)
+        public override T ReadJson(JsonReader reader, Type objectType, T? existingValue, bool hasExistingValue, JsonSerializer serializer)
         {
-            string s = (string)reader.Value;
+            string? s = reader.Value as string;
             return Create(s);
         }
 
-        public override void WriteJson(JsonWriter writer, T value, JsonSerializer serializer)
+        public override void WriteJson(JsonWriter writer, T? value, JsonSerializer serializer)
         {
             string s = Tokenize(value);
             writer.WriteValue(s);

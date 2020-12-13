@@ -12,6 +12,7 @@ using Newtonsoft.Json.Linq;
 using Serilog;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -23,9 +24,9 @@ namespace ModMyFactoryGUI
     {
         private static readonly JsonSerializerSettings _settings;
         private readonly string _filePath;
-        private readonly IDictionary<string, object> _table;
+        private readonly IDictionary<string, object?> _table;
 
-        private SettingManager(string filePath, IDictionary<string, object> table)
+        private SettingManager(string filePath, IDictionary<string, object?> table)
             => (_filePath, _table) = (filePath, table);
 
         static SettingManager()
@@ -41,10 +42,10 @@ namespace ModMyFactoryGUI
         }
 
         public SettingManager(string filePath)
-            : this(filePath, new Dictionary<string, object>())
+            : this(filePath, new Dictionary<string, object?>())
         { }
 
-        private static bool TryLoad(string filePath, out SettingManager result)
+        private static bool TryLoad(string filePath, [NotNullWhen(true)] out SettingManager? result)
         {
             result = null;
             
@@ -53,8 +54,8 @@ namespace ModMyFactoryGUI
                 if (!File.Exists(filePath)) return false;
 
                 var json = File.ReadAllText(filePath);
-                var table = JsonConvert.DeserializeObject<IDictionary<string, object>>(json, _settings);
-                result = new SettingManager(filePath, table);
+                var table = JsonConvert.DeserializeObject<IDictionary<string, object?>>(json, _settings);
+                result = new SettingManager(filePath, table!);
                 return true;
             }
             catch (Exception ex)
@@ -64,7 +65,7 @@ namespace ModMyFactoryGUI
             }
         }
 
-        private static bool TryFindConverter(Type tokenType, Type targetType, out IExtendedJsonConverter converter)
+        private static bool TryFindConverter(Type tokenType, Type targetType, [NotNullWhen(true)] out IExtendedJsonConverter? converter)
         {
             foreach (var c in _settings.Converters)
             {
@@ -82,7 +83,7 @@ namespace ModMyFactoryGUI
             return false;
         }
 
-        private static T Cast<T>(object obj)
+        private static T? Cast<T>(object obj)
         {
             // First try to directly cast to the desired type
             if (obj is T result) return result;
@@ -116,7 +117,7 @@ namespace ModMyFactoryGUI
         public void Set(string key, object value)
             => _table[key] = value;
 
-        public object Get(string key, object defaultValue = default)
+        public object? Get(string key, object? defaultValue = default)
         {
             if (!_table.TryGetValue(key, out var value))
             {
@@ -126,20 +127,22 @@ namespace ModMyFactoryGUI
             return value;
         }
 
-        public T Get<T>(string key, T defaultValue = default)
+        public T? Get<T>(string key, T defaultValue = default)
         {
-            var obj = Get(key, (object)defaultValue);
+            var obj = Get(key, (object?)defaultValue);
+            if (obj is null) return defaultValue;
             return Cast<T>(obj);
         }
 
-        public bool TryGet(string key, out object result)
+        public bool TryGet(string key, out object? result)
             => _table.TryGetValue(key, out result);
 
-        public bool TryGet<T>(string key, out T result)
+        public bool TryGet<T>(string key, out T? result)
         {
-            if (TryGet(key, out object obj))
+            if (TryGet(key, out object? obj))
             {
-                result = Cast<T>(obj);
+                if (obj is null) result = default;
+                else result = Cast<T>(obj);
                 return true;
             }
             else

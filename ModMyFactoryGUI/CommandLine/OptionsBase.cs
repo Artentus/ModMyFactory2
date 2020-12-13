@@ -18,9 +18,9 @@ namespace ModMyFactoryGUI.CommandLine
         public bool NoLog { get; }
 
         [Option('a', "app-data", HelpText = "Overrides the application data path")]
-        public string AppDataPath { get; }
+        public string? AppDataPath { get; }
 
-        protected OptionsBase(bool verbose, bool noLog, string appDataPath)
+        protected OptionsBase(bool verbose, bool noLog, string? appDataPath)
             => (Verbose, NoLog, AppDataPath) = (verbose, noLog, appDataPath);
     }
 }

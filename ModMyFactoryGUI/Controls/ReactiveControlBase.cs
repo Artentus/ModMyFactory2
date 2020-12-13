@@ -11,12 +11,12 @@ using ReactiveUI;
 
 namespace ModMyFactoryGUI.Controls
 {
-    internal abstract class ReactiveControlBase<T> : ReactiveUserControl<T>, IView<T> where T : class, IRoutableViewModel
+    internal abstract class ReactiveControlBase<T> : ReactiveUserControl<T?>, IView<T> where T : class, IReactiveObject
     {
-        object IView.ViewModel
+        object? IView.ViewModel
         {
             get => ViewModel;
-            set => ViewModel = (T)value;
+            set => ViewModel = value as T;
         }
     }
 }

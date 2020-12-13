@@ -7,6 +7,7 @@ using Avalonia.Markup.Xaml.Styling;
 using Avalonia.Styling;
 using ReactiveUI;
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 
 namespace Avalonia.ThemeManager
@@ -64,7 +65,7 @@ namespace Avalonia.ThemeManager
         /// <param name="file">The XAML file containing the style definition.</param>
         /// <param name="theme">Out. The loaded theme or null if the file could not be loaded.</param>
         /// <returns>Returns true if the file was successfully loaded, otherwise false.</returns>
-        public static bool TryLoad(FileInfo file, out ITheme theme)
+        public static bool TryLoad(FileInfo file, [NotNullWhen(true)] out ITheme? theme)
         {
             theme = default;
             if ((file is null) || !file.Exists) return false;
@@ -92,7 +93,7 @@ namespace Avalonia.ThemeManager
         /// <param name="filePath">Path to the XAML file containing the style definition.</param>
         /// <param name="theme">Out. The loaded theme or null if the file could not be loaded.</param>
         /// <returns>Returns true if the file was successfully loaded, otherwise false.</returns>
-        public static bool TryLoad(string filePath, out ITheme theme)
+        public static bool TryLoad(string filePath, [NotNullWhen(true)] out ITheme? theme)
             => TryLoad(new FileInfo(filePath), out theme);
 
         /// <summary>

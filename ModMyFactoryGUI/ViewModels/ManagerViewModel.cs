@@ -24,6 +24,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Threading;
@@ -141,6 +142,8 @@ namespace ModMyFactoryGUI.ViewModels
             _downloadQueue = downloadQueue;
             _modVersionGroupings = new ObservableCollection<ModVersionGroupingViewModel>();
             _modpacks = new ObservableCollection<ModpackViewModel>();
+            _modFilter = string.Empty;
+            _modpackFilter = string.Empty;
 
             foreach (var modManager in Program.Manager.ModManagers)
             {
@@ -187,7 +190,7 @@ namespace ModMyFactoryGUI.ViewModels
             return modpack.MatchesSearch;
         }
 
-        private void OnModManagerCreated(object sender, ModManagerCreatedEventArgs e)
+        private void OnModManagerCreated(object? sender, ModManagerCreatedEventArgs e)
         {
             var vm = new ModVersionGroupingViewModel(e.ModManager);
             vm.FamilyViewModels.CollectionChanged += OnVersionGroupingCollectionChanged;
@@ -196,7 +199,7 @@ namespace ModMyFactoryGUI.ViewModels
             _modVersionGroupings.Add(vm);
         }
 
-        private bool TryGetViewModel(Modpack modpack, out ModpackViewModel result)
+        private bool TryGetViewModel(Modpack modpack, [NotNullWhen(true)] out ModpackViewModel? result)
         {
             foreach (var vm in _modpacks)
             {
@@ -225,7 +228,7 @@ namespace ModMyFactoryGUI.ViewModels
             this.RaisePropertyChanged(nameof(AllModpacksEnabled));
         }
 
-        private void OnFamilyPropertyChanged(object sender, PropertyChangedEventArgs e)
+        private void OnFamilyPropertyChanged(object? sender, PropertyChangedEventArgs e)
         {
             if (e.PropertyName == nameof(ModFamilyViewModel.IsEnabled))
             {
@@ -233,29 +236,35 @@ namespace ModMyFactoryGUI.ViewModels
             }
         }
 
-        private void OnVersionGroupingCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        private void OnVersionGroupingCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
         {
             switch (e.Action)
             {
                 case NotifyCollectionChangedAction.Add:
-                    foreach (ModFamilyViewModel vm in e.NewItems)
-                        vm.PropertyChanged += OnFamilyPropertyChanged;
+                    if (!(e.NewItems is null))
+                    {
+                        foreach (ModFamilyViewModel vm in e.NewItems)
+                            vm.PropertyChanged += OnFamilyPropertyChanged;
+                    }
                     break;
 
                 case NotifyCollectionChangedAction.Remove:
-                    foreach (ModFamilyViewModel vm in e.OldItems)
-                        vm.PropertyChanged -= OnFamilyPropertyChanged;
+                    if (!(e.OldItems is null))
+                    {
+                        foreach (ModFamilyViewModel vm in e.OldItems)
+                            vm.PropertyChanged -= OnFamilyPropertyChanged;
+                    }
                     break;
             }
 
             EvaluateModEnabledStates();
         }
 
-        private void OnModpackPropertyChanged(object sender, PropertyChangedEventArgs e)
+        private void OnModpackPropertyChanged(object? sender, PropertyChangedEventArgs e)
         {
             if (e.PropertyName == nameof(ModpackViewModel.IsRenaming))
             {
-                var vm = (ModpackViewModel)sender;
+                var vm = (ModpackViewModel)sender!;
                 if (!vm.IsRenaming) Modpacks.Refresh();
             }
             else if (e.PropertyName == nameof(ModpackViewModel.Enabled))
@@ -285,12 +294,12 @@ namespace ModMyFactoryGUI.ViewModels
             }
         }
 
-        private void OnModpackCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        private void OnModpackCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
         {
             switch (e.Action)
             {
                 case NotifyCollectionChangedAction.Add:
-                    if (!_isAdding)
+                    if (!_isAdding && !(e.NewItems is null))
                     {
                         foreach (Modpack modpack in e.NewItems)
                             OnModpackAdded(modpack, out _);
@@ -298,7 +307,7 @@ namespace ModMyFactoryGUI.ViewModels
                     break;
 
                 case NotifyCollectionChangedAction.Remove:
-                    if (!_isRemoving)
+                    if (!_isRemoving && !(e.OldItems is null))
                     {
                         foreach (Modpack modpack in e.OldItems)
                             OnModpackRemoved(modpack);
@@ -360,7 +369,7 @@ namespace ModMyFactoryGUI.ViewModels
 
                 foreach (var family in modManager.Families)
                 {
-                    if (cancellationToken.IsCancellationRequested) return null;
+                    if (cancellationToken.IsCancellationRequested) return new Dictionary<AccurateVersion, List<ModUpdateInfo>>();
                     progress.Report((double)familyIndex / (double)familyCount);
                     familyIndex++;
 
@@ -369,7 +378,7 @@ namespace ModMyFactoryGUI.ViewModels
                     if (!latest.HasValue) continue; // Silently skip in case the local version of a mod does not exist on the portal
 
                     // The default mod is also always the one with the highest version
-                    if (latest.Value.Version > family.GetDefaultMod().Version)
+                    if (latest.Value.Version > family.GetDefaultMod()!.Version)
                     {
                         // Update available
                         list.Add(new ModUpdateInfo(family, latest.Value));
@@ -436,14 +445,14 @@ namespace ModMyFactoryGUI.ViewModels
         private async Task DeleteModFamily(ModFamily family)
         {
             var title = (string)App.Current.Locales.GetResource("DeleteConfirm_Title");
-            var message = string.Format((string)App.Current.Locales.GetResource("DeleteConfirm_Mod_Message"), family.DisplayName, family.EnabledMod.Version);
+            var message = string.Format((string)App.Current.Locales.GetResource("DeleteConfirm_Mod_Message"), family.DisplayName, family.EnabledMod!.Version);
             var result = await MessageBox.Show(title, message, MessageKind.Question, DialogOptions.YesNo);
             if (result == DialogResult.Yes)
             {
                 var mod = family.EnabledMod;
                 Program.Manager.RemoveMod(mod);
                 mod.Dispose();
-                mod.File.Delete();
+                mod.File?.Delete();
             }
         }
 
@@ -456,7 +465,7 @@ namespace ModMyFactoryGUI.ViewModels
             OnModpackAdded(modpack, out var vm);
 
             vm.IsRenaming = true;
-            AttachedView.ScrollModpackIntoView(vm);
+            AttachedView!.ScrollModpackIntoView(vm);
 
             _isAdding = false;
         }
@@ -482,7 +491,7 @@ namespace ModMyFactoryGUI.ViewModels
             var (success, modFile) = await ModFile.TryLoadAsync(path);
             if (success)
             {
-                await ImportModFileAsync(modFile);
+                await ImportModFileAsync(modFile!);
             }
             else
             {

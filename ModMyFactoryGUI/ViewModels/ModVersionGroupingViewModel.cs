@@ -7,7 +7,6 @@
 
 using ModMyFactory.BaseTypes;
 using ModMyFactory.Mods;
-using ModMyFactoryGUI.Helpers;
 using ReactiveUI;
 using System;
 using System.Collections.Generic;
@@ -19,12 +18,24 @@ namespace ModMyFactoryGUI.ViewModels
     {
         private sealed class FamilyComparer : IComparer<ModFamilyViewModel>
         {
-            public int Compare(ModFamilyViewModel first, ModFamilyViewModel second)
+            public int Compare(ModFamilyViewModel? first, ModFamilyViewModel? second)
             {
-                // Search score always takes precendence over the default alphabeticaal sorting
-                int result = second.SearchScore.CompareTo(first.SearchScore);
-                if (result == 0) result = first.DisplayName.CompareTo(second.DisplayName);
-                return result;
+                if (first is null)
+                {
+                    if (second is null) return 0;
+                    else return int.MinValue;
+                }
+                else if (second is null)
+                {
+                    return int.MaxValue;
+                }
+                else
+                {
+                    // Search score always takes precendence over the default alphabeticaal sorting
+                    int result = second.SearchScore.CompareTo(first.SearchScore);
+                    if (result == 0) result = first.DisplayName.CompareTo(second.DisplayName);
+                    return result;
+                }
             }
         }
 
@@ -69,6 +80,7 @@ namespace ModMyFactoryGUI.ViewModels
         public ModVersionGroupingViewModel(ModManager manager)
         {
             _manager = manager;
+            _filter = string.Empty;
 
             _familyViewModels = new ObservableDictionary<string, ModFamilyViewModel>();
             FamilyViewModels = new CollectionView<ModFamilyViewModel>(_familyViewModels.Values, new FamilyComparer(), FilterFamily);
@@ -87,40 +99,46 @@ namespace ModMyFactoryGUI.ViewModels
             return family.MatchesSearch;
         }
 
-        private void OnModCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        private void OnModCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
         {
             switch (e.Action)
             {
                 case NotifyCollectionChangedAction.Add:
-                    foreach (Mod mod in e.NewItems)
+                    if (!(e.NewItems is null))
                     {
-                        // If the newly added mod is part of a new family we need to add a new view model
-                        if (!_familyViewModels.ContainsKey(mod.Name))
+                        foreach (Mod mod in e.NewItems)
                         {
-                            if (_manager.TryGetFamily(mod.Name, out var family))
+                            // If the newly added mod is part of a new family we need to add a new view model
+                            if (!_familyViewModels.ContainsKey(mod.Name))
                             {
-                                var vm = new ModFamilyViewModel(_manager, family);
-                                _familyViewModels.Add(family.FamilyName, vm);
-                            }
-                            else
-                            {
-                                // Assuming the code works this will never be reached
-                                throw new InvalidOperationException();
+                                if (_manager.TryGetFamily(mod.Name, out var family))
+                                {
+                                    var vm = new ModFamilyViewModel(_manager, family);
+                                    _familyViewModels.Add(family.FamilyName, vm);
+                                }
+                                else
+                                {
+                                    // Assuming the code works this will never be reached
+                                    throw new InvalidOperationException();
+                                }
                             }
                         }
                     }
                     break;
 
                 case NotifyCollectionChangedAction.Remove:
-                    foreach (Mod mod in e.OldItems)
+                    if (!(e.OldItems is null))
                     {
-                        // If the removed mod was the last mod in its family we need to remove the view model
-                        if (_familyViewModels.ContainsKey(mod.Name))
+                        foreach (Mod mod in e.OldItems)
                         {
-                            if (!_manager.TryGetFamily(mod.Name, out var family) || family.Count == 0)
+                            // If the removed mod was the last mod in its family we need to remove the view model
+                            if (_familyViewModels.ContainsKey(mod.Name))
                             {
-                                if (_familyViewModels.Remove(mod.Name, out var vm))
-                                    vm.Dispose();
+                                if (!_manager.TryGetFamily(mod.Name, out var family) || family.Count == 0)
+                                {
+                                    if (_familyViewModels.Remove(mod.Name, out var vm))
+                                        vm.Dispose();
+                                }
                             }
                         }
                     }

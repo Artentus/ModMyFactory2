@@ -40,7 +40,7 @@ the Free Software Foundation, either version 3 of the License, or
     <!-- Toolbar -->
     <Grid DockPanel.Dock="Top" ColumnDefinitions="Auto,Auto,*">
       <ComboBox Grid.Column="0" Margin="8" Width="250" FontSize="{DynamicResource FontSizeMedium}"
-                Items="{Binding FactorioViewModel.Instances}" SelectedItem="{Binding SelectedFactorioInstance, Mode=TwoWay}">
+                Items="{Binding FactorioInstances}" SelectedItem="{Binding SelectedFactorioInstance, Mode=TwoWay}">
         <ComboBox.ItemTemplate>
           <DataTemplate DataType="{x:Type models:FactorioInstanceViewModel}">
             <Grid ColumnDefinitions="Auto,Auto">
