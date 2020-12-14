@@ -399,7 +399,7 @@ namespace ModMyFactoryGUI.ViewModels
                 }
                 else
                 {
-                    await Messages.InvalidModFile(job.File).Show();
+                    await Messages.InvalidModFile(job.File!).Show();
                 }
             }
             else

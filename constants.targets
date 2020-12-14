@@ -3,9 +3,10 @@
     <PropertyGroup>
         <LangVersion>9.0</LangVersion>
         <Nullable>enable</Nullable>
+        <NoWarn>1591</NoWarn>
         <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     </PropertyGroup>
-    
+
     <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
         <DefineConstants>$(DefineConstants);DEBUG</DefineConstants>
     </PropertyGroup>

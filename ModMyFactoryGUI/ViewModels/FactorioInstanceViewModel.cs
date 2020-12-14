@@ -290,7 +290,7 @@ namespace ModMyFactoryGUI.ViewModels
                 {
                     for (int i = paths.Count - 1; i >= 0; i--)
                     {
-                        if (FileHelper.PathsEqual(paths[i], _instance.Directory.FullName))
+                        if (FileHelper.PathsEqual(paths[i], _instance!.Directory.FullName))
                         {
                             paths.RemoveAt(i);
                             Program.Settings.Set(SettingName.ExternalInstances, paths);
@@ -310,7 +310,7 @@ namespace ModMyFactoryGUI.ViewModels
             // ToDo: ask user
             OnInstanceRemoved(EventArgs.Empty);
             _manager.RemoveInstance(_instance);
-            _instance.Dispose();
+            _instance!.Dispose();
             _instance.Directory.Delete(true);
         }
 
