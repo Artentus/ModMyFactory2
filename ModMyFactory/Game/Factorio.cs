@@ -72,7 +72,7 @@ namespace ModMyFactory.Game
         /// <summary>
         /// Tries to load a Factorio instance
         /// </summary>
-        /// <param name="directory">The path the instance is stored at</param>
+        /// <param name="path">The path the instance is stored at</param>
         public static async Task<(bool, IFactorioInstance?)> TryLoadAsync(string path)
         {
             var dir = new DirectoryInfo(path);
@@ -95,7 +95,7 @@ namespace ModMyFactory.Game
         /// <summary>
         /// Loads a Factorio instance
         /// </summary>
-        /// <param name="directory">The path the instance is stored at</param>
+        /// <param name="path">The path the instance is stored at</param>
         public static async Task<IFactorioInstance> LoadAsync(string path)
         {
             var dir = new DirectoryInfo(path);
