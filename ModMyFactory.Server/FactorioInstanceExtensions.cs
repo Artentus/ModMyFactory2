@@ -27,7 +27,7 @@ namespace ModMyFactory.Server
         /// Optional command line arguments
         /// </param>
         /// <returns></returns>
-        public static Process StartServer(this IFactorioInstance instance, FileInfo savegameFile, ServerStartOptions startOptions, DirectoryInfo modDirectory = null, params string[] arguments)
+        public static Process StartServer(this IFactorioInstance instance, FileInfo savegameFile, ServerStartOptions startOptions, DirectoryInfo? modDirectory = null, params string[] arguments)
         {
             if (savegameFile is null) throw new ArgumentNullException(nameof(savegameFile));
             if (startOptions is null) throw new ArgumentNullException(nameof(startOptions));

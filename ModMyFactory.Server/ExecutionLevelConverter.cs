@@ -14,7 +14,7 @@ namespace ModMyFactory.Server
     {
         public override ExecutionLevel ReadJson(JsonReader reader, Type objectType, ExecutionLevel existingValue, bool hasExistingValue, JsonSerializer serializer)
         {
-            var enumString = (string)reader.Value;
+            var enumString = reader.Value as string;
 
             return enumString switch
             {

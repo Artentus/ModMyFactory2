@@ -6,6 +6,7 @@
 //  (at your option) any later version.
 
 using Newtonsoft.Json;
+using System;
 using System.ComponentModel;
 using System.IO;
 using System.Text;
@@ -29,21 +30,21 @@ namespace ModMyFactory.Server
         /// </summary>
         [JsonProperty("name")]
         [DefaultValue("")]
-        public string Name { get; set; }
+        public string Name { get; set; } = string.Empty;
 
         /// <summary>
         /// Description of the game as it will appear in the listing
         /// </summary>
         [JsonProperty("description")]
         [DefaultValue("")]
-        public string Description { get; set; }
+        public string Description { get; set; } = string.Empty;
 
         /// <summary>
         /// Tags of the game as they will appear in the listing
         /// </summary>
         [JsonProperty("tags")]
         [DefaultValue(new string[0])]
-        public string[] Tags { get; set; }
+        public string[] Tags { get; set; } = Array.Empty<string>();
 
         /// <summary>
         /// Maximum number of players allowed<br/>
@@ -66,7 +67,7 @@ namespace ModMyFactory.Server
         /// </summary>
         [JsonProperty("username")]
         [DefaultValue("")]
-        public string Username { get; set; }
+        public string Username { get; set; } = string.Empty;
 
         /// <summary>
         /// Valid factorio.com password<br/>
@@ -74,7 +75,7 @@ namespace ModMyFactory.Server
         /// </summary>
         [JsonProperty("password")]
         [DefaultValue("")]
-        public string Password { get; set; }
+        public string Password { get; set; } = string.Empty;
 
         /// <summary>
         /// Authentication token<br/>
@@ -82,7 +83,7 @@ namespace ModMyFactory.Server
         /// </summary>
         [JsonProperty("token")]
         [DefaultValue("")]
-        public string AuthToken { get; set; }
+        public string AuthToken { get; set; } = string.Empty;
 
         /// <summary>
         /// Password required to join the game<br/>
@@ -90,7 +91,7 @@ namespace ModMyFactory.Server
         /// </summary>
         [JsonProperty("game_password")]
         [DefaultValue("")]
-        public string GamePassword { get; set; }
+        public string GamePassword { get; set; } = string.Empty;
 
         /// <summary>
         /// If true, the server will only allow clients that are logged in with a valid factorio.com account

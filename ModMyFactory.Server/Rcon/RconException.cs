@@ -14,7 +14,7 @@ namespace ModMyFactory.Server.Rcon
     /// </summary>
     public class RconException : Exception
     {
-        public RconException(string message, Exception innerException = null)
+        public RconException(string message, Exception? innerException = null)
             : base(message, innerException)
         { }
     }
@@ -26,7 +26,7 @@ namespace ModMyFactory.Server.Rcon
         /// </summary>
         public int Id { get; }
 
-        public PacketIdException(int id, Exception innerException = null)
+        public PacketIdException(int id, Exception? innerException = null)
             : base("Invalid packet ID", innerException)
             => Id = id;
     }
@@ -38,7 +38,7 @@ namespace ModMyFactory.Server.Rcon
         /// </summary>
         public Packet Packet { get; }
 
-        public PacketTypeException(Packet packet, Exception innerException = null)
+        public PacketTypeException(Packet packet, Exception? innerException = null)
             : base("Invalid packet type", innerException)
             => Packet = packet;
     }

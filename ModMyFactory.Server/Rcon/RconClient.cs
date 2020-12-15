@@ -19,7 +19,7 @@ namespace ModMyFactory.Server.Rcon
     {
         private readonly TcpClient _tcpClient;
         private readonly SemaphoreSlim _syncSemaphore;
-        private NetworkStream _stream;
+        private NetworkStream? _stream;
         private int _currentId;
 
         /// <summary>
@@ -37,7 +37,7 @@ namespace ModMyFactory.Server.Rcon
         // Wait for a packet with a specific ID
         private async Task<Packet> WaitForResponseAsync(int id, int timeout)
         {
-            _stream.ReadTimeout = timeout;
+            _stream!.ReadTimeout = timeout;
 
             // We wait until we receive more data using polling
             while (true)
@@ -56,7 +56,7 @@ namespace ModMyFactory.Server.Rcon
         // Wait for the next packet
         private async Task<Packet> WaitForNextResponseAsync(int timeout)
         {
-            _stream.ReadTimeout = timeout;
+            _stream!.ReadTimeout = timeout;
 
             // We wait until we receive more data using polling
             while (true)
@@ -102,7 +102,7 @@ namespace ModMyFactory.Server.Rcon
             await _syncSemaphore.WaitAsync();
             try
             {
-                await _stream.WriteAsync(packet);
+                await _stream!.WriteAsync(packet);
                 return await WaitForResponseAsync(packet.Id, timeout);
             }
             finally
@@ -120,7 +120,7 @@ namespace ModMyFactory.Server.Rcon
             await _syncSemaphore.WaitAsync();
             try
             {
-                await _stream.WriteAsync(packet);
+                await _stream!.WriteAsync(packet);
 
                 // When authenticating we have to wait for two responses
                 // The first is a normal response containing the ID
@@ -164,7 +164,7 @@ namespace ModMyFactory.Server.Rcon
             {
                 _syncSemaphore.Wait();
 
-                _stream.Close();
+                _stream?.Close();
                 _tcpClient.Close();
 
                 _syncSemaphore.Release();

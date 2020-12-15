@@ -23,7 +23,7 @@ namespace ModMyFactory.Server
         /// <summary>
         /// IP address (and optionally port) to bind to
         /// </summary>
-        public BindingTarget BindingTarget { get; set; }
+        public BindingTarget? BindingTarget { get; set; }
 
         /// <summary>
         /// Port to use for RCON
@@ -33,17 +33,17 @@ namespace ModMyFactory.Server
         /// <summary>
         /// IP address and port to use for RCON
         /// </summary>
-        public BindingTarget RconBindingTarget { get; set; }
+        public BindingTarget? RconBindingTarget { get; set; }
 
         /// <summary>
         /// Password for RCON
         /// </summary>
-        public string RconPassword { get; set; }
+        public string? RconPassword { get; set; }
 
         /// <summary>
         /// File with server settings
         /// </summary>
-        public FileInfo SettingsFile { get; set; }
+        public FileInfo? SettingsFile { get; set; }
 
         /// <summary>
         /// If the whitelist should be used
@@ -53,27 +53,27 @@ namespace ModMyFactory.Server
         /// <summary>
         /// File with server whitelist
         /// </summary>
-        public FileInfo WhitelistFile { get; set; }
+        public FileInfo? WhitelistFile { get; set; }
 
         /// <summary>
         /// File with server banlist
         /// </summary>
-        public FileInfo BanlistFile { get; set; }
+        public FileInfo? BanlistFile { get; set; }
 
         /// <summary>
         /// File with server adminlist
         /// </summary>
-        public FileInfo AdminlistFile { get; set; }
+        public FileInfo? AdminlistFile { get; set; }
 
         /// <summary>
         /// File where a copy of the server's log will be stored
         /// </summary>
-        public FileInfo ConsoleLogFile { get; set; }
+        public FileInfo? ConsoleLogFile { get; set; }
 
         /// <summary>
         /// File where server ID will be stored to or read from
         /// </summary>
-        public FileInfo ServerIdFile { get; set; }
+        public FileInfo? ServerIdFile { get; set; }
 
         internal List<string> ToArgs(FileInfo savegameFile)
         {

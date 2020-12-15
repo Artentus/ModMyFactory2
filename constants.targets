@@ -3,7 +3,7 @@
     <PropertyGroup>
         <LangVersion>9.0</LangVersion>
         <Nullable>enable</Nullable>
-        <NoWarn>1591</NoWarn>
+        <NoWarn>1591;1573</NoWarn>
         <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     </PropertyGroup>
 
