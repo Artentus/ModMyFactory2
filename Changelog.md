@@ -1,3 +1,9 @@
+### Beta 4.2
+
+- Switch to .Net 5.0
+- Add option to view mods online from manager
+
+
 ### Beta 4.1.2
 
 - Add Brazilian Portuguese translation (thanks Mobius One)

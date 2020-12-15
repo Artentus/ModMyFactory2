@@ -51,13 +51,18 @@ the Free Software Foundation, either version 3 of the License, or
 
       <!-- Title -->
       <Border Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="0" Background="{DynamicResource ThemeAccentBrush2}">
-        <TextBlock Margin="8,1,8,4" Classes="h1" Text="{Binding DisplayName}" />
+        <StackPanel Orientation="Horizontal">
+          <TextBlock Margin="8,1,8,4" Classes="h1" Text="{Binding DisplayName}" />
+          <TextBlock Margin="0,1,0,4" Classes="h1" Text=" " />
+        </StackPanel>
       </Border>
 
       <!-- Author -->
-      <TextBlock Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="1" Margin="8,2" Classes="h3 muted"
-                 Text="{Binding Author, Converter={StaticResource LocalizedFormatter}, ConverterParameter=AuthorFormat}" />
-
+      <StackPanel Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="1" Orientation="Horizontal">
+        <TextBlock Margin="8,2" Classes="h3 muted" Text="{Binding Author, Converter={StaticResource LocalizedFormatter}, ConverterParameter=AuthorFormat}" />
+        <TextBlock Margin="0,2" Classes="h3" Text=" " />
+      </StackPanel>
+      
       <!-- Homepage -->
       <TextBlock Grid.Column="0" Grid.Row="3" Margin="16,0,8,1" Text="{l:LocalizedResource HomepageHeader}" />
       <controls:HyperLink Grid.Column="1" Grid.Row="3" Text="{Binding Homepage}" IsVisible="{Binding HasHomepage}" Url="{Binding Homepage}" />
