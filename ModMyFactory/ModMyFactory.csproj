@@ -24,15 +24,15 @@
   
   <ItemGroup Condition="'$(Configuration)' == 'Debug'">
     <ProjectReference Include="..\ModMyFactory.BaseTypes\ModMyFactory.BaseTypes.csproj" />
-    <ProjectReference Include="..\ModMyFactory.Localization\ModMyFactory.Localization.csproj" />
-    <ProjectReference Include="..\ModMyFactory.ModSettings\ModMyFactory.ModSettings.csproj" />
+    <!-- <ProjectReference Include="..\ModMyFactory.Localization\ModMyFactory.Localization.csproj" /> -->
+    <!-- <ProjectReference Include="..\ModMyFactory.ModSettings\ModMyFactory.ModSettings.csproj" /> -->
     <ProjectReference Include="..\ModMyFactory.Win32\ModMyFactory.Win32.csproj" />
   </ItemGroup>
   
   <ItemGroup Condition="'$(Configuration)' == 'Release'">
     <PackageReference Include="ModMyFactory.BaseTypes" Version="1.*-*" />
-    <PackageReference Include="ModMyFactory.Localization" Version="1.*-*" />
-    <PackageReference Include="ModMyFactory.ModSettings" Version="1.*-*" />
+    <!-- <PackageReference Include="ModMyFactory.Localization" Version="1.*-*" /> -->
+    <!-- <PackageReference Include="ModMyFactory.ModSettings" Version="1.*-*" /> -->
     <PackageReference Include="ModMyFactory.Win32" Version="1.*-*" />
   </ItemGroup>
 
