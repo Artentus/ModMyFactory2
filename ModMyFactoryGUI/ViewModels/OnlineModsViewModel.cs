@@ -7,14 +7,18 @@
 
 using ModMyFactory;
 using ModMyFactory.BaseTypes;
+using ModMyFactory.Mods;
 using ModMyFactory.WebApi;
 using ModMyFactory.WebApi.Mods;
+using ModMyFactoryGUI.Helpers;
 using ModMyFactoryGUI.Tasks.Web;
 using ModMyFactoryGUI.Views;
 using ReactiveUI;
 using Serilog;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Input;
 
@@ -24,11 +28,13 @@ namespace ModMyFactoryGUI.ViewModels
     {
         private readonly Manager _manager;
         private readonly DownloadQueue _downloadQueue;
+        private readonly AutoResetEvent _refreshEvent;
         private ICollection<OnlineModViewModel>? _onlineMods;
         private ModComparer _selectedComparer;
         private AccurateVersion _selectedFactorioVersion;
         private OnlineModViewModel? _selectedMod;
         private string _filter;
+        private volatile bool _refreshing = false;
 
         public bool ModsLoaded { get; private set; }
 
@@ -121,10 +127,12 @@ namespace ModMyFactoryGUI.ViewModels
             }
         }
 
-        public OnlineModsViewModel(Manager manager, DownloadQueue downloadQueue)
+        public OnlineModsViewModel(int tabIndex, Manager manager, DownloadQueue downloadQueue)
+            : base(tabIndex)
         {
             _manager = manager;
             _downloadQueue = downloadQueue;
+            _refreshEvent = new AutoResetEvent(false);
             _filter = string.Empty;
             ErrorMessageKey = string.Empty;
             RefreshCommand = ReactiveCommand.CreateFromTask(RefreshOnlineModsAsync);
@@ -159,6 +167,38 @@ namespace ModMyFactoryGUI.ViewModels
             Refresh();
 
             PropertyChanged += async (s, e) => await OnPropertyChanged(s, e);
+        }
+
+        public async ValueTask BrowseModFamilyAsync(ModFamily family)
+        {
+            Filter = string.Empty;
+
+            if (!ModsLoaded)
+            {
+                if (_refreshing)
+                {
+                    await _refreshEvent.WaitOneAsync();
+                }
+                else
+                {
+                    await RefreshOnlineModsAsync();
+                }
+                
+            }
+
+            if (!LoadingErrorOccurred)
+            {
+                var mod = _onlineMods!.FirstOrDefault(vm => vm.Info.Name == family.FamilyName);
+                if (mod is null)
+                {
+                    // ToDo: show message
+                }
+                else
+                {
+                    SelectedMod = mod;
+                    AttachedView!.ScrollModIntoView(mod);
+                }
+            }
         }
 
         private async Task OnPropertyChanged(object? sender, PropertyChangedEventArgs e)
@@ -224,6 +264,10 @@ namespace ModMyFactoryGUI.ViewModels
 
         private async Task RefreshOnlineModsAsync()
         {
+            if (_refreshing) return;
+
+            _refreshEvent.Reset();
+            _refreshing = true;
             ModsLoaded = false;
             this.RaisePropertyChanged(nameof(ModsLoaded));
             LoadingErrorOccurred = false;
@@ -280,6 +324,9 @@ namespace ModMyFactoryGUI.ViewModels
 
             ModsLoaded = true;
             this.RaisePropertyChanged(nameof(ModsLoaded));
+
+            _refreshing = false;
+            _refreshEvent.Set();
         }
     }
 }

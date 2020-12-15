@@ -92,7 +92,9 @@ namespace ModMyFactoryGUI.ViewModels
                 {
                     _selectedTab = value;
                     this.RaisePropertyChanged(nameof(SelectedTab));
-                    SelectedViewModel = GetViewModel(_selectedTab);
+
+                    _selectedViewModel = GetViewModel(_selectedTab);
+                    this.RaisePropertyChanged(nameof(SelectedViewModel));
                 }
             }
         }
@@ -106,6 +108,9 @@ namespace ModMyFactoryGUI.ViewModels
                 {
                     _selectedViewModel = value;
                     this.RaisePropertyChanged(nameof(SelectedViewModel));
+
+                    _selectedTab = GetTab(_selectedViewModel);
+                    this.RaisePropertyChanged(nameof(SelectedTab));
                 }
             }
         }
@@ -145,12 +150,16 @@ namespace ModMyFactoryGUI.ViewModels
             DownloadQueue.StartQueue();
             App.ShuttingDown += (sender, e) => DownloadQueue.StopQueue();
 
-            ManagerViewModel = new ManagerViewModel(DownloadQueue);
-            FactorioViewModel = new FactorioViewModel(DownloadQueue);
-            OnlineModsViewModel = new OnlineModsViewModel(Program.Manager, DownloadQueue);
-            ExportViewModel = new ExportViewModel();
-            SettingsViewModel = new SettingsViewModel(DownloadQueue);
-            SelectedViewModel = ManagerViewModel;
+            ManagerViewModel = new ManagerViewModel(0, DownloadQueue);
+            OnlineModsViewModel = new OnlineModsViewModel(1, Program.Manager, DownloadQueue);
+            FactorioViewModel = new FactorioViewModel(2, DownloadQueue);
+            ExportViewModel = new ExportViewModel(3);
+            SettingsViewModel = new SettingsViewModel(4, DownloadQueue);
+            ManagerViewModel.BrowseModFamilyRequested += async (sender, e) =>
+            {
+                SelectedViewModel = OnlineModsViewModel;
+                await OnlineModsViewModel.BrowseModFamilyAsync(e.Family);
+            };
 
             // Properties don't actually change but we need to refresh the formatters
             App.Current.Locales.UICultureChanged += (sender, e) =>
@@ -429,6 +438,14 @@ namespace ModMyFactoryGUI.ViewModels
 
             // This shouldn't happen
             throw new ArgumentException("Tab does not contain a valid view", nameof(tab));
+        }
+
+        private TabItem? GetTab(IMainViewModel? vm)
+        {
+            if (vm is null) return null;
+
+            var tabControl = AttachedView!.FindControl<TabControl>("MainTabs");
+            return tabControl.ItemContainerGenerator.ContainerFromIndex(vm.TabIndex) as TabItem;
         }
 
         private async Task ImportPackagesAsync(IEnumerable<string> paths)

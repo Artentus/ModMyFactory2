@@ -33,6 +33,14 @@ using System.Windows.Input;
 
 namespace ModMyFactoryGUI.ViewModels
 {
+    internal sealed class BrowseModFamilyRequestedEventArgs : EventArgs
+    {
+        public ModFamily Family { get; }
+
+        public BrowseModFamilyRequestedEventArgs(in ModFamily family)
+            => Family = family;
+    }
+
     internal sealed class ManagerViewModel : MainViewModelBase<ManagerView>
     {
         private readonly DownloadQueue _downloadQueue;
@@ -42,6 +50,8 @@ namespace ModMyFactoryGUI.ViewModels
         private bool? _allModsEnabled, _allModpacksEnabled;
         private bool _isUpdating;
         private volatile bool _isAdding, _isRemoving;
+
+        public event EventHandler<BrowseModFamilyRequestedEventArgs>? BrowseModFamilyRequested;
 
         public CollectionView<ModVersionGroupingViewModel> ModVersionGroupings { get; }
 
@@ -131,13 +141,16 @@ namespace ModMyFactoryGUI.ViewModels
 
         public ICommand UpdateModsCommand { get; }
 
+        public ICommand BrowseModFamilyCommand { get; }
+
         public ICommand DeleteModFamilyCommand { get; }
 
         public ICommand CreateModpackCommand { get; }
 
         public ICommand DeleteModpackCommand { get; }
 
-        public ManagerViewModel(DownloadQueue downloadQueue)
+        public ManagerViewModel(int tabIndex, DownloadQueue downloadQueue)
+            : base(tabIndex)
         {
             _downloadQueue = downloadQueue;
             _modVersionGroupings = new ObservableCollection<ModVersionGroupingViewModel>();
@@ -179,6 +192,7 @@ namespace ModMyFactoryGUI.ViewModels
 
             AddModsCommand = ReactiveCommand.CreateFromTask(AddModsAsync);
             UpdateModsCommand = ReactiveCommand.CreateFromTask(UpdateModsAsync);
+            BrowseModFamilyCommand = ReactiveCommand.Create<ModFamily>(BrowseModFamily);
             DeleteModFamilyCommand = ReactiveCommand.CreateFromTask<ModFamily>(DeleteModFamily);
             CreateModpackCommand = ReactiveCommand.Create(CreateModpack);
             DeleteModpackCommand = ReactiveCommand.CreateFromTask<Modpack>(DeleteModpack);
@@ -440,6 +454,11 @@ namespace ModMyFactoryGUI.ViewModels
             {
                 await MessageHelper.ShowMessageForApiException(ex);
             }
+        }
+
+        private void BrowseModFamily(ModFamily family)
+        {
+            BrowseModFamilyRequested?.Invoke(this, new BrowseModFamilyRequestedEventArgs(family));
         }
 
         private async Task DeleteModFamily(ModFamily family)

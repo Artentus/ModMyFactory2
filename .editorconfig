@@ -11,6 +11,8 @@ indent_size = 2
 # XAML files
 [*.xaml]
 indent_size = 2
+[*.axaml]
+indent_size = 2
 
 # Project files
 [*.csproj]

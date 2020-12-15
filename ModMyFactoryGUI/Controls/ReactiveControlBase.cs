@@ -13,7 +13,7 @@ namespace ModMyFactoryGUI.Controls
 {
     internal abstract class ReactiveControlBase<T> : ReactiveUserControl<T?>, IView<T> where T : class, IReactiveObject
     {
-        object? IView.ViewModel
+        IReactiveObject? IView.ViewModel
         {
             get => ViewModel;
             set => ViewModel = value as T;

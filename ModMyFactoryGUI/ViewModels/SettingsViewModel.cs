@@ -179,7 +179,8 @@ namespace ModMyFactoryGUI.ViewModels
 
         public ICommand ResetCommand { get; }
 
-        public SettingsViewModel(DownloadQueue downloadQueue)
+        public SettingsViewModel(int tabIndex, DownloadQueue downloadQueue)
+            : base(tabIndex)
         {
             _downloadQueue = downloadQueue;
             _username = string.Empty;

@@ -57,7 +57,7 @@ the Free Software Foundation, either version 3 of the License, or
       </Grid>
 
       <!-- Mod list -->
-      <ListBox Grid.Column="0" Grid.Row="2" Margin="4,4,0,4" Grid.IsSharedSizeScope="True"
+      <ListBox x:Name="ModList" Grid.Column="0" Grid.Row="2" Margin="4,4,0,4" Grid.IsSharedSizeScope="True"
                Items="{Binding OnlineMods}" SelectedItem="{Binding SelectedMod}">
         <ListBox.IsVisible>
           <MultiBinding Converter="{x:Static BoolConverters.And}">

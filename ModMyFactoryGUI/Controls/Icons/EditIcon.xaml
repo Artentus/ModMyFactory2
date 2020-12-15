@@ -9,8 +9,6 @@ the Free Software Foundation, either version 3 of the License, or
 
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              x:Class="ModMyFactoryGUI.Controls.Icons.EditIcon">
 
   <Grid Width="16" Height="16" Margin="3">

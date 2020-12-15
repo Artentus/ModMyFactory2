@@ -139,7 +139,8 @@ namespace ModMyFactoryGUI.ViewModels
             }
         }
 
-        public ExportViewModel()
+        public ExportViewModel(int tabIndex)
+            : base(tabIndex)
         {
             _modpacks = new ObservableCollection<ModpackExportViewModel>();
             foreach (var modpack in Program.Modpacks)

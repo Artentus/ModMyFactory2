@@ -10,11 +10,25 @@ using System;
 
 namespace ModMyFactoryGUI.MVVM
 {
-    internal abstract class ViewModelBase<T> : ReactiveObject where T : class, IView
+    internal interface IViewModel : IReactiveObject
+    {
+        IView? AttachedView { get; }
+    }
+
+    internal interface IViewModel<T> : IViewModel where T : class, IView
+    {
+        new T? AttachedView { get; }
+    }
+
+#pragma warning disable CS8612 // ReactiveObject doesn't implement PropertyCHanged with nullable=enable
+    internal abstract class ViewModelBase<T> : ReactiveObject, IViewModel<T> where T : class, IView
+#pragma warning restore CS8612 
     {
         public event EventHandler? ViewChanged;
 
         public T? AttachedView { get; private set; }
+
+        IView? IViewModel.AttachedView => AttachedView;
 
         protected ViewModelBase()
         { }

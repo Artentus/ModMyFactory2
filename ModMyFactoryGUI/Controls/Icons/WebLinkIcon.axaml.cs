@@ -7,13 +7,12 @@
 
 using Avalonia.Controls;
 using Avalonia.Markup.Xaml;
-using ModMyFactoryGUI.ViewModels;
 
-namespace ModMyFactoryGUI.Views
+namespace ModMyFactoryGUI.Controls.Icons
 {
-    internal class OnlineModsView : MainViewBase<OnlineModsViewModel>
+    internal class WebLinkIcon : UserControl
     {
-        public OnlineModsView()
+        public WebLinkIcon()
         {
             InitializeComponent();
         }
@@ -21,12 +20,6 @@ namespace ModMyFactoryGUI.Views
         private void InitializeComponent()
         {
             AvaloniaXamlLoader.Load(this);
-        }
-
-        public void ScrollModIntoView(OnlineModViewModel vm)
-        {
-            var listBox = this.FindControl<ListBox>("ModList");
-            listBox.ScrollIntoView(vm);
         }
     }
 }

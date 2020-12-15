@@ -9,6 +9,16 @@ using ReactiveUI;
 
 namespace ModMyFactoryGUI.MVVM
 {
+    internal interface IView
+    {
+        IReactiveObject? ViewModel { get; set; }
+    }
+
+    internal interface IView<T> : IView where T : IReactiveObject
+    {
+        new T? ViewModel { get; set; }
+    }
+
     internal static class View
     {
         public static TView CreateAndAttach<TView>(ViewModelBase<TView> viewModel)

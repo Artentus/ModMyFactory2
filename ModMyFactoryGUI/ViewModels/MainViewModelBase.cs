@@ -7,13 +7,14 @@
 
 using ModMyFactoryGUI.MVVM;
 using ModMyFactoryGUI.Views;
-using ReactiveUI;
 using System;
 
 namespace ModMyFactoryGUI.ViewModels
 {
-    internal interface IMainViewModel : IReactiveObject
+    internal interface IMainViewModel : IViewModel
     {
+        int TabIndex { get; }
+
         void AttachView(IMainView view);
     }
 
@@ -22,6 +23,11 @@ namespace ModMyFactoryGUI.ViewModels
 #pragma warning restore CS8612
         where T : class, IMainView
     {
+        public int TabIndex { get; }
+
+        protected MainViewModelBase(int tabIndex)
+            => TabIndex = tabIndex;
+
         void IMainViewModel.AttachView(IMainView view)
         {
             if (view is T v) AttachView(v);

@@ -245,7 +245,7 @@ the Free Software Foundation, either version 3 of the License, or
     </Border>
 
     <!-- Main View -->
-    <TabControl TabStripPlacement="Right" SelectedItem="{Binding SelectedTab, Mode=TwoWay}"
+    <TabControl x:Name="MainTabs" TabStripPlacement="Right" SelectedItem="{Binding SelectedTab, Mode=TwoWay}"
                 Background="{DynamicResource ThemeBackgroundBrush}" BorderBrush="{DynamicResource ThemeBackgroundHighBrush}" BorderThickness="4,0,0,0">
 
       <!-- Manager -->

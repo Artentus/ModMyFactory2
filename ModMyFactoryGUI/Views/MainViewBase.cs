@@ -9,6 +9,7 @@ using Avalonia.Controls;
 using ModMyFactoryGUI.Controls;
 using ModMyFactoryGUI.MVVM;
 using ModMyFactoryGUI.ViewModels;
+using ReactiveUI;
 using System;
 
 namespace ModMyFactoryGUI.Views
@@ -19,6 +20,12 @@ namespace ModMyFactoryGUI.Views
     internal abstract class MainViewBase<T> : ReactiveControlBase<T>, IMainView where T : class, IMainViewModel
     {
         IMainViewModel? IView<IMainViewModel>.ViewModel
+        {
+            get => ViewModel;
+            set => ViewModel = value as T;
+        }
+
+        IReactiveObject? IView.ViewModel
         {
             get => ViewModel;
             set => ViewModel = value as T;

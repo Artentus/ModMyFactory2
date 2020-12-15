@@ -9,6 +9,7 @@ using Avalonia.Controls.Primitives;
 using Avalonia.Input;
 using Avalonia.Styling;
 using ModMyFactoryGUI.MVVM;
+using ReactiveUI;
 using System;
 using System.Runtime.InteropServices;
 
@@ -96,9 +97,9 @@ namespace ModMyFactoryGUI.Controls
             set => SetValue(TitleBarContentProperty, value);
         }
 
-        object? IView.ViewModel
+        IReactiveObject? IView.ViewModel
         {
-            get => DataContext;
+            get => DataContext as IReactiveObject;
             set => DataContext = value;
         }
 

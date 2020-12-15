@@ -395,6 +395,10 @@
     "type": "string",
     "value": "Modpacks"
   },
+  "ViewOnlineButton": {
+    "type": "string",
+    "value": "View online"
+  },
   "RemoveFromPackButton": {
     "type": "string",
     "value": "Remove from modpack"

@@ -33,7 +33,8 @@ namespace ModMyFactoryGUI.ViewModels
 
         public ICommand DownloadCommand { get; }
 
-        public FactorioViewModel(DownloadQueue downloadQueue)
+        public FactorioViewModel(int tabIndex, DownloadQueue downloadQueue)
+            : base(tabIndex)
         {
             _downloadQueue = downloadQueue;
             ImportCommand = ReactiveCommand.CreateFromTask<bool>(ImportAsync);

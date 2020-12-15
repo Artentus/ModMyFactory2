@@ -379,6 +379,10 @@
   },
 
   // --------- Manager view ---------
+  "ViewOnlineButton": {
+    "type": "string",
+    "value": "Online ansehen"
+  },
   "RemoveFromPackButton": {
     "type": "string",
     "value": "Aus Modpack entfernen"
