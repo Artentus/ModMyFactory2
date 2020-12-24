@@ -92,7 +92,11 @@ namespace ModMyFactoryGUI
         static VersionStatistics()
         {
 #if SELFCONTAINED
-            if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            {
+                AppPlatform = AppPlatform.Windows;
+            }
+            else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
             {
                 AppPlatform = AppPlatform.Linux64;
             }
