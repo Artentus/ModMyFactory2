@@ -29,7 +29,7 @@ namespace ModMyFactory.WebApi.Mods
             if (pageSize == 0) throw new ArgumentOutOfRangeException(nameof(pageSize));
             if (pageIndex < 1) throw new ArgumentOutOfRangeException(nameof(pageIndex));
 
-            string sizeStr = pageSize > 0 ? pageSize.ToString() : "max";
+            string sizeStr = pageSize > 0 ? pageSize.ToString() : "999";
             string url = $"{ModsUrl}?page_size={sizeStr}";
             if (pageSize > 0) url += $"&page={pageIndex}";
 
