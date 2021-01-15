@@ -19,19 +19,9 @@ namespace ModMyFactory.WebApi.Mods
         private const string ModsUrl = BaseUrl + "/api/mods";
         internal const string BaseUrl = "https://mods.factorio.com";
 
-        /// <summary>
-        /// Requests a mod page from the server
-        /// </summary>
-        /// <param name="pageSize">The page size. Negative values are interpreted as maximum page size (all mods on one page).</param>
-        /// <param name="pageIndex">The 1-based index of the page to request based on the specified page size. Has no functionality if maximum page size is used.</param>
-        public static async Task<ModPage> RequestPageAsync(int pageSize = -1, int pageIndex = 1)
+        private static async Task<ModPage> RequestPageInternalAsync(int pageSize, int pageIndex)
         {
-            if (pageSize == 0) throw new ArgumentOutOfRangeException(nameof(pageSize));
-            if (pageIndex < 1) throw new ArgumentOutOfRangeException(nameof(pageIndex));
-
-            string sizeStr = pageSize > 0 ? pageSize.ToString() : "max";
-            string url = $"{ModsUrl}?page_size={sizeStr}";
-            if (pageSize > 0) url += $"&page={pageIndex}";
+            string url = $"{ModsUrl}?page_size={pageSize}&page={pageIndex}";
 
             try
             {
@@ -41,6 +31,28 @@ namespace ModMyFactory.WebApi.Mods
             catch (WebException ex)
             {
                 throw ApiException.FromWebException(ex);
+            }
+        }
+
+        /// <summary>
+        /// Requests a mod page from the server
+        /// </summary>
+        /// <param name="pageSize">The page size. Negative values are interpreted as maximum page size (all mods on one page).</param>
+        /// <param name="pageIndex">The 1-based index of the page to request based on the specified page size. Has no effect if maximum page size is used.</param>
+        public static async Task<ModPage> RequestPageAsync(int pageSize = -1, int pageIndex = 1)
+        {
+            if (pageSize == 0) throw new ArgumentOutOfRangeException(nameof(pageSize));
+            if (pageIndex < 1) throw new ArgumentOutOfRangeException(nameof(pageIndex));
+
+            if (pageSize > 0)
+            {
+                return await RequestPageInternalAsync(pageSize, pageIndex);
+            }
+            else
+            {
+                var page = await RequestPageInternalAsync(1, 1); // Request the smallest possible page to learn how many mods there are
+                int modCount = page.Pagination!.Value.TotalModCount;
+                return await RequestPageInternalAsync(modCount, 1);
             }
         }
 
