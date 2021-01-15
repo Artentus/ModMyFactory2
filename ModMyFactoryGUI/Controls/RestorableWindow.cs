@@ -57,7 +57,7 @@ namespace ModMyFactoryGUI.Controls
         protected void SetBounds(PixelPoint position, Size size)
         {
             // We only care about bounds if the window is neither minimized nor maximized
-            if (PlatformImpl.WindowState == WindowState.Normal)
+            if (WindowState == WindowState.Normal)
             {
                 if (!_stateRestoreInProgress) // Prevent infinite loop
                 {

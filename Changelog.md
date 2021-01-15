@@ -1,3 +1,8 @@
+### Beta 4.2.2
+
+- Fix online mods not loading
+- Fix window not showing up after closing ModMyFactory while minimized
+
 ### Beta 4.2
 
 - Switch to .Net 5.0
