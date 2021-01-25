@@ -14,5 +14,11 @@
         <GenerateDocumentationFile>true</GenerateDocumentationFile>
         <DefineConstants>$(DefineConstants);RELEASE</DefineConstants>
     </PropertyGroup>
+
+    <PropertyGroup>
+        <DefineConstants Condition="'$(RuntimeIdentifier)' == 'linux-x64'">$(DefineConstants);LINUX;SELFCONTAINED</DefineConstants>
+        <DefineConstants Condition="'$(RuntimeIdentifier)' == 'osx-x64'">$(DefineConstants);OSX;SELFCONTAINED</DefineConstants>
+        <DefineConstants Condition="'$(RuntimeIdentifier)' == 'win-x64'">$(DefineConstants);WIN32;SELFCONTAINED</DefineConstants>
+    </PropertyGroup>
     
 </Project>

@@ -17,13 +17,6 @@
     <AssemblyVersion>1.0</AssemblyVersion>
     <FileVersion>$(Version)</FileVersion>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-
-    <!-- Uncomment this if you want to build a self-contained binary (or specify Standalone=true in MSBuild) -->
-    <!--<DefineConstants>$(DefineConstants);SELFCONTAINED</DefineConstants>-->
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(Standalone)' == 'true'">
-    <DefineConstants>$(DefineConstants);SELFCONTAINED</DefineConstants>
   </PropertyGroup>
 
   <ItemGroup>

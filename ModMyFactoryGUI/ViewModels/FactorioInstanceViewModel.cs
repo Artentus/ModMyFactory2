@@ -227,10 +227,16 @@ namespace ModMyFactoryGUI.ViewModels
             return args;
         }
 
-        private string GetTargetPath()
+        private static string GetTargetPath()
         {
 #if SELFCONTAINED
+#if WIN32
+            var assemblyFile = new FileInfo(Assembly.GetExecutingAssembly().Location);
+            var fileName = Path.GetFileNameWithoutExtension(assemblyFile.Name);
+            return Path.Combine(assemblyFile.Directory!.FullName, fileName + ".exe");
+#else
             return Assembly.GetExecutingAssembly().Location;
+#endif
 #else
             return "dotnet";
 #endif

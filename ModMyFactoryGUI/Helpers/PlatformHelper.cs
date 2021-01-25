@@ -11,7 +11,6 @@ using Mono.Unix;
 using System;
 using System.Diagnostics;
 using System.IO;
-using System.Reflection;
 using System.Runtime.InteropServices;
 
 namespace ModMyFactoryGUI.Helpers
@@ -23,10 +22,17 @@ namespace ModMyFactoryGUI.Helpers
         private static readonly string[] LinuxArchiveExtensions = { "tar.gz", "tar.xz" };
         private static readonly string[] LinuxSymbolicLinkExtensions = { "sh" };
         private static readonly string[] MacArchiveExtensions = { "dmg" };
-        private static readonly string[] EmptyExtensions = new string[0];
+        private static readonly string[] EmptyExtensions = Array.Empty<string>();
 
         public static void OpenWebUrl(string url)
         {
+#if WIN32
+            Process.Start(new ProcessStartInfo(url) { UseShellExecute = true });
+#elif LINUX
+            Process.Start("xdg-open", url);
+#elif OSX
+            Process.Start("open", url);
+#else
             // Code according to Microsoft
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
@@ -44,6 +50,7 @@ namespace ModMyFactoryGUI.Helpers
             {
                 throw new PlatformNotSupportedException();
             }
+#endif
         }
 
         public static void OpenDirectory(DirectoryInfo directory)
@@ -52,6 +59,18 @@ namespace ModMyFactoryGUI.Helpers
             if (!path.EndsWith(Path.DirectorySeparatorChar))
                 path += Path.DirectorySeparatorChar;
 
+#if WIN32
+            Process.Start(new ProcessStartInfo()
+            {
+                FileName = path,
+                UseShellExecute = true,
+                Verb = "open"
+            });
+#elif LINUX
+            Process.Start("xdg-open", path);
+#elif OSX
+            Process.Start("open", path);
+#else
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
                 Process.Start(new ProcessStartInfo()
@@ -73,10 +92,18 @@ namespace ModMyFactoryGUI.Helpers
             {
                 throw new PlatformNotSupportedException();
             }
+#endif
         }
 
         public static Platform GetCurrentPlatform()
         {
+#if WIN32
+            return Platform.Win64Manual;
+#elif LINUX
+            return Platform.Linux64;
+#elif OSX
+            return Platform.OSX;
+#else
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
                 return Platform.Win64Manual;
@@ -93,10 +120,18 @@ namespace ModMyFactoryGUI.Helpers
             {
                 throw new PlatformNotSupportedException();
             }
+#endif
         }
 
         public static string[] GetFactorioArchiveExtensions()
         {
+#if WIN32
+            return WindowsArchiveExtensions;
+#elif LINUX
+            return LinuxArchiveExtensions;
+#elif OSX
+            return MacArchiveExtensions;
+#else
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
                 return WindowsArchiveExtensions;
@@ -113,21 +148,25 @@ namespace ModMyFactoryGUI.Helpers
             {
                 throw new PlatformNotSupportedException();
             }
+#endif
         }
 
         public static string[] GetSymbolicLinkExtensions()
         {
+#if WIN32
+            return WindowsSymbolicLinkExtensions;
+#elif LINUX
+            return EmptyExtensions;
+#elif OSX
+            return EmptyExtensions;
+#else
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
                 return WindowsSymbolicLinkExtensions;
             }
             else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
             {
-#if SELFCONTAINED
-                return EmptyExtensions;
-#else
                 return LinuxSymbolicLinkExtensions;
-#endif
             }
             else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
             {
@@ -137,6 +176,7 @@ namespace ModMyFactoryGUI.Helpers
             {
                 throw new PlatformNotSupportedException();
             }
+#endif
         }
 
         private static void CreateUnixSymbolicLink(string linkPath, string targetPath, string arguments)
@@ -164,18 +204,21 @@ namespace ModMyFactoryGUI.Helpers
 
         public static void CreateSymbolicLink(string linkPath, string targetPath, string arguments, string iconLocation)
         {
+#if WIN32
+            Shell.CreateSymbolicLink(linkPath, targetPath, arguments, iconLocation);
+#elif LINUX
+            CreateUnixSymbolicLink(linkPath, targetPath, arguments);
+#elif OSX
+            CreateUnixSymbolicLink(linkPath, targetPath, arguments);
+#else
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
                 Shell.CreateSymbolicLink(linkPath, targetPath, arguments, iconLocation);
             }
             else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
             {
-#if SELFCONTAINED
-                CreateUnixSymbolicLink(linkPath, targetPath, arguments);
-#else
                 // If the app is not standalone we need to create a shell script instead of an actual link
                 CreateLinuxShellScript(linkPath, targetPath, arguments);
-#endif
             }
             else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
             {
@@ -185,6 +228,7 @@ namespace ModMyFactoryGUI.Helpers
             {
                 throw new PlatformNotSupportedException();
             }
+#endif
         }
     }
 }
