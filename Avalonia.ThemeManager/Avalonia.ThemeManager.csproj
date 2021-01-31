@@ -19,7 +19,7 @@
 
   <ItemGroup>
     <PackageReference Include="Avalonia" Version="0.9.12" />
-    <PackageReference Include="ReactiveUI" Version="11.5.35" />
+    <PackageReference Include="ReactiveUI" Version="13.1.1" />
   </ItemGroup>
 
 </Project>

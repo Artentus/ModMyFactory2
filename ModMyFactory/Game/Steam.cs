@@ -21,20 +21,24 @@ namespace ModMyFactory.Game
     {
         private static bool TryGetSteamPathWin32([NotNullWhen(true)] out string? path)
         {
+            path = null;
+
             RegistryKey? softwareKey = null;
             try
             {
                 string softwarePath = Environment.Is64BitProcess ? @"SOFTWARE\WOW6432Node" : "SOFTWARE";
                 softwareKey = Registry.LocalMachine.OpenSubKey(softwarePath, false);
+                if (softwareKey is null) return false;
 
                 using var key = softwareKey.OpenSubKey(@"Valve\Steam");
-                var obj = key.GetValue("InstallPath");
+                var obj = key?.GetValue("InstallPath");
                 path = obj as string;
+                if (string.IsNullOrEmpty(path)) return false;
+
                 return Directory.Exists(path);
             }
             catch
             {
-                path = null;
                 return false;
             }
             finally
