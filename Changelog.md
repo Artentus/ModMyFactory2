@@ -1,3 +1,12 @@
+### Beta 4.2.4
+
+- Fix modpacks not getting properly deleted
+- Fix link paths being incorrect on Linux and Mac
+
+### Beta 4.2.3
+
+- Fix link paths being incorrect on Windows
+
 ### Beta 4.2.2
 
 - Fix online mods not loading

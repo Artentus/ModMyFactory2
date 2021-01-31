@@ -296,7 +296,18 @@ namespace ModMyFactoryGUI
         }
 
         public static bool DeleteModpack(Modpack modpack)
-            => _modpacks.RemoveValue(modpack);
+        {
+            bool result = _modpacks.RemoveValue(modpack);
+            if (result) SaveModpacks();
+            return result;
+        }
+
+        public static async Task<bool> DeleteModpackAsync(Modpack modpack)
+        {
+            bool result = _modpacks.RemoveValue(modpack);
+            if (result) await SaveModpacksAsync();
+            return result;
+        }
 
         public static int GetModpackId(Modpack modpack)
         {

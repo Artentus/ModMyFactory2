@@ -90,7 +90,11 @@ namespace ModMyFactoryGUI.ViewModels
 
         private void RemoveMod(ICanEnable mod)
         {
-            if (!(mod is null)) Modpack.Remove(mod);
+            if (!(mod is null))
+            {
+                if (Modpack.Remove(mod))
+                    Program.SaveModpacks();
+            }
         }
 
         public void ApplyFuzzyFilter(in string filter)

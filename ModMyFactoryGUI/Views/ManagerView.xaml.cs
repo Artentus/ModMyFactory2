@@ -175,7 +175,7 @@ namespace ModMyFactoryGUI.Views
             }
         }
 
-        private async void DropModListHandler(DragEventArgs e)
+        private async Task DropModListHandler(DragEventArgs e)
         {
             if (e.Data.Contains(DataFormats.FileNames))
             {
@@ -188,7 +188,7 @@ namespace ModMyFactoryGUI.Views
             }
         }
 
-        private void DropModpackListHandler(ListBox target, DragEventArgs e)
+        private  async Task DropModpackListHandler(ListBox target, DragEventArgs e)
         {
             if (e.Data.Contains(InternalFormat))
             {
@@ -197,16 +197,16 @@ namespace ModMyFactoryGUI.Views
 
                 var list = e.Data.Get<IList<ICanEnable>>(InternalFormat);
                 modpack.AddRangeSafe(list);
-                _ = Task.Run(Program.SaveModpacksAsync);
+                await Program.SaveModpacksAsync();
             }
         }
 
-        private void DropHandler(object sender, DragEventArgs e)
+        private async void DropHandler(object sender, DragEventArgs e)
         {
             if (sender is ListBox target)
             {
-                if (target.Name == "ModList") DropModListHandler(e);
-                if (target.Name == "ModpackList") DropModpackListHandler(target, e);
+                if (target.Name == "ModList") await DropModListHandler(e);
+                if (target.Name == "ModpackList") await DropModpackListHandler(target, e);
             }
 
             _modSourceItem = null;

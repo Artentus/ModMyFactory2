@@ -194,7 +194,7 @@ namespace ModMyFactoryGUI.ViewModels
             UpdateModsCommand = ReactiveCommand.CreateFromTask(UpdateModsAsync);
             BrowseModFamilyCommand = ReactiveCommand.Create<ModFamily>(BrowseModFamily);
             DeleteModFamilyCommand = ReactiveCommand.CreateFromTask<ModFamily>(DeleteModFamily);
-            CreateModpackCommand = ReactiveCommand.Create(CreateModpack);
+            CreateModpackCommand = ReactiveCommand.CreateFromTask(CreateModpack);
             DeleteModpackCommand = ReactiveCommand.CreateFromTask<Modpack>(DeleteModpack);
         }
 
@@ -475,13 +475,14 @@ namespace ModMyFactoryGUI.ViewModels
             }
         }
 
-        private void CreateModpack()
+        private async Task CreateModpack()
         {
             _isAdding = true;
             ModpackFilter = string.Empty; // Clear filter to avoid the new modpack getting hidden
 
             var modpack = Program.CreateModpack();
             OnModpackAdded(modpack, out var vm);
+            await Program.SaveModpacksAsync();
 
             vm.IsRenaming = true;
             AttachedView!.ScrollModpackIntoView(vm);
@@ -498,7 +499,7 @@ namespace ModMyFactoryGUI.ViewModels
             {
                 _isRemoving = true;
 
-                Program.DeleteModpack(modpack);
+                await Program.DeleteModpackAsync(modpack);
                 OnModpackRemoved(modpack);
 
                 _isRemoving = false;

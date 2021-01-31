@@ -31,6 +31,7 @@ namespace ModMyFactoryGUI.Helpers
                 if (object.Equals(kvp.Value, value))
                 {
                     key = kvp.Key;
+                    keyFound = true;
                     break;
                 }
             }
