@@ -42,8 +42,7 @@ namespace ModMyFactory
             get => _enabled;
             set
             {
-                if (value is null) throw new InvalidOperationException("Cannot set enabled state to null");
-                else SetEnabledState(value.Value);
+                if (value != null) SetEnabledState(value.Value);
             }
         }
 
