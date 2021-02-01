@@ -2,6 +2,7 @@
 
 - Fix modpacks not getting properly deleted
 - Fix link paths being incorrect on Linux and Mac
+- Fix crash when downloading Factorio on Linux
 
 ### Beta 4.2.3
 
