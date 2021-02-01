@@ -6,8 +6,8 @@
 //  (at your option) any later version.
 
 using ModMyFactory.Mods;
-using SharpCompress.Archives;
 using SharpCompress.Common;
+using SharpCompress.Readers;
 using System;
 using System.IO;
 using System.Linq;
@@ -168,11 +168,14 @@ namespace ModMyFactory.Game
 
             var (valid, extractName) = await Task.Run(() =>
             {
-                using var archive = ArchiveFactory.Open(archiveFile);
+                using var stream = archiveFile.OpenRead();
+                using var reader = ReaderFactory.Open(stream);
 
                 string? topLevelDir = null;
-                foreach (var entry in archive.Entries)
+                while (reader.MoveToNextEntry())
                 {
+                    var entry = reader.Entry;
+
                     // All files in a valid Factorio archive must reside
                     // in a top-level folder called 'Factorio_*'. If we
                     // find a file that doesn't we can stop immediately.
@@ -193,7 +196,7 @@ namespace ModMyFactory.Game
                     }
 
                     if (!entry.IsDirectory)
-                        entry.WriteToDirectory(destination, new ExtractionOptions() { ExtractFullPath = true });
+                        reader.WriteEntryToDirectory(destination, new ExtractionOptions() { ExtractFullPath = true });
                 }
 
                 return (true, topLevelDir);
