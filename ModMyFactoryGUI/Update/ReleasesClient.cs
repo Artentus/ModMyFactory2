@@ -15,9 +15,9 @@ namespace ModMyFactoryGUI.Update
 {
     sealed class ReleasesClient
     {
-        // This is a public access token, meaning it can only access things information anyone can already access in a browser.
+        // This is a public access token, meaning it can only access information anyone can already access in a browser.
         // But using this token instead of no authorization increases the API rate limit greatly.
-        private const string Token = "f066fc3cd1da097e1b72e6b8802c1faca00aee55";
+        private const string Token = "0bac4fa86ff998683273de92714fb82be45ffe6b";
 
         private readonly GitHubClient _client;
 
