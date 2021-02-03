@@ -1,17 +1,26 @@
+### Beta 4.2.5
+
+- Fix auto updater not working
+- Fix possible crash when enabling modpacks
+
+
 ### Beta 4.2.4
 
 - Fix modpacks not getting properly deleted
 - Fix link paths being incorrect on Linux and Mac
 - Fix crash when downloading Factorio on Linux
 
+
 ### Beta 4.2.3
 
 - Fix link paths being incorrect on Windows
+
 
 ### Beta 4.2.2
 
 - Fix online mods not loading
 - Fix window not showing up after closing ModMyFactory while minimized
+
 
 ### Beta 4.2
 

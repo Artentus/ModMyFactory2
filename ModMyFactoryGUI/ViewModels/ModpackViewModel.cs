@@ -39,7 +39,11 @@ namespace ModMyFactoryGUI.ViewModels
         public bool? Enabled
         {
             get => Modpack.Enabled;
-            set => Modpack.Enabled = value;
+            set
+            {
+                if (value.HasValue)
+                    Modpack.Enabled = value;
+            }
         }
 
         public bool IsRenaming
