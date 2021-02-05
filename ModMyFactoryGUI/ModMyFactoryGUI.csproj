@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
   <Import Project="..\package.targets" />
   <Import Project="..\constants.targets" />
   <Import Project="..\references.targets" />
@@ -37,8 +37,12 @@
     </Task>
   </UsingTask>
 
-  <Target Name="Prebuild" Condition="$(OauthToken) != ''" BeforeTargets="BeforeBuild">
+  <Target Name="Prebuild" Condition="$(OauthToken) != ''" BeforeTargets="BeforeResolveReferences">
     <ReplaceOauthToken SourcePath="$(MSBuildProjectDirectory)\Update\ReleasesClient.cs" TargetPath="$(MSBuildProjectDirectory)\prebuild\ReleasesClient.cs" OauthToken="$(OauthToken)" />
+    <ItemGroup>
+      <Compile Include="$(MSBuildProjectDirectory)\prebuild\*.cs" />
+      <FileWrites Include="$(MSBuildProjectDirectory)\prebuild\*.cs" />
+    </ItemGroup>
   </Target>
 
   <ItemGroup Condition="$(OauthToken) != ''">
