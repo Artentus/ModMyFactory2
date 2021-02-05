@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <Import Project="..\package.targets" />
   <Import Project="..\constants.targets" />
   <Import Project="..\references.targets" />
@@ -18,6 +18,36 @@
     <FileVersion>$(Version)</FileVersion>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
+
+  <UsingTask TaskName="ReplaceOauthToken" TaskFactory="RoslynCodeTaskFactory" AssemblyFile="$(MSBuildToolsPath)\Microsoft.Build.Tasks.Core.dll">
+    <ParameterGroup>
+      <SourcePath ParameterType="System.String" Required="true" />
+      <TargetPath ParameterType="System.String" Required="true" />
+      <OauthToken ParameterType="System.String" Required="true" />
+    </ParameterGroup>
+    <Task>
+      <Using Namespace="System" />
+      <Using Namespace="System.IO" />
+      <Code Type="Fragment" Language="cs">
+        <![CDATA[
+          new FileInfo(TargetPath).Directory.Create();
+          File.WriteAllText(TargetPath, File.ReadAllText(SourcePath).Replace("$oauth_token$", OauthToken));
+        ]]>
+      </Code>
+    </Task>
+  </UsingTask>
+
+  <Target Name="Prebuild" Condition="$(OauthToken) != ''" BeforeTargets="BeforeBuild">
+    <ReplaceOauthToken SourcePath="$(MSBuildProjectDirectory)\Update\ReleasesClient.cs" TargetPath="$(MSBuildProjectDirectory)\prebuild\ReleasesClient.cs" OauthToken="$(OauthToken)" />
+  </Target>
+
+  <ItemGroup Condition="$(OauthToken) != ''">
+    <Compile Remove="Update\ReleasesClient.cs" />
+  </ItemGroup>
+
+  <ItemGroup Condition="$(OauthToken) == ''">
+    <Compile Remove="prebuild\*.cs" />
+  </ItemGroup>
 
   <ItemGroup>
     <Compile Update="**\*.xaml.cs">

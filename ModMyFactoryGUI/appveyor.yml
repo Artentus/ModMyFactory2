@@ -7,12 +7,16 @@ version: 4.2.5.{build}-beta
 branches:
   only:
     - master
+
+environment:
+  OAUTH_TOKEN:
+    secure: FcuPjiRWTaNiGcYHvdQWSKHsiLcLGbzRD0r33WVA3c4u6vN3KeCv/8eq3n5oTJPW
     
 build_script:
-  - dotnet publish ModMyFactoryGUI\ -o ModMyFactoryGUI\bin\publish\linux-x64\ -c Release -f net5.0 -r linux-x64 -p:PublishTrimmed=true --version-suffix %APPVEYOR_BUILD_VERSION%
-  - dotnet publish ModMyFactoryGUI\ -o ModMyFactoryGUI\bin\publish\osx-x64\ -c Release -f net5.0 -r osx-x64 -p:PublishTrimmed=true --version-suffix %APPVEYOR_BUILD_VERSION%
-  - dotnet publish ModMyFactoryGUI\ -o ModMyFactoryGUI\bin\publish\win-x64\ -c Release -f net5.0 -r win-x64 -p:PublishTrimmed=true --version-suffix %APPVEYOR_BUILD_VERSION%
-  - dotnet publish ModMyFactoryGUI\ -o ModMyFactoryGUI\bin\publish\net5.0\ -c Release -f net5.0 --version-suffix %APPVEYOR_BUILD_VERSION%
+  - dotnet publish ModMyFactoryGUI\ -o ModMyFactoryGUI\bin\publish\linux-x64\ -c Release -f net5.0 -r linux-x64 -p:PublishTrimmed=true --version-suffix %APPVEYOR_BUILD_VERSION% -p:OauthToken=%OAUTH_TOKEN%
+  - dotnet publish ModMyFactoryGUI\ -o ModMyFactoryGUI\bin\publish\osx-x64\ -c Release -f net5.0 -r osx-x64 -p:PublishTrimmed=true --version-suffix %APPVEYOR_BUILD_VERSION% -p:OauthToken=%OAUTH_TOKEN%
+  - dotnet publish ModMyFactoryGUI\ -o ModMyFactoryGUI\bin\publish\win-x64\ -c Release -f net5.0 -r win-x64 -p:PublishTrimmed=true --version-suffix %APPVEYOR_BUILD_VERSION% -p:OauthToken=%OAUTH_TOKEN%
+  - dotnet publish ModMyFactoryGUI\ -o ModMyFactoryGUI\bin\publish\net5.0\ -c Release -f net5.0 --version-suffix %APPVEYOR_BUILD_VERSION% -p:OauthToken=%OAUTH_TOKEN%
   
 after_build:
   - 7z a %APPVEYOR_BUILD_VERSION%_linux64.zip .\ModMyFactoryGUI\bin\publish\linux-x64\*

@@ -15,10 +15,6 @@ namespace ModMyFactoryGUI.Update
 {
     sealed class ReleasesClient
     {
-        // This is a public access token, meaning it can only access information anyone can already access in a browser.
-        // But using this token instead of no authorization increases the API rate limit greatly.
-        private const string Token = "0bac4fa86ff998683273de92714fb82be45ffe6b";
-
         private readonly GitHubClient _client;
 
         public ReleasesClient()
@@ -26,8 +22,14 @@ namespace ModMyFactoryGUI.Update
             var product = new ProductHeaderValue("ModMyFactory2", VersionStatistics.AppVersion.ToString());
             _client = new GitHubClient(product);
 
-            var auth = new Credentials(Token, AuthenticationType.Oauth);
+#if !DEBUG
+            // This is a public access token, meaning it can only access information anyone can already access in a browser.
+            // But using this token instead of no authorization increases the API rate limit greatly.
+            const string token = "$oauth_token$";
+
+            var auth = new Credentials(token, AuthenticationType.Oauth);
             _client.Credentials = auth;
+#endif
         }
 
         private bool CheckRateLimit()
