@@ -21,7 +21,7 @@ namespace ModMyFactory
     public class Modpack : ICanEnable, ICollection<ICanEnable>, IReadOnlyCollection<ICanEnable>, INotifyCollectionChanged, INotifyPropertyChanged
     {
         private readonly List<ICanEnable> _children = new List<ICanEnable>();
-        private bool? _enabled;
+        private bool? _enabled = false;
         private string _displayName = string.Empty;
 
         /// <summary>
