@@ -25,7 +25,7 @@ namespace ModMyFactoryGUI.Synchronization
 
     internal sealed class GlobalContext : IDisposable
     {
-        private const string Uid = "ModMyFactoryGUI-uid(56F38E84-0DCD-475B-96F7-340ABBDEF8F1)";
+        private const string Uid = "MMFGUI_56F38E84-0DCD-475B-96F7";
         private readonly IUniversalMutex _globalMutex;
         private CancellationTokenSource? _cancellationSource;
         private Task? _listenTask;

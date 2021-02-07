@@ -1,3 +1,9 @@
+### Beta 4.2.6
+
+- Fix startup error on Mac
+- Fix possible crash when trying to open invalid Factorio archives
+
+
 ### Beta 4.2.5
 
 - Fix auto updater not working
