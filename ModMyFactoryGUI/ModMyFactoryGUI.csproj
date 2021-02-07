@@ -37,7 +37,7 @@
     </Task>
   </UsingTask>
 
-  <Target Name="Prebuild" Condition="$(OauthToken) != ''" BeforeTargets="BeforeResolveReferences">
+  <Target Name="Prebuild" Condition="$(OauthToken) != ''" BeforeTargets="BeforeBuild;BeforeRebuild">
     <ReplaceOauthToken SourcePath="$(MSBuildProjectDirectory)\Update\ReleasesClient.cs" TargetPath="$(MSBuildProjectDirectory)\prebuild\ReleasesClient.cs" OauthToken="$(OauthToken)" />
     <ItemGroup>
       <Compile Include="$(MSBuildProjectDirectory)\prebuild\*.cs" />

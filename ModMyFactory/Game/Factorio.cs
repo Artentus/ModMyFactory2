@@ -199,16 +199,19 @@ namespace ModMyFactory.Game
                         reader.WriteEntryToDirectory(destination, new ExtractionOptions() { ExtractFullPath = true });
                 }
 
-                return (true, topLevelDir);
+                return (!string.IsNullOrEmpty(topLevelDir), topLevelDir);
             });
 
             if (!valid)
             {
-                // We may have extracted some files already, but they must
-                // all reside in a directory called 'Factorio_*' so we can
-                // clean up easily.
-                var dir = destinationDir.EnumerateDirectories(extractName).FirstOrDefault();
-                if (!(dir is null)) dir.Delete(true);
+                if (!string.IsNullOrEmpty(extractName))
+                {
+                    // We may have extracted some files already, but they must
+                    // all reside in a directory called 'Factorio_*' so we can
+                    // clean up easily.
+                    var dir = destinationDir.EnumerateDirectories(extractName).FirstOrDefault();
+                    if (!(dir is null)) dir.Delete(true);
+                }
 
                 return (false, null);
             }
