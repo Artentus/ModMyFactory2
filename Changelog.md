@@ -1,3 +1,9 @@
+### Beta 4.2.7
+
+- Fix Factorio not getting loaded on Mac
+- Fix multiple instances being allowed to run on Mac
+
+
 ### Beta 4.2.6
 
 - Fix startup error on Mac
