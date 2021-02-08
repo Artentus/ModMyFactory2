@@ -38,10 +38,13 @@ namespace ModMyFactory.Game
             {
                 executable = new FileInfo(Path.Combine(directory.FullName, "bin", "x64", "factorio.exe"));
             }
-            else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux)
-                || RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+            else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
             {
                 executable = new FileInfo(Path.Combine(directory.FullName, "bin", "x64", "factorio"));
+            }
+            else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+            {
+                executable = new FileInfo(Path.Combine(directory.FullName, "MacOS", "factorio"));
             }
             else
             {
@@ -57,13 +60,17 @@ namespace ModMyFactory.Game
         /// <param name="directory">The directory the instance is stored in</param>
         public static async Task<(bool, IFactorioInstance?)> TryLoadAsync(DirectoryInfo directory)
         {
-            if (!directory.Exists) return (false, null);
-            if (!TryLoadExecutable(directory, out var executable)) return (false, null);
+            var dir = RuntimeInformation.IsOSPlatform(OSPlatform.OSX)
+                ? new DirectoryInfo(Path.Combine(directory.FullName, "factorio.app", "Contents"))
+                : directory;
 
-            (bool s1, var coreMod) = await TryLoadCoreModAsync(directory);
+            if (!dir.Exists) return (false, null);
+            if (!TryLoadExecutable(dir, out var executable)) return (false, null);
+
+            (bool s1, var coreMod) = await TryLoadCoreModAsync(dir);
             if (!s1) return (false, null);
 
-            (bool s2, var baseMod) = await TryLoadBaseModAsync(directory);
+            (bool s2, var baseMod) = await TryLoadBaseModAsync(dir);
             if (!s2) return (false, null);
 
             return (true, new FactorioStandaloneInstance(directory, coreMod!, baseMod!, executable));
