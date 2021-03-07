@@ -1,4 +1,4 @@
-//  Copyright (C) 2020 Mathis Rech
+//  Copyright (C) 2020-2021 Mathis Rech
 //
 //  This program is free software: you can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published by
@@ -13,6 +13,9 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Runtime.InteropServices;
+using SharpCompress.Readers.Zip;
+using SharpCompress.Readers.Tar;
+using SharpCompress.Compressors.Xz;
 
 namespace ModMyFactory.Game
 {
@@ -162,6 +165,70 @@ namespace ModMyFactory.Game
             return current;
         }
 
+        private static (bool, string?) Extract(IReader reader, string destination)
+        {
+            string? topLevelDir = null;
+            while (reader.MoveToNextEntry())
+            {
+                var entry = reader.Entry;
+
+                // All files in a valid Factorio archive must reside
+                // in a top-level folder called 'Factorio_*'. If we
+                // find a file that doesn't we can stop immediately.
+                if (topLevelDir is null)
+                {
+                    topLevelDir = GetTopDirectory(entry.Key.TrimStart('/', '\\'));
+                    topLevelDir = topLevelDir.TrimEnd('/', '\\');
+
+                    if (!topLevelDir.StartsWith("factorio", StringComparison.OrdinalIgnoreCase))
+                        return (false, topLevelDir);
+                }
+                else
+                {
+                    string dir = GetTopDirectory(entry.Key.TrimStart('/', '\\'));
+                    dir = dir.TrimEnd('/', '\\');
+                    if (!string.Equals(dir, topLevelDir, StringComparison.OrdinalIgnoreCase))
+                        return (false, topLevelDir);
+                }
+
+                if (!entry.IsDirectory)
+                    reader.WriteEntryToDirectory(destination, new ExtractionOptions() { ExtractFullPath = true });
+            }
+
+            return (!string.IsNullOrEmpty(topLevelDir), topLevelDir);
+        }
+
+        private static (bool, string?) ExtractWin32(FileInfo archiveFile, string destination)
+        {
+            using var stream = archiveFile.OpenRead();
+            using var reader = ZipReader.Open(stream);
+            return Extract(reader, destination);
+        }
+
+        private static (bool, string?) ExtractLinux(FileInfo archiveFile, string destination)
+        {
+            using var stream = archiveFile.OpenRead();
+            bool isXz = XZStream.IsXZStream(stream);
+            stream.Position = 0;
+            if (isXz)
+            {
+                using var xzStream = new XZStream(stream);
+                using var reader = TarReader.Open(xzStream);
+                return Extract(reader, destination);
+            }
+            else
+            {
+                using var reader = TarReader.Open(stream);
+                return Extract(reader, destination);
+            }
+        }
+
+        private static (bool, string?) ExtractMac(FileInfo archiveFile, string destination)
+        {
+            // ToDo: implement once SharpCompress releases DMG support
+            return (false, null);
+        }
+
         /// <summary>
         /// Tries to extract an archive containing Factorio
         /// </summary>
@@ -175,38 +242,22 @@ namespace ModMyFactory.Game
 
             var (valid, extractName) = await Task.Run(() =>
             {
-                using var stream = archiveFile.OpenRead();
-                using var reader = ReaderFactory.Open(stream);
-
-                string? topLevelDir = null;
-                while (reader.MoveToNextEntry())
+                if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
                 {
-                    var entry = reader.Entry;
-
-                    // All files in a valid Factorio archive must reside
-                    // in a top-level folder called 'Factorio_*'. If we
-                    // find a file that doesn't we can stop immediately.
-                    if (topLevelDir is null)
-                    {
-                        topLevelDir = GetTopDirectory(entry.Key.TrimStart('/', '\\'));
-                        topLevelDir = topLevelDir.TrimEnd('/', '\\');
-
-                        if (!topLevelDir.StartsWith("factorio", StringComparison.OrdinalIgnoreCase))
-                            return (false, topLevelDir);
-                    }
-                    else
-                    {
-                        string dir = GetTopDirectory(entry.Key.TrimStart('/', '\\'));
-                        dir = dir.TrimEnd('/', '\\');
-                        if (!string.Equals(dir, topLevelDir, StringComparison.OrdinalIgnoreCase))
-                            return (false, topLevelDir);
-                    }
-
-                    if (!entry.IsDirectory)
-                        reader.WriteEntryToDirectory(destination, new ExtractionOptions() { ExtractFullPath = true });
+                    return ExtractWin32(archiveFile, destination);
                 }
-
-                return (!string.IsNullOrEmpty(topLevelDir), topLevelDir);
+                else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+                {
+                    return ExtractLinux(archiveFile, destination);
+                }
+                else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+                {
+                    return ExtractMac(archiveFile, destination);
+                }
+                else
+                {
+                    throw new PlatformNotSupportedException();
+                }
             });
 
             if (!valid)
