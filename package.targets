@@ -3,7 +3,7 @@
     <PropertyGroup>
         <Authors>Mathis Rech</Authors>
         <Product>ModMyFactory v2</Product>
-        <Copyright>Copyright (C) 2020 Mathis Rech</Copyright>
+        <Copyright>Copyright (C) 2020-2021 Mathis Rech</Copyright>
         <PackageLicenseFile>License.md</PackageLicenseFile>
         <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
         <RepositoryUrl>https://github.com/Artentus/ModMyFactory2</RepositoryUrl>
