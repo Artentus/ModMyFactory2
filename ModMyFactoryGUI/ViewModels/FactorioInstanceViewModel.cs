@@ -24,6 +24,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
+using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using System.Windows.Input;
 
@@ -221,8 +222,11 @@ namespace ModMyFactoryGUI.ViewModels
 
             var args = Parser.Default.FormatCommandLine(opts);
 #if !SELFCONTAINED
-            var assemblyPath = Assembly.GetExecutingAssembly().Location;
-            args = $"\"{assemblyPath}\" {args}";
+            if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            {
+                var assemblyPath = Assembly.GetExecutingAssembly().Location;
+                args = $"\"{assemblyPath}\" {args}";
+            }
 #endif
             return args;
         }
@@ -230,15 +234,29 @@ namespace ModMyFactoryGUI.ViewModels
         private static string GetTargetPath()
         {
 #if SELFCONTAINED
-            var assemblyFile = new FileInfo(Assembly.GetExecutingAssembly().Location);
+            var filePath = Assembly.GetExecutingAssembly().Location;
+            var assemblyFile = new FileInfo(filePath);
             var fileName = Path.GetFileNameWithoutExtension(assemblyFile.Name);
+
 #if WIN32
-            return Path.Combine(assemblyFile.Directory!.FullName, fileName + ".exe");
+            filePath = Path.Combine(assemblyFile.Directory!.FullName, fileName + ".exe");
 #else
-            return Path.Combine(assemblyFile.Directory!.FullName, fileName);
+            filePath = Path.Combine(assemblyFile.Directory!.FullName, fileName);
 #endif
+
+            return filePath;
 #else
-            return "dotnet";
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            {
+                var filePath = Assembly.GetExecutingAssembly().Location;
+                var assemblyFile = new FileInfo(filePath);
+                var fileName = Path.GetFileNameWithoutExtension(assemblyFile.Name);
+                return Path.Combine(assemblyFile.Directory!.FullName, fileName + ".exe");
+            }
+            else
+            {
+                return "dotnet";
+            }
 #endif
         }
 

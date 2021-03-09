@@ -7,7 +7,6 @@
 
 using Avalonia;
 using Avalonia.Controls;
-using Avalonia.Logging.Serilog;
 using Avalonia.ReactiveUI;
 using CommandLine;
 using ModMyFactory;
@@ -351,9 +350,6 @@ namespace ModMyFactoryGUI
         private static AppBuilder BuildAvaloniaApp()
         {
             return AppBuilder.Configure<App>()
-#if DEBUG
-                .LogToDebug()
-#endif
                 .UsePlatformDetect()
                 .UseReactiveUI();
         }
@@ -372,7 +368,7 @@ namespace ModMyFactoryGUI
 
                         InitLogger(options);
                         await InitProgramAsync(options);
-
+                        
                         SyncContext.BeginListen();
 
                         try

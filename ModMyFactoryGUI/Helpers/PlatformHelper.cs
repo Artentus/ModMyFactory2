@@ -11,6 +11,7 @@ using Mono.Unix;
 using System;
 using System.Diagnostics;
 using System.IO;
+using System.Reflection;
 using System.Runtime.InteropServices;
 
 namespace ModMyFactoryGUI.Helpers
@@ -223,6 +224,72 @@ namespace ModMyFactoryGUI.Helpers
             else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
             {
                 CreateUnixSymbolicLink(linkPath, targetPath, arguments);
+            }
+            else
+            {
+                throw new PlatformNotSupportedException();
+            }
+#endif
+        }
+
+        public static class MimeType
+        {
+            public const string Json = "application/json";
+            public const string Zip = "application/x-zip-compressed";
+        }
+
+        public sealed record FileType(string Extension, string MimeType, PercievedFileType PercievedType);
+
+        public static void RegisterFileTypes(string component, int version, string description, string iconPath, params FileType[] fileTypes)
+        {
+            static string GetAppPath()
+            {
+                string filePath = Assembly.GetExecutingAssembly().Location;
+
+#if WIN32
+                var assemblyFile = new FileInfo(filePath);
+                var fileName = Path.GetFileNameWithoutExtension(assemblyFile.Name);
+                filePath = Path.Combine(assemblyFile.Directory!.FullName, fileName + ".exe");
+#elif !SELFCONTAINED
+                if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                {
+                    var assemblyFile = new FileInfo(filePath);
+                    var fileName = Path.GetFileNameWithoutExtension(assemblyFile.Name);
+                    filePath = Path.Combine(assemblyFile.Directory!.FullName, fileName + ".exe");
+                }
+                else
+                {
+                    return $"dotnet \"{filePath}\" --import";
+                }
+#endif
+                return $"\"{filePath}\" --import";
+            }
+
+            const string appName = "ModMyFactoryGUI";
+            string appPath = GetAppPath();
+
+#if WIN32
+            string handlerName = Registry.RegisterHandler(appName, component, version, appPath, description, iconPath);
+            foreach (var fileType in fileTypes)
+                Registry.RegisterFileType(fileType.Extension, handlerName, fileType.MimeType, fileType.PercievedType);
+#elif LINUX
+            // ToDo
+#elif OSX
+            // ToDo
+#else
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            {
+                string handlerName = Registry.RegisterHandler(appName, component, version, appPath, description, iconPath);
+                foreach (var fileType in fileTypes)
+                    Registry.RegisterFileType(fileType.Extension, handlerName, fileType.MimeType, fileType.PercievedType);
+            }
+            else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+            {
+                // ToDo
+            }
+            else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+            {
+                // ToDo
             }
             else
             {

@@ -22,7 +22,7 @@ namespace ModMyFactoryGUI.CommandLine
                 return new Example[]
                 {
                     new Example("Import package files",
-                        new RunOptions(false, new[] { "package_1.fmp", "package_2.fmpa" }, false, false, null))
+                        new RunOptions(false, false, new[] { "package_1.fmp", "package_2.fmpa" }, false, false, null))
                 };
             }
         }
@@ -30,11 +30,14 @@ namespace ModMyFactoryGUI.CommandLine
         [Option('u', "no-update", HelpText = "Disables the automatic update check")]
         public bool NoAutoUpdate { get; }
 
+        [Option('f', "no-file-associations", HelpText = "Disables the creation of file type associations")]
+        public bool NoFileTypeAssociations { get; }
+
         [Option('i', "import", Min = 1, Separator = ';', HelpText = "Optional list of package files to import")]
         public IEnumerable<string> ImportList { get; }
 
-        public RunOptions(bool noAutoUpdate, IEnumerable<string> importList, bool verbose, bool noLog, string? appDataPath)
+        public RunOptions(bool noAutoUpdate, bool noFileTypeAssociations, IEnumerable<string> importList, bool verbose, bool noLog, string? appDataPath)
             : base(verbose, noLog, appDataPath)
-            => (NoAutoUpdate, ImportList) = (noAutoUpdate, importList);
+            => (NoAutoUpdate, NoFileTypeAssociations, ImportList) = (noAutoUpdate, noFileTypeAssociations, importList);
     }
 }

@@ -26,7 +26,11 @@
   },
   "FmpaFileType": {
     "type": "string",
-    "value": "Factorio-Modpackarchive"
+    "value": "Factorio-Modpack-Archive"
+  },
+  "FmpFileDesc": {
+    "type": "string",
+    "value": "Factorio-Modpack"
   },
   "DefaultModpackName": {
     "type": "string",

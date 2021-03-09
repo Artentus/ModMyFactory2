@@ -208,9 +208,11 @@ the Free Software Foundation, either version 3 of the License, or
         </controls:DragDropListBox.ItemTemplate>
       </controls:DragDropListBox>
 
-      <Button Grid.Row="3" Grid.Column="2" HorizontalAlignment="Right" Margin="4"
-              Content="{l:LocalizedResource NewModpackMenuItem}" Command="{Binding CreateModpackCommand}" />
-
+      <StackPanel Grid.Row="3" Grid.Column="2" Orientation="Horizontal" HorizontalAlignment="Right">
+        <Button Margin="4" Content="{l:LocalizedResource ImportModpacksMenuItem}" Command="{Binding ImportModpacksCommand}" />
+        <Button Margin="4" Content="{l:LocalizedResource NewModpackMenuItem}" Command="{Binding CreateModpackCommand}" />
+      </StackPanel>
+      
     </Grid>
   </Border>
 

@@ -10,6 +10,7 @@ using Avalonia.Threading;
 using CommandLine;
 using ModMyFactory.Game;
 using ModMyFactory.Mods;
+using ModMyFactory.Win32;
 using ModMyFactoryGUI.CommandLine;
 using ModMyFactoryGUI.Controls;
 using ModMyFactoryGUI.Helpers;
@@ -492,6 +493,33 @@ namespace ModMyFactoryGUI.ViewModels
         }
 #endif
 
+        private static void RegisterFmpFileTypes()
+        {
+            const string component = "FactorioModpack";
+            string description = (string)App.Current.Locales.GetResource("FmpFileDesc");
+            var assemblyFile = new FileInfo(Assembly.GetExecutingAssembly().Location);
+            string iconPath = Path.Combine(assemblyFile.Directory!.FullName, "Factorio_Modpack_Icon.ico");
+
+            var fmpType = new PlatformHelper.FileType(".fmp", PlatformHelper.MimeType.Json, PercievedFileType.Text);
+            var fmpaType = new PlatformHelper.FileType(".fmpa", PlatformHelper.MimeType.Zip, PercievedFileType.Compressed);
+            Log.Information("Registering file type associations for {*.fmp, *.fmpa}");
+            PlatformHelper.RegisterFileTypes(component, -1, description, iconPath, fmpType, fmpaType);
+        }
+
+        private Task EvaluateOptionsStartup(RunOptions options)
+        {
+            if (options.NoFileTypeAssociations)
+            {
+                Log.Verbose("Skip registering file type associations due to command line");
+            }
+            else
+            {
+                RegisterFmpFileTypes();
+            }
+
+            return EvaluateOptions(options);
+        }
+
         private async void WindowOpenedHandler(object? sender, EventArgs e)
         {
             var args = Environment.GetCommandLineArgs();
@@ -503,7 +531,7 @@ namespace ModMyFactoryGUI.ViewModels
             });
             var parsedOptions = parser.ParseArguments<RunOptions>(args);
 
-            await parsedOptions.WithParsedAsync(EvaluateOptions);
+            await parsedOptions.WithParsedAsync(EvaluateOptionsStartup);
 
 #if !DEBUG
             await StartupUpdate();

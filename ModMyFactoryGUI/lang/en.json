@@ -28,6 +28,10 @@
     "type": "string",
     "value": "Factorio modpack archives"
   },
+  "FmpFileDesc": {
+    "type": "string",
+    "value": "Factorio modpack"
+  },
   "DefaultModpackName": {
     "type": "string",
     "value": "New Modpack"

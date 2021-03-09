@@ -138,16 +138,12 @@ namespace ModMyFactoryGUI.ViewModels
         }
 
         public ICommand AddModsCommand { get; }
-
         public ICommand UpdateModsCommand { get; }
-
         public ICommand BrowseModFamilyCommand { get; }
-
         public ICommand DeleteModFamilyCommand { get; }
-
         public ICommand CreateModpackCommand { get; }
-
         public ICommand DeleteModpackCommand { get; }
+        public ICommand ImportModpacksCommand { get; }
 
         public ManagerViewModel(int tabIndex, DownloadQueue downloadQueue)
             : base(tabIndex)
@@ -196,6 +192,7 @@ namespace ModMyFactoryGUI.ViewModels
             DeleteModFamilyCommand = ReactiveCommand.CreateFromTask<ModFamily>(DeleteModFamily);
             CreateModpackCommand = ReactiveCommand.CreateFromTask(CreateModpack);
             DeleteModpackCommand = ReactiveCommand.CreateFromTask<Modpack>(DeleteModpack);
+            ImportModpacksCommand = ReactiveCommand.CreateFromTask(ImportModpacksAsync);
         }
 
         private bool FilterModpack(ModpackViewModel modpack)
@@ -516,6 +513,24 @@ namespace ModMyFactoryGUI.ViewModels
             else
             {
                 // ToDo: show error message
+            }
+        }
+
+        private async Task ImportModpacksAsync()
+        {
+            var filter = new FileDialogFilter();
+            filter.Extensions.Add("fmp");
+            filter.Extensions.Add("fmpa");
+            filter.Name = (string)App.Current.Locales.GetResource("FmpFileType");
+
+            var ofd = new OpenFileDialog { AllowMultiple = true };
+            ofd.Filters.Add(filter);
+            
+            var paths = await ofd.ShowAsync(App.Current.MainWindow);
+            if (!(paths is null) && (paths.Length > 0))
+            {
+                using var helper = new ImportHelper(paths);
+                await helper.ImportPackagesAsync();
             }
         }
     }
