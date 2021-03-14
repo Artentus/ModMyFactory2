@@ -53,6 +53,6 @@ namespace ModMyFactory.Game
             _steam = steam;
         }
 
-        public override Process Start(string arguments) => _steam.StartApp(SteamApp.Factorio, arguments);
+        public override Process Start(string? arguments) => _steam.StartApp(SteamApp.Factorio, arguments);
     }
 }

@@ -118,7 +118,7 @@ namespace ModMyFactory.Game
             return new ManagedFactorioInstance(instance, modManager, false);
         }
 
-        public Process Start(string arguments) => _baseInstance.Start(arguments);
+        public Process Start(string? arguments) => _baseInstance.Start(arguments);
 
         /// <summary>
         /// Links this instances save directory to another location<br/>

@@ -25,8 +25,8 @@ namespace ModMyFactory.BaseTypes
             }
             else
             {
-                T obj = serializer.Deserialize<T>(reader);
-                return new T[] { obj! };
+                T? obj = serializer.Deserialize<T>(reader);
+                return new T?[] { obj };
             }
         }
 

@@ -57,7 +57,7 @@ namespace ModMyFactory.Game
         /// Starts this instance
         /// </summary>
         /// <param name="arguments">Optional command line arguments</param>
-        Process Start(string arguments = null);
+        Process Start(string? arguments = null);
     }
 
     public static class FactorioInstance

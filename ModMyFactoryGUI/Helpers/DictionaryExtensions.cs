@@ -25,7 +25,7 @@ namespace ModMyFactoryGUI.Helpers
         public static bool RemoveValue<TKey, TValue>(this IDictionary<TKey, TValue> dictionary, TValue value)
         {
             bool keyFound = false;
-            TKey key = default;
+            TKey? key = default;
             foreach (var kvp in dictionary)
             {
                 if (object.Equals(kvp.Value, value))

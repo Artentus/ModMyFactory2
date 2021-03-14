@@ -10,7 +10,7 @@
             "request": "launch",
             "preLaunchTask": "build",
             // If you have changed target frameworks, make sure to update the program path.
-            "program": "${workspaceFolder}/ModMyFactoryGUI/bin/Debug/netcoreapp3.0/ModMyFactoryGUI.dll",
+            "program": "${workspaceFolder}/ModMyFactoryGUI/bin/Debug/net5.0/ModMyFactoryGUI.dll",
             "args": [],
             "cwd": "${workspaceFolder}/ModMyFactoryGUI",
             // For more information about the 'console' field, see https://aka.ms/VSCode-CS-LaunchJson-Console

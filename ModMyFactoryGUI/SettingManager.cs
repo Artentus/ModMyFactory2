@@ -90,7 +90,7 @@ namespace ModMyFactoryGUI
 
             // Then try to find a suitable converter
             if (TryFindConverter(obj.GetType(), typeof(T), out var converter))
-                return (T)converter.CreateFromToken(obj);
+                return (T?)converter.CreateFromToken(obj);
 
             // We couldn't cast the object, let Json.NET do the work for us
             // This may not always work as expected, consider creating a converter
@@ -127,7 +127,7 @@ namespace ModMyFactoryGUI
             return value;
         }
 
-        public T? Get<T>(string key, T defaultValue = default)
+        public T? Get<T>(string key, T? defaultValue = default)
         {
             var obj = Get(key, (object?)defaultValue);
             if (obj is null) return defaultValue;

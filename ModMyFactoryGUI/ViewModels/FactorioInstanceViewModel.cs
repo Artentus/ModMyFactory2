@@ -323,7 +323,7 @@ namespace ModMyFactoryGUI.ViewModels
                     }
                 }
             }
-            _manager.RemoveInstance(_instance);
+            _manager.RemoveInstance(_instance!);
         }
 
         public void Delete()
@@ -333,7 +333,7 @@ namespace ModMyFactoryGUI.ViewModels
 
             // ToDo: ask user
             OnInstanceRemoved(EventArgs.Empty);
-            _manager.RemoveInstance(_instance);
+            _manager.RemoveInstance(_instance!);
             _instance!.Dispose();
             _instance.Directory.Delete(true);
         }

@@ -24,7 +24,7 @@ namespace ModMyFactory.Game
             _executable = executable;
         }
 
-        public override Process Start(string arguments)
+        public override Process Start(string? arguments)
         {
             var startInfo = new ProcessStartInfo(_executable.FullName, arguments);
             return Process.Start(startInfo);

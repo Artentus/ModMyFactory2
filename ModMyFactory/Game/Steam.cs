@@ -146,7 +146,7 @@ namespace ModMyFactory.Game
         /// </summary>
         /// <param name="app">The app to start</param>
         /// <param name="arguments">Optional arguments</param>
-        public Process StartApp(SteamApp app, string arguments)
+        public Process StartApp(SteamApp app, string? arguments)
         {
             ProcessStartInfo startInfo;
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
@@ -164,7 +164,7 @@ namespace ModMyFactory.Game
             var builder = new ArgumentBuilder();
             builder.AppendArgument("-applaunch");
             builder.AppendArgument(((long)app).ToString());
-            builder.AppendExisting(arguments);
+            if (!string.IsNullOrEmpty(arguments)) builder.AppendExisting(arguments);
             startInfo.Arguments = builder.ToString();
 
             return Process.Start(startInfo);

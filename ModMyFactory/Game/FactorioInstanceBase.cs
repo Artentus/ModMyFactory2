@@ -45,7 +45,7 @@ namespace ModMyFactory.Game
             }
         }
 
-        public abstract Process Start(string arguments);
+        public abstract Process Start(string? arguments);
 
         public void Dispose()
         {

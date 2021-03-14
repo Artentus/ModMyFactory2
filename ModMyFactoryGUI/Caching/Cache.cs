@@ -41,7 +41,7 @@ namespace ModMyFactoryGUI.Caching
         {
             if (_disposed) throw new ObjectDisposedException(this.ToString());
 
-            if (!_cache.TryGetValue(key, out TValue result))
+            if (!_cache.TryGetValue(key, out TValue? result))
             {
                 result = await ResolveCacheMiss(key);
                 _cache.Add(key, result);
