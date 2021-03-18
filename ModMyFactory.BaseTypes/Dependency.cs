@@ -68,6 +68,11 @@ namespace ModMyFactory.BaseTypes
                 type = DependencyType.Optional;
                 value = value[1..].TrimStart();
             }
+            else if (value[0] == '~')
+            {
+                // We can treat this as a normal dependency
+                value = value[1..].TrimStart();
+            }
             else if (value.StartsWith("(?)"))
             {
                 type = DependencyType.Hidden;
