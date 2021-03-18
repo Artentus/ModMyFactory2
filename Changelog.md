@@ -2,8 +2,8 @@
 
 - Add UI option to import modpacks
 - Add associations for FMP and FMPA files on Windows
-- Fix Factorio not getting loaded on Mac
 - Fix multiple instances being allowed to run on Mac
+- Fix crash when loading certain mods
 
 
 ### Beta 4.2.6
