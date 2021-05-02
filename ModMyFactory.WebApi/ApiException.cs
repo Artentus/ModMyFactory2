@@ -36,4 +36,39 @@ namespace ModMyFactory.WebApi
             }
         }
     }
+
+    public class ResourceNotFoundException : ApiException
+    {
+        protected internal ResourceNotFoundException(Exception? innerException = null)
+            : base("Remote resource not found.", innerException)
+        { }
+    }
+
+    public class AuthenticationFailureException : ApiException
+    {
+        protected internal AuthenticationFailureException(Exception? innerException = null)
+            : base("Failed to authenticate on the server.", innerException)
+        { }
+    }
+
+    public class TimeoutException : ApiException
+    {
+        protected internal TimeoutException(Exception? innerException = null)
+            : base("A timeout occured when trying to connect to the server.", innerException)
+        { }
+    }
+
+    public class ConnectFailureException : ApiException
+    {
+        protected internal ConnectFailureException(Exception? innerException = null)
+            : base("Failed to connect to the server.", innerException)
+        { }
+    }
+
+    public class ResponseException : ApiException
+    {
+        protected internal ResponseException(Exception? innerException = null)
+            : base("Server sent invalid response.", innerException)
+        { }
+    }
 }

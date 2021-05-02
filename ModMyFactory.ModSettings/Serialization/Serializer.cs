@@ -17,6 +17,13 @@ using System.Text;
 
 namespace ModMyFactory.ModSettings.Serialization
 {
+    public sealed class SerializerException : Exception
+    {
+        internal SerializerException(string message, Exception? innerException = null)
+            : base(message, innerException)
+        { }
+    }
+
     public static class Serializer
     {
         private static readonly AccurateVersion MinVersion = (0, 16);
@@ -84,7 +91,7 @@ namespace ModMyFactory.ModSettings.Serialization
                     break;
 
                 default:
-                    throw new InvalidDataException($"Found unknown type {type} in property tree.");
+                    throw new SerializerException($"Found unknown type {type} in property tree.");
             }
         }
 
@@ -103,7 +110,10 @@ namespace ModMyFactory.ModSettings.Serialization
         {
             writer.Write((uint)token.Count());
 
-            foreach (var kvp in token.Value<IDictionary<string, JToken>>())
+            var dict = token.Value<IDictionary<string, JToken>>();
+            if (dict is null) return;
+
+            foreach (var kvp in dict)
             {
                 writer.Write(kvp.Key);
                 WritePropertyTree(writer, kvp.Value);

@@ -22,12 +22,12 @@ namespace ModMyFactory.WebApi.Factorio
         private const string PacketUrl = BaseUrl + "/get-available-versions";
         private const string DownloadUrl = BaseUrl + "/get-download-link";
 
-        private async static Task<string> GetPackageLinkAsync(Platform platform, AccurateVersion from, AccurateVersion to, string username, string token)
+        private async static Task<string?> GetPackageLinkAsync(Platform platform, AccurateVersion from, AccurateVersion to, string username, string token)
         {
             string url = $"{DownloadUrl}?apiVersion=2&username={username}&token={token}&package={platform.ToActualString()}&from={from}&to={to}";
             string document = await WebHelper.RequestDocumentAsync(url);
             var response = JsonConvert.DeserializeObject<string[]>(document);
-            return response[0];
+            return response?[0];
         }
 
         /// <summary>
@@ -36,7 +36,7 @@ namespace ModMyFactory.WebApi.Factorio
         /// <param name="platform">The target platform.</param>
         /// <param name="username">Username for authentication.</param>
         /// <param name="token">Login token for authentication.</param>
-        public async static Task<List<UpdatePackageInfo>> GetUpdatePackagesAsync(Platform platform, string username, string token)
+        public async static Task<IReadOnlyList<UpdatePackageInfo>> GetUpdatePackagesAsync(Platform platform, string username, string token)
         {
             try
             {
@@ -44,7 +44,8 @@ namespace ModMyFactory.WebApi.Factorio
                 string document = await WebHelper.RequestDocumentAsync(url);
 
                 var response = JsonConvert.DeserializeObject<Dictionary<string, List<UpdatePackageInfo>>>(document);
-                var packages = response[platform.ToActualString()];
+                var packages = response?[platform.ToActualString()];
+                if (packages is null) return Array.Empty<UpdatePackageInfo>();
 
                 for (int i = packages.Count; i >= 0; i--)
                 {
@@ -70,12 +71,14 @@ namespace ModMyFactory.WebApi.Factorio
         /// <param name="file">The destination file.</param>
         /// <param name="username">Username for authentication.</param>
         /// <param name="token">Login token for authentication.</param>
-        public async static Task DownloadUpdatePackageAsync(Platform platform, AccurateVersion from, AccurateVersion to, FileInfo file, string username, string token,
-                                                            CancellationToken cancellationToken = default, IProgress<double>? progress = null)
+        public async static Task DownloadUpdatePackageAsync(
+            Platform platform, AccurateVersion from, AccurateVersion to, FileInfo file, string username, string token,
+            CancellationToken cancellationToken = default, IProgress<double>? progress = null)
         {
             try
             {
-                string url = await GetPackageLinkAsync(platform, from, to, username, token);
+                string? url = await GetPackageLinkAsync(platform, from, to, username, token);
+                if (url is null) throw new ResponseException();
                 await WebHelper.DownloadFileAsync(url, file, cancellationToken, progress);
             }
             catch (WebException ex)
@@ -92,9 +95,10 @@ namespace ModMyFactory.WebApi.Factorio
         /// <param name="file">The destination file.</param>
         /// <param name="username">Username for authentication.</param>
         /// <param name="token">Login token for authentication.</param>
-        public async static Task DownloadUpdatePackageAsync(Platform platform, UpdatePackageInfo packageInfo, FileInfo file, string username, string token,
-                                                            CancellationToken cancellationToken = default, IProgress<double>? progress = null)
-            => await DownloadUpdatePackageAsync(platform, packageInfo.From, packageInfo.To, file, username, token, cancellationToken, progress);
+        public static Task DownloadUpdatePackageAsync(
+            Platform platform, UpdatePackageInfo packageInfo, FileInfo file, string username, string token,
+            CancellationToken cancellationToken = default, IProgress<double>? progress = null)
+            => DownloadUpdatePackageAsync(platform, packageInfo.From, packageInfo.To, file, username, token, cancellationToken, progress);
 
         /// <summary>
         /// Downloads an update package.
@@ -105,8 +109,9 @@ namespace ModMyFactory.WebApi.Factorio
         /// <param name="fileName">The destination file name.</param>
         /// <param name="username">Username for authentication.</param>
         /// <param name="token">Login token for authentication.</param>
-        public async static Task<FileInfo> DownloadUpdatePackageAsync(Platform platform, AccurateVersion from, AccurateVersion to, string fileName, string username, string token,
-                                                            CancellationToken cancellationToken = default, IProgress<double>? progress = null)
+        public async static Task<FileInfo> DownloadUpdatePackageAsync(
+            Platform platform, AccurateVersion from, AccurateVersion to, string fileName, string username, string token,
+            CancellationToken cancellationToken = default, IProgress<double>? progress = null)
         {
             var file = new FileInfo(fileName);
             await DownloadUpdatePackageAsync(platform, from, to, file, username, token, cancellationToken, progress);
@@ -121,8 +126,9 @@ namespace ModMyFactory.WebApi.Factorio
         /// <param name="fileName">The destination file name.</param>
         /// <param name="username">Username for authentication.</param>
         /// <param name="token">Login token for authentication.</param>
-        public async static Task<FileInfo> DownloadUpdatePackageAsync(Platform platform, UpdatePackageInfo packageInfo, string fileName, string username, string token,
-                                                            CancellationToken cancellationToken = default, IProgress<double>? progress = null)
-            => await DownloadUpdatePackageAsync(platform, packageInfo.From, packageInfo.To, fileName, username, token, cancellationToken, progress);
+        public static Task<FileInfo> DownloadUpdatePackageAsync(
+            Platform platform, UpdatePackageInfo packageInfo, string fileName, string username, string token,
+            CancellationToken cancellationToken = default, IProgress<double>? progress = null)
+            => DownloadUpdatePackageAsync(platform, packageInfo.From, packageInfo.To, fileName, username, token, cancellationToken, progress);
     }
 }

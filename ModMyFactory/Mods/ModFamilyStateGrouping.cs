@@ -43,13 +43,13 @@ namespace ModMyFactory.Mods
         /// <summary>
         /// Creates state information from a JSON string
         /// </summary>
-        public static ModFamilyStateGrouping FromJson(string json)
+        public static ModFamilyStateGrouping? FromJson(string json)
             => JsonConvert.DeserializeObject<ModFamilyStateGrouping>(json);
 
         /// <summary>
         /// Loads state information from a file
         /// </summary>
-        public static ModFamilyStateGrouping FromFile(string path)
+        public static ModFamilyStateGrouping? FromFile(string path)
         {
             string json = File.ReadAllText(path);
             return FromJson(json);
@@ -58,13 +58,13 @@ namespace ModMyFactory.Mods
         /// <summary>
         /// Loads state information from a file
         /// </summary>
-        public static ModFamilyStateGrouping FromFile(FileInfo file)
+        public static ModFamilyStateGrouping? FromFile(FileInfo file)
             => FromFile(file.FullName);
 
         /// <summary>
         /// Loads state information from a file
         /// </summary>
-        public static async Task<ModFamilyStateGrouping> FromFileAsync(string path)
+        public static async Task<ModFamilyStateGrouping?> FromFileAsync(string path)
         {
             using var stream = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.Read,
                                               4096, FileOptions.Asynchronous | FileOptions.SequentialScan);
@@ -79,7 +79,7 @@ namespace ModMyFactory.Mods
         /// <summary>
         /// Loads state information from a file
         /// </summary>
-        public static async Task<ModFamilyStateGrouping> FromFileAsync(FileInfo file)
+        public static async Task<ModFamilyStateGrouping?> FromFileAsync(FileInfo file)
             => await FromFileAsync(file.FullName);
 
         /// <summary>

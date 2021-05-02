@@ -15,7 +15,7 @@ namespace ModMyFactoryGUI.Localization.Json
 {
     internal sealed class JsonLocale : ILocale
     {
-        private readonly IDictionary<string, JsonValue> _values;
+        private readonly IReadOnlyDictionary<string, JsonValue> _values;
 
         public object this[string key] => _values[key];
         public string Culture { get; }
@@ -29,7 +29,7 @@ namespace ModMyFactoryGUI.Localization.Json
             using var reader = new StreamReader(fs);
 
             string json = reader.ReadToEnd();
-            _values = JsonConvert.DeserializeObject<IDictionary<string, JsonValue>>(json);
+            _values = JsonConvert.DeserializeObject<IReadOnlyDictionary<string, JsonValue>>(json) ?? new Dictionary<string, JsonValue>(0);
 
             Culture = culture;
         }

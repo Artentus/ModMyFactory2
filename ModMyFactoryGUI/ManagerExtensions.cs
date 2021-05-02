@@ -102,7 +102,7 @@ namespace ModMyFactoryGUI
                         try
                         {
                             var state = await ModFamilyStateGrouping.FromFileAsync(file);
-                            state.ApplyToManager(modManager);
+                            state!.ApplyToManager(modManager);
                             Log.Verbose($"Successfully loaded mod list file '{file.FullName}'");
                         }
                         catch (Exception ex)

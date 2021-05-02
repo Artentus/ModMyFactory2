@@ -16,6 +16,13 @@ using System.Threading.Tasks;
 
 namespace ModMyFactory.Export
 {
+    public sealed class ImportException : Exception
+    {
+        internal ImportException(string message, Exception? innerException = null)
+            : base(message, innerException)
+        { }
+    }
+
     public static class Importer
     {
         private static bool InferArchiveFromExtension(FileInfo file)
@@ -38,6 +45,7 @@ namespace ModMyFactory.Export
         {
             string json = File.ReadAllText(path);
             var package = JsonConvert.DeserializeObject<Package>(json);
+            if (package is null) throw new ImportException("File is not a valid modpack file");
             return new ImportResult(package);
         }
 
@@ -51,6 +59,7 @@ namespace ModMyFactory.Export
             string json = Encoding.UTF8.GetString(buffer);
 
             var package = JsonConvert.DeserializeObject<Package>(json);
+            if (package is null) throw new ImportException("File is not a valid modpack file");
             return new ImportResult(package);
         }
 
@@ -85,7 +94,7 @@ namespace ModMyFactory.Export
                 }
             }
 
-            if (package is null) throw new InvalidOperationException("File did not contain a valid package description");
+            if (package is null) throw new ImportException("File did not contain a valid package description");
             return new ImportResult(package, extractedFiles);
         }
 

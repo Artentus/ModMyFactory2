@@ -5,6 +5,7 @@
 //  the Free Software Foundation, either version 3 of the License, or
 //  (at your option) any later version.
 
+using ModMyFactory.ModSettings.Serialization;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
@@ -35,8 +36,19 @@ namespace ModMyFactory.ModSettings
         public override SettingType ReadJson(JsonReader reader, Type objectType, SettingType existingValue, bool hasExistingValue, JsonSerializer serializer)
         {
             JToken token = JToken.Load(reader);
-            string value = token.Value<string>();
-            return from[value];
+            string? value = token.Value<string>();
+            try
+            {
+                return from[value!];
+            }
+            catch (KeyNotFoundException ex)
+            {
+                throw new SerializerException("Unknown runtime type", ex);
+            }
+            catch (ArgumentNullException ex)
+            {
+                throw new SerializerException("Runtime type undefined", ex);
+            }
         }
 
         public override void WriteJson(JsonWriter writer, SettingType value, JsonSerializer serializer)
