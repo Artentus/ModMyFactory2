@@ -273,9 +273,9 @@ namespace ModMyFactoryGUI.Helpers
             foreach (var fileType in fileTypes)
                 Registry.RegisterFileType(fileType.Extension, handlerName, fileType.MimeType, fileType.PercievedType);
 #elif LINUX
-            // ToDo
+            var _ = GetAppPath();
 #elif OSX
-            // ToDo
+            var _ = GetAppPath();
 #else
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
