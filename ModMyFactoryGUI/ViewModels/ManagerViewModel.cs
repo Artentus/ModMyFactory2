@@ -376,8 +376,7 @@ namespace ModMyFactoryGUI.ViewModels
             foreach (var modManager in Program.Manager.ModManagers)
             {
                 var list = new List<ModUpdateInfo>();
-                result.Add(modManager.FactorioVersion, list);
-
+                
                 foreach (var family in modManager.Families)
                 {
                     if (cancellationToken.IsCancellationRequested) return new Dictionary<AccurateVersion, List<ModUpdateInfo>>();
@@ -396,6 +395,8 @@ namespace ModMyFactoryGUI.ViewModels
                         Log.Debug("Update to version {0} found for mod family '{1}', Factorio version {2}", latest.Value.Version, family.FamilyName, modManager.FactorioVersion);
                     }
                 }
+
+                if (list.Count > 0) result.Add(modManager.FactorioVersion, list);
             }
 
             progress.Report(1.0);
