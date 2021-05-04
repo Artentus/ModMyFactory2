@@ -2,6 +2,7 @@
 
 - Add UI option to import modpacks
 - Add associations for FMP and FMPA files on Windows
+- The mod update dialog now hides Factorio version with no updates
 - Fix multiple instances being allowed to run on Mac
 - Fix crash when loading certain mods
 
