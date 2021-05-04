@@ -265,10 +265,10 @@ namespace ModMyFactoryGUI.Helpers
                 return $"\"{filePath}\" --import";
             }
 
+#if WIN32
             const string appName = "ModMyFactoryGUI";
             string appPath = GetAppPath();
 
-#if WIN32
             string handlerName = Registry.RegisterHandler(appName, component, version, appPath, description, iconPath);
             foreach (var fileType in fileTypes)
                 Registry.RegisterFileType(fileType.Extension, handlerName, fileType.MimeType, fileType.PercievedType);
@@ -279,6 +279,9 @@ namespace ModMyFactoryGUI.Helpers
 #else
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
+                const string appName = "ModMyFactoryGUI";
+                string appPath = GetAppPath();
+
                 string handlerName = Registry.RegisterHandler(appName, component, version, appPath, description, iconPath);
                 foreach (var fileType in fileTypes)
                     Registry.RegisterFileType(fileType.Extension, handlerName, fileType.MimeType, fileType.PercievedType);
