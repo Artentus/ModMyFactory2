@@ -1,3 +1,8 @@
+### Beta 4.3.1
+
+- Fix Window position being saved off-screen
+
+
 ### Beta 4.3
 
 - Add UI option to import modpacks

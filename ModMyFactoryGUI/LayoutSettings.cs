@@ -19,7 +19,20 @@ namespace ModMyFactoryGUI
 
         public WindowRestoreState MainWindowRestoreState
         {
-            get => _manager.Get(SettingName.MainWindowRestoreState, WindowRestoreState.Undefined);
+            get
+            {
+                var restoreState = _manager.Get(SettingName.MainWindowRestoreState, WindowRestoreState.Undefined);
+
+                // If the window position has previously been saved in the invalid state, override it to undefined.
+                // See RestorableWindow.SetBounds for a detailed explanation.
+                if ((restoreState.Position.X == -32_000) && (restoreState.Position.Y == -32_000))
+                {
+                    restoreState = WindowRestoreState.Undefined;
+                    _manager.Set(SettingName.MainWindowRestoreState, restoreState);
+                }
+
+                return restoreState;
+            }
             set
             {
                 _manager.Set(SettingName.MainWindowRestoreState, value);

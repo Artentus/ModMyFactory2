@@ -39,7 +39,7 @@ namespace ModMyFactoryGUI.Controls
             PlatformImpl.Resized += OnSizeChanged;
         }
 
-        private bool SizeEqualsInt(Size first, Size second)
+        private static bool SizeEqualsInt(Size first, Size second)
             => ((int)first.Width == (int)second.Width) && ((int)first.Height == (int)second.Height);
 
         private void SetBoundsInternal(PixelPoint position, Size size)
@@ -56,6 +56,12 @@ namespace ModMyFactoryGUI.Controls
 
         protected void SetBounds(PixelPoint position, Size size)
         {
+            // This is a workaround to an issue where sometimes the Window
+            // position is set to -32000,-32000 for an unknown reason.
+            // The chance of this position being real is pretty much 0 in
+            // practice, so we can filter it out.
+            if ((position.X == -32_000) && (position.Y == -32_000)) return;
+
             // We only care about bounds if the window is neither minimized nor maximized
             if (WindowState == WindowState.Normal)
             {
