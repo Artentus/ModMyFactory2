@@ -35,9 +35,9 @@ artifacts:
 deploy:
   - provider: NuGet
     api_key:
-      secure: VInztqsw3tTLecCeO3rqareRXTw5Rn9UvBiihaVsiLSoYnR2DTAfjVoMcO+crSRC
+      secure: iv9Dyc9qD5/UhCjimUN8wwpRaXTd1eGuSFTW28A/fjjyn8wJKlN96iSFvxevYGG0
     artifact: 'Packages'
   - provider: NuGet
     api_key:
-      secure: VInztqsw3tTLecCeO3rqareRXTw5Rn9UvBiihaVsiLSoYnR2DTAfjVoMcO+crSRC
+      secure: iv9Dyc9qD5/UhCjimUN8wwpRaXTd1eGuSFTW28A/fjjyn8wJKlN96iSFvxevYGG0
     artifact: 'Symbols'
