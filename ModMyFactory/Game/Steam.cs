@@ -111,7 +111,7 @@ namespace ModMyFactory.Game
             using var reader = new StreamReader(stream);
             content = await reader.ReadToEndAsync();
 
-            var matches = Regex.Matches(content, "\"\\d\"\\s+\"(?<path>.+)\"");
+            var matches = Regex.Matches(content, "\"path\"\\s+\"(?<path>[^\"]+)\"");
             foreach (Match match in matches)
             {
                 string path = match.Groups["path"].Value;

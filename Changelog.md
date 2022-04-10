@@ -1,6 +1,7 @@
 ### Beta 4.3.1
 
 - Fix Window position being saved off-screen
+- Fix Steam detection
 
 
 ### Beta 4.3
