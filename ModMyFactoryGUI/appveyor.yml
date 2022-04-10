@@ -10,7 +10,7 @@ branches:
 
 environment:
   OAUTH_TOKEN:
-    secure: FcuPjiRWTaNiGcYHvdQWSKHsiLcLGbzRD0r33WVA3c4u6vN3KeCv/8eq3n5oTJPW
+    secure: oFSYhDRIY5Qd7D+Cn7eEO6MpwzeYkR0FPok/zoWZ8rTFpMbMyvnUN6vTKzWAG09Q
     
 build_script:
   - dotnet publish ModMyFactoryGUI\ -o ModMyFactoryGUI\bin\publish\linux-x64\ -c Release -f net5.0 -r linux-x64 -p:PublishTrimmed=true --version-suffix %APPVEYOR_BUILD_VERSION% -p:OauthToken=%OAUTH_TOKEN%
@@ -34,6 +34,6 @@ deploy:
   release: 'ModMyFactoryGUI v$(appveyor_build_version)'
   description: ''
   auth_token:
-    secure: pvpw2TIwvV+P7KoIG1vAJCBT8aSYCVzgtp9Cq+IsyQ/wsmgXbSzJsg9uYPsD8ZCX
+    secure: ygEi7xyaY9+27XwXdXkp1F+Gq8V/N9EGo7Uj6Arn+LydKBYK2R0ksYYZWfs9ObRJ
   artifact: Binaries
   prerelease: true # don't forget to change
