@@ -138,7 +138,7 @@ namespace ModMyFactoryGUI.ViewModels
                 if (success.IsTrue())
                 {
                     IsInstalled = true;
-                    var job = new DownloadModReleaseJob(Info, _modDisplayName, username, token);
+                    var job = new DownloadModReleaseJob(Info, _modDisplayName, username!, token!);
 
                     async void JobCompletedHandler(object? sender, JobCompletedEventArgs<DownloadJob> e)
                     {

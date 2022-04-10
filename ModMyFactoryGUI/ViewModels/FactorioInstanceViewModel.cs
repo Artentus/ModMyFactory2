@@ -356,7 +356,7 @@ namespace ModMyFactoryGUI.ViewModels
                     IsInDownloadQueue = true;
 
                     // Create a download job
-                    var job = new DownloadFactorioJob(username, token,
+                    var job = new DownloadFactorioJob(username!, token!,
                         version, FactorioBuild.Alpha, PlatformHelper.GetCurrentPlatform());
 
                     // Use an actual function instead of a lambda

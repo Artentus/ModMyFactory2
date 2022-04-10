@@ -74,7 +74,7 @@ namespace ModMyFactoryGUI
             }
         }
 
-        private async Task<(bool? success, string username, string token)> TryLogInWithDialogAsync()
+        private async Task<(bool? success, string? username, string? token)> TryLogInWithDialogAsync()
         {
             var dialog = new LoginDialog();
             dialog.CancelCommand = ReactiveCommand.Create(() => dialog.Close(DialogResult.Cancel));
@@ -95,7 +95,7 @@ namespace ModMyFactoryGUI
             return _isLoggedIn;
         }
 
-        public async ValueTask<(bool? success, string username, string token)> TryLogInAsync()
+        public async ValueTask<(bool? success, string? username, string? token)> TryLogInAsync()
         {
             if (_isLoggedIn) return (true, _username, _token);
             else return await TryLogInWithDialogAsync();

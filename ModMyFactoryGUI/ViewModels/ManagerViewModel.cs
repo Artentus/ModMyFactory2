@@ -435,7 +435,7 @@ namespace ModMyFactoryGUI.ViewModels
                             {
                                 if (update.Selected)
                                 {
-                                    var job = new UpdateModJob(update, vm.ReplaceUpdates, vm.RemoveOldMods, username, token);
+                                    var job = new UpdateModJob(update, vm.ReplaceUpdates, vm.RemoveOldMods, username!, token!);
                                     _downloadQueue.AddJob(job);
                                 }
                             }

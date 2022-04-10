@@ -93,7 +93,7 @@ namespace ModMyFactoryGUI.Helpers
                     var dir = Program.Locations.GetModDir(release.Info.FactorioVersion);
                     string fileName = Path.Combine(dir.FullName, release.FileName);
 
-                    var file = await ModApi.DownloadModReleaseAsync(release, username, token, fileName, CancellationToken.None, progress);
+                    var file = await ModApi.DownloadModReleaseAsync(release, username!, token!, fileName, CancellationToken.None, progress);
                     var (success, modFile) = await ModFile.TryLoadAsync(file);
                     if (success) return modFile;
                 }
