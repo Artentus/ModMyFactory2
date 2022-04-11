@@ -102,24 +102,16 @@ namespace ModMyFactoryGUI
                 : baseCollection.Where(item => _filter(item));
 
             var sorted = new List<T>(filtered);
-            if (!(_comparer is null)) sorted.Sort(_comparer);
+            if (_comparer is not null) sorted.Sort(_comparer);
 
             return sorted;
         }
 
         public void Refresh()
         {
-            var old = _evaluated.ToArray();
             _evaluated = Evaluate(_baseCollection);
-
-            var removed = old.Except(_evaluated).ToArray();
-            if (removed.Length > 0) OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Remove, removed, 0));
-
-            var added = _evaluated.Except(old).ToArray();
-            if (added.Length > 0) OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add, added, 0));
-
-            if (old.Length != _evaluated.Count)
-                OnPropertyChanged(new PropertyChangedEventArgs(nameof(Count)));
+            OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
+            OnPropertyChanged(new PropertyChangedEventArgs(nameof(Count)));
         }
 
         public void Add(T item) => throw new NotSupportedException();

@@ -417,7 +417,7 @@ namespace ModMyFactoryGUI.ViewModels
                 await ProgressDialog.Show(title, message, searchTask, progress, 0.0, 1.0, cancellationSource, App.Current.MainWindow);
 
                 var updates = searchTask.Result;
-                int updateCount = updates.Values.Select(l => l.Count()).Sum();
+                int updateCount = updates.Values.Select(l => l.Count).Sum();
                 if (updateCount > 0)
                 {
                     // Some updates are available

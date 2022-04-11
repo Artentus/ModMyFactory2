@@ -1,3 +1,8 @@
+### Beta 4.3.2
+
+- Fix Modpack filtering
+
+
 ### Beta 4.3.1
 
 - Fix Window position being saved off-screen
