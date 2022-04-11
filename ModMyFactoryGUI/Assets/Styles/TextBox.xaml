@@ -3,9 +3,10 @@ Style slightly modified from the Avalonia default style
 -->
 
 <Styles xmlns="https://github.com/avaloniaui"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:controls="clr-namespace:ModMyFactoryGUI.Controls">
 
-  <Style Selector="TextBox">
+  <Style Selector="TextBox,controls|AutoFocusTextBox">
     <Setter Property="Background" Value="{DynamicResource ThemeBackgroundLowBrush}" />
     <Setter Property="BorderBrush" Value="{DynamicResource ThemeBorderMidBrush}" />
     <Setter Property="BorderThickness" Value="1" />
@@ -68,19 +69,19 @@ Style slightly modified from the Avalonia default style
     </Setter>
   </Style>
 
-  <Style Selector="TextBox:pointerover /template/ Border#border">
+  <Style Selector="TextBox:pointerover /template/ Border#border,controls|AutoFocusTextBox:pointerover /template/ Border#border">
     <Setter Property="BorderBrush" Value="{DynamicResource ThemeBorderHighBrush}" />
   </Style>
-  <Style Selector="TextBox:focus /template/ Border#border">
+  <Style Selector="TextBox:focus /template/ Border#border,controls|AutoFocusTextBox:focus /template/ Border#border">
     <Setter Property="BorderBrush" Value="{DynamicResource ThemeBorderHighBrush}" />
   </Style>
-  <Style Selector="TextBox:error /template/ Border#border">
+  <Style Selector="TextBox:error /template/ Border#border,controls|AutoFocusTextBox:error /template/ Border#border">
     <Setter Property="BorderBrush" Value="{DynamicResource ErrorBrush}" />
   </Style>
-  <Style Selector="TextBox">
+  <Style Selector="TextBox,controls|AutoFocusTextBox">
     <Setter Property="Cursor" Value="IBeam" />
   </Style>
-  <Style Selector="TextBox:disabled /template/ Border#border">
+  <Style Selector="TextBox:disabled /template/ Border#border,controls|AutoFocusTextBox:disabled /template/ Border#border">
     <Setter Property="Opacity" Value="{DynamicResource ThemeDisabledOpacity}" />
   </Style>
 

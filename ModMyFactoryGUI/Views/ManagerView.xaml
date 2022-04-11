@@ -132,11 +132,11 @@ the Free Software Foundation, either version 3 of the License, or
                   <CheckBox Grid.Column="0" IsChecked="{Binding Enabled}" IsThreeState="False" />
                   <TextBlock Grid.Column="1" Margin="13,4" Text="{Binding DisplayName}" IsHitTestVisible="False" />
 
-                  <TextBox Grid.Column="1" Margin="8,2" MinWidth="150" Text="{Binding DisplayName, Mode=TwoWay}" IsVisible="{Binding IsRenaming}">
-                    <TextBox.KeyBindings>
+                  <controls:AutoFocusTextBox Grid.Column="1" Margin="8,2" MinWidth="150" Text="{Binding DisplayName, Mode=TwoWay}" IsVisible="{Binding IsRenaming}">
+                    <controls:AutoFocusTextBox.KeyBindings>
                       <KeyBinding Gesture="Return" Command="{Binding EndRenameCommand}" />
-                    </TextBox.KeyBindings>
-                  </TextBox>
+                    </controls:AutoFocusTextBox.KeyBindings>
+                  </controls:AutoFocusTextBox>
                   <ToggleButton Grid.Column="2" Padding="0" MinWidth="1" Width="26" Height="26"
                                 ToolTip.Tip="{l:LocalizedResource RenameButton}" FontSize="{DynamicResource FontSizeNormal}"
                                 HorizontalAlignment="Center" VerticalAlignment="Center" IsChecked="{Binding IsRenaming, Mode=TwoWay}">

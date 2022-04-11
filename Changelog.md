@@ -1,7 +1,8 @@
 ### Beta 4.3.2
 
-- Fix Modpack filtering
+- Fix modpack filtering
 - Mods and modpacks can now be deselected
+- When renaming modpacks, the name is automatically focused
 
 
 ### Beta 4.3.1
