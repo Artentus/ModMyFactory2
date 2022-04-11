@@ -8,6 +8,7 @@
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Input;
+using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
 using Avalonia.VisualTree;
 using ModMyFactory;
@@ -223,6 +224,15 @@ namespace ModMyFactoryGUI.Views
             _modpackSourceItem = null;
             _dragStart = null;
             _dragging = false;
+        }
+
+        private void LostFocusHandler(object sender, RoutedEventArgs e)
+        {
+            if (sender is TextBox target)
+            {
+                if (target.DataContext is ModpackViewModel vm)
+                    vm.IsRenaming = false;
+            }
         }
 
         public void ScrollModpackIntoView(ModpackViewModel vm)

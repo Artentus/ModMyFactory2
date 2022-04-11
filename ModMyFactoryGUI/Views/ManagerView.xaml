@@ -132,7 +132,9 @@ the Free Software Foundation, either version 3 of the License, or
                   <CheckBox Grid.Column="0" IsChecked="{Binding Enabled}" IsThreeState="False" />
                   <TextBlock Grid.Column="1" Margin="13,4" Text="{Binding DisplayName}" IsHitTestVisible="False" />
 
-                  <controls:AutoFocusTextBox Grid.Column="1" Margin="8,2" MinWidth="150" Text="{Binding DisplayName, Mode=TwoWay}" IsVisible="{Binding IsRenaming}">
+                  <controls:AutoFocusTextBox Grid.Column="1" Margin="8,2" MinWidth="150"
+                                             Text="{Binding DisplayName, Mode=TwoWay}"
+                                             IsVisible="{Binding IsRenaming}" LostFocus="LostFocusHandler">
                     <controls:AutoFocusTextBox.KeyBindings>
                       <KeyBinding Gesture="Return" Command="{Binding EndRenameCommand}" />
                     </controls:AutoFocusTextBox.KeyBindings>
