@@ -1,6 +1,7 @@
 ### Beta 4.3.2
 
 - Fix Modpack filtering
+- Mods and modpacks can now be deselected
 
 
 ### Beta 4.3.1

@@ -39,7 +39,7 @@ namespace ModMyFactoryGUI.Views
             AvaloniaXamlLoader.Load(this);
         }
 
-        private ListBoxItem? GetPointerItem(ListBox listBox)
+        private static ListBoxItem? GetPointerItem(ListBox listBox)
         {
             var children = listBox.GetVisualDescendants();
             foreach (var child in children)
@@ -56,8 +56,18 @@ namespace ModMyFactoryGUI.Views
             if (sender is ListBox source)
             {
                 _dragStart = e.GetPosition(source);
-                if (source.Name == "ModList") _modSourceItem = GetPointerItem(source);
-                if (source.Name == "ModpackList") _modpackSourceItem = GetPointerItem(source);
+
+                if (source.Name == "ModList")
+                {
+                    _modSourceItem = GetPointerItem(source);
+                    if (_modSourceItem is null) source.SelectedItem = null;
+                }
+
+                if (source.Name == "ModpackList")
+                {
+                    _modpackSourceItem = GetPointerItem(source);
+                    if (_modpackSourceItem is null) source.SelectedItem = null;
+                }
             }
         }
 
@@ -188,7 +198,7 @@ namespace ModMyFactoryGUI.Views
             }
         }
 
-        private  async Task DropModpackListHandler(ListBox target, DragEventArgs e)
+        private async Task DropModpackListHandler(ListBox target, DragEventArgs e)
         {
             if (e.Data.Contains(InternalFormat))
             {
