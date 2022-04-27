@@ -1,0 +1,736 @@
+{
+  // --------- Misc ---------
+  "CloseButton": {
+    "type": "string",
+    "value": "Закрыть"
+  },
+  "DownloadButton": {
+    "type": "string",
+    "value": "Скачать"
+  },
+  "DeleteButton": {
+    "type": "string",
+    "value": "Удалить"
+  },
+  "ArchiveFileType": {
+    "type": "string",
+    "value": "Архивы"
+  },
+  "SymlinkFileType": {
+    "type": "string",
+    "value": "Ссылки"
+  },
+  "FmpFileType": {
+    "type": "string",
+    "value": "Модпаки Factorio"
+  },
+  "FmpaFileType": {
+    "type": "string",
+    "value": "Архивы модпаков Factorio"
+  },
+  "FmpFileDesc": {
+    "type": "string",
+    "value": "Модпак Factorio"
+  },
+  "DefaultModpackName": {
+    "type": "string",
+    "value": "Новый модпак"
+  },
+
+  // --------- Messages ---------
+  "ServerError_Title": {
+    "type": "string",
+    "value": "Ошибка сервера"
+  },
+  "ConnectionError_Title": {
+    "type": "string",
+    "value": "Ошибка соединения"
+  },
+  "TimeoutError_Title": {
+    "type": "string",
+    "value": "Время соединения вышло"
+  },
+  "FileIntegrityError_Title": {
+    "type": "string",
+    "value": "Проверка целостности файла не удалась"
+  },
+  "InvalidModFile_Title": {
+    "type": "string",
+    "value": "Не удалось загрузить мод"
+  },
+  "ServerError_Message": {
+    "type": "string",
+    "value": "Произошла ошибка на стороне сервера,\nпожалуйста, повторите попытку позже."
+  },
+  "ConnectionError_Message": {
+    "type": "string",
+    "value": "Невозможно подключиться к серверу.\nУбедитесь, что у вас стабильное подключение к Интернету,\nзатем попробуйте еще раз."
+  },
+  "TimeoutError_Message": {
+    "type": "string",
+    "value": "Время соединения с сервером истекло.\nУбедитесь, что у вас стабильное подключение к Интернету,\nзатем попробуйте еще раз."
+  },
+  "FileIntegrityError_Message": {
+    "type": "string",
+    "value": "Загруженный файл был поврежден и не мог быть загружен,\nпожалуйста, попробуйте снова."
+  },
+  "InvalidModFile_Message": {
+    "type": "string",
+    "value": "Загружаемый файл не является допустимым файлом мода."
+  },
+
+  "LogInRequired_Title": {
+    "type": "string",
+    "value": "Требуется вход"
+  },
+  "LoginError_Message": {
+    "type": "string",
+    "value": "Неправильное имя пользователя или пароль"
+  },
+  "LocationMoveWhileDownload_Title": {
+    "type": "string",
+    "value": "Перемещение расположений невозможно"
+  },
+  "LocationMoveWhileDownload_Message": {
+    "type": "string",
+    "value": "Расположении нельзя перемещать во время загрузки.\nПодождите, пока все загрузки будут завершены, затем снова примените изменения."
+  },
+  "ConfirmLocationMoveOverwrite_Title": {
+    "type": "string",
+    "value": "Подтвердить перемещение"
+  },
+  "ConfirmLocationMoveOverwrite_Message": {
+    "type": "string",
+    "value": "Указанный каталог уже существует, перемещение местоположения приведет к удалению всех существующих файлов в указанный каталоге.\nВы уверены, что хотите продолжить?"
+  },
+
+  "MovingLocation_Title": {
+    "type": "string",
+    "value": "Перемещение расположения"
+  },
+  "MovingFiles_Message": {
+    "type": "string",
+    "value": "Перемещение файлов..."
+  },
+
+  "DeleteConfirm_Title": {
+    "type": "string",
+    "value": "Подтвердить удаление"
+  },
+  "DeleteConfirm_Mod_Message": {
+    "type": "string",
+    "value": "Вы уверены, что хотите удалить мод '{0}' версии {1}?"
+  },
+  "DeleteConfirm_Modpack_Message": {
+    "type": "string",
+    "value": "Вы уверены, что хотите удалить модпак '{0}'?"
+  },
+
+  "UpdateWhileDownloading_Title": {
+    "type": "string",
+    "value": "Обновление невозможно"
+  },
+  "UpdateWhileDownloading_Message": {
+    "type": "string",
+    "value": "Обновление невозможно выполнить, пока загрузки всё ещё находятся в очереди.\nПодождите, пока все загрузки будут завершены, затем повторите попытку."
+  },
+  "NoUpdateFound_Title": {
+    "type": "string",
+    "value": "Нет доступных обновлений"
+  },
+  "NoUpdateFound_Message": {
+    "type": "string",
+    "value": "Последняя версия ModMyFactory уже установлена."
+  },
+  "Update_Title": {
+    "type": "string",
+    "value": "Обновление"
+  },
+  "UpdateSearch_Message": {
+    "type": "string",
+    "value": "Поиск обновлений..."
+  },
+  "UpdateDownload_Message": {
+    "type": "string",
+    "value": "Загрузка пакета обновления..."
+  },
+
+  "ModUpdateSearch_Title": {
+    "type": "string",
+    "value": "Обновление модов"
+  },
+  "ModUpdateSearch_Message": {
+    "type": "string",
+    "value": "Поиск обновлений мода..."
+  },
+  "NoModUpdates_Title": {
+    "type": "string",
+    "value": "Нет доступных обновлений мода"
+  },
+  "NoModUpdates_Message": {
+    "type": "string",
+    "value": "Все ваши моды обновлены."
+  },
+
+  // --------- Dialog options ---------
+  "OkButton": {
+    "type": "string",
+    "value": "Ок"
+  },
+  "CancelButton": {
+    "type": "string",
+    "value": "Отмена"
+  },
+  "YesButton": {
+    "type": "string",
+    "value": "Да"
+  },
+  "NoButton": {
+    "type": "string",
+    "value": "Нет"
+  },
+  "RetryButton": {
+    "type": "string",
+    "value": "Повторить"
+  },
+  "AbortButton": {
+    "type": "string",
+    "value": "Прервать"
+  },
+  "LogInButton": {
+    "type": "string",
+    "value": "Войти"
+  },
+
+  // --------- Main window ---------
+  "MainWindowTitle": {
+    "type": "string",
+    "value": "ModMyFactory GUI"
+  },
+  "StartGameButton": {
+    "type": "string",
+    "value": "Запустить игру"
+  },
+
+  // File menu
+  "FileMenuItem": {
+    "type": "string",
+    "value": "_Файл"
+  },
+  "AddModFilesMenuItem": {
+    "type": "string",
+    "value": "Добавить моды"
+  },
+  "AddModFilesHotkey": {
+    "type": "string",
+    "value": "Ctrl+O"
+  },
+  "NewModpackMenuItem": {
+    "type": "string",
+    "value": "Новый модпак"
+  },
+  "NewModpackHotkey": {
+    "type": "string",
+    "value": "Ctrl+N"
+  },
+  "CreateLinkMenuItem": {
+    "type": "string",
+    "value": "Создать ссылку"
+  },
+  "CreateLinkHotkey": {
+    "type": "string",
+    "value": "Ctrl+L"
+  },
+  "ExportModpacksMenuItem": {
+    "type": "string",
+    "value": "Экспортировать модпаки"
+  },
+  "ExportModpacksHotkey": {
+    "type": "string",
+    "value": "Ctrl+E"
+  },
+  "ImportModpacksMenuItem": {
+    "type": "string",
+    "value": "Импортировать модпаки"
+  },
+  "ImportModpacksHotkey": {
+    "type": "string",
+    "value": "Ctrl+I"
+  },
+  "StartGameMenuItem": {
+    "type": "string",
+    "value": "Запустить игру"
+  },
+  "StartGameHotkey": {
+    "type": "string",
+    "value": "F6"
+  },
+  "CloseMenuItem": {
+    "type": "string",
+    "value": "Закрыть"
+  },
+  "CloseHotkey": {
+    "type": "string",
+    "value": "Alt+F4"
+  },
+
+  // Edit menu
+  "EditMenuItem": {
+    "type": "string",
+    "value": "_Отредактировать"
+  },
+  "UpdateModsMenuItem": {
+    "type": "string",
+    "value": "Обновить моды"
+  },
+  "UpdateModsHotkey": {
+    "type": "string",
+    "value": "Ctrl+U"
+  },
+  "DependenciesMenuItem": {
+    "type": "string",
+    "value": "Зависимости модов"
+  },
+  "DependenciesHotkey": {
+    "type": "string",
+    "value": "Ctrl+D"
+  },
+
+  // View menu
+  "ViewMenuItem": {
+    "type": "string",
+    "value": "_Просмотреть"
+  },
+  "OpenFactorioFolderMenuItem": {
+    "type": "string",
+    "value": "Открыть папку Factorio"
+  },
+  "OpenModFolderMenuItem": {
+    "type": "string",
+    "value": "Открыть папку мода"
+  },
+  "ThemeMenuItem": {
+    "type": "string",
+    "value": "Visual theme"
+  },
+
+  // Language menu
+  "LanguageMenuItem": {
+    "type": "string",
+    "value": "Язык"
+  },
+
+  // Info menu
+  "InfoMenuItem": {
+    "type": "string",
+    "value": "_Инфо"
+  },
+  "HelpMenuItem": {
+    "type": "string",
+    "value": "Помощь"
+  },
+  "HelpHotkey": {
+    "type": "string",
+    "value": "F1"
+  },
+  "CheckUpdateMenuItem": {
+    "type": "string",
+    "value": "Обновить"
+  },
+  "CheckUpdateHotkey": {
+    "type": "string",
+    "value": "F3"
+  },
+  "ThreadMenuItem": {
+    "type": "string",
+    "value": "Ветка форума (англ.)"
+  },
+  "AboutMenuItem": {
+    "type": "string",
+    "value": "О программе"
+  },
+  "AboutHotkey": {
+    "type": "string",
+    "value": "Ctrl+F1"
+  },
+
+  // Tab headers
+  "ManagerTabHeader": {
+    "type": "string",
+    "value": "Менеджер"
+  },
+  "OnlineModsTabHeader": {
+    "type": "string",
+    "value": "Скачать\nМоды"
+  },
+  "FactorioTabHeader": {
+    "type": "string",
+    "value": "Factorio"
+  },
+  "ExportTabHeader": {
+    "type": "string",
+    "value": "Экспорт\nмодпаков"
+  },
+  "SettingsTabHeader": {
+    "type": "string",
+    "value": "Настройки"
+  },
+
+  // Download status
+  "EmptyQueueText": {
+    "type": "string",
+    "value": "Нет загрузок в очереди"
+  },
+  "DownloadingFormat": {
+    "type": "string",
+    "value": "Скачивание {0}"
+  },
+  "QueueFormat": {
+    "type": "string",
+    "value": "В очереди: {0}"
+  },
+
+  // --------- Manager view ---------
+  "ModsHeader": {
+    "type": "string",
+    "value": "Моды"
+  },
+  "ModpacksHeader": {
+    "type": "string",
+    "value": "Модпаки"
+  },
+  "ViewOnlineButton": {
+    "type": "string",
+    "value": "Посмотреть онлайн"
+  },
+  "RemoveFromPackButton": {
+    "type": "string",
+    "value": "Удалить из модпака"
+  },
+
+  // --------- Factorio instance view ---------
+  "InDownloadQueueText": {
+    "type": "string",
+    "value": "В очереди"
+  },
+  "DownloadingText": {
+    "type": "string",
+    "value": "Скачивание..."
+  },
+  "ExtractingText": {
+    "type": "string",
+    "value": "Распаковка..."
+  },
+  "ImportInstallationButton": {
+    "type": "string",
+    "value": "Импортировать"
+  },
+  "ImportArchiveButton": {
+    "type": "string",
+    "value": "Архивировать"
+  },
+  "DownloadStableButton": {
+    "type": "string",
+    "value": "Скачать"
+  },
+  "DownloadExperimentalButton": {
+    "type": "string",
+    "value": "Экспериментальная"
+  },
+  "RenameButton": {
+    "type": "string",
+    "value": "Переименовать"
+  },
+  "ShortcutButton": {
+    "type": "string",
+    "value": "Создать ярлык"
+  },
+  "BrowseFilesButton": {
+    "type": "string",
+    "value": "Просмотр файлов"
+  },
+  "RemoveButton": {
+    "type": "string",
+    "value": "Удалить из менеджера"
+  },
+
+  // --------- Online mods view ---------
+  "LoadingMessage": {
+    "type": "string",
+    "value": "Получение модов\nс сервера..."
+  },
+  "RefreshButton": {
+    "type": "string",
+    "value": "Обновить"
+  },
+  "HomepageHeader": {
+    "type": "string",
+    "value": "Домашняя\nстраница:"
+  },
+  "GitHubHeader": {
+    "type": "string",
+    "value": "GitHub:"
+  },
+  "LicenseHeader": {
+    "type": "string",
+    "value": "Лицензия:"
+  },
+  "DescriptionHeader": {
+    "type": "string",
+    "value": "Описание"
+  },
+  "ChangelogHeader": {
+    "type": "string",
+    "value": "Список изменений"
+  },
+  "FaqHeader": {
+    "type": "string",
+    "value": "FAQ"
+  },
+  "ReleasesHeader": {
+    "type": "string",
+    "value": "Релизы"
+  },
+  "Compare_Alphabetical": {
+    "type": "string",
+    "value": "По алфавиту"
+  },
+  "Compare_DownloadCount": {
+    "type": "string",
+    "value": "По количеству загрузок"
+  },
+  "AllVersionsDesc": {
+    "type": "string",
+    "value": "Все версии"
+  },
+
+  // --------- Export view ---------
+  "ExportButton": {
+    "type": "string",
+    "value": "Экспортировать"
+  },
+  "UseLatestOption": {
+    "type": "string",
+    "value": "Использовать последнюю версию мода"
+  },
+  "UseFactorioOption": {
+    "type": "string",
+    "value": "Использовать последнюю версию мода,\nсовместимую с текущей версией Factorio."
+  },
+  "UseSpecificOption": {
+    "type": "string",
+    "value": "Использовать текущую установленную версию мода"
+  },
+  "IncludeOption": {
+    "type": "string",
+    "value": "Добавить файл мода"
+  },
+  "DownloadNewerOption": {
+    "type": "string",
+    "value": "Загрузить последние версии мода,\nдаже если файл мода добавлен"
+  },
+  "UseLatestOptionPack": {
+    "type": "string",
+    "value": "Использовать последнюю версию всех модов в модпаке"
+  },
+  "UseFactorioOptionPack": {
+    "type": "string",
+    "value": "Использовать последнюю версию всех модов в модпаке,\nсовместимые с соответствующей им версией Factorio."
+  },
+  "UseSpecificOptionPack": {
+    "type": "string",
+    "value": "Использовать текущую установленную версию\nвсех модов в модпаке"
+  },
+  "IncludeOptionPack": {
+    "type": "string",
+    "value": "Добавить файлы всех модов в модпак"
+  },
+  "DownloadNewerOptionPack": {
+    "type": "string",
+    "value": "Скачать последние версии модов в модпаке,\nдаже если их файл мода добавлен"
+  },
+  "UseLatestOptionGlobal": {
+    "type": "string",
+    "value": "Использовать последнюю версию всех модов"
+  },
+  "UseFactorioOptionGlobal": {
+    "type": "string",
+    "value": "Использовать последнюю версию всех модов в модпаке,\nсовместимые с соответствующей им версией Factorio."
+  },
+  "UseSpecificOptionGlobal": {
+    "type": "string",
+    "value": "Использовать текущую установленную версию всех модов"
+  },
+  "IncludeOptionGlobal": {
+    "type": "string",
+    "value": "Добавить файлы всех модов"
+  },
+  "DownloadNewerOptionGlobal": {
+    "type": "string",
+    "value": "Скачать последние версии всех модов,\nдаже если их файлы мода добавлен в модпак"
+  },
+
+  // --------- Settings view ---------
+  "CredentialsHeader": {
+    "type": "string",
+    "value": "Учетные данные для входа"
+  },
+  "Username": {
+    "type": "string",
+    "value": "Имя пользователя или адрес электронной почты"
+  },
+  "Password": {
+    "type": "string",
+    "value": "Пароль"
+  },
+  "UpdateHeader": {
+    "type": "string",
+    "value": "Обновления"
+  },
+  "UpdateOnStartupOption": {
+    "type": "string",
+    "value": "Автоматический поиск обновлений при запуске"
+  },
+  "UpdatePrereleaseOption": {
+    "type": "string",
+    "value": "При поиске обновлений находить предрелизные версии"
+  },
+  "FactorioLocationHeader": {
+    "type": "string",
+    "value": "Расположение экземпляров Factorio"
+  },
+  "ModLocationHeader": {
+    "type": "string",
+    "value": "Расположение папки модов"
+  },
+  "AppDataOption": {
+    "type": "string",
+    "value": "Папка данных приложения по умолчанию"
+  },
+  "BinDirOption": {
+    "type": "string",
+    "value": "Папка установки"
+  },
+  "CustomOption": {
+    "type": "string",
+    "value": "Пользовательская папка"
+  },
+  "AcceptButton": {
+    "type": "string",
+    "value": "Принять"
+  },
+  "DiscardButton": {
+    "type": "string",
+    "value": "Отмена"
+  },
+
+  // --------- About window ---------
+  "AboutWindowTitle": {
+    "type": "string",
+    "value": "Подробнее о ModMyFactory GUI"
+  },
+  "AuthorFormat": {
+    "type": "string",
+    "value": "за авторством {0}"
+  },
+  "VersionFormat": {
+    "type": "string",
+    "value": "v{0}"
+  },
+  "AttributionsTabHeader": {
+    "type": "string",
+    "value": "Контрибуция"
+  },
+  "ChangelogTabHeader": {
+    "type": "string",
+    "value": "Список изменений"
+  },
+  "ThirdPartySoftwareHeader": {
+    "type": "string",
+    "value": "Стороннее ПО"
+  },
+  "TranslatorsHeader": {
+    "type": "string",
+    "value": "Переводчики"
+  },
+
+  // --------- Update window ---------
+  "UpdateWindowTitle": {
+    "type": "string",
+    "value": "Доступно обновление"
+  },
+  "UpdateButton": {
+    "type": "string",
+    "value": "Установить обновление"
+  },
+  "CurrentVersionFormat": {
+    "type": "string",
+    "value": "Текущая версия: {0}"
+  },
+  "UpdateVersionFormat": {
+    "type": "string",
+    "value": "Последняя версия: {0}"
+  },
+
+  // --------- Mod update window ---------
+  "ModUpdateWindowTitle": {
+    "type": "string",
+    "value": "Доступны обновления мода"
+  },
+  "ModUpdatesHeader": {
+    "type": "string",
+    "value": "Доступные обновления"
+  },
+  "ReplaceUpdatesOption": {
+    "type": "string",
+    "value": "Обновить моды в модпаках"
+  },
+  "RemoveOldModsOption": {
+    "type": "string",
+    "value": "Удалить старые версии мода"
+  },
+  "ModUpdateButton": {
+    "type": "string",
+    "value": "Обновить моды"
+  },
+
+  // --------- Shortcut properties window ---------
+  "ShortcutPropertiesWindowTitle": {
+    "type": "string",
+    "value": "Изменить свойства ярлыка"
+  },
+  "CreateShortcutButton": {
+    "type": "string",
+    "value": "Создать ярлык"
+  },
+  "UseModpackHeader": {
+    "type": "string",
+    "value": "Запустить с модпаком"
+  },
+  "UseSavegameHeader": {
+    "type": "string",
+    "value": "Загрузить файл сохранения"
+  },
+  "UseCustomArgsHeader": {
+    "type": "string",
+    "value": "Передавать пользовательские аргументы"
+  },
+
+  // --------- Visual theme names ---------
+  "__theme__.Light": {
+    "type": "string",
+    "value": "Светлая"
+  },
+  "__theme__.Dark": {
+    "type": "string",
+    "value": "Тёмная"
+  },
+  "__theme__.BaseLight": {
+    "type": "string",
+    "value": "Светлая"
+  },
+  "__theme__.BaseDark": {
+    "type": "string",
+    "value": "Тёмная"
+  }
+}

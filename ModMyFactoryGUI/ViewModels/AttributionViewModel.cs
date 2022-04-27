@@ -71,6 +71,7 @@ namespace ModMyFactoryGUI.ViewModels
             Translators = new TranslatorViewModel[]
             {
                 new TranslatorViewModel("Mobius One", "https://github.com/mobius1qwe", new CultureInfo("pt-br")),
+                new TranslatorViewModel("Gesugao-san", "https://github.com/Gesugao-san", new CultureInfo("ru-ru")),
             };
         }
     }
