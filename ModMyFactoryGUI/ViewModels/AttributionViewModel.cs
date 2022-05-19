@@ -34,9 +34,15 @@ namespace ModMyFactoryGUI.ViewModels
 
         public TranslatorViewModel(string name, string url, params CultureInfo[] cultures)
         {
+            static string GetName(CultureInfo culture)
+            {
+                if (culture.IsNeutralCulture) return culture.EnglishName;
+                else return culture.Parent.EnglishName;
+            }
+
             Name = name;
             Url = url;
-            Languages = "[" + string.Join(", ", cultures.Select(c => c.EnglishName)) + "]";
+            Languages = "(" + string.Join(", ", cultures.Select(GetName)) + ")";
         }
     }
 

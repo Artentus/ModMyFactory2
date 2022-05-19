@@ -1,3 +1,7 @@
+### Beta 4.3.3
+- Add Russian translation
+
+
 ### Beta 4.3.2
 
 - Fix modpack filtering

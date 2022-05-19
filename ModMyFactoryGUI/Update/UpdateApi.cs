@@ -8,8 +8,8 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using System.Net;
 using System.Threading.Tasks;
+using ModMyFactoryGUI.Helpers;
 using Octokit;
 
 namespace ModMyFactoryGUI.Update
@@ -75,11 +75,10 @@ namespace ModMyFactoryGUI.Update
             }
         }
 
-        public static async Task<string> RequestChangelogAsync()
+        public static Task<string> RequestChangelogAsync()
         {
             const string url = "https://raw.githubusercontent.com/Artentus/ModMyFactory2/master/Changelog.md";
-            using var wc = new WebClient();
-            return await wc.DownloadStringTaskAsync(url);
+            return WebHelper.DownloadStringAsync(url);
         }
     }
 }

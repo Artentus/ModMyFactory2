@@ -184,10 +184,9 @@ namespace ModMyFactoryGUI.ViewModels
             {
                 if (Uri.TryCreate(Info.ThumbnailUrl, UriKind.Absolute, out var url))
                 {
-                    using var wc = new WebClient();
                     try
                     {
-                        byte[] data = await wc.DownloadDataTaskAsync(url);
+                        byte[] data = await WebHelper.DownloadBytesAsync(url);
                         using var stream = new MemoryStream(data);
                         Thumbnail = new Bitmap(stream);
                         this.RaisePropertyChanged(nameof(Thumbnail));

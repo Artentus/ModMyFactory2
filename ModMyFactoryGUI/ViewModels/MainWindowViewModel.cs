@@ -291,12 +291,12 @@ namespace ModMyFactoryGUI.ViewModels
             {
                 Log.Verbose("Downloading update package from '{0}' to '{1}'", url, fileName);
 
-                using var wc = new WebClient();
-                var downloadTask = wc.DownloadFileTaskAsync(url, fileName);
+                var downloadTask = WebHelper.DownloadFileAsync(url, fileName);
 
                 string title = (string)App.Current.Locales.GetResource("Update_Title");
                 string message = (string)App.Current.Locales.GetResource("UpdateDownload_Message");
                 await ProgressDialog.Show(title, message, downloadTask, AttachedView!);
+
                 return true;
             }
             catch (WebException ex)

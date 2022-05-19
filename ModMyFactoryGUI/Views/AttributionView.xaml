@@ -48,7 +48,7 @@ the Free Software Foundation, either version 3 of the License, or
 
       <ItemsControl.ItemTemplate>
         <DataTemplate>
-          <StackPanel Orientation="Horizontal">
+          <StackPanel Orientation="Horizontal" Margin="4,0">
             <controls:HyperLink HorizontalAlignment="Center"
                               Text="{Binding Name}" Url="{Binding Url}" />
             <TextBlock Classes="muted" Margin="4,0,0,0" Text="{Binding Languages}"/>
