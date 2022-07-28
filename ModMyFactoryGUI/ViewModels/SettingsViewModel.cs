@@ -323,7 +323,7 @@ namespace ModMyFactoryGUI.ViewModels
 
                 case Location.Custom:
                     ModLocationIsCustom = true;
-                    CustomFactorioLocation = Program.Locations.CustomModPath!;
+                    CustomModLocation = Program.Locations.CustomModPath!;
                     break;
             }
 
