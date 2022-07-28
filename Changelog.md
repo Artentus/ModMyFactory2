@@ -1,3 +1,7 @@
+### Beta 4.3.4
+- Fix Factorio and mod location settings being incorrectly loaded
+
+
 ### Beta 4.3.3
 - Add Russian translation
 
