@@ -18,6 +18,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Avalonia.LogicalTree;
 
 namespace ModMyFactoryGUI.Views
 {
@@ -239,6 +240,30 @@ namespace ModMyFactoryGUI.Views
         {
             var listBox = this.FindControl<ListBox>("ModpackList");
             listBox.ScrollIntoView(vm);
+        }
+
+        private void ExpandAllModpacks_OnClick(object? sender, RoutedEventArgs e)
+        {
+            var listBox = this.FindControl<ListBox>("ModpackList");
+            foreach (var modpack in listBox.Items)
+            {
+                if (modpack is ModpackViewModel modpackVm)
+                {
+                    modpackVm.IsExpanded = true;
+                }
+            }
+        }
+
+        private void CollapseAllModpacks_OnClick(object? sender, RoutedEventArgs e)
+        {
+            var listBox = this.FindControl<ListBox>("ModpackList");
+            foreach (var modpack in listBox.Items)
+            {
+                if (modpack is ModpackViewModel modpackVm)
+                {
+                    modpackVm.IsExpanded = false;
+                }
+            }
         }
     }
 }
