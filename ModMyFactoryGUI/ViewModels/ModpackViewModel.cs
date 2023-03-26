@@ -58,6 +58,12 @@ namespace ModMyFactoryGUI.ViewModels
             }
         }
 
+        public bool IsExpanded
+        {
+            get => _isExpanded;
+            set => this.RaiseAndSetIfChanged(ref _isExpanded, value);
+        }
+
         // Store information for fuzzy search
         public bool MatchesSearch { get; private set; } = true;
 
@@ -118,6 +124,7 @@ namespace ModMyFactoryGUI.ViewModels
         #region IDisposable Support
 
         private bool _disposed = false;
+        private bool _isExpanded = false;
 
         private void Dispose(bool disposing)
         {

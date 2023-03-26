@@ -273,6 +273,14 @@
     "type": "string",
     "value": "Alt+F4"
   },
+  "CollapseAll": {
+    "type": "string",
+    "value": "Collapse all"
+  },
+  "ExpandAll": {
+    "type": "string",
+    "value": "Expand all"
+  },
 
   // Edit menu
   "EditMenuItem": {
